@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +18,6 @@ import org.w3.x2005.atom.GeneratorDocument.Generator;
 import org.w3.x2005.atom.IconDocument.Icon;
 import org.w3.x2005.atom.LinkDocument.Link;
 import org.w3.x2005.atom.LogoDocument.Logo;
-import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.XmlOptions;
 
 public class FeedCreateModifyFormServlet extends HttpServlet {
