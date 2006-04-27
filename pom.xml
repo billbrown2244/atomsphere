@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+  http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.colorful</groupId>
+  <artifactId>mediafeed</artifactId>
+  <packaging>war</packaging>
+  <version>1.0.0</version>
+  <description>Atom Feed Manager</description>
+  <dependencies>
+  	<dependency>
+  		<groupId>xmlbeans</groupId>
+         <artifactId>xmlpublic</artifactId>
+		 <version>2.1.0</version>
+         <scope>compile</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>xmlbeans</groupId>
+         <artifactId>xbean_xpath</artifactId>
+		 <version>2.1.0</version>
+         <scope>compile</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>xmlbeans</groupId>
+     	<artifactId>xmlbeans-jsr173-api</artifactId>
+		<version>2.0-dev</version>
+   		<scope>compile</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.w3c</groupId>
+         <artifactId>atom</artifactId>
+         <version>1.0</version>
+         <scope>compile</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>javax.servlet</groupId>
+         <artifactId>servlet-api</artifactId>
+         <version>2.4</version>
+         <scope>provided</scope>
+  	</dependency>
+  </dependencies>
+</project>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet href="http://www.atomenabled.org/css/atom.css" type="text/css"?>
+
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en-US">
+<title type="html">AtomEnabled.org</title>
+<subtitle type="html">Your one stop shop for all Atom API and syndication information.</subtitle>
+
+<link href="http://www.atomenabled.org/atom.xml" rel="self"/>
+<link href="http://www.atomenabled.org" rel="alternate" title="AtomEnabled.org" type="text/html"/>
+<id>tag:blogger.com,1999:blog-6356614</id>
+<updated>2005-09-15T13:33:06Z</updated>
+<generator uri="http://www.blogger.com/" version="5.15">Blogger</generator>
+
+<div class="info" xmlns="http://www.w3.org/1999/xhtml">This is an Atom formatted XML site feed. It is intended to be viewed in a Newsreader or syndicated to another site. Please visit the <a href="http://help.blogger.com/bin/answer.py?answer=697">Blogger Help</a> for more info.</div>
+<convertLineBreaks xmlns="http://www.blogger.com/atom/ns#">false</convertLineBreaks>
+<entry xmlns="http://www.w3.org/2005/Atom">
+<author>
+<name>Sam Ruby</name>
+</author>
+<published>2005-09-15T06:27:00-07:00</published>
+<updated>2005-09-15T13:33:06Z</updated>
+<link href="http://www.atomenabled.org/2005/09/atomenableds-atom-feed.php" rel="alternate" title="AtomEnabled's Atom Feed" type="text/html"/>
+
+<id>tag:blogger.com,1999:blog-6356614.post-112679118686717868</id>
+<title type="html">AtomEnabled's Atom Feed</title>
+<content type="xhtml" xml:base="http://www.atomenabled.org" xml:space="preserve">
+<div xmlns="http://www.w3.org/1999/xhtml">This site's <a href="http://www.atomenabled.org/atom.xml">Atom feed</a> has been converted to Atom 1.0.  Addionally, the Feed Validator is <a href="http://feedvalidator.org/news/archives/2005/09/15/atom_03_deprecated.html">now issuing deprecation warnings</a> whenever it encounters Atom 0.3 feeds.</div>
+</content>
+<draft xmlns="http://purl.org/atom-blog/ns#">false</draft>
+</entry>
+
+<entry xmlns="http://www.w3.org/2005/Atom">
+<author>
+<name>Sam Ruby</name>
+</author>
+<published>2005-07-31T13:08:00-07:00</published>
+<updated>2005-08-01T02:37:13Z</updated>
+<link href="http://www.atomenabled.org/2005/07/introduction-to-atom.php" rel="alternate" title="Introduction to Atom" type="text/html"/>
+<id>tag:blogger.com,1999:blog-6356614.post-112284122983872666</id>
+<title type="html">Introduction to Atom</title>
+<content type="xhtml" xml:base="http://www.atomenabled.org" xml:space="preserve">
+<div xmlns="http://www.w3.org/1999/xhtml">An <a href="http://www.atomenabled.org/developers/syndication/">introduction</a> to <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">The Atom Syndication Format</a> has been placed into the <a href="http://www.atomenabled.org/developers/">Developers</a> &gt; <a href="http://www.atomenabled.org/developers/syndication/">Syndication</a> section of this website.</div>
+
+</content>
+<draft xmlns="http://purl.org/atom-blog/ns#">false</draft>
+</entry>
+<entry xmlns="http://www.w3.org/2005/Atom">
+<link href="http://www.rakaz.nl/nucleus/item/103" rel="related" title="Moving from Atom 0.3 to 1.0" type="text/html"/>
+<author>
+<name>Jason Shellen</name>
+</author>
+<published>2005-07-21T18:22:09-07:00</published>
+<updated>2005-07-22T01:22:09Z</updated>
+<link href="http://www.atomenabled.org/2005/07/moving-from-atom-03-to-10.php" rel="alternate" title="Moving from Atom 0.3 to 1.0" type="text/html"/>
+<id>tag:blogger.com,1999:blog-6356614.post-112199532985050363</id>
+
+<title type="html">Moving from Atom 0.3 to 1.0</title>
+<content type="xhtml" xml:base="http://www.atomenabled.org" xml:space="preserve">
+<div xmlns="http://www.w3.org/1999/xhtml">Thanks to Rakaz for his helpful article on <a href="http://www.rakaz.nl/nucleus/item/103">Moving from Atom 0.3 to 1.0</a> for those looking to implement changes to fully support the 1.0 feed format.</div>
+</content>
+<draft xmlns="http://purl.org/atom-blog/ns#">false</draft>
+</entry>
+<entry xmlns="http://www.w3.org/2005/Atom">
+<link href="http://www.tbray.org/ongoing/When/200x/2005/07/14/Atom-1.0" rel="related" title="Atom 1.0 is Almost Final" type="text/html"/>
+<author>
+<name>anil</name>
+
+</author>
+<published>2005-07-15T15:33:00-07:00</published>
+<updated>2005-07-15T22:39:07Z</updated>
+<link href="http://www.atomenabled.org/2005/07/atom-10-is-almost-final.php" rel="alternate" title="Atom 1.0 is Almost Final" type="text/html"/>
+<id>tag:blogger.com,1999:blog-6356614.post-112146714738390169</id>
+<title type="html">Atom 1.0 is Almost Final</title>
+<content type="xhtml" xml:base="http://www.atomenabled.org" xml:space="preserve">
+<div xmlns="http://www.w3.org/1999/xhtml">Tim Bray has posted an <a href="http://www.tbray.org/ongoing/When/200x/2005/07/14/Atom-1.0">update on Atom 1.0</a>, with some key links as the IETF works to approve the standard. First, a quick <a href="http://www.intertwingly.net/wiki/pie/Rss20AndAtom10Compared">comparison between Atom 1.0 and RSS 2.0</a>, which is useful for implementors, and a number of <a href="http://intertwingly.net/wiki/pie/FormatTests">Atom feed format tests</a>, which the community can make contributions to.
+
+At this time, the IETF is expected to accept the <a href="http://atompub.org/">draft published at atompub.org</a> as soon as one registered objection is resolved.</div>
+
+</content>
+<draft xmlns="http://purl.org/atom-blog/ns#">false</draft>
+</entry>
+<entry xmlns="http://www.w3.org/2005/Atom">
+<author>
+<name>Ross</name>
+</author>
+<published>2004-09-14T14:02:56-07:00</published>
+<updated>2004-09-14T21:10:56Z</updated>
+<link href="http://www.atomenabled.org/2004/09/socialtext-supports-atom.php" rel="alternate" title="Socialtext Supports Atom" type="text/html"/>
+<id>tag:blogger.com,1999:blog-6356614.post-109519625695535418</id>
+<title type="html">Socialtext Supports Atom</title>
+
+<content type="xhtml" xml:base="http://www.atomenabled.org" xml:space="preserve">
+<div xmlns="http://www.w3.org/1999/xhtml">
+<a href="http://www.socialtext.com/weblog/040914wikiatom.html">Socialtext Atom enabled</a> its Enterprise Social Software to gain offline editing, syndication across private spaces and provide an Atom enabled wiki -- built upon the open source <a href="http://www.kwiki.org">Kwiki</a>.</div>
+</content>
+<draft xmlns="http://purl.org/atom-blog/ns#">false</draft>
+</entry>
+</feed>

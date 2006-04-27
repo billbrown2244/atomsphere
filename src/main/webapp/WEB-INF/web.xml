@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app 
+ xmlns="http://java.sun.com/xml/ns/j2ee" 
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
+ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" 
+ version="2.4"> 
+
+	<servlet>
+    	<servlet-name>admin</servlet-name>
+    	<servlet-class>com.colorful.atom.servlet.AdminServlet</servlet-class>
+    	<init-param>
+  			<description>The path to the Atom File Path Config file</description>
+  			<param-name>configPath</param-name>
+  			<param-value>C:/atomConfig.xml</param-value>
+  		</init-param>
+  		<load-on-startup>1</load-on-startup>
+  	</servlet>
+  	<servlet>
+    	<servlet-name>modifyAll</servlet-name>
+    	<servlet-class>com.colorful.atom.servlet.ModifyAllServlet</servlet-class>
+  	</servlet>
+	<servlet>
+    	<servlet-name>feedCreateForm</servlet-name>
+    	<servlet-class>com.colorful.atom.servlet.FeedCreateModifyFormServlet</servlet-class>
+  		<init-param>
+  			<description>The path and file name of the stylesheet</description>
+  			<param-name>cssPath</param-name>
+  			<param-value>http://localhost:8080/earthbeats/scripts/styles.css</param-value>
+  		</init-param>
+  		<init-param>
+  			<description>The path to the Atom Specification</description>
+  			<param-name>specPath</param-name>
+  			<param-value>http://www.atomenabled.org/developers/syndication/atom-format-spec.php</param-value>
+  		</init-param>  		
+  	</servlet>
+	<servlet>
+    	<servlet-name>feedCreate</servlet-name>
+    	<servlet-class>com.colorful.atom.servlet.FeedCreateModifyServlet</servlet-class>
+  	</servlet>
+  	<servlet>
+    	<servlet-name>feedDelete</servlet-name>
+    	<servlet-class>com.colorful.atom.servlet.FeedDeleteServlet</servlet-class>
+  	</servlet>
+
+  	
+ 	<servlet>
+    	<servlet-name>entryCreateForm</servlet-name>
+    	<servlet-class>com.colorful.atom.servlet.EntryCreateModifyFormServlet</servlet-class>
+  	</servlet>
+  	<servlet>
+    	<servlet-name>entryCreate</servlet-name>
+    	<servlet-class>com.colorful.atom.servlet.EntryCreateModifyServlet</servlet-class>
+  	</servlet>
+  	<servlet>
+    	<servlet-name>entryDelete</servlet-name>
+    	<servlet-class>com.colorful.atom.servlet.EntryDeleteServlet</servlet-class>
+  	</servlet>
+
+  	
+  	
+  	
+ 	<servlet-mapping>
+    	<servlet-name>admin</servlet-name>
+    	<url-pattern>/atom</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
+    	<servlet-name>modifyAll</servlet-name>
+    	<url-pattern>/atom/modify</url-pattern>
+  	</servlet-mapping>
+ 	<servlet-mapping>
+    	<servlet-name>feedCreateForm</servlet-name>
+    	<url-pattern>/atom/create</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
+    	<servlet-name>feedCreate</servlet-name>
+    	<url-pattern>/atom/create/feed</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
+    	<servlet-name>feedDelete</servlet-name>
+    	<url-pattern>/atom/delete</url-pattern>
+  	</servlet-mapping>
+
+  	<servlet-mapping>
+  		<servlet-name>entryCreateForm</servlet-name>
+    	<url-pattern>/atom/modify/create</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
+    	<servlet-name>entryCreate</servlet-name>
+    	<url-pattern>/atom/modify/create/entry</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
+    	<servlet-name>entryDelete</servlet-name>
+    	<url-pattern>/atom/modify/delete</url-pattern>
+  	</servlet-mapping>
+
+  	
+  	<welcome-file-list>
+  		<welcome-file>atom</welcome-file>
+  	</welcome-file-list>
+
+  	
+</web-app>
