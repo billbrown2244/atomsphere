@@ -131,7 +131,7 @@ public class FeedCreateModifyServlet extends HttpServlet {
                 if(create){
                     atomSubTitle = feed.addNewSubtitle();
                 }else{
-                    if(feed.getSubtitleArray() == null){
+                    if(feed.getSubtitleArray().length == 0){
                         atomSubTitle = feed.addNewSubtitle();
                     }else{
                         atomSubTitle = feed.getSubtitleArray(0);
@@ -147,7 +147,7 @@ public class FeedCreateModifyServlet extends HttpServlet {
                 author = feed.addNewAuthor();
                 author.addName(feedAuthorName);
             }else{
-                if(feed.getAuthorArray() == null){
+                if(feed.getAuthorArray().length == 0){
                     author = feed.addNewAuthor();
                     author.addName(feedAuthorName);
                 }else{
@@ -159,7 +159,7 @@ public class FeedCreateModifyServlet extends HttpServlet {
                 if(create){
                     author.addEmail(feedAuthorEmail);
                 }else{
-                    if(author.getEmailArray() == null){
+                    if(author.getEmailArray().length == 0){
                         author.addEmail(feedAuthorEmail);
                     }else{
                         author.setEmailArray(0,feedAuthorEmail);
@@ -170,7 +170,7 @@ public class FeedCreateModifyServlet extends HttpServlet {
                 if(create){
                     author.addUri(feedAuthorURI);
                 }else{
-                    if(author.getUriArray() == null){
+                    if(author.getUriArray().length == 0){
                         author.addUri(feedAuthorURI);
                     }else{
                         author.setUriArray(0,feedAuthorURI);
@@ -186,7 +186,7 @@ public class FeedCreateModifyServlet extends HttpServlet {
                     contributor = feed.addNewContributor();
                     contributor.addName(feedContributorName);
                 }else{
-                    if(feed.getContributorArray() == null){
+                    if(feed.getContributorArray().length == 0){
                         contributor = feed.addNewContributor();
                         contributor.addName(feedContributorName);
                     }else{
@@ -198,7 +198,7 @@ public class FeedCreateModifyServlet extends HttpServlet {
                     if(create){
                         contributor.addEmail(feedContributorEmail);
                     }else{
-                        if(contributor.getEmailArray() == null){
+                        if(contributor.getEmailArray().length == 0){
                             contributor.addEmail(feedContributorEmail);
                         }else{
                             contributor.setEmailArray(0,feedContributorEmail);
@@ -209,7 +209,7 @@ public class FeedCreateModifyServlet extends HttpServlet {
                     if(create){
                         contributor.addUri(feedContributorURI);
                     }else{
-                        if(contributor.getUriArray() == null){
+                        if(contributor.getUriArray().length == 0){
                             contributor.addUri(feedContributorURI);
                         }else{
                             contributor.setUriArray(0,feedContributorURI);
@@ -223,7 +223,7 @@ public class FeedCreateModifyServlet extends HttpServlet {
             if(create){
                 link = feed.addNewLink();
             }else{
-                if(feed.getLinkArray() == null){
+                if(feed.getLinkArray().length == 0){
                     link = feed.addNewLink();
                 }else{
                     link = feed.getLinkArray(0);
@@ -256,7 +256,7 @@ public class FeedCreateModifyServlet extends HttpServlet {
                 if(create){
                     category = feed.addNewCategory();
                 }else{
-                    if(feed.getCategoryArray() == null){
+                    if(feed.getCategoryArray().length == 0){
                         category = feed.addNewCategory(); 
                     }else{
                         category = feed.getCategoryArray(0);
@@ -277,7 +277,7 @@ public class FeedCreateModifyServlet extends HttpServlet {
                 if(create){
                     generator = feed.addNewGenerator();
                 }else{
-                    if(feed.getGeneratorArray() == null){
+                    if(feed.getGeneratorArray().length == 0){
                         generator = feed.addNewGenerator(); 
                     }else{
                         generator = feed.getGeneratorArray(0);
@@ -298,7 +298,7 @@ public class FeedCreateModifyServlet extends HttpServlet {
                 if(create){
                     atomIcon = feed.addNewIcon();
                 }else{
-                    if(feed.getIconArray() == null){
+                    if(feed.getIconArray().length == 0){
                         atomIcon = feed.addNewIcon();
                     }else{
                         atomIcon = feed.getIconArray(0);
@@ -313,7 +313,7 @@ public class FeedCreateModifyServlet extends HttpServlet {
                 if(create){
                     atomLogo = feed.addNewLogo();
                 }else{
-                    if(feed.getLogoArray() == null){
+                    if(feed.getLogoArray().length == 0){
                         atomLogo = feed.addNewLogo();
                     }else{
                         atomLogo = feed.getLogoArray(0);
@@ -328,7 +328,7 @@ public class FeedCreateModifyServlet extends HttpServlet {
                 if(create){
                     atomRights = feed.addNewRights();
                 }else{
-                    if(feed.getRightsArray() == null){
+                    if(feed.getRightsArray().length == 0){
                         atomRights = feed.addNewRights();
                     }else{
                         atomRights = feed.getRightsArray(0);
