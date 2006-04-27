@@ -323,16 +323,16 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();        
         out.println("<html><head><title>Atomsphere</title><link rel=\"stylesheet\" type=\"text/css\" href=\""+AdminServlet.cssURL+"\"/></head><body>");
-        if(fileExists){
-            out.println("<form method=\"post\" action=\"modify/feed/modify\" >");
-        }else{
-            out.println("<form method=\"post\" action=\"create/feed\" >");
-        }
+        out.println("<form method=\"post\" action=\"create/feed\" >");
+
         out.println("<table>");
         out.println("<tr><td><span style=\"color: green;\">*</span> = Required</td><td><span style=\"color: green;\">(*)</span> = Required for parent</td></tr>");
         
+        if(fileExists){//make the field read only
+        out.println("<tr><td>Feed Path &amp; Name:*</td><td><input type=\"text\" name=\"relativePath\" value=\""+relativePath+"\" readonly=\"readonly\" /></td><td><a href=\""+AdminServlet.atomSpecURL+"#element.feed\" >help</a></td></tr>");
+        }else{
         out.println("<tr><td>Feed Path &amp; Name:*</td><td><input type=\"text\" name=\"relativePath\" value=\""+relativePath+"\" /></td><td><a href=\""+AdminServlet.atomSpecURL+"#element.feed\" >help</a></td></tr>");
-        
+        }
         
         out.println("<tr><td>Title:<span style=\"color: green;\">*</span></td><td><input type=\"text\" name=\"feedTitle\" value=\""+title+"\" /></td></tr>");
         out.println("<tr><td>Sub Title:</td><td><input type=\"text\" name=\"feedSubTitle\" value=\""+subTitle+"\" /></td></tr>");
