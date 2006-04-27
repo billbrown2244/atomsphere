@@ -27,14 +27,7 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
 
     
     private static final long serialVersionUID = 6072923458769031495L;
-    private static String cssPath = null;
-    private static String specPath = null;
-    
-    public void init(ServletConfig config) throws ServletException {
-    super.init(config);
-        cssPath = config.getInitParameter("cssPath");
-        specPath = config.getInitParameter("specPath");
-    }
+
     
     public void doPost( HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
     {
@@ -191,13 +184,12 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
             hreflang = new String[links.length];
             linkTitle = new String[links.length];
             linkLen = new String[links.length];
-            String atomURL = "http://"+request.getServerName()+":8080/mediafeed";
             for(int i=0; i < links.length; i++){
                 if(links[i].getHref() == null){
                     href[i] = "";
                 }else{
                     href[i] = links[i].getHref().getDomNode().getFirstChild().getNodeValue();
-                    href[i] = href[i].substring(atomURL.length());
+                    href[i] = href[i].substring(AdminServlet.docRootURL.length());
                     if(href[i].startsWith("/")){
                         href[i] = href[i].substring(1);
                     }
@@ -276,7 +268,7 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
                 iconURL = "";
             }else{
                 iconURL = icons[0].getDomNode().getFirstChild().getNodeValue();
-                iconURL = iconURL.substring(atomURL.length());
+                iconURL = iconURL.substring(AdminServlet.docRootURL.length());
                 if(iconURL.startsWith("/")){
                     iconURL = iconURL.substring(1);
                 }
@@ -288,7 +280,7 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
                 logoURL = "";
             }else{
                 logoURL = logos[0].getDomNode().getFirstChild().getNodeValue();
-                logoURL = logoURL.substring(atomURL.length());
+                logoURL = logoURL.substring(AdminServlet.docRootURL.length());
                 if(logoURL.startsWith("/")){
                     logoURL = logoURL.substring(1);
                 }
@@ -332,7 +324,7 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
         //output the form.
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();        
-        out.println("<html><head><style>body{ background-color: #CCCCCC; font-size: 10px; font-family: verdana;}</style><title>atom feed</title></head><body>");
+        out.println("<html><head><title>Atomsphere</title><link rel=\"stylesheet\" type=\"text/css\" href=\""+AdminServlet.cssURL+"\"/></head><body>");
         if(fileExists){
             out.println("<form method=\"post\" action=\"modify/feed/modify\" >");
         }else{
@@ -341,7 +333,7 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
         out.println("<table>");
         out.println("<tr><td><span style=\"color: green;\">*</span> = Required</td><td><span style=\"color: green;\">(*)</span> = Required for parent</td></tr>");
         
-        out.println("<tr><td>Feed Path &amp; Name:*</td><td><input type=\"text\" name=\"relativePath\" value=\""+relativePath+"\" /></td><td><a href=\""+specPath+"#element.feed\" >help</a></td></tr>");
+        out.println("<tr><td>Feed Path &amp; Name:*</td><td><input type=\"text\" name=\"relativePath\" value=\""+relativePath+"\" /></td><td><a href=\""+AdminServlet.atomSpecURL+"#element.feed\" >help</a></td></tr>");
         
         
         out.println("<tr><td>Title:<span style=\"color: green;\">*</span></td><td><input type=\"text\" name=\"feedTitle\" value=\""+title+"\" /></td></tr>");

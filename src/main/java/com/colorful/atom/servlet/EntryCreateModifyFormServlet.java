@@ -16,14 +16,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
     
     
     private static final long serialVersionUID = -9222153218454275735L;
-    private static String cssPath = null;
-    private static String specPath = null;
-    
-    public void init(ServletConfig config) throws ServletException {
-    super.init(config);
-        cssPath = config.getInitParameter("cssPath");
-        specPath = config.getInitParameter("specPath");
-    }
+
     
     public void doPost( HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
     {
@@ -35,7 +28,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
         out.println("<table>");
         out.println("<tr><td>* = Required</td></tr>");
         
-        out.println("<tr><td>Document File Name:*</td><td><input type=\"text\" name=\"feedFileName\" value=\""+feedName+"\" /></td><td><a href=\""+specPath+"#element.feed\" >help</a></td></tr>");
+        //out.println("<tr><td>Document File Name:*</td><td><input type=\"text\" name=\"feedFileName\" value=\""+feedName+"\" /></td><td><a href=\""+specPath+"#element.feed\" >help</a></td></tr>");
         
         
         out.println("<tr><td>Title:*</td><td><input type=\"text\" name=\"feedTitle\" value=\"\" /></td></tr>");

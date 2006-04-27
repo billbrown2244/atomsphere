@@ -5,7 +5,7 @@
   http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.colorful</groupId>
-  <artifactId>mediafeed</artifactId>
+  <artifactId>atomsphere</artifactId>
   <packaging>war</packaging>
   <version>1.0.0</version>
   <description>Atom Feed Manager</description>

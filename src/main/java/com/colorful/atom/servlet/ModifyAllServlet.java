@@ -2,7 +2,6 @@ package com.colorful.atom.servlet;
 
 import java.beans.XMLDecoder;
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -58,7 +57,7 @@ public class ModifyAllServlet extends HttpServlet {
             
             response.setContentType("text/html");
             PrintWriter out = response.getWriter(); 
-            out.println("<html><head><title>atom feed</title></head><body>");
+            out.println("<html><head><title>Atomsphere</title><link rel=\"stylesheet\" type=\"text/css\" href=\""+AdminServlet.cssURL+"\"/></head><body>");
             out.println("<h3><form method=\"post\" action=\"../atom/create\">Header Data <input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"submit\" value=\"Modify\" /></form></h3>");
             out.println("<table>");
             out.println("<tr><td>Title</td><td>"+titles[0].xmlText()+"</td></tr>");
@@ -109,7 +108,7 @@ public class ModifyAllServlet extends HttpServlet {
             out.println("<table>");
             out.println("<tr><td>* = Required</td></tr>");
             
-            //out.println("<tr><td>Document File Name:*</td><td><input type=\"text\" name=\"feedFileName\" value=\""+feedName+"\" /></td><td><a href=\""+specPath+"#element.feed\" >help</a></td></tr>");
+            //out.println("<tr><td>Document File Name:*</td><td><input type=\"text\" name=\"feedFileName\" value=\""+feedName+"\" /></td><td><a href=\"""+specPath+"#element.feed\" >help</a></td></tr>");
             
             
             out.println("<tr><td>Title:*</td><td><input type=\"text\" name=\"feedTitle\" value=\"\" /></td></tr>");

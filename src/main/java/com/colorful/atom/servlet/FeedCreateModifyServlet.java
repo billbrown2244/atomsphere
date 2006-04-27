@@ -73,8 +73,7 @@ public class FeedCreateModifyServlet extends HttpServlet {
             feed.setLang("en-US");
             
             //add id (REQUIRED)
-            String atomURL = "http://"+request.getServerName()+":8080/mediafeed";
-            String atomID = atomURL+relativePath;
+            String atomID = AdminServlet.docRootURL+relativePath;
             feed.addNewId().set(XmlString.Factory.newValue(atomID));
             
             //add published (REQUIRED)
@@ -113,9 +112,9 @@ public class FeedCreateModifyServlet extends HttpServlet {
             //add self ref link (RECOMMENDED)
             Link link = feed.addNewLink();
             if(feedLinkPath.equals("/")){
-                link.setHref(XmlString.Factory.newValue(atomURL+relativePath));
+                link.setHref(XmlString.Factory.newValue(AdminServlet.docRootURL+relativePath));
             }else{
-                link.setHref(XmlString.Factory.newValue(atomURL+feedLinkPath));
+                link.setHref(XmlString.Factory.newValue(AdminServlet.docRootURL+feedLinkPath));
             }
             if(feedLinkRel != null && !feedLinkRel.equals("")){
                 link.setRel(XmlString.Factory.newValue(feedLinkRel));
@@ -159,12 +158,12 @@ public class FeedCreateModifyServlet extends HttpServlet {
             
             //add Icon (1h X 1v)
             if(feedIcon != null && !feedIcon.equals("/")){
-                feed.addNewIcon().set(XmlString.Factory.newValue(atomURL+feedIcon));
+                feed.addNewIcon().set(XmlString.Factory.newValue(AdminServlet.docRootURL+feedIcon));
             }
             
             //add Logo (2h X 1v)
             if(feedLogo != null && !feedLogo.equals("/")){
-                feed.addNewLogo().set(XmlString.Factory.newValue(atomURL+feedLogo));
+                feed.addNewLogo().set(XmlString.Factory.newValue(AdminServlet.docRootURL+feedLogo));
             }
             
             //add Rights
