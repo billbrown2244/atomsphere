@@ -75,9 +75,9 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
         
         //optional - can have multiple
         Category[] categories = null;
-        String[] term = null;
-        String[] schemeURI = null;
-        String[] label = null;
+        String[] categoryTerm = null;
+        String[] categorySchemeURI = null;
+        String[] categoryLabel = null;
         
         //optional
         Generator[] generators = null;
@@ -131,8 +131,6 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
                 if(authors[i].getEmailArray().length == 0){
                     authorEmail[i] = "";
                 }else{
-                    System.out.println("authorEmail[] len = "+authorEmail.length);
-                    System.out.println("authorEmailArray[] len = "+authors[i].getEmailArray().length);
                     authorEmail[i] = authors[i].getEmailArray()[0];
                 }
                 if(authors[i].getUriArray().length == 0){
@@ -221,24 +219,24 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
             
             //get the list of categories
             categories = feed.getCategoryArray();
-            term = new String[categories.length];
-            schemeURI = new String[categories.length];
-            label = new String[categories.length];
+            categoryTerm = new String[categories.length];
+            categorySchemeURI = new String[categories.length];
+            categoryLabel = new String[categories.length];
             for(int i=0; i < categories.length; i++){
                 if(categories[i].getTerm() == null){
-                    term[i] = "";
+                    categoryTerm[i] = "";
                 }else{
-                    term[i] = categories[i].getTerm().getDomNode().getFirstChild().getNodeValue();
+                    categoryTerm[i] = categories[i].getTerm().getDomNode().getFirstChild().getNodeValue();
                 }
                 if(categories[i].getScheme() == null){
-                    schemeURI[i] = "";
+                    categorySchemeURI[i] = "";
                 }else{
-                    schemeURI[i] = categories[i].getScheme().getDomNode().getFirstChild().getNodeValue();
+                    categorySchemeURI[i] = categories[i].getScheme().getDomNode().getFirstChild().getNodeValue();
                 }
                 if(categories[i].getLabel() == null){
-                    label[i] = "";
+                    categoryLabel[i] = "";
                 }else{
-                    label[i] = categories[i].getLabel().getDomNode().getFirstChild().getNodeValue();
+                    categoryLabel[i] = categories[i].getLabel().getDomNode().getFirstChild().getNodeValue();
                 }
             }
             
@@ -308,9 +306,9 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
             hreflang = new String[]{""};
             linkTitle = new String[]{""};
             linkLen = new String[]{""};
-            term = new String[]{""};
-            schemeURI = new String[]{""};
-            label = new String[]{""};
+            categoryTerm = new String[]{""};
+            categorySchemeURI = new String[]{""};
+            categoryLabel = new String[]{""};
             generatorStr = "";
             generatorURI = "";
             generatorVersion = "";
@@ -358,9 +356,9 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Length:</td><td><input type=\"text\" name=\"feedLinkLength\" value=\""+linkLen[0]+"\" /></td></tr>");
        
         out.println("<tr><td>Category:</td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Term:<span style=\"color: green;\">(*)</span></td><td><input type=\"text\" name=\"feedCategoryTerm\" value=\"\" /></td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Scheme URI:<br />&nbsp;&nbsp;&nbsp;(full URI required)</td><td><input type=\"text\" name=\"feedCategoryScheme\" value=\"\" /></td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Label</td><td><input type=\"text\" name=\"feedCategoryLabel\" value=\"\" /></td></tr>");
+        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Term:<span style=\"color: green;\">(*)</span></td><td><input type=\"text\" name=\"feedCategoryTerm\" value=\""+categoryTerm[0]+"\" /></td></tr>");
+        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Scheme URI:<br />&nbsp;&nbsp;&nbsp;(full URI required)</td><td><input type=\"text\" name=\"feedCategoryScheme\" value=\""+categorySchemeURI[0]+"\" /></td></tr>");
+        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Label</td><td><input type=\"text\" name=\"feedCategoryLabel\" value=\""+categoryLabel[0]+"\" /></td></tr>");
         
         out.println("<tr><td>Generator:</td><td><input type=\"text\" name=\"feedGenerator\" value=\""+generatorStr+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Generator URI:</td><td><input type=\"text\" name=\"feedGeneratorURI\" value=\""+generatorURI+"\" /></td></tr>");

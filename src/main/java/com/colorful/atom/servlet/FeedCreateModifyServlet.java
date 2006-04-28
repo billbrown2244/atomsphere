@@ -15,17 +15,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.XmlString;
-import org.w3.x2005.atom.AtomDateConstruct;
 import org.w3.x2005.atom.AtomPersonConstruct;
-import org.w3.x2005.atom.AtomTextConstruct;
 import org.w3.x2005.atom.FeedDocument;
 import org.w3.x2005.atom.CategoryDocument.Category;
+import org.w3.x2005.atom.EntryDocument.Entry;
 import org.w3.x2005.atom.FeedDocument.Feed;
 import org.w3.x2005.atom.GeneratorDocument.Generator;
-import org.w3.x2005.atom.IconDocument.Icon;
-import org.w3.x2005.atom.IdDocument.Id;
 import org.w3.x2005.atom.LinkDocument.Link;
-import org.w3.x2005.atom.LogoDocument.Logo;
 
 public class FeedCreateModifyServlet extends HttpServlet {
     
@@ -77,7 +73,7 @@ public class FeedCreateModifyServlet extends HttpServlet {
             
             FeedDocument feedDoc = null;
             Feed feed = null;
-            
+            Entry[] entries = null;
             if(create){
                 feedDoc = FeedDocument.Factory.newInstance();
                 feed = feedDoc.addNewFeed();
@@ -89,154 +85,66 @@ public class FeedCreateModifyServlet extends HttpServlet {
                 options.setLoadTrimTextBuffer();
                 feedDoc = FeedDocument.Factory.parse((String)atomConfig.get(relativePath),options);
                 feed = feedDoc.getFeed();
+                entries = feed.getEntryArray();
+                //create new feed document
+                feedDoc = FeedDocument.Factory.newInstance();
+                feed = feedDoc.addNewFeed();
             }
+            
             
             //set the language
             feed.setLang("en-US");
             
             //add id (REQUIRED)
             String atomIDStr = AdminServlet.docRootURL+relativePath;
-            Id atomID = null;
-            if(create){
-                atomID = feed.addNewId();
-            }else{
-                atomID = feed.getIdArray(0);
-            }
-            atomID.set(XmlString.Factory.newValue(atomIDStr));
-            
+            feed.addNewId().set(XmlString.Factory.newValue(atomIDStr));
             
             //add published (REQUIRED)
-            AtomDateConstruct atomDate = null;
-            if(create){
-                atomDate = feed.addNewUpdated();
-            }else{
-                atomDate = feed.getUpdatedArray(0);
-            }
-            atomDate.setCalendarValue(Calendar.getInstance());
+            feed.addNewUpdated().setCalendarValue(Calendar.getInstance());
             
             
             //add title (REQUIRED)
-            AtomTextConstruct atomTitle = null;
-            if(create){
-                atomTitle = feed.addNewTitle();
-            }else{
-                atomTitle = feed.getTitleArray(0);
-            }
-            atomTitle.set(XmlString.Factory.newValue(feedTitle));
+            feed.addNewTitle().set(XmlString.Factory.newValue(feedTitle));
             
             
             //add subtitle
             if(feedSubTitle != null && !feedSubTitle.equals("")){
-                AtomTextConstruct atomSubTitle = null;
-                if(create){
-                    atomSubTitle = feed.addNewSubtitle();
-                }else{
-                    if(feed.getSubtitleArray().length == 0){
-                        atomSubTitle = feed.addNewSubtitle();
-                    }else{
-                        atomSubTitle = feed.getSubtitleArray(0);
-                    }
-                }
-                atomSubTitle.set(XmlString.Factory.newValue(feedSubTitle));
+                feed.addNewSubtitle().set(XmlString.Factory.newValue(feedSubTitle));
             }
             
             
             //add author (REQUIRED)            
-            AtomPersonConstruct author = null;
-            if(create){
-                author = feed.addNewAuthor();
-                author.addName(feedAuthorName);
-            }else{
-                if(feed.getAuthorArray().length == 0){
-                    author = feed.addNewAuthor();
-                    author.addName(feedAuthorName);
-                }else{
-                    author = feed.getAuthorArray(0);
-                    author.setNameArray(0,feedAuthorName);
-                }
-            }            
+            AtomPersonConstruct author = feed.addNewAuthor();            
+            author.addName(feedAuthorName);
+            
             if(feedAuthorEmail != null && !feedAuthorEmail.equals("")){//(RECOMMENDED)
-                if(create){
-                    author.addEmail(feedAuthorEmail);
-                }else{
-                    if(author.getEmailArray().length == 0){
-                        author.addEmail(feedAuthorEmail);
-                    }else{
-                        author.setEmailArray(0,feedAuthorEmail);
-                    }
-                }
+                author.addEmail(feedAuthorEmail);
             }
             if(feedAuthorURI != null && !feedAuthorURI.equals("")){//(RECOMMENDED)
-                if(create){
-                    author.addUri(feedAuthorURI);
-                }else{
-                    if(author.getUriArray().length == 0){
-                        author.addUri(feedAuthorURI);
-                    }else{
-                        author.setUriArray(0,feedAuthorURI);
-                    }
-                }
+                author.addUri(feedAuthorURI);
             }
             
             
             //add Contributor
             if(feedContributorName != null && !feedContributorName.equals("")){
-                AtomPersonConstruct contributor = null;
-                if(create){
-                    contributor = feed.addNewContributor();
-                    contributor.addName(feedContributorName);
-                }else{
-                    if(feed.getContributorArray().length == 0){
-                        contributor = feed.addNewContributor();
-                        contributor.addName(feedContributorName);
-                    }else{
-                        contributor = feed.getContributorArray(0);
-                        contributor.setNameArray(0,feedContributorName);
-                    }
-                }
+                AtomPersonConstruct contributor = feed.addNewContributor();
+                contributor.addName(feedContributorName);
+                
                 if(feedContributorEmail != null && !feedContributorEmail.equals("")){//(RECOMMENDED)
-                    if(create){
                         contributor.addEmail(feedContributorEmail);
-                    }else{
-                        if(contributor.getEmailArray().length == 0){
-                            contributor.addEmail(feedContributorEmail);
-                        }else{
-                            contributor.setEmailArray(0,feedContributorEmail);
-                        }
-                    }
                 }
                 if(feedContributorURI != null && !feedContributorURI.equals("")){//(RECOMMENDED)
-                    if(create){
-                        contributor.addUri(feedContributorURI);
-                    }else{
-                        if(contributor.getUriArray().length == 0){
-                            contributor.addUri(feedContributorURI);
-                        }else{
-                            contributor.setUriArray(0,feedContributorURI);
-                        }
-                    }
+                    contributor.addUri(feedContributorURI);
                 }
             }
             
+            
             //add self ref link (RECOMMENDED)
-            Link link = null;
-            if(create){
-                link = feed.addNewLink();
-            }else{
-                if(feed.getLinkArray().length == 0){
-                    link = feed.addNewLink();
-                }else{
-                    link = feed.getLinkArray(0);
-                }
-            }
-            if(feedLinkPath.equals("/")){
-                link.setHref(XmlString.Factory.newValue(AdminServlet.docRootURL+relativePath));
-            }else{
-                link.setHref(XmlString.Factory.newValue(AdminServlet.docRootURL+feedLinkPath));
-            }
-            if(feedLinkRel != null && !feedLinkRel.equals("")){
-                link.setRel(XmlString.Factory.newValue(feedLinkRel));
-            }
+            if(feedLinkPath != null && !feedLinkPath.equals("/")){
+            Link link = feed.addNewLink();
+            link.setHref(XmlString.Factory.newValue(AdminServlet.docRootURL+feedLinkPath));
+            link.setRel(XmlString.Factory.newValue(feedLinkRel));
+           
             if(feedLinkMediaType != null && !feedLinkMediaType.equals("")){
                 link.setType(feedLinkMediaType);
             }
@@ -249,19 +157,12 @@ public class FeedCreateModifyServlet extends HttpServlet {
             if(feedLinkLength != null && !feedLinkLength.equals("")){
                 link.setLength(XmlString.Factory.newValue(feedLinkLength));
             }
+            }
+            
             
             //add Category
             if(feedCategoryTerm != null && !feedCategoryTerm.equals("")){
-                Category category = null;
-                if(create){
-                    category = feed.addNewCategory();
-                }else{
-                    if(feed.getCategoryArray().length == 0){
-                        category = feed.addNewCategory(); 
-                    }else{
-                        category = feed.getCategoryArray(0);
-                    }
-                }
+                Category category = feed.addNewCategory(); 
                 category.setTerm(XmlString.Factory.newValue(feedCategoryTerm));
                 if(feedCategoryScheme != null && !feedCategoryScheme.equals("")){
                     category.setScheme(XmlString.Factory.newValue(feedCategoryScheme));
@@ -270,19 +171,11 @@ public class FeedCreateModifyServlet extends HttpServlet {
                     category.setLabel(XmlString.Factory.newValue(feedCategoryLabel));
                 }
             }
+                
             
             //add Generator
             if(feedGenerator != null && !feedGenerator.equals("")){
-                Generator generator = null;
-                if(create){
-                    generator = feed.addNewGenerator();
-                }else{
-                    if(feed.getGeneratorArray().length == 0){
-                        generator = feed.addNewGenerator(); 
-                    }else{
-                        generator = feed.getGeneratorArray(0);
-                    }
-                }
+                Generator generator = feed.addNewGenerator();
                 generator.set(XmlString.Factory.newValue(feedGenerator));
                 if(feedGeneratorURI != null && !feedGeneratorURI.equals("")){
                     generator.setUri(XmlString.Factory.newValue(feedGeneratorURI));
@@ -294,48 +187,24 @@ public class FeedCreateModifyServlet extends HttpServlet {
             
             //add Icon (1h X 1v)
             if(feedIcon != null && !feedIcon.equals("/")){
-                Icon atomIcon = null;
-                if(create){
-                    atomIcon = feed.addNewIcon();
-                }else{
-                    if(feed.getIconArray().length == 0){
-                        atomIcon = feed.addNewIcon();
-                    }else{
-                        atomIcon = feed.getIconArray(0);
-                    }
-                }
-                atomIcon.set(XmlString.Factory.newValue(AdminServlet.docRootURL+feedIcon));
+                feed.addNewIcon().set(XmlString.Factory.newValue(AdminServlet.docRootURL+feedIcon));
             }
             
             //add Logo (2h X 1v)
             if(feedLogo != null && !feedLogo.equals("/")){
-                Logo atomLogo = null;
-                if(create){
-                    atomLogo = feed.addNewLogo();
-                }else{
-                    if(feed.getLogoArray().length == 0){
-                        atomLogo = feed.addNewLogo();
-                    }else{
-                        atomLogo = feed.getLogoArray(0);
-                    }
-                }
-                atomLogo.set(XmlString.Factory.newValue(AdminServlet.docRootURL+feedLogo));
+                feed.addNewLogo().set(XmlString.Factory.newValue(AdminServlet.docRootURL+feedLogo));
             }
             
             //add Rights
             if(feedRights != null && !feedRights.equals("")){
-                AtomTextConstruct atomRights = null;
-                if(create){
-                    atomRights = feed.addNewRights();
-                }else{
-                    if(feed.getRightsArray().length == 0){
-                        atomRights = feed.addNewRights();
-                    }else{
-                        atomRights = feed.getRightsArray(0);
-                    }
-                }
-                atomRights.set(XmlString.Factory.newValue(feedRights));
+                feed.addNewRights().set(XmlString.Factory.newValue(feedRights));
             }
+            
+            //finally set the entries of the modified feed if there are any.
+            if(!create){
+                feed.setEntryArray(entries);
+            }
+            
             
             
             //create the file and write it to its destination             
