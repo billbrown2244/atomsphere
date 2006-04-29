@@ -2,6 +2,7 @@ package com.colorful.atom.servlet;
 
 import java.beans.XMLDecoder;
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -209,7 +210,10 @@ public class FeedCreateModifyServlet extends HttpServlet {
             
             //create the file and write it to its destination             
             AdminServlet.writeFeedToConfigFile(relativePath,feedDoc.toString());
-            FileWriter feedFile = new FileWriter(getServletContext().getRealPath(relativePath));
+            String fullPath = getServletContext().getRealPath(relativePath);
+            File makeDirs = new File(fullPath.substring(0,fullPath.lastIndexOf("\\")));
+            makeDirs.mkdirs();            
+            FileWriter feedFile = new FileWriter(fullPath);
             feedFile.write(feedDoc.toString());
             feedFile.flush();
             feedFile.close();

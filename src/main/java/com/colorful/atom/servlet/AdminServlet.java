@@ -50,8 +50,11 @@ public class AdminServlet extends HttpServlet {
 				
 				Iterator feeds = atomConfig.keySet().iterator();
 				while(feeds.hasNext()){
-					String relativePath = (String)feeds.next(); 
-					FileWriter feedFile = new FileWriter(getServletContext().getRealPath(relativePath));
+					String relativePath = (String)feeds.next();
+                    String fullPath = getServletContext().getRealPath(relativePath);
+                    File makeDirs = new File(fullPath.substring(0,fullPath.lastIndexOf("\\")));
+                    makeDirs.mkdirs();            
+                    FileWriter feedFile = new FileWriter(fullPath);
 					XmlOptions options = new XmlOptions();
 					options.setLoadStripWhitespace();
 					options.setLoadTrimTextBuffer();
