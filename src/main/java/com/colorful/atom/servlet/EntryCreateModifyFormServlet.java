@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.w3.x2005.atom.CategoryDocument.Category;
+
 
 public class EntryCreateModifyFormServlet extends HttpServlet {
     
@@ -21,6 +23,42 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
     public void doPost( HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
     {
         String entryTitle = request.getParameter("entryTitle");
+        
+        
+        
+        
+        
+//      optional - can have multiple
+        Category[] categories = null;
+        String[] categoryTerm = null;
+        String[] categorySchemeURI = null;
+        String[] categoryLabel = null;
+        
+//      get the list of categories
+        categories = feed.getCategoryArray();
+        categoryTerm = new String[categories.length];
+        categorySchemeURI = new String[categories.length];
+        categoryLabel = new String[categories.length];
+        for(int i=0; i < categories.length; i++){
+            if(categories[i].getTerm() == null){
+                categoryTerm[i] = "";
+            }else{
+                categoryTerm[i] = categories[i].getTerm().getDomNode().getFirstChild().getNodeValue();
+            }
+            if(categories[i].getScheme() == null){
+                categorySchemeURI[i] = "";
+            }else{
+                categorySchemeURI[i] = categories[i].getScheme().getDomNode().getFirstChild().getNodeValue();
+            }
+            if(categories[i].getLabel() == null){
+                categoryLabel[i] = "";
+            }else{
+                categoryLabel[i] = categories[i].getLabel().getDomNode().getFirstChild().getNodeValue();
+            }
+        }
+        
+        
+        
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();        
         out.println("<html><head><title>Atomsphere</title><link rel=\"stylesheet\" type=\"text/css\" href=\""+AdminServlet.cssURL+"\"/></head><body>");
