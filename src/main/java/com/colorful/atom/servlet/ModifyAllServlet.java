@@ -108,7 +108,7 @@ public class ModifyAllServlet extends HttpServlet {
             
             //create new entry;
             out.println("<form method=\"post\" action=\"modify/create\" >");
-            out.println("<table><tr><td>Entry Title:</td><td><input name=\"entryTitle\" value=\"\" /></td><td><input type=\"submit\" value=\"New\" /></td></tr></table>");
+            out.println("<table><tr><td>Entry Title:</td><td><input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input name=\"entryTitle\" value=\"\" /></td><td><input type=\"submit\" value=\"New\" /></td></tr></table>");
             out.println("</form>");
             
             //list existing entries for that feed.

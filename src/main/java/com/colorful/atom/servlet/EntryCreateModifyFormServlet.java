@@ -54,6 +54,8 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
             String[] categorySchemeURI = null;
             String[] categoryLabel = null;
             
+            //determines the type of feed we are working with; new or existing
+            String formType = null;
             
             //open the file to get the feeds.
             XmlOptions options = new XmlOptions();
@@ -74,8 +76,9 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
                 }
             }
             if(entryExists){
+                formType = "modify";
                 //get the list of authors
-                authors = feed.getAuthorArray();
+                authors = entry.getAuthorArray();
                 authorName = new String[authors.length];
                 authorEmail = new String[authors.length];
                 authorURI = new String[authors.length];
@@ -94,7 +97,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
                 }
                 
                 //get the list of contributors
-                contributors = feed.getContributorArray();
+                contributors = entry.getContributorArray();
                 if(contributors.length == 0){
                     contributorName = new String[1];
                     contributorEmail = new String[1];
@@ -148,9 +151,38 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
                         categoryLabel[i] = categories[i].getLabel().getDomNode().getFirstChild().getNodeValue();
                     }
                 }
+                
+                
+                //get the content
+                //entry.get
+                
             }else{
-        
+                formType = "create";
             entry = Entry.Factory.newInstance();
+            
+           // title = "";
+           // subTitle = "";
+            authorName = new String[]{""};
+            authorEmail = new String[]{""};
+            authorURI = new String[]{""};
+            contributorName = new String[]{""};
+            contributorEmail = new String[]{""};
+            contributorURI = new String[]{""};
+         //   href = new String[]{""};
+         //   rel = new String[]{""};
+          //  type = new String[]{""};
+         //   hreflang = new String[]{""};
+         //   linkTitle = new String[]{""};
+         //   linkLen = new String[]{""};
+            categoryTerm = new String[]{""};
+            categorySchemeURI = new String[]{""};
+            categoryLabel = new String[]{""};
+         //   generatorStr = "";
+         //   generatorURI = "";
+         //   generatorVersion = "";
+         //   iconURL = "";
+         //   logoURL = "";
+        //    rightsStr = "";
             }
         
 
@@ -165,11 +197,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
         out.println("<tr><td><span style=\"color: green;\">*</span> = Required</td><td><span style=\"color: green;\">(*)</span> = Required for parent</td></tr>");
         
         
-        out.println("<tr><td>Title:*</td><td><input type=\"text\" name=\"feedTitle\" value=\"\" /></td></tr>");
-        
-        out.println("<tr><td>Title:<span style=\"color: green;\">*</span></td><td><input type=\"text\" name=\"feedTitle\" value=\""+title+"\" /></td></tr>");
-        out.println("<tr><td>Sub Title:</td><td><input type=\"text\" name=\"feedSubTitle\" value=\""+subTitle+"\" /></td></tr>");
-        
+        out.println("<tr><td>Title:*</td><td><input type=\"text\" name=\"feedTitle\" value=\""+entryTitle+"\" /></td></tr>");
         
         out.println("<tr><td>Author:<span style=\"color: green;\">*</span></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author Name:<span style=\"color: green;\">(*)</span></td><td><input type=\"text\" name=\"feedAuthorName\" value=\""+authorName[0]+"\" /></td></tr>");
@@ -181,7 +209,16 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor Name:<span style=\"color: green;\">(*)</td><td><input type=\"text\" name=\"feedContributorName\" value=\""+contributorName[0]+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor Email:</td><td><input type=\"text\" name=\"feedContributorEmail\" value=\""+contributorEmail[0]+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor URI:</td><td><input type=\"text\" name=\"feedContributorURI\" value=\""+contributorURI[0]+"\" /></td></tr>");
+ 
+        out.println("<tr><td>Category:</td></tr>");
+        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Term:<span style=\"color: green;\">(*)</span></td><td><input type=\"text\" name=\"feedCategoryTerm\" value=\""+categoryTerm[0]+"\" /></td></tr>");
+        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Scheme URI:<br />&nbsp;&nbsp;&nbsp;(full URI required)</td><td><input type=\"text\" name=\"feedCategoryScheme\" value=\""+categorySchemeURI[0]+"\" /></td></tr>");
+        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Label</td><td><input type=\"text\" name=\"feedCategoryLabel\" value=\""+categoryLabel[0]+"\" /></td></tr>");
         
+        out.println("<tr><td>Content:</td></tr>");
+        out.println("<tr><td><select name=\"contentType\"><option value=\"*\">:::Select:::</option>text<option></option>html<option></option>html<option></option></select></td></tr>");
+        
+      /*
         out.println("<tr><td>Link:<span style=\"color: green;\">*</span></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Path &amp; Name:<span style=\"color: green;\">(*)</span><br />(Leave blank for root)</td><td><input type=\"text\" name=\"feedLinkPath\" value=\""+href[0]+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Rel:<span style=\"color: green;\">(*)</span><br />(ex. self)</td><td><input type=\"text\" name=\"feedLinkRel\" value=\""+rel[0]+"\" /></td></tr>");
@@ -190,11 +227,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Title:</td><td><input type=\"text\" name=\"feedLinkTitle\" value=\""+linkTitle[0]+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Length:</td><td><input type=\"text\" name=\"feedLinkLength\" value=\""+linkLen[0]+"\" /></td></tr>");
        
-        out.println("<tr><td>Category:</td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Term:<span style=\"color: green;\">(*)</span></td><td><input type=\"text\" name=\"feedCategoryTerm\" value=\""+categoryTerm[0]+"\" /></td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Scheme URI:<br />&nbsp;&nbsp;&nbsp;(full URI required)</td><td><input type=\"text\" name=\"feedCategoryScheme\" value=\""+categorySchemeURI[0]+"\" /></td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Label</td><td><input type=\"text\" name=\"feedCategoryLabel\" value=\""+categoryLabel[0]+"\" /></td></tr>");
-        
+
         out.println("<tr><td>Generator:</td><td><input type=\"text\" name=\"feedGenerator\" value=\""+generatorStr+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Generator URI:</td><td><input type=\"text\" name=\"feedGeneratorURI\" value=\""+generatorURI+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Generator Version:</td><td><input type=\"text\" name=\"feedGeneratorVersion\" value=\""+generatorVersion+"\" /></td></tr>");
@@ -204,6 +237,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
         out.println("<tr><td>Logo URI:(2hz to 1vt)</td><td><input type=\"text\" name=\"feedLogo\" value=\""+logoURL+"\" /></td></tr>");
         
         out.println("<tr><td>Rights:</td><td><input type=\"text\" name=\"feedRights\" value=\""+rightsStr+"\" /></td></tr>");
+        */
         
         if(entryExists){
             out.println("<tr><td><input type=\"submit\" value=\"Modify Entry\" /></tr>");
