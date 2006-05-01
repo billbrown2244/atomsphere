@@ -1,5 +1,6 @@
 package com.colorful.atom.servlet;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -9,7 +10,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.xmlbeans.XmlOptions;
+import org.w3.x2005.atom.AtomPersonConstruct;
+import org.w3.x2005.atom.AtomTextConstruct;
+import org.w3.x2005.atom.FeedDocument;
 import org.w3.x2005.atom.CategoryDocument.Category;
+import org.w3.x2005.atom.EntryDocument.Entry;
+import org.w3.x2005.atom.FeedDocument.Feed;
 
 
 public class EntryCreateModifyFormServlet extends HttpServlet {
@@ -23,39 +30,130 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
     public void doPost( HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
     {
         String entryTitle = request.getParameter("entryTitle");
+        String relativePath = request.getParameter("relativePath");
+        boolean entryExists = false; 
         
+        try{
+            
+            //required 
+            //can have multiple
+            AtomPersonConstruct[] authors = null;
+            String[] authorName = null;
+            String[] authorEmail = null;
+            String[] authorURI = null;
+            
+            //optional - can have multiple
+            AtomPersonConstruct[] contributors = null;
+            String[] contributorName = null;
+            String[] contributorEmail = null;
+            String[] contributorURI = null;
         
-        
-        
-        
-//      optional - can have multiple
-        Category[] categories = null;
-        String[] categoryTerm = null;
-        String[] categorySchemeURI = null;
-        String[] categoryLabel = null;
-        
-//      get the list of categories
-        categories = feed.getCategoryArray();
-        categoryTerm = new String[categories.length];
-        categorySchemeURI = new String[categories.length];
-        categoryLabel = new String[categories.length];
-        for(int i=0; i < categories.length; i++){
-            if(categories[i].getTerm() == null){
-                categoryTerm[i] = "";
-            }else{
-                categoryTerm[i] = categories[i].getTerm().getDomNode().getFirstChild().getNodeValue();
+            //optional - can have multiple
+            Category[] categories = null;
+            String[] categoryTerm = null;
+            String[] categorySchemeURI = null;
+            String[] categoryLabel = null;
+            
+            
+            //open the file to get the feeds.
+            XmlOptions options = new XmlOptions();
+            options.setLoadStripWhitespace();
+            options.setLoadTrimTextBuffer();
+            FeedDocument feedDoc = FeedDocument.Factory.parse(new File(getServletContext().getRealPath(relativePath)),options);
+            Feed feed = feedDoc.getFeed();
+            Entry[] entries = feed.getEntryArray();
+            Entry entry = null;
+            int entryIndex = 0;
+            for(int i=0; i < entries.length; i++){
+                AtomTextConstruct title = entries[i].getTitleArray(0);
+                String titleVal = title.getDomNode().getFirstChild().getNodeValue();
+                if(titleVal.equals(entryTitle)){
+                    entryIndex = i;
+                    entryExists = true;
+                    entry = entries[i];
+                }
             }
-            if(categories[i].getScheme() == null){
-                categorySchemeURI[i] = "";
+            if(entryExists){
+                //get the list of authors
+                authors = feed.getAuthorArray();
+                authorName = new String[authors.length];
+                authorEmail = new String[authors.length];
+                authorURI = new String[authors.length];
+                for(int i=0; i < authors.length; i++){
+                    authorName[i] = authors[i].getNameArray()[0];
+                    if(authors[i].getEmailArray().length == 0){
+                        authorEmail[i] = "";
+                    }else{
+                        authorEmail[i] = authors[i].getEmailArray()[0];
+                    }
+                    if(authors[i].getUriArray().length == 0){
+                        authorURI[i] = "";
+                    }else{
+                        authorURI[i] = authors[i].getUriArray()[0];
+                    }
+                }
+                
+                //get the list of contributors
+                contributors = feed.getContributorArray();
+                if(contributors.length == 0){
+                    contributorName = new String[1];
+                    contributorEmail = new String[1];
+                    contributorURI = new String[1];
+                    contributorName[0] = "";
+                    contributorEmail[0] = "";
+                    contributorURI[0] = "";
+                }else{
+                contributorName = new String[contributors.length];
+                contributorEmail = new String[contributors.length];
+                contributorURI = new String[contributors.length];
+                }
+                for(int i=0; i < contributors.length; i++){
+                    if(contributors[i].getNameArray().length == 0){
+                        contributorName[i] = "";
+                    }else{
+                        contributorName[i] = contributors[i].getNameArray()[0];
+                    }
+                    if(contributors[i].getEmailArray().length == 0){
+                        contributorEmail[i] = "";
+                    }else{
+                        contributorEmail[i] = contributors[i].getEmailArray()[0];
+                    }
+                    if(contributors[i].getUriArray().length == 0){
+                        contributorURI[i] = "";
+                    }else{
+                        contributorURI[i] = contributors[i].getUriArray()[0];
+                    }
+                }
+                
+                
+                //get the list of categories
+                categories = entry.getCategoryArray();
+                categoryTerm = new String[categories.length];
+                categorySchemeURI = new String[categories.length];
+                categoryLabel = new String[categories.length];
+                for(int i=0; i < categories.length; i++){
+                    if(categories[i].getTerm() == null){
+                        categoryTerm[i] = "";
+                    }else{
+                        categoryTerm[i] = categories[i].getTerm().getDomNode().getFirstChild().getNodeValue();
+                    }
+                    if(categories[i].getScheme() == null){
+                        categorySchemeURI[i] = "";
+                    }else{
+                        categorySchemeURI[i] = categories[i].getScheme().getDomNode().getFirstChild().getNodeValue();
+                    }
+                    if(categories[i].getLabel() == null){
+                        categoryLabel[i] = "";
+                    }else{
+                        categoryLabel[i] = categories[i].getLabel().getDomNode().getFirstChild().getNodeValue();
+                    }
+                }
             }else{
-                categorySchemeURI[i] = categories[i].getScheme().getDomNode().getFirstChild().getNodeValue();
+        
+            entry = Entry.Factory.newInstance();
             }
-            if(categories[i].getLabel() == null){
-                categoryLabel[i] = "";
-            }else{
-                categoryLabel[i] = categories[i].getLabel().getDomNode().getFirstChild().getNodeValue();
-            }
-        }
+        
+
         
         
         
@@ -107,10 +205,10 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
         
         out.println("<tr><td>Rights:</td><td><input type=\"text\" name=\"feedRights\" value=\""+rightsStr+"\" /></td></tr>");
         
-        if(fileExists){
-            out.println("<tr><td><input type=\"submit\" value=\"Modify Feed\" /></tr>");
+        if(entryExists){
+            out.println("<tr><td><input type=\"submit\" value=\"Modify Entry\" /></tr>");
         }else{
-            out.println("<tr><td><input type=\"submit\" value=\"Create Feed\" /></tr>");
+            out.println("<tr><td><input type=\"submit\" value=\"Create Entry\" /></tr>");
         }
         out.println("</table>");
         out.println("<input type=\"hidden\" name=\"formType\" value=\""+formType+"\" />");
@@ -119,6 +217,10 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
         
         out.flush();
         out.close();
+        
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
     }
     
