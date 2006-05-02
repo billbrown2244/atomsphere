@@ -197,7 +197,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
         out.println("<tr><td><span style=\"color: green;\">*</span> = Required</td><td><span style=\"color: green;\">(*)</span> = Required for parent</td></tr>");
         
         
-        out.println("<tr><td>Title:*</td><td><input type=\"text\" name=\"feedTitle\" value=\""+entryTitle+"\" /></td></tr>");
+        out.println("<tr><td>Title:<span style=\"color: green;\">*</span></td><td><input type=\"text\" name=\"feedTitle\" value=\""+entryTitle+"\" /></td></tr>");
         
         out.println("<tr><td>Author:<span style=\"color: green;\">*</span></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author Name:<span style=\"color: green;\">(*)</span></td><td><input type=\"text\" name=\"feedAuthorName\" value=\""+authorName[0]+"\" /></td></tr>");
@@ -216,8 +216,8 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Label</td><td><input type=\"text\" name=\"feedCategoryLabel\" value=\""+categoryLabel[0]+"\" /></td></tr>");
         
         out.println("<tr><td>Content:</td></tr>");
-        out.println("<tr><td><select name=\"contentType\"><option value=\"*\">:::Select:::</option>text<option></option>html<option></option>html<option></option></select></td></tr>");
-        
+        out.println("<tr><td><select name=\"contentType\" onchange=\"document.getElementsByName('otherContentType')[0].value='';\"><option value=\"*\">:::Select:::</option><option>text</option><option>html</option><option>xhtml</option><option>other</option></select>&nbsp;&nbsp;<input type=\"text\" name=\"otherContentType\" size=\"7\" value=\"for other\" /></td></tr>");
+        out.println("<tr><td><textarea name=\"content\" rows=\"6\" cols=\"40\"></textarea>");
       /*
         out.println("<tr><td>Link:<span style=\"color: green;\">*</span></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Path &amp; Name:<span style=\"color: green;\">(*)</span><br />(Leave blank for root)</td><td><input type=\"text\" name=\"feedLinkPath\" value=\""+href[0]+"\" /></td></tr>");
