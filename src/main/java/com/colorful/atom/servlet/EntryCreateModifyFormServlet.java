@@ -3,6 +3,8 @@ package com.colorful.atom.servlet;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -234,7 +236,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
             entry = Entry.Factory.newInstance();
             
            // title = "";
-           // subTitle = "";
+            summaryStr = "";
             authorName = new String[]{""};
             authorEmail = new String[]{""};
             authorURI = new String[]{""};
@@ -265,7 +267,11 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
         
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();        
-        out.println("<html><head><title>Atomsphere</title><link rel=\"stylesheet\" type=\"text/css\" href=\""+AdminServlet.cssURL+"\"/></head><body>");
+        out.println("<html><head><title>Atomsphere</title><link rel=\"stylesheet\" type=\"text/css\" href=\""+AdminServlet.cssURL+"\"/>");
+        ResourceBundle bundle = ResourceBundle.getBundle("atomsphere",Locale.getDefault(),this.getClass().getClassLoader());
+        out.println(bundle.getString("javascript"));
+        
+        out.println("</head><body>");
         out.println("<form method=\"post\" action=\"create/entry\" >");
         out.println("<table>");
         out.println("<tr><td><span style=\"color: green;\">*</span> = Required</td><td><span style=\"color: green;\">(*)</span> = Required for parent</td></tr>");
@@ -273,26 +279,22 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
         
         out.println("<tr><td>Title:<span style=\"color: green;\">*</span></td><td><input type=\"text\" name=\"entryTitle\" value=\""+entryTitle+"\" /></td></tr>");
         
+        out.println("<tr><td>Summary:</td><td><input type=\"text\" name=\"entrySummary\" value=\""+summaryStr+"\" /></td></tr>");
+        
+        out.println("<tr><td>Content:<span style=\"color: green;\">*</span></td></tr>");
+        out.println("<tr><td><select id=\"contentType\" name=\"contentType\" onchange=\"showInput()\"><option value=\"*\">:::Select:::</option><option>text</option><option>html</option><option>xhtml</option><option>link</option><option>other</option></select>&nbsp;&nbsp;<input type=\"text\" name=\"otherContentType\" size=\"7\" value=\"for other\" /></td></tr>");
+        out.println("<tr><td><div id=\"inputArea\"></div>");
+        
         out.println("<tr><td>Author:<span style=\"color: green;\">*</span></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author Name:<span style=\"color: green;\">(*)</span></td><td><input type=\"text\" name=\"entryAuthorName\" value=\""+authorName[0]+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author Email:</td><td><input type=\"text\" name=\"entryAuthorEmail\" value=\""+authorEmail[0]+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author URI:</td><td><input type=\"text\" name=\"entryAuthorURI\" value=\""+authorURI[0]+"\" /></td></tr>");
-        
-        
+
         out.println("<tr><td>Contributor:</td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor Name:<span style=\"color: green;\">(*)</td><td><input type=\"text\" name=\"entryContributorName\" value=\""+contributorName[0]+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor Email:</td><td><input type=\"text\" name=\"entryContributorEmail\" value=\""+contributorEmail[0]+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor URI:</td><td><input type=\"text\" name=\"entryContributorURI\" value=\""+contributorURI[0]+"\" /></td></tr>");
  
-        out.println("<tr><td>Category:</td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Term:<span style=\"color: green;\">(*)</span></td><td><input type=\"text\" name=\"entryCategoryTerm\" value=\""+categoryTerm[0]+"\" /></td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Scheme URI:<br />&nbsp;&nbsp;&nbsp;(full URI required)</td><td><input type=\"text\" name=\"entryCategoryScheme\" value=\""+categorySchemeURI[0]+"\" /></td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Label</td><td><input type=\"text\" name=\"entryCategoryLabel\" value=\""+categoryLabel[0]+"\" /></td></tr>");
-        
-        out.println("<tr><td>Content:</td></tr>");
-        out.println("<tr><td><select name=\"contentType\" onchange=\"document.getElementsByName('otherContentType')[0].value='';\"><option value=\"*\">:::Select:::</option><option>text</option><option>html</option><option>xhtml</option><option>link</option><option>other</option></select>&nbsp;&nbsp;<input type=\"text\" name=\"otherContentType\" size=\"7\" value=\"for other\" /></td></tr>");
-        out.println("<tr><td><textarea name=\"content\" rows=\"6\" cols=\"40\"></textarea>");
-      
         out.println("<tr><td>Link:<span style=\"color: green;\">*</span></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Path &amp; Name:<span style=\"color: green;\">(*)</span><br />(Leave blank for root)</td><td><input type=\"text\" name=\"entryLinkPath\" value=\""+href[0]+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Rel:<span style=\"color: green;\">(*)</span><br />(ex. self)</td><td><input type=\"text\" name=\"entryLinkRel\" value=\""+rel[0]+"\" /></td></tr>");
@@ -300,10 +302,15 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Language:<br />(ex. en-US)</td><td><input type=\"text\" name=\"entryLinkLanguage\" value=\""+hreflang[0]+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Title:</td><td><input type=\"text\" name=\"entryLinkTitle\" value=\""+linkTitle[0]+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Length:</td><td><input type=\"text\" name=\"entryLinkLength\" value=\""+linkLen[0]+"\" /></td></tr>");
-       
+      
+        out.println("<tr><td>Category:</td></tr>");
+        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Term:<span style=\"color: green;\">(*)</span></td><td><input type=\"text\" name=\"entryCategoryTerm\" value=\""+categoryTerm[0]+"\" /></td></tr>");
+        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Scheme URI:<br />&nbsp;&nbsp;&nbsp;(full URI required)</td><td><input type=\"text\" name=\"entryCategoryScheme\" value=\""+categorySchemeURI[0]+"\" /></td></tr>");
+        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Label</td><td><input type=\"text\" name=\"entryCategoryLabel\" value=\""+categoryLabel[0]+"\" /></td></tr>");
+         
         out.println("<tr><td>Rights:</td><td><input type=\"text\" name=\"entryRights\" value=\""+rightsStr+"\" /></td></tr>");
         
-        out.println("<tr><td>Rights:</td><td><input type=\"text\" name=\"entrySummary\" value=\""+summaryStr+"\" /></td></tr>");
+        
         /*
         out.println("<tr><td>Generator:</td><td><input type=\"text\" name=\"entryGenerator\" value=\""+generatorStr+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Generator URI:</td><td><input type=\"text\" name=\"entryGeneratorURI\" value=\""+generatorURI+"\" /></td></tr>");
