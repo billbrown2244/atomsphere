@@ -253,12 +253,6 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
             categorySchemeURI = new String[]{""};
             categoryLabel = new String[]{""};
             rightsStr = "";
-         //   generatorStr = "";
-         //   generatorURI = "";
-         //   generatorVersion = "";
-         //   iconURL = "";
-         //   logoURL = "";
-        //    
             }
         
 
@@ -282,7 +276,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
         out.println("<tr><td>Summary:</td><td><input type=\"text\" name=\"entrySummary\" value=\""+summaryStr+"\" /></td></tr>");
         
         out.println("<tr><td>Content:<span style=\"color: green;\">*</span></td></tr>");
-        out.println("<tr><td><select id=\"contentType\" name=\"contentType\" onchange=\"showInput()\"><option value=\"*\">:::Select:::</option><option>text</option><option>html</option><option>xhtml</option><option>link</option><option>other</option></select>&nbsp;&nbsp;<input type=\"text\" name=\"otherContentType\" size=\"7\" value=\"for other\" /></td></tr>");
+        out.println("<tr><td><select id=\"contentType\" name=\"contentType\" onchange=\"showInput()\"><option value=\"*\">:::Select:::</option><option>text</option><option>html</option><option>xhtml</option><option>link</option><option>other</option></select></td></tr>");
         out.println("<tr><td><div id=\"inputArea\"></div>");
         
         out.println("<tr><td>Author:<span style=\"color: green;\">*</span></td></tr>");
