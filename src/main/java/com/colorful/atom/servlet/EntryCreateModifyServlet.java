@@ -28,13 +28,25 @@ public class EntryCreateModifyServlet extends HttpServlet {
     //Send an email to the user with their login and password 
     public void doPost( HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
     { 
-        String atomAuthor = request.getParameter("atomAuthor");
-        String atomAuthorEmail = request.getParameter("atomAuthorEmail");
-        String atomId = request.getParameter("atomId");
-        String atomTitle = request.getParameter("atomTitle");
-        String docLocation = request.getParameter("docLocation");
+        String entryTitle = request.getParameter("entryTitle");
+        String entrySummary = request.getParameter("entrySummary");
+        String contentType = request.getParameter("contentType");
+        String entryAuthorName = request.getParameter("entryAuthorName");
+        String entryAuthorEmail = request.getParameter("entryAuthorEmail");
+        String entryAuthorURI = request.getParameter("entryAuthorURI");
+        String entryContributorName = request.getParameter("entryContributorName");
+        String entryContributorEmail = request.getParameter("entryContributorEmail");
+        String entryContributorURI = request.getParameter("entryContributorURI");
+       /*
+        String entryAuthorEmail = request.getParameter("entryAuthorEmail");
+        String entryAuthorEmail = request.getParameter("entryAuthorEmail");
+        String entryAuthorEmail = request.getParameter("entryAuthorEmail");
+        String entryAuthorEmail = request.getParameter("entryAuthorEmail");
+        String entryAuthorEmail = request.getParameter("entryAuthorEmail");
+        String entryAuthorEmail = request.getParameter("entryAuthorEmail");
+        String entryAuthorEmail = request.getParameter("entryAuthorEmail");
         //String atomUpdated = Calendar.getInstance().toString(); //required
-
+        */
    
         try{
             
