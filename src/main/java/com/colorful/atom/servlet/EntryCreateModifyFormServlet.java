@@ -305,24 +305,13 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
         out.println("<tr><td>Rights:</td><td><input type=\"text\" name=\"entryRights\" value=\""+rightsStr+"\" /></td></tr>");
         
         
-        /*
-        out.println("<tr><td>Generator:</td><td><input type=\"text\" name=\"entryGenerator\" value=\""+generatorStr+"\" /></td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Generator URI:</td><td><input type=\"text\" name=\"entryGeneratorURI\" value=\""+generatorURI+"\" /></td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Generator Version:</td><td><input type=\"text\" name=\"entryGeneratorVersion\" value=\""+generatorVersion+"\" /></td></tr>");
-        
-        out.println("<tr><td>Icon URI:(1hz to 1vt)</td><td><input type=\"text\" name=\"entryIcon\" value=\""+iconURL+"\" /></td></tr>");
-        
-        out.println("<tr><td>Logo URI:(2hz to 1vt)</td><td><input type=\"text\" name=\"entryLogo\" value=\""+logoURL+"\" /></td></tr>");
-        
-        
-        */
-        
         if(entryExists){
             out.println("<tr><td><input type=\"submit\" value=\"Modify Entry\" /></tr>");
         }else{
             out.println("<tr><td><input type=\"submit\" value=\"Create Entry\" /></tr>");
         }
         out.println("</table>");
+        out.println("<input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" />");
         out.println("<input type=\"hidden\" name=\"formType\" value=\""+formType+"\" />");
         out.println("</form>");
         out.println("</body></html>");

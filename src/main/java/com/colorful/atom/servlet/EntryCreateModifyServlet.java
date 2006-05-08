@@ -37,16 +37,22 @@ public class EntryCreateModifyServlet extends HttpServlet {
         String entryContributorName = request.getParameter("entryContributorName");
         String entryContributorEmail = request.getParameter("entryContributorEmail");
         String entryContributorURI = request.getParameter("entryContributorURI");
-       /*
-        String entryAuthorEmail = request.getParameter("entryAuthorEmail");
-        String entryAuthorEmail = request.getParameter("entryAuthorEmail");
-        String entryAuthorEmail = request.getParameter("entryAuthorEmail");
-        String entryAuthorEmail = request.getParameter("entryAuthorEmail");
-        String entryAuthorEmail = request.getParameter("entryAuthorEmail");
-        String entryAuthorEmail = request.getParameter("entryAuthorEmail");
-        String entryAuthorEmail = request.getParameter("entryAuthorEmail");
-        //String atomUpdated = Calendar.getInstance().toString(); //required
-        */
+        String entryLinkPath = "/"+request.getParameter("entryLinkPath").trim();
+        String entryLinkRel = request.getParameter("entryLinkRel").trim();
+        String entryLinkMediaType = request.getParameter("entryLinkMediaType").trim();
+        String entryLinkLanguage = request.getParameter("entryLinkLanguage").trim();
+        String entryLinkTitle = request.getParameter("entryLinkTitle").trim();
+        String entryLinkLength = request.getParameter("entryLinkLength").trim();
+        String entryCategoryTerm = request.getParameter("entryCategoryTerm").trim();
+        String entryCategoryScheme = request.getParameter("entryCategoryScheme").trim();
+        String entryCategoryLabel = request.getParameter("entryCategoryLabel").trim();
+        String entryRights = request.getParameter("entryRights").trim();
+        String relativePath = request.getParameter("relativePath").trim();
+        String formType = request.getParameter("formType").trim();
+        boolean create = false;
+        if(formType.equals("create")){
+            create = true;
+        }
    
         try{
             
@@ -55,26 +61,31 @@ public class EntryCreateModifyServlet extends HttpServlet {
         //feedDoc.setFeed(feed);
         Feed feed = feedDoc.addNewFeed();
         
-        //add id
-        feed.addNewId().set(XmlString.Factory.newValue(atomId));
-       
-        //add link
-        Link selfLink = feed.addNewLink();
-        selfLink.addNewHref().set(XmlString.Factory.newValue(docLocation));
-        selfLink.addNewRel().set(XmlString.Factory.newValue("self"));
+        
+//      set the language
+        feed.setLang("en-US");
+        
+        //add id (REQUIRED)
+        String atomIDStr = AdminServlet.docRootURL+relativePath;
+        feed.addNewId().set(XmlString.Factory.newValue(atomIDStr));
+        
+        //add published (REQUIRED)
+        feed.addNewUpdated().setCalendarValue(Calendar.getInstance());
+        
+
         
         //add title
         //AtomTextConstruct title = feed.addNewTitle();
         //title.set(XmlString.Factory.newValue(atomTitle));
         //or
-        feed.addNewTitle().set(XmlString.Factory.newValue(atomTitle));
+        //feed.addNewTitle().set(XmlString.Factory.newValue(atomTitle));
 
         feed.addNewSubtitle().set(XmlString.Factory.newValue("this is the subtitle."));
         
         //add author
         AtomPersonConstruct author = feed.addNewAuthor();
-        author.addName(atomAuthor);
-        author.addEmail(atomAuthorEmail);
+        //author.addName(atomAuthor);
+        //author.addEmail(atomAuthorEmail);
         
         
         //add published
