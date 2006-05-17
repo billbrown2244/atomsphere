@@ -1,15 +1,21 @@
 package com.colorful.atom.servlet;
 
+import java.beans.XMLDecoder;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.XmlString;
 import org.w3.x2005.atom.AtomPersonConstruct;
+import org.w3.x2005.atom.EntryDocument;
 import org.w3.x2005.atom.FeedDocument;
 import org.w3.x2005.atom.EntryDocument.Entry;
 import org.w3.x2005.atom.FeedDocument.Feed;
@@ -55,15 +61,39 @@ public class EntryCreateModifyServlet extends HttpServlet {
         }
    
         try{
+
+            XMLDecoder decode = new XMLDecoder(new BufferedInputStream(new FileInputStream(AdminServlet.atomConfigFile)));
+            Map atomConfig = (Map)decode.readObject();
+            XmlOptions options = new XmlOptions();
+            options.setLoadStripWhitespace();
+            options.setLoadTrimTextBuffer();
+            FeedDocument feedDoc = FeedDocument.Factory.parse((String)atomConfig.get(relativePath),options);
+            Feed feed = feedDoc.getFeed();
+            Entry[] entries = feed.getEntryArray();
+            Entry entry = null;
             
-        FeedDocument feedDoc = FeedDocument.Factory.newInstance();
-        //Feed feed = FeedDocument.Feed.Factory.newInstance();
-        //feedDoc.setFeed(feed);
-        Feed feed = feedDoc.addNewFeed();
-        
-        
-//      set the language
-        feed.setLang("en-US");
+            if(create){
+                //create a new entry from the existing feed
+                entry = feed.addNewEntry();
+            }else{
+                //create a new entry outside of the existing feed. 
+                entry = EntryDocument.Factory.newInstance().addNewEntry();
+            }
+                //remove the old entry and create a new one. 
+                Entry[] temp = new Entry[entries.length];
+                for(int i=0; i < temp.length; i++){
+                    if(entries[i].getTitleArray()[0].getDomNode().getFirstChild().getNodeValue().equals(entryTitle)){
+                       i--; 
+                    }else{
+                        temp[i] = entries[i];
+                    }
+                }
+                
+                entries[0] = entry;
+                for(int i=0; i < temp.length -1; i++){
+                    entries[i+1] = temp[i];
+                }
+            }
         
         //add id (REQUIRED)
         String atomIDStr = AdminServlet.docRootURL+relativePath;
@@ -96,7 +126,7 @@ public class EntryCreateModifyServlet extends HttpServlet {
         //feed.addNewLink().setHref(XmlString.Factory.newValue("www.testcompany.org"));
         //Entry entry = feed.addNewEntry();
         
-        
+        feed.setEntryArray(entries);
         System.out.println(feedDoc.toString());
     } catch (Exception e){
         e.printStackTrace();
