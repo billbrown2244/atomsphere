@@ -6,6 +6,7 @@ namespace atom = "http://www.w3.org/2005/Atom"
 namespace xhtml = "http://www.w3.org/1999/xhtml"
 namespace s = "http://www.ascc.net/xml/schematron"
 namespace local = ""
+namespace xsd = "http://www.w3.org/2001/XMLSchema"
 
 start = atomFeed | atomEntry
 
