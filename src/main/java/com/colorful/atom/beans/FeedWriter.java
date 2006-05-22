@@ -205,13 +205,31 @@ public class FeedWriter{
     }
 
     private void writeLogo(XMLStreamWriter writer, Logo logo) throws Exception{
-        // TODO Auto-generated method stub
-        
+        writer.writeStartElement("logo");
+        if(logo.getAttributes() != null){
+            Iterator feedAttrs = logo.getAttributes().iterator();
+            //write the attributes
+            while(feedAttrs.hasNext()){
+                Attribute feedAttr = (Attribute)feedAttrs.next();
+                writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
+            }
+        }
+        writer.writeCharacters(logo.getUri());
+        writer.writeEndElement();        
     }
 
     private void writeIcon(XMLStreamWriter writer, Icon icon) throws Exception{
-        // TODO Auto-generated method stub
-        
+        writer.writeStartElement("icon");
+        if(icon.getAttributes() != null){
+            Iterator feedAttrs = icon.getAttributes().iterator();
+            //write the attributes
+            while(feedAttrs.hasNext()){
+                Attribute feedAttr = (Attribute)feedAttrs.next();
+                writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
+            }
+        }
+        writer.writeCharacters(icon.getUri());
+        writer.writeEndElement(); 
     }
 
     private void writeCategories(XMLStreamWriter writer, List categories) throws Exception{

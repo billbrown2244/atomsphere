@@ -59,11 +59,11 @@ public class FeedDoc {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader reader =
         inputFactory.createXMLStreamReader(new java.io.FileInputStream("inFile.xml"));
-        Feed feed = new FeedReader().readFeed(reader);
-        
+        return new FeedReader().readFeed(reader);
     }
     
     public static void main(String[] args){
+        try{
         Feed feed = new Feed(atomBase,lang_en);
         
         Generator generator = new Generator("http://www.colorfulsoftware.com/projects/atomsphere","1.0.0");
@@ -88,7 +88,20 @@ public class FeedDoc {
         contributor.setEmail(new Email("info@maddog.net"));
         feed.addContributor(contributor);
         
+        Rights rights = new Rights("GPL 1.0");
+        feed.setRights(rights);
+        
+        Icon icon = new Icon("http://host/images/icon.png");
+        feed.setIcon(icon);
+        
+        Logo logo = new Logo();
+        logo.setUri("http://host/images/logo.png");
+        feed.setLogo(logo);
+        
         FeedDoc.writeFeedDoc("out.xml",feed);
         System.out.println("done");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }

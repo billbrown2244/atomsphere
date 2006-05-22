@@ -1,6 +1,5 @@
 package com.colorful.atom.beans;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class Icon {
@@ -8,6 +7,14 @@ public class Icon {
     private List attributes = null;
     private String uri = null;
 
+    public Icon(){
+        this.uri = "";
+    }
+    
+    public Icon(String uri){
+        this.uri = uri;
+    }
+    
     public String getUri() {
         return uri;
     }
@@ -26,18 +33,4 @@ public class Icon {
         this.attributes = attributes;
     }
 
-    public String toXML(){
-        StringBuffer buff = new StringBuffer();
-        buff.append("<icon ");
-        if(attributes != null){
-        Iterator attrs = attributes.iterator();
-        while(attrs.hasNext()){
-            buff.append(((Attribute)attrs.next()).toXML());
-        }
-        }
-        buff.append(">");
-        buff.append(uri);
-        buff.append("</icon>\n");       
-        return buff.toString();
-    }
 }

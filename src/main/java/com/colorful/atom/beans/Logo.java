@@ -4,9 +4,24 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Logo {
+    /*
+     * atomLogo = element atom:logo {
+   atomCommonAttributes,
+   (atomUri)
+}
+     */
+    
     private List attributes = null;
     private String uri = null;
 
+    public Logo(){
+        this.uri = "";
+    }
+    
+    public Logo(String uri){
+        this.uri = uri;
+    }
+    
     public String getUri() {
         return uri;
     }
@@ -23,20 +38,5 @@ public class Logo {
 
     public void setAttributes(List attributes) {
         this.attributes = attributes;
-    }
-
-    public String toXML(){
-        StringBuffer buff = new StringBuffer();
-        buff.append("<logo ");
-        if(attributes != null){
-        Iterator attrs = attributes.iterator();
-        while(attrs.hasNext()){
-            buff.append(((Attribute)attrs.next()).toXML());
-        }
-        }
-        buff.append(">");
-        buff.append(uri);
-        buff.append("</logo>\n");       
-        return buff.toString();
     }
 }
