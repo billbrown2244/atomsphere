@@ -1,5 +1,6 @@
 package com.colorful.atom.beans;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Content {
@@ -42,9 +43,15 @@ atomOutOfLineContent =
     public static final String atomInlineOtherContent = "atomInlineOtherContent";
     public static final String atomOutOfLineContent = "atomOutOfLineContent";
 
-    List attributes;
-    Attribute type;
-    Attribute source;
-    String content;
+    private List attributes = null;
+    private Attribute type = null;
+    private Attribute source = null;
+    private String content = null;
     
+    public void addAttribute(Attribute attribute){
+        if(this.attributes == null){
+            this.attributes = new LinkedList();
+        }
+        this.attributes.add(attribute);
+    }
 }

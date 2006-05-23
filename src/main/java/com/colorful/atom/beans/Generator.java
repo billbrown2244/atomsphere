@@ -24,6 +24,13 @@ public class Generator {
     public void setAttributes(List attributes) {
         this.attributes = attributes;
     }
+    
+    public void addAttribute(Attribute attribute){
+        if(this.attributes == null){
+            this.attributes = new LinkedList();
+        }
+        this.attributes.add(attribute);
+    }
 
     public String getText() {
         return text;

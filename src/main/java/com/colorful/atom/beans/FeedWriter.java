@@ -188,7 +188,7 @@ public class FeedWriter{
             writer.writeEndElement();
         }
     }
-
+    
     private void writeRights(XMLStreamWriter writer, Rights rights) throws Exception{
         writer.writeStartElement("rights");
         if(rights.getAttributes() != null){
@@ -203,7 +203,7 @@ public class FeedWriter{
         writer.writeEndElement();
         
     }
-
+    
     private void writeLogo(XMLStreamWriter writer, Logo logo) throws Exception{
         writer.writeStartElement("logo");
         if(logo.getAttributes() != null){
@@ -217,7 +217,7 @@ public class FeedWriter{
         writer.writeCharacters(logo.getUri());
         writer.writeEndElement();        
     }
-
+    
     private void writeIcon(XMLStreamWriter writer, Icon icon) throws Exception{
         writer.writeStartElement("icon");
         if(icon.getAttributes() != null){
@@ -231,19 +231,59 @@ public class FeedWriter{
         writer.writeCharacters(icon.getUri());
         writer.writeEndElement(); 
     }
-
+    
     private void writeCategories(XMLStreamWriter writer, List categories) throws Exception{
-        // TODO Auto-generated method stub
         
+        Iterator categoryList = categories.iterator();
+        while(categoryList.hasNext()){
+            Category category = (Category)categoryList.next();
+            writer.writeEmptyElement("category");                        
+            if(category.getAttributes() != null){
+                Iterator feedAttrs = category.getAttributes().iterator();
+                //write the attributes
+                while(feedAttrs.hasNext()){
+                    Attribute feedAttr = (Attribute)feedAttrs.next();
+                    writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
+                }
+            }
+        }
     }
-
+    
     private void writeLinks(XMLStreamWriter writer, List links) throws Exception{
-        // TODO Auto-generated method stub
         
+        Iterator linksList = links.iterator();
+        while(linksList.hasNext()){
+            Link link = (Link)linksList.next();
+            writer.writeEmptyElement("link");
+            if(link.getAttributes() != null){
+                Iterator feedAttrs = link.getAttributes().iterator();
+                //write the attributes
+                while(feedAttrs.hasNext()){
+                    Attribute feedAttr = (Attribute)feedAttrs.next();
+                    writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
+                }
+            }
+        }
     }
     
     private void writeExtensions(XMLStreamWriter writer,List extensions) throws Exception{
-//      TODO Auto-generated method stub
+        Iterator extensionsList = extensions.iterator();
+        while(extensionsList.hasNext()){
+            Extension extension = (Extension)extensionsList.next();
+            writer.writeStartElement(extension.getElementName());
+            if(extension.getAttributes() != null){
+                Iterator feedAttrs = extension.getAttributes().iterator();
+                //write the attributes
+                while(feedAttrs.hasNext()){
+                    Attribute feedAttr = (Attribute)feedAttrs.next();
+                    writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
+                }
+            }
+            if(extension.getContent() != null){
+                writer.writeCharacters(extension.getContent());
+            }
+            writer.writeEndElement();
+        }
     }
     
     private void writeEntries(XMLStreamWriter writer, Map entries) throws Exception{

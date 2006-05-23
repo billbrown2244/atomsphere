@@ -43,7 +43,7 @@ public class Feed {
     private Map entries = null;
     
     public Feed(){
-
+        attributes = new LinkedList();
     }
     
     public Feed(Attribute attribute){
@@ -177,17 +177,46 @@ public class Feed {
         this.updated = updated;
     }
 
-    public void addAuthor(Author author) {
-        if(authors == null){
-            authors = new LinkedList();
+    public void addAttribute(Attribute attribute){
+        if(this.attributes == null){
+            this.attributes = new LinkedList();
         }
-        authors.add(author);        
+        this.attributes.add(attribute);
+    }
+    
+    public void addAuthor(Author author) {
+        if(this.authors == null){
+            this.authors = new LinkedList();
+        }
+        this.authors.add(author);        
     }
 
     public void addContributor(Contributor contributor) {
-        if(contributors == null){
-            contributors = new LinkedList();
+        if(this.contributors == null){
+            this.contributors = new LinkedList();
         }
-        contributors.add(contributor);
+        this.contributors.add(contributor);
+    }
+
+    public void addCategory(Category category) {
+        if(this.categories == null){
+            this.categories = new LinkedList();
+        }
+        this.categories.add(category);
+    }
+    
+    public void addLink(Link link) {
+        if(this.links == null){
+            this.links = new LinkedList();
+        }
+        this.links.add(link);
+    }
+
+    public void addExtension(Extension extension) {
+        if(this.extensions == null){
+            this.extensions = new LinkedList();
+        }
+        this.extensions.add(extension);
+        
     }
 }

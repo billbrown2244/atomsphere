@@ -1,6 +1,7 @@
 package com.colorful.atom.beans;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Logo {
@@ -38,5 +39,12 @@ public class Logo {
 
     public void setAttributes(List attributes) {
         this.attributes = attributes;
+    }
+    
+    public void addAttribute(Attribute attribute){
+        if(this.attributes == null){
+            this.attributes = new LinkedList();
+        }
+        this.attributes.add(attribute);
     }
 }

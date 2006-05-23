@@ -18,6 +18,8 @@ import org.w3.x2005.atom.AtomPersonConstruct;
 import org.w3.x2005.atom.EntryDocument;
 import org.w3.x2005.atom.FeedDocument;
 import org.w3.x2005.atom.EntryDocument.Entry;
+import org.w3.x2005.atom.EntryDocument.Entry.TextContent;
+import org.w3.x2005.atom.EntryDocument.Entry.TextContent.Type.Enum;
 import org.w3.x2005.atom.FeedDocument.Feed;
 import org.w3.x2005.atom.LinkDocument.Link;
 
@@ -37,6 +39,7 @@ public class EntryCreateModifyServlet extends HttpServlet {
         String entryTitle = request.getParameter("entryTitle");
         String entrySummary = request.getParameter("entrySummary");
         String contentType = request.getParameter("contentType");
+        String content = request.getParameter("content");
         String entryAuthorName = request.getParameter("entryAuthorName");
         String entryAuthorEmail = request.getParameter("entryAuthorEmail");
         String entryAuthorURI = request.getParameter("entryAuthorURI");
@@ -72,14 +75,21 @@ public class EntryCreateModifyServlet extends HttpServlet {
             Entry[] entries = feed.getEntryArray();
             Entry entry = null;
             
+            
             if(create){
                 //create a new entry from the existing feed
                 entry = feed.addNewEntry();
+                Entry[] temp = new Entry[entries.length+1];
+                temp[0] = entry;
+                for(int i=0; i < entries.length; i++){
+                    temp[i+1] = entries[i];
+                }
+                entries = temp;
             }else{
                 //create a new entry outside of the existing feed. 
                 entry = EntryDocument.Factory.newInstance().addNewEntry();
-            }
-                //remove the old entry and create a new one. 
+            
+                //remove the old entry and create a new one as the first on the list. 
                 Entry[] temp = new Entry[entries.length];
                 for(int i=0; i < temp.length; i++){
                     if(entries[i].getTitleArray()[0].getDomNode().getFirstChild().getNodeValue().equals(entryTitle)){
@@ -88,50 +98,37 @@ public class EntryCreateModifyServlet extends HttpServlet {
                         temp[i] = entries[i];
                     }
                 }
-                
                 entries[0] = entry;
                 for(int i=0; i < temp.length -1; i++){
                     entries[i+1] = temp[i];
                 }
+                
             }
+            
         
-        //add id (REQUIRED)
-        String atomIDStr = AdminServlet.docRootURL+relativePath;
-        feed.addNewId().set(XmlString.Factory.newValue(atomIDStr));
+            //add id (REQUIRED)
+            String atomIDStr = AdminServlet.docRootURL+relativePath;
+            entry.addNewId().set(XmlString.Factory.newValue(atomIDStr+"#"+entryTitle));
+            
+            //add published (REQUIRED)
+            entry.addNewUpdated().setCalendarValue(Calendar.getInstance());
+            
+            //add title (REQUIRED)
+            entry.addNewTitle().set(XmlString.Factory.newValue(entryTitle));
         
-        //add published (REQUIRED)
-        feed.addNewUpdated().setCalendarValue(Calendar.getInstance());
-        
-
-        
-        //add title
-        //AtomTextConstruct title = feed.addNewTitle();
-        //title.set(XmlString.Factory.newValue(atomTitle));
-        //or
-        //feed.addNewTitle().set(XmlString.Factory.newValue(atomTitle));
-
-        feed.addNewSubtitle().set(XmlString.Factory.newValue("this is the subtitle."));
-        
-        //add author
-        AtomPersonConstruct author = feed.addNewAuthor();
-        //author.addName(atomAuthor);
-        //author.addEmail(atomAuthorEmail);
-        
-        
-        //add published
-        feed.addNewUpdated().setCalendarValue(Calendar.getInstance());
-        
-        Entry entry = feed.addNewEntry();
-        
-        //feed.addNewLink().setHref(XmlString.Factory.newValue("www.testcompany.org"));
-        //Entry entry = feed.addNewEntry();
-        
+            //add the content
+            if(contentType.equals("text")||contentType.equals("html")){
+                TextContent text = entry.addNewTextContent();
+                text.setType(TextContent.Type.Enum.forString(contentType));
+                text.set(XmlString.Factory.newValue(content));
+            }
+            
         feed.setEntryArray(entries);
         System.out.println(feedDoc.toString());
-    } catch (Exception e){
-        e.printStackTrace();
-    }
-        
-        
+    
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        response.sendRedirect("../../modify?relativePath="+relativePath);
     }
 }

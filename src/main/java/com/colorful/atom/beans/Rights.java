@@ -1,5 +1,6 @@
 package com.colorful.atom.beans;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Rights {
@@ -22,6 +23,10 @@ private AtomTextConstruct rights = null;
 
     public void setAttributes(List attributes) {
         this.rights.setAttributes(attributes);
+    }
+    
+    public void addAttribute(Attribute attribute){
+        this.rights.addAttribute(attribute);
     }
 
     public String getText() {

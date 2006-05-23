@@ -38,7 +38,7 @@ public class FeedDoc {
      * 
      * 
       */
-    public static final Attribute atomBase = new Attribute("xml:base","http://www.w3.org/2005/Atom");
+    public static final Attribute atomBase = new Attribute("xmlns","http://www.w3.org/2005/Atom");
     public static final Attribute lang_en = new Attribute("xml:lang","en-US");
     static{
         
@@ -88,7 +88,8 @@ public class FeedDoc {
         contributor.setEmail(new Email("info@maddog.net"));
         feed.addContributor(contributor);
         
-        Rights rights = new Rights("GPL 1.0");
+        Rights rights = new Rights();
+        rights.setText("GPL 1.0");
         feed.setRights(rights);
         
         Icon icon = new Icon("http://host/images/icon.png");
@@ -97,6 +98,17 @@ public class FeedDoc {
         Logo logo = new Logo();
         logo.setUri("http://host/images/logo.png");
         feed.setLogo(logo);
+        
+        Category category = new Category("music","http://mtv.com/genere","music");
+        feed.addCategory(category);
+        
+        Link link = new Link("http://www.yahoo.com","self");
+        link.setHreflang(new Attribute("hreflang","en-US"));
+        feed.addLink(link);
+        
+        Extension extension = new Extension("http://www.w3.org/1999/xhtml","div");
+        extension.setContent("<span style='color:red;'>hello there</span>");
+        feed.addExtension(extension);
         
         FeedDoc.writeFeedDoc("out.xml",feed);
         System.out.println("done");

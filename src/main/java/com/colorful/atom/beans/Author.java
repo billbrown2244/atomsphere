@@ -1,5 +1,6 @@
 package com.colorful.atom.beans;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Author {
@@ -32,6 +33,11 @@ public class Author {
     public void setAttributes(List attributes) {
         this.author.setAttributes(attributes);
     }
+    
+    public void addAttribute(Attribute attribute){
+        this.author.addAttribute(attribute);
+    }
+    
     public Email getEmail() {
         return this.author.getEmail();
     }
