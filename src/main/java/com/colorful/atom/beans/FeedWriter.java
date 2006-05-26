@@ -9,21 +9,27 @@ import javax.xml.stream.XMLStreamWriter;
 
 public class FeedWriter{
     
-    public void writeFeed(XMLStreamWriter writer, Feed feed) throws Exception{
-        //open the element
+    public void writeFeed(XMLStreamWriter writer, Feed feed,String encoding) throws Exception{
+        
+        //write the xml header.
+        writer.writeStartDocument(encoding,"1.0");
+        
+        //open the feed element
         writer.writeStartElement("feed");
-        Iterator feedAttrs = feed.getAttributes().iterator();
-        //write the attributes
-        while(feedAttrs.hasNext()){
-            Attribute feedAttr = (Attribute)feedAttrs.next();
-            writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
+        if(feed.getAttributes() != null){
+            Iterator feedAttrs = feed.getAttributes().iterator();
+            //write the attributes
+            while(feedAttrs.hasNext()){
+                Attribute feedAttr = (Attribute)feedAttrs.next();
+                writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
+            }
         }
-        //write the generator
-        writeGenerator(writer,feed.getGenerator());
         //write the id
         writeID(writer,feed.getId());
         //write the updated date
         writeUpdated(writer,feed.getUpdated());
+        //write the generator
+        writeGenerator(writer,feed.getGenerator());
         //write the title
         writeTitle(writer,feed.getTitle());
         //write the author
@@ -287,7 +293,189 @@ public class FeedWriter{
     }
     
     private void writeEntries(XMLStreamWriter writer, Map entries) throws Exception{
-        // TODO Auto-generated method stub
+        
+        Iterator entryItr = entries.keySet().iterator();
+        while(entryItr.hasNext()){
+            Entry entry = (Entry)entries.get(entryItr.next());
+            writer.writeStartElement("entry");
+            if(entry.getAttributes() != null){
+                Iterator entryAttrs = entry.getAttributes().iterator();
+                //write the attributes
+                while(entryAttrs.hasNext()){
+                    Attribute entryAttr = (Attribute)entryAttrs.next();
+                    writer.writeAttribute(entryAttr.getName(),entryAttr.getValue());
+                }
+            }
+            //write the id
+            writeID(writer,entry.getId());
+            //write the updated date
+            writeUpdated(writer,entry.getUpdated());
+            //write the title
+            writeTitle(writer,entry.getTitle());
+            //write the source
+            if(entry.getSource() != null){
+                writeSource(writer,entry.getSource());
+            }
+            //write the author
+            if(entry.getAuthors() != null){
+                writeAuthors(writer,entry.getAuthors());
+            }
+            //write the contributors
+            if(entry.getContributors() != null){
+                writeContributors(writer,entry.getContributors());
+            }
+            //write the links
+            if(entry.getLinks() != null){
+                writeLinks(writer,entry.getLinks());
+            }
+            //write the categories
+            if(entry.getCategories() != null){
+                writeCategories(writer,entry.getCategories());
+            }
+            //write the published date
+            if(entry.getPublished() != null){
+                writePublished(writer,entry.getPublished());
+            }
+            //write the rights
+            if(entry.getRights() != null){
+                writeRights(writer,entry.getRights());
+            }
+            //write the extensions
+            if(entry.getExtensions() != null){
+                writeExtensions(writer,entry.getExtensions());
+            }
+            //write the summary
+            if(entry.getSummary() != null){
+                writeSummary(writer,entry.getSummary());
+            }
+            //write the content
+            if(entry.getContent() != null){
+                writeContent(writer,entry.getContent());
+            }
+        }
+    }
+
+    private void writeSummary(XMLStreamWriter writer, Summary summary) throws Exception{
+        writer.writeStartElement("summary");
+        if(summary.getAttributes() != null){
+            Iterator feedAttrs = summary.getAttributes().iterator();
+            //write the attributes
+            while(feedAttrs.hasNext()){
+                Attribute feedAttr = (Attribute)feedAttrs.next();
+                writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
+            }
+        }
+        writer.writeCharacters(summary.getText());
+        writer.writeEndElement();
+    }
+
+    private void writePublished(XMLStreamWriter writer, Published published) throws Exception{
+        writer.writeStartElement("published");
+        writer.writeCharacters(published.getText());
+        writer.writeEndElement();
+    }
+
+    private void writeContent(XMLStreamWriter writer, Content content) throws Exception{
+        //look for the src attribute to see if we need to build
+        //an empty tag.
+        boolean externalLink = false;
+        if(content.getAttributes() != null){
+            Iterator contentAttrs = content.getAttributes().iterator();
+
+            
+            while(contentAttrs.hasNext()){
+                Attribute contentAttr = (Attribute)contentAttrs.next();
+                if(contentAttr.getName().equals("src")){
+                    externalLink = true;
+                    writer.writeEmptyElement("content");
+                    break;
+                }
+                
+            }
+            if(!externalLink){
+                writer.writeStartElement("content");
+            }
+            
+            //write the attributes
+            contentAttrs = content.getAttributes().iterator();
+            while(contentAttrs.hasNext()){
+                Attribute contentAttr = (Attribute)contentAttrs.next();
+                writer.writeAttribute(contentAttr.getName(),contentAttr.getValue());
+            }
+            
+        }else{//there are not attributes so assume default 'text';
+            writer.writeStartElement("content");
+        }
+        if(content.getContent() != null){
+            writer.writeCharacters(content.getContent());
+        }
+        if(!externalLink){
+            writer.writeEndElement();
+        }
+    }
+    
+    private void writeSource(XMLStreamWriter writer, Source source) throws Exception{
+        
+        //open the source element
+        writer.writeStartElement("source");
+        if(source.getAttributes() != null){
+            Iterator sourceAttrs = source.getAttributes().iterator();
+            //write the attributes
+            while(sourceAttrs.hasNext()){
+                Attribute sourceAttr = (Attribute)sourceAttrs.next();
+                writer.writeAttribute(sourceAttr.getName(),sourceAttr.getValue());
+            }
+        }
+        //write the id
+        if(source.getId() != null){
+            writeID(writer,source.getId());
+        }
+        //write the updated date
+        if(source.getUpdated() != null){
+            writeUpdated(writer,source.getUpdated());
+        }
+        //write the generator
+        if(source.getGenerator() != null){
+            writeGenerator(writer,source.getGenerator());
+        }
+        //write the title
+        if(source.getTitle() != null){
+            writeTitle(writer,source.getTitle());
+        }
+        //write the author
+        if(source.getAuthors() != null){
+            writeAuthors(writer,source.getAuthors());
+        }
+        //write the contributors
+        if(source.getContributors() != null){
+            writeContributors(writer,source.getContributors());
+        }
+        //write the links
+        if(source.getLinks() != null){
+            writeLinks(writer,source.getLinks());
+        }
+        //write the categories
+        if(source.getCategories() != null){
+            writeCategories(writer,source.getCategories());
+        }
+        //write the icon
+        if(source.getIcon() != null){
+            writeIcon(writer,source.getIcon());
+        }
+        //write the logo
+        if(source.getLogo() != null){
+            writeLogo(writer,source.getLogo());
+        }
+        //write the rights
+        if(source.getRights() != null){
+            writeRights(writer,source.getRights());
+        }
+        //write the extensions
+        if(source.getExtensions() != null){
+            writeExtensions(writer,source.getExtensions());
+        }
+        
+        writer.writeEndElement();
         
     }
 }

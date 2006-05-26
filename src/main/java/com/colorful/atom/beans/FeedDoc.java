@@ -40,18 +40,20 @@ public class FeedDoc {
       */
     public static final Attribute atomBase = new Attribute("xmlns","http://www.w3.org/2005/Atom");
     public static final Attribute lang_en = new Attribute("xml:lang","en-US");
-    static{
-        
-        
-    }
+    public static final String default_encoding = "utf-8";
+
     //writes files to the output doc. 
-    public static void writeFeedDoc(String outFile,Feed feed) throws Exception{
-        
+    public static void writeFeedDoc(String outFile,Feed feed,String encoding) throws Exception{
+        try{
             XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-            XMLStreamWriter writer = new IndentingXMLStreamWriter(outputFactory.createXMLStreamWriter(new java.io.FileOutputStream(outFile)));
-            new FeedWriter().writeFeed(writer,feed);
+            XMLStreamWriter writer = new IndentingXMLStreamWriter(outputFactory.createXMLStreamWriter(new java.io.FileOutputStream(outFile),encoding));
+            new FeedWriter().writeFeed(writer,feed,encoding);
             writer.flush();
             writer.close();
+        }catch(Exception e){
+            System.out.println("error creating xml file.");
+            e.printStackTrace();
+        }
     }
     
     public static Feed readFeedDoc(String inFile) throws Exception{
@@ -110,7 +112,7 @@ public class FeedDoc {
         extension.setContent("<span style='color:red;'>hello there</span>");
         feed.addExtension(extension);
         
-        FeedDoc.writeFeedDoc("out.xml",feed);
+        FeedDoc.writeFeedDoc("out.xml",feed,default_encoding);
         System.out.println("done");
         }catch(Exception e){
             e.printStackTrace();
