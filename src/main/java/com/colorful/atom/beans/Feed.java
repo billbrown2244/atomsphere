@@ -3,6 +3,7 @@ package com.colorful.atom.beans;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Feed {
     /*
@@ -218,5 +219,12 @@ public class Feed {
         }
         this.extensions.add(extension);
         
+    }
+
+    public void addEntry(Entry entry) {
+        if(this.entries == null){
+            this.entries = new TreeMap();
+        }
+        this.entries.put(entry.getUpdated().getText(),entry);
     }
 }

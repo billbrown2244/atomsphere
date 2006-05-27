@@ -9,10 +9,10 @@ import javax.xml.stream.XMLStreamWriter;
 
 public class FeedWriter{
     
-    public void writeFeed(XMLStreamWriter writer, Feed feed,String encoding) throws Exception{
+    public void writeFeed(XMLStreamWriter writer, Feed feed,String encoding,String version) throws Exception{
         
         //write the xml header.
-        writer.writeStartDocument(encoding,"1.0");
+        writer.writeStartDocument(encoding,version);
         
         //open the feed element
         writer.writeStartElement("feed");

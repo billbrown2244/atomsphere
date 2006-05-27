@@ -40,14 +40,15 @@ public class FeedDoc {
       */
     public static final Attribute atomBase = new Attribute("xmlns","http://www.w3.org/2005/Atom");
     public static final Attribute lang_en = new Attribute("xml:lang","en-US");
-    public static final String default_encoding = "utf-8";
+    public static String encoding = "utf-8";
+    public static String xml_version = "1.0";
 
     //writes files to the output doc. 
-    public static void writeFeedDoc(String outFile,Feed feed,String encoding) throws Exception{
+    public static void writeFeedDoc(String outFile,Feed feed,String encoding,String version) throws Exception{
         try{
             XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
             XMLStreamWriter writer = new IndentingXMLStreamWriter(outputFactory.createXMLStreamWriter(new java.io.FileOutputStream(outFile),encoding));
-            new FeedWriter().writeFeed(writer,feed,encoding);
+            new FeedWriter().writeFeed(writer,feed,encoding,version);
             writer.flush();
             writer.close();
         }catch(Exception e){
@@ -60,7 +61,7 @@ public class FeedDoc {
         
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader reader =
-        inputFactory.createXMLStreamReader(new java.io.FileInputStream("inFile.xml"));
+        inputFactory.createXMLStreamReader(new java.io.FileInputStream(inFile));
         return new FeedReader().readFeed(reader);
     }
     
@@ -112,7 +113,10 @@ public class FeedDoc {
         extension.setContent("<span style='color:red;'>hello there</span>");
         feed.addExtension(extension);
         
-        FeedDoc.writeFeedDoc("out.xml",feed,default_encoding);
+        FeedDoc.writeFeedDoc("out.xml",feed,encoding,xml_version);
+        
+        Feed feed2 = FeedDoc.readFeedDoc("out.xml");
+        FeedDoc.writeFeedDoc("out2.xml",feed2,encoding,xml_version);
         System.out.println("done");
         }catch(Exception e){
             e.printStackTrace();

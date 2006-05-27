@@ -10,8 +10,9 @@ public class Id {
    (atomUri)
 }
      */
-    List attributes;
-    URI uri;
+    private List attributes = null;
+    private URI uri = null;
+    private String text = null;
     
     public Id(){
         //do nothing.
@@ -36,5 +37,13 @@ public class Id {
     }
     public void setUri(URI uri) {
         this.uri = uri;
+    }
+
+    public String getText() {
+        return this.uri.getText();
+    }
+
+    public void setText(String text) {
+        this.uri.setText(text);
     }
 }
