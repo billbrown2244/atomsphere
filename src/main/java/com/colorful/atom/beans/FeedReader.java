@@ -1,13 +1,30 @@
 package com.colorful.atom.beans;
 
+
+import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
 
 public class FeedReader{
+	
+	private static SimpleDateFormat simplDateFmt = null;
+	
+	static{
+		String timeZoneOffset = null;
+        TimeZone timeZone = TimeZone.getDefault();
+        int hours = (((timeZone.getRawOffset()/1000)/60)/60);
+        if(hours >= 0){
+            timeZoneOffset = TimeZone.getTimeZone("GMT"+"+"+hours).getID().substring(3);
+        }else{
+            timeZoneOffset = TimeZone.getTimeZone("GMT"+"-"+Math.abs(hours)).getID().substring(3);
+        }
+        simplDateFmt = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SSS\'"+timeZoneOffset+"\'");
+	}
 
     public Feed readFeed(XMLStreamReader reader) throws Exception{
         System.out.println("****DEBUG HELP FOR CONSTANTS*****");
@@ -43,8 +60,6 @@ public class FeedReader{
                 if(reader.getLocalName().equals("feed")){
                     feed = new Feed();
                     feed.setAttributes(getAttributes(reader));
-                    //skip to the end.
-                    //reader.nextTag();
                 }else if(reader.getLocalName().equals("author")){
                     feed.addAuthor(readAuthor(reader));
                 }else if(reader.getLocalName().equals("category")){
@@ -56,9 +71,7 @@ public class FeedReader{
                 }else if(reader.getLocalName().equals("icon")){
                     feed.setIcon(readIcon(reader));
                 }else if(reader.getLocalName().equals("id")){
-                    System.out.println("in start of id element.");
                     feed.setId(readId(reader));
-                    reader.nextTag();
                 }else if(reader.getLocalName().equals("link")){
                     feed.addLink(readLink(reader));
                 }else if(reader.getLocalName().equals("logo")){
@@ -145,19 +158,24 @@ public class FeedReader{
         return null;
     }
 
-    private Updated readUpdated(XMLStreamReader reader) {
-        // TODO Auto-generated method stub
-        return null;
+    private Updated readUpdated(XMLStreamReader reader) throws Exception{
+        Updated updated = new Updated();
+        updated.setUpdated(simplDateFmt.parse(reader.getElementText()));        
+        return updated;
     }
 
-    private Title readTitle(XMLStreamReader reader) {
-        // TODO Auto-generated method stub
-        return null;
+    private Title readTitle(XMLStreamReader reader) throws Exception{
+        Title title = new Title();
+        title.setAttributes(getAttributes(reader));
+        title.setText(reader.getElementText());
+        return title;
     }
 
-    private Subtitle readSubtitle(XMLStreamReader reader) {
-        // TODO Auto-generated method stub
-        return null;
+    private Subtitle readSubtitle(XMLStreamReader reader) throws Exception{
+        Subtitle subtitle = new Subtitle();
+        subtitle.setAttributes(getAttributes(reader));
+        subtitle.setText(reader.getElementText());
+        return subtitle;
     }
 
     private Rights readRights(XMLStreamReader reader) {
@@ -176,16 +194,10 @@ public class FeedReader{
     }
 
     private Id readId(XMLStreamReader reader) throws Exception{
-        System.out.println("in read id.");
         Id id = new Id();
         id.setAttributes(getAttributes(reader));
         id.setUri(new URI(reader.getElementText()));        
         return id;
-    }
-
-    private String getCharacterData(XMLStreamReader reader) throws Exception{
-        System.out.println("element text = "+reader.getElementText());
-        return reader.getElementText();
     }
 
     private Icon readIcon(XMLStreamReader reader) {
@@ -193,9 +205,11 @@ public class FeedReader{
         return null;
     }
 
-    private Generator readGenerator(XMLStreamReader reader) {
-        // TODO Auto-generated method stub
-        return null;
+    private Generator readGenerator(XMLStreamReader reader) throws Exception{
+        Generator generator = new Generator();
+        generator.setAttributes(getAttributes(reader));
+        generator.setText(reader.getElementText());
+        return generator;
     }
 
     private Contributor readContributor(XMLStreamReader reader) {
