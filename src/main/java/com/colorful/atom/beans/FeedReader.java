@@ -290,7 +290,13 @@ public class FeedReader{
 
     private Published readPublished(XMLStreamReader reader) throws Exception{
         Published published = new Published();
-        published.setPublished(simplDateFmt.parse(reader.getElementText()));
+        String dateText = reader.getElementText();
+        try{
+            published.setPublished(simplDateFmt.parse(dateText));        
+        }catch(Exception e){
+            SimpleDateFormat simpleDateFmt2 = new SimpleDateFormat(simplDateFmt.toPattern().substring(0,19));
+            published.setPublished(simpleDateFmt2.parse(dateText.substring(0,19)));
+        }
         return published;
     }
 
@@ -303,7 +309,13 @@ public class FeedReader{
 
     private Updated readUpdated(XMLStreamReader reader) throws Exception{
         Updated updated = new Updated();
-        updated.setUpdated(simplDateFmt.parse(reader.getElementText()));        
+        String dateText = reader.getElementText();
+        try{
+        updated.setUpdated(simplDateFmt.parse(dateText));        
+        }catch(Exception e){
+            SimpleDateFormat simpleDateFmt2 = new SimpleDateFormat(simplDateFmt.toPattern().substring(0,19));
+            updated.setUpdated(simpleDateFmt2.parse(dateText.substring(0,19)));
+        }
         return updated;
     }
     

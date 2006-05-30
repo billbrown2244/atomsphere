@@ -48,11 +48,16 @@ public class FeedDoc {
         }
     }
     
-    public static Feed readFeedDoc(String inFile) throws Exception{
+    public static Feed readFeedDoc(String fileOrString, boolean isFile) throws Exception{
         
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        XMLStreamReader reader =
-        inputFactory.createXMLStreamReader(new java.io.FileInputStream(inFile));
+        
+        XMLStreamReader reader = null;
+        if(isFile){
+            reader = inputFactory.createXMLStreamReader(new java.io.FileInputStream(fileOrString));
+        }else{
+            reader = inputFactory.createXMLStreamReader(new java.io.StringReader(fileOrString));
+        }
         return new FeedReader().readFeed(reader);
     }
     
@@ -123,7 +128,7 @@ public class FeedDoc {
         
         FeedDoc.writeFeedDoc("out.xml",feed,encoding,xml_version);
         
-        Feed feed2 = FeedDoc.readFeedDoc("out.xml");
+        Feed feed2 = FeedDoc.readFeedDoc("out.xml",true);
         FeedDoc.writeFeedDoc("out2.xml",feed2,encoding,xml_version);
         System.out.println("done");
         }catch(Exception e){
