@@ -25,7 +25,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
@@ -38,10 +37,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.xmlbeans.XmlOptions;
-import org.w3.x2005.atom.FeedDocument;
-
-
+import com.colorful.atom.beans.Feed;
+import com.colorful.atom.beans.FeedDoc;
 
 public class AdminServlet extends HttpServlet {
 	
@@ -72,14 +69,12 @@ public class AdminServlet extends HttpServlet {
                     String fullPath = getServletContext().getRealPath(relativePath);
                     File makeDirs = new File(fullPath.substring(0,fullPath.lastIndexOf("\\")));
                     makeDirs.mkdirs();            
-                    FileWriter feedFile = new FileWriter(fullPath);
-					XmlOptions options = new XmlOptions();
-					options.setLoadStripWhitespace();
-					options.setLoadTrimTextBuffer();
-					FeedDocument feedDoc = FeedDocument.Factory.parse((String)atomConfig.get(relativePath),options);
-					feedFile.write(feedDoc.toString());
-					feedFile.flush();
-					feedFile.close();
+					
+                    //read the raw xml text into a new Feed object.
+                    Feed feed = FeedDoc.readFeedDoc((String)atomConfig.get(relativePath),false);
+                    //write it out to the location provided from the input
+                    FeedDoc.writeFeedDoc(fullPath,feed,FeedDoc.encoding,FeedDoc.xml_version);
+
 				}
 				
 			}else{//otherwise create the initial file.
@@ -102,7 +97,7 @@ public class AdminServlet extends HttpServlet {
 	}
 	
 	public synchronized static void removeFeed(String relativePath, ServletContext context) throws Exception{
-		//remove the file and remove the entry from the config.
+		//remove the file and remove the entry from the config file.
 		File feedXML = new File(context.getRealPath(relativePath));
 		if(!feedXML.delete()){
 			throw new Exception("could not delete file: "+relativePath);
@@ -124,15 +119,15 @@ public class AdminServlet extends HttpServlet {
 	}
 	
 	public synchronized static void writeFeedToConfigFile(String relativePath,String feedXML) throws Exception{
-		//decode the current state
+		//decode/parse the current config file
 		XMLDecoder decode = new XMLDecoder(new BufferedInputStream(new FileInputStream(atomConfigFile)));
 		Map atomConfig = (Map)decode.readObject();
 		decode.close();
 		
-		//add the new path to the sorted tree map
+		//add the path to the sorted tree map
 		atomConfig.put(relativePath,feedXML);
 		
-		//re encode it to the file. 
+		//encode it to the file. 
 		XMLEncoder encode = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(atomConfigFile)));
 		encode.writeObject(atomConfig);
 		encode.close();
@@ -159,14 +154,12 @@ public class AdminServlet extends HttpServlet {
 			while(feeds.hasNext()){
 				//open the feed and read out the title of the feed.
 				//provide a delete button and manage entries button.
-				String relativePath = (String)feeds.next();  
-				XmlOptions options = new XmlOptions();
-				options.setLoadStripWhitespace();
-				options.setLoadTrimTextBuffer();
-				FeedDocument feedDoc = FeedDocument.Factory.parse((String)atomConfig.get(relativePath),options);
-				String fullURLPath = feedDoc.getFeed().getIdArray()[0].getDomNode().getFirstChild().getNodeValue();
+				String relativePath = (String)feeds.next(); 
+                String fullPath = getServletContext().getRealPath(relativePath);
+                Feed feed = FeedDoc.readFeedDoc(fullPath,true);
+
 				out.println("<table><tr>"); 
-				out.println("<td><a href=\""+fullURLPath+"\" >"+feedDoc.getFeed().getTitleArray(0).xmlText()+"</a></td>");
+				out.println("<td><a href=\""+feed.getId().getText()+"\" >"+feed.getTitle().getText()+"</a></td>");
 				out.println("<td><form method=\"post\" action=\"atom/modify\"><input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"submit\" value=\"Modify\" /></form></td>");
 				out.println("<td><form method=\"post\" action=\"atom/delete\"><input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"submit\" value=\"Delete\" /></form></td>");
 				out.println("</tr></table>");

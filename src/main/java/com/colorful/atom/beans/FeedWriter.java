@@ -238,7 +238,7 @@ public class FeedWriter{
                 writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
             }
         }
-        writer.writeCharacters(logo.getUri());
+        writer.writeCharacters(logo.getUri().getText());
         writer.writeEndElement();        
     }
     
@@ -252,7 +252,7 @@ public class FeedWriter{
                 writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
             }
         }
-        writer.writeCharacters(icon.getUri());
+        writer.writeCharacters(icon.getUri().getText());
         writer.writeEndElement(); 
     }
     

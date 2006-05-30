@@ -18,11 +18,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom.servlet;
 
-import java.beans.XMLDecoder;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -30,18 +29,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.xmlbeans.XmlOptions;
-import org.w3.x2005.atom.AtomPersonConstruct;
-import org.w3.x2005.atom.AtomTextConstruct;
-import org.w3.x2005.atom.FeedDocument;
-import org.w3.x2005.atom.CategoryDocument.Category;
-import org.w3.x2005.atom.EntryDocument.Entry;
-import org.w3.x2005.atom.FeedDocument.Feed;
-import org.w3.x2005.atom.GeneratorDocument.Generator;
-import org.w3.x2005.atom.IconDocument.Icon;
-import org.w3.x2005.atom.LinkDocument.Link;
-import org.w3.x2005.atom.LogoDocument.Logo;
-
+import com.colorful.atom.beans.Author;
+import com.colorful.atom.beans.Category;
+import com.colorful.atom.beans.Contributor;
+import com.colorful.atom.beans.Entry;
+import com.colorful.atom.beans.FeedDoc;
+import com.colorful.atom.beans.Feed;
+import com.colorful.atom.beans.Generator;
+import com.colorful.atom.beans.Icon;
+import com.colorful.atom.beans.Logo;
+import com.colorful.atom.beans.Rights;
+import com.colorful.atom.beans.Subtitle;
+import com.colorful.atom.beans.Title;
+import com.colorful.atom.beans.Link;
 
 public class ModifyAllServlet extends HttpServlet {
     
@@ -53,73 +53,91 @@ public class ModifyAllServlet extends HttpServlet {
     {
         String relativePath = request.getParameter("relativePath");
         try{
-            //get the document.
-            XMLDecoder decode = new XMLDecoder(new BufferedInputStream(new FileInputStream(AdminServlet.atomConfigFile)));
-            Map atomConfig = (Map)decode.readObject();
 
-            XmlOptions options = new XmlOptions();
-            options.setLoadStripWhitespace();
-            options.setLoadTrimTextBuffer();
-            FeedDocument feedDoc = FeedDocument.Factory.parse((String)atomConfig.get(relativePath),options);
-            Feed feed = feedDoc.getFeed();
-            Entry[] entries = feed.getEntryArray();
-            
-            AtomTextConstruct[] titles = feed.getTitleArray();
-            AtomTextConstruct[] subTitles = feed.getSubtitleArray();
-            AtomPersonConstruct[] authors = feed.getAuthorArray();
-            AtomPersonConstruct[] contributors = feed.getContributorArray();
-            Link[] links = feed.getLinkArray();
-            Category[] categories = feed.getCategoryArray();
-            Generator[] generators = feed.getGeneratorArray();
-            Icon[] icons = feed.getIconArray();
-            Logo[] logos = feed.getLogoArray();
-            AtomTextConstruct[] rights = feed.getRightsArray();
+            //get the document file
+            String fullPath = getServletContext().getRealPath(relativePath);
+            Feed feed = FeedDoc.readFeedDoc(fullPath,true);
+
+            Title title = feed.getTitle();
+            Subtitle subtitle = feed.getSubtitle();
+            List authors = feed.getAuthors();
+            List contributors = feed.getContributors();
+            List links = feed.getLinks();
+            List categories = feed.getCategories();
+            Generator generator = feed.getGenerator();
+            Icon icon = feed.getIcon();
+            Logo logo = feed.getLogo();
+            Rights rights = feed.getRights();
+            Map entries = feed.getEntries();
             
             response.setContentType("text/html");
             PrintWriter out = response.getWriter(); 
             out.println("<html><head><title>Atomsphere</title><link rel=\"stylesheet\" type=\"text/css\" href=\""+AdminServlet.cssURL+"\"/></head><body>");
             out.println("<h3><form method=\"post\" action=\"../atom/create\">Header Data <input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"submit\" value=\"Modify\" /></form></h3>");
             out.println("<table>");
-            out.println("<tr><td>Title</td><td>"+titles[0].getDomNode().getFirstChild().getNodeValue()+"</td></tr>");
-            if(subTitles.length > 0 && subTitles[0] != null){
-                out.println("<tr><td>Sub Title</td><td>"+subTitles[0].getDomNode().getFirstChild().getNodeValue()+"</td></tr>");
-            }
-            //multiple
-            String[] authorNames = authors[0].getNameArray();
-            String[] authorEmails = authors[0].getEmailArray();
-            String[] authorURIs = authors[0].getUriArray();
-            String authorEmail = ((authorEmails.length > 0 && !authorEmails.equals(""))?", "+authorEmails[0]:"");
-            String authorURI = ((authorURIs.length > 0 && !authorURIs[0].equals(""))?", "+authorURIs[0]:"");
-            out.println("<tr><td>Author</td><td>"+authorNames[0]+authorEmail+authorURI+"</td></tr>");
             
-            //multiple
-            if(contributors.length > 0 && contributors[0] != null){
-                String[] contributorsNames = contributors[0].getNameArray();
-                out.println("<tr><td>Contributors</td><td>"+contributorsNames[0]+"</td></tr>");
+            //list title
+            out.println("<tr><td>Title</td><td>"+title.getText()+"</td></tr>");
+            
+            //list subtitle
+            if(subtitle != null){
+                out.println("<tr><td>Sub Title</td><td>"+subtitle.getText()+"</td></tr>");
             }
             
-            //multiple
-            out.println("<tr><td>Link</td><td>"+links[0].getHref().getStringValue()+", REL="+links[0].getRel().getDomNode().getNodeValue()+"</td></tr>");
+            //list the authors
+            if(authors != null){
+                Iterator authorItr = authors.iterator();
+                while(authorItr.hasNext()){
+                    Author author = (Author)authorItr.next();
+                    out.println("<tr><td>Author</td><td>"+author.getName().getText()+"</td></tr>");
+                }
+            }
+            
+            //list the contributors
+            if(contributors != null){
+                Iterator contributorItr = contributors.iterator();
+                while(contributorItr.hasNext()){
+                    Contributor contributor = (Contributor)contributorItr.next();
+                    out.println("<tr><td>Contributor</td><td>"+contributor.getName().getText()+"</td></tr>");
+                }
+            }
+            
+            //list the links
+            if(links != null){
+                Iterator linkItr = links.iterator();
+                while(linkItr.hasNext()){
+                    Link link = (Link)linkItr.next();
+                    out.println("<tr><td>Link</td><td>"+link.getHref().getValue()+", REL="+link.getRel().getValue()+"</td></tr>");
+                }
+            }
            
-            //multiple
-            if(categories.length > 0 && categories[0] != null){
-                out.println("<tr><td>Category</td><td>"+categories[0].getTerm().getDomNode().getNodeValue()+"</td></tr>");
+            //list the categories
+            if(categories != null){
+                Iterator categoryItr = categories.iterator();
+                while(categoryItr.hasNext()){
+                    Category category = (Category)categoryItr.next();
+                    out.println("<tr><td>Category</td><td>"+category.getTerm().getValue()+"</td></tr>");
+                }
+            }
+
+            //list the generator
+            if(generator != null){
+                out.println("<tr><td>Generator</td><td>"+generator.getText()+"</td></tr>");
             }
             
-            if(generators.length > 0 && generators[0] != null){
-                out.println("<tr><td>Generator</td><td>"+generators[0].getDomNode().getFirstChild().getNodeValue()+"</td></tr>");
+            //list the icon
+            if(icon != null){
+                out.println("<tr><td>Icon</td><td>"+icon.getText()+"</td></tr>");
             }
             
-            if(icons.length > 0 && icons[0] != null){
-                out.println("<tr><td>Icon</td><td>"+icons[0].getDomNode().getFirstChild().getNodeValue()+"</td></tr>");
+            //list the logo
+            if(logo != null){
+                out.println("<tr><td>Logo</td><td>"+logo.getText()+"</td></tr>");
             }
             
-            if(logos.length > 0 && logos[0] != null){
-                out.println("<tr><td>Logo</td><td>"+logos[0].getDomNode().getFirstChild().getNodeValue()+"</td></tr>");
-            }
-            
-            if(rights.length > 0 && rights[0] != null){
-                out.println("<tr><td>Rights</td><td>"+rights[0].getDomNode().getFirstChild().getNodeValue()+"</td></tr>");
+            //list the rights
+            if(rights != null){
+                out.println("<tr><td>Rights</td><td>"+rights.getText()+"</td></tr>");
             }
  
             out.println("</table>");
@@ -130,8 +148,16 @@ public class ModifyAllServlet extends HttpServlet {
             out.println("</form>");
             
             //list existing entries for that feed.
-            for(int i=0; i < entries.length; i++){
-                Entry entry = entries[i];
+            if(entries != null){
+            Iterator entryItr = entries.keySet().iterator();
+            while(entryItr.hasNext()){
+                Entry entry = (Entry)entries.get(entryItr.next());
+                out.println("<table><tr>"); 
+                out.println("<td>"+entry.getTitle().getText()+"</td>");
+                out.println("<td><form method=\"post\" action=\"atom/modify\"><input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"submit\" value=\"Modify\" /></form></td>");
+                out.println("<td><form method=\"post\" action=\"atom/delete\"><input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"submit\" value=\"Delete\" /></form></td>");
+                out.println("</tr></table>");
+            }
             }
             out.println("</body></html>");
             

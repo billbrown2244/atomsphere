@@ -343,7 +343,7 @@ public class FeedReader{
     private Logo readLogo(XMLStreamReader reader) throws Exception{
         Logo logo = new Logo();
         logo.setAttributes(getAttributes(reader));
-        logo.setUri(reader.getElementText());
+        logo.setUri(new URI(reader.getElementText()));
         return logo;
     }
     
@@ -363,7 +363,7 @@ public class FeedReader{
     private Icon readIcon(XMLStreamReader reader) throws Exception{
         Icon icon = new Icon();
         icon.setAttributes(getAttributes(reader));
-        icon.setUri(reader.getElementText());
+        icon.setUri(new URI(reader.getElementText()));
         return icon;
     }
     

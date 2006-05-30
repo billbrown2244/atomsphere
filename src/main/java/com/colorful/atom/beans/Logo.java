@@ -30,22 +30,23 @@ public class Logo {
      */
     
     private List attributes = null;
-    private String uri = null;
+    private URI uri = null;
+    private String text = null;
 
     public Logo(){
-        this.uri = "";
+        this.uri = new URI();
     }
     
-    public Logo(String uri){
+    public Logo(URI uri){
         this.uri = uri;
     }
     
-    public String getUri() {
+    public URI getUri() {
         return uri;
     }
 
 
-    public void setUri(String uri) {
+    public void setUri(URI uri) {
         this.uri = uri;
     }
     
@@ -63,5 +64,13 @@ public class Logo {
             this.attributes = new LinkedList();
         }
         this.attributes.add(attribute);
+    }
+
+    public String getText() {
+        return this.uri.getText();
+    }
+
+    public void setText(String text) {
+        this.uri.setText(text);
     }
 }

@@ -91,11 +91,11 @@ public class FeedDoc {
         rights.setText("GPL 1.0");
         feed.setRights(rights);
         
-        Icon icon = new Icon("http://host/images/icon.png");
+        Icon icon = new Icon(new URI("http://host/images/icon.png"));
         feed.setIcon(icon);
         
         Logo logo = new Logo();
-        logo.setUri("http://host/images/logo.png");
+        logo.setUri(new URI("http://host/images/logo.png"));
         feed.setLogo(logo);
         
         Category category = new Category("music","http://mtv.com/genere","music");

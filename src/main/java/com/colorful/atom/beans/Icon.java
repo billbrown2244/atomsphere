@@ -29,22 +29,23 @@ public class Icon {
 }
      */
     private List attributes = null;
-    private String uri = null;
+    private URI uri = null;
+    private String text = null;
 
     public Icon(){
-        this.uri = "";
+        this.uri = new URI();
     }
     
-    public Icon(String uri){
+    public Icon(URI uri){
         this.uri = uri;
     }
     
-    public String getUri() {
+    public URI getUri() {
         return uri;
     }
 
 
-    public void setUri(String uri) {
+    public void setUri(URI uri) {
         this.uri = uri;
     }
     
@@ -56,11 +57,19 @@ public class Icon {
     public void setAttributes(List attributes) {
         this.attributes = attributes;
     }
-
+    
     public void addAttribute(Attribute attribute){
         if(this.attributes == null){
             this.attributes = new LinkedList();
         }
         this.attributes.add(attribute);
+    }
+
+    public String getText() {
+        return this.uri.getText();
+    }
+
+    public void setText(String text) {
+        this.uri.setText(text);
     }
 }
