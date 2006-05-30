@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom.beans;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class Author {
