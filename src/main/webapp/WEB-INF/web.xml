@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- 
+Atomsphere - an atom feed library.
+Copyright (C) 2006 William R. Brown.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
 <web-app 
  xmlns="http://java.sun.com/xml/ns/j2ee" 
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -12,17 +30,17 @@
     	<init-param>
   			<description>The path to the Atom State Config file</description>
   			<param-name>atomConfigFile</param-name>
-  			<param-value>/tmp/atomConfig.xml</param-value>
+  			<param-value>C:/atomConfig.xml</param-value>
   		</init-param>
   		<init-param>
   			<description>The document root URL for the library</description>
   			<param-name>docRootURL</param-name>
-  			<param-value>http://earthbeats.localhost/atomsphere</param-value>
+  			<param-value>http://localhost:8080/atomsphere</param-value>
   		</init-param>
   		<init-param>
   			<description>The path and file name of the stylesheet</description>
   			<param-name>cssURL</param-name>
-  			<param-value>http://earthbeats.localhost/scripts/styles.css</param-value>
+  			<param-value>http://colorfulsoftware.com/scripts/styles.css</param-value>
   		</init-param>
   		<init-param>
   			<description>The path to the Atom Specification</description>

@@ -1,3 +1,21 @@
+/*
+Atomsphere - an atom feed library.
+Copyright (C) 2006 William R. Brown.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
 package com.colorful.atom.beans;
 
 import java.util.Calendar;
@@ -10,31 +28,7 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 public class FeedDoc {
-    /*
-     *     * author  4.2.1
-     * category  4.2.2
-     * content  4.1.3
-     * contributor  4.2.3
-     * email  3.2.3
-     * entry  4.1.2
-     * feed  4.1.1
-     * generator  4.2.4
-     * icon  4.2.5
-     * id  4.2.6
-     * link  4.2.7
-     * logo  4.2.8
-     * name  3.2.1
-     * published  4.2.9
-     * rights  4.2.10
-     * source  4.2.11
-     * subtitle  4.2.12
-     * summary  4.2.13
-     * title  4.2.14
-     * updated  4.2.15
-     * uri  3.2.2
-     * 
-     * 
-      */
+
     public static final Attribute atomBase = new Attribute("xmlns","http://www.w3.org/2005/Atom");
     public static final Attribute lang_en = new Attribute("xml:lang","en-US");
     public static String encoding = "utf-8";
