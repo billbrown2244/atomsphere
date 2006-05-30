@@ -32,4 +32,12 @@ private AtomTextConstruct subtitle = null;
     public void setText(String text) {
         this.subtitle.setText(text);
     }
+
+    public AtomTextConstruct getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(AtomTextConstruct subtitle) {
+        this.subtitle = subtitle;
+    }
 }

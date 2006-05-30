@@ -11,11 +11,11 @@ import javax.xml.stream.XMLStreamReader;
 
 
 public class FeedReader{
-	
-	private static SimpleDateFormat simplDateFmt = null;
-	
-	static{
-		String timeZoneOffset = null;
+    
+    private static SimpleDateFormat simplDateFmt = null;
+    
+    static{
+        String timeZoneOffset = null;
         TimeZone timeZone = TimeZone.getDefault();
         int hours = (((timeZone.getRawOffset()/1000)/60)/60);
         if(hours >= 0){
@@ -24,8 +24,8 @@ public class FeedReader{
             timeZoneOffset = TimeZone.getTimeZone("GMT"+"-"+Math.abs(hours)).getID().substring(3);
         }
         simplDateFmt = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SSS\'"+timeZoneOffset+"\'");
-	}
-
+    }
+    
     public Feed readFeed(XMLStreamReader reader) throws Exception{
         System.out.println("****DEBUG HELP FOR CONSTANTS*****");
         System.out.println("START_DOCUMENT = "+XMLStreamConstants.START_DOCUMENT);
@@ -43,8 +43,8 @@ public class FeedReader{
         System.out.println("NOTATION_DECLARATION = "+XMLStreamConstants.NOTATION_DECLARATION);
         System.out.println("PROCESSING_INSTRUCTION = "+XMLStreamConstants.PROCESSING_INSTRUCTION);
         System.out.println("SPACE = "+XMLStreamConstants.SPACE);
-       
-        Feed feed = null;
+        
+        Feed feed = new Feed();
         while(reader.hasNext()){
             switch (reader.next()){
             
@@ -53,12 +53,10 @@ public class FeedReader{
                 FeedDoc.encoding = reader.getEncoding();
                 FeedDoc.xml_version = reader.getVersion();
                 break;
-            
+     
             case XMLStreamConstants.START_ELEMENT:
-                System.out.println("found start element. "+reader.getName());
                 //call each feed elements read method depending on the name
                 if(reader.getLocalName().equals("feed")){
-                    feed = new Feed();
                     feed.setAttributes(getAttributes(reader));
                 }else if(reader.getLocalName().equals("author")){
                     feed.addAuthor(readAuthor(reader));
@@ -90,33 +88,34 @@ public class FeedReader{
                     feed.addExtension(readExtension(reader));
                 }                
                 break;
+                
             case XMLStreamConstants.END_ELEMENT:
                 reader.next();
                 break;
             case XMLStreamConstants.ATTRIBUTE:
-                case XMLStreamConstants.CDATA:
-                case XMLStreamConstants.CHARACTERS:
-                    System.out.println("characters = "+reader.getText());
-                case XMLStreamConstants.COMMENT:
-                case XMLStreamConstants.DTD:
-                case XMLStreamConstants.END_DOCUMENT:
-                case XMLStreamConstants.ENTITY_DECLARATION:
-                case XMLStreamConstants.ENTITY_REFERENCE:
-                case XMLStreamConstants.NAMESPACE:
-                case XMLStreamConstants.NOTATION_DECLARATION:
-                case XMLStreamConstants.PROCESSING_INSTRUCTION:
-                case XMLStreamConstants.SPACE:
-                    System.out.println("event type = "+reader.getEventType());
-                    break;
-                default:
-                    throw new Exception("unknown event in the xml file = "+reader.getEventType());
+            case XMLStreamConstants.CDATA:
+            case XMLStreamConstants.CHARACTERS:
+                System.out.println("characters = "+reader.getText());
+            case XMLStreamConstants.COMMENT:
+            case XMLStreamConstants.DTD:
+            case XMLStreamConstants.END_DOCUMENT:
+            case XMLStreamConstants.ENTITY_DECLARATION:
+            case XMLStreamConstants.ENTITY_REFERENCE:
+            case XMLStreamConstants.NAMESPACE:
+            case XMLStreamConstants.NOTATION_DECLARATION:
+            case XMLStreamConstants.PROCESSING_INSTRUCTION:
+            case XMLStreamConstants.SPACE:
+                System.out.println("event type = "+reader.getEventType());
+                break;
+            default:
+                throw new Exception("unknown event in the xml file = "+reader.getEventType());
             }
         }
-
+        
         
         return feed;
     }
-
+    
     private List getAttributes(XMLStreamReader reader) throws Exception{
         List attributes = null;
         int eventSkip = 0;
@@ -134,7 +133,7 @@ public class FeedReader{
         for(int i=0; i < reader.getAttributeCount(); i++){
             eventSkip++;
             String attrName = null;
-            if (reader.getAttributeName(i).getPrefix() != null){
+            if (reader.getAttributeName(i).getPrefix() != null && !reader.getAttributeName(i).getPrefix().equals("")){
                 attrName = reader.getAttributeName(i).getPrefix()+":"+reader.getAttributeName(i).getLocalPart();
             }else{
                 attrName = reader.getAttributeName(i).getLocalPart();
@@ -147,15 +146,141 @@ public class FeedReader{
         System.out.println("number of attributes = "+eventSkip);
         return attributes;
     }
-
-    private Extension readExtension(XMLStreamReader reader) {
-        // TODO Auto-generated method stub
-        return null;
+    
+    private Extension readExtension(XMLStreamReader reader) throws Exception{
+        Extension extension = new Extension();
+        extension.setElementName(reader.getLocalName());
+        extension.setAttributes(getAttributes(reader));
+        extension.setContent(reader.getElementText());
+        return extension;
+    }
+    
+    private Entry readEntry(XMLStreamReader reader) throws Exception{
+        boolean breakOut = false;
+        Entry entry = new Entry();
+        entry.setAttributes(getAttributes(reader));
+        while(reader.hasNext()){
+            switch (reader.next()){
+            case XMLStreamConstants.START_ELEMENT:
+                //call each feed elements read method depending on the name
+                if(reader.getLocalName().equals("id")){
+                    entry.setId(readId(reader));
+                }else if(reader.getLocalName().equals("author")){
+                    entry.addAuthor(readAuthor(reader));
+                }else if(reader.getLocalName().equals("category")){
+                    entry.addCategory(readCategory(reader));
+                }else if(reader.getLocalName().equals("contributor")){
+                    entry.addContributor(readContributor(reader));
+                }else if(reader.getLocalName().equals("content")){
+                    entry.setContent(readContent(reader));
+                }else if(reader.getLocalName().equals("link")){
+                    entry.addLink(readLink(reader));
+                }else if(reader.getLocalName().equals("published")){
+                    entry.setPublished(readPublished(reader));
+                }else if(reader.getLocalName().equals("link")){
+                    entry.addLink(readLink(reader));
+                }else if(reader.getLocalName().equals("rights")){
+                    entry.setRights(readRights(reader));
+                }else if(reader.getLocalName().equals("source")){
+                    entry.setSource(readSource(reader));
+                }else if(reader.getLocalName().equals("summary")){
+                    entry.setSummary(readSummary(reader));
+                }else if(reader.getLocalName().equals("title")){
+                    entry.setTitle(readTitle(reader));
+                }else if(reader.getLocalName().equals("updated")){
+                    entry.setUpdated(readUpdated(reader));
+                }else {//extension
+                    entry.addExtension(readExtension(reader));
+                }
+                break;
+                
+            case XMLStreamConstants.END_ELEMENT:
+                if(reader.getLocalName().equals("entry")){
+                    breakOut = true;
+                }else{
+                    reader.next();
+                }
+                break;            
+            }
+            if(breakOut){
+                break;
+            }
+        }
+        return entry;
+    }
+    
+    private Summary readSummary(XMLStreamReader reader) throws Exception{
+        Summary summary = new Summary();
+        summary.setAttributes(getAttributes(reader));
+        summary.setText(reader.getElementText());
+        return summary;
     }
 
-    private Entry readEntry(XMLStreamReader reader) {
-        // TODO Auto-generated method stub
-        return null;
+    private Source readSource(XMLStreamReader reader) throws Exception{
+        boolean breakOut = false;
+        Source source = new Source();
+        source.setAttributes(getAttributes(reader));
+
+        while(reader.hasNext()){
+            switch (reader.next()){
+            
+            case XMLStreamConstants.START_ELEMENT:
+                //call each feed elements read method depending on the name
+                if(reader.getLocalName().equals("author")){
+                    source.addAuthor(readAuthor(reader));
+                }else if(reader.getLocalName().equals("category")){
+                    source.addCategory(readCategory(reader));
+                }else if(reader.getLocalName().equals("contributor")){
+                    source.addContributor(readContributor(reader));
+                }else if(reader.getLocalName().equals("generator")){
+                    source.setGenerator(readGenerator(reader));
+                }else if(reader.getLocalName().equals("icon")){
+                    source.setIcon(readIcon(reader));
+                }else if(reader.getLocalName().equals("id")){
+                    source.setId(readId(reader));
+                }else if(reader.getLocalName().equals("link")){
+                    source.addLink(readLink(reader));
+                }else if(reader.getLocalName().equals("logo")){
+                    source.setLogo(readLogo(reader));
+                }else if(reader.getLocalName().equals("rights")){
+                    source.setRights(readRights(reader));
+                }else if(reader.getLocalName().equals("subtitle")){
+                    source.setSubtitle(readSubtitle(reader));
+                }else if(reader.getLocalName().equals("title")){
+                    source.setTitle(readTitle(reader));
+                }else if(reader.getLocalName().equals("updated")){
+                    source.setUpdated(readUpdated(reader));
+                }else {//extension
+                    source.addExtension(readExtension(reader));
+                }                
+                break;
+                
+            case XMLStreamConstants.END_ELEMENT:
+                if(reader.getLocalName().equals("contributor")){
+                    breakOut = true;
+                }else{
+                    reader.next();
+                }
+                break;
+            }
+            if(breakOut){
+                break;
+            }
+        }
+        return source;
+    }
+
+    private Published readPublished(XMLStreamReader reader) throws Exception{
+        Published published = new Published();
+        published.setPublished(simplDateFmt.parse(reader.getElementText()));
+        return published;
+    }
+
+    private Content readContent(XMLStreamReader reader) throws Exception{
+        Content content = new Content();
+        content.setAttributes(getAttributes(reader));
+        content.setContent(reader.getElementText());
+        return content;
     }
 
     private Updated readUpdated(XMLStreamReader reader) throws Exception{
@@ -163,69 +288,135 @@ public class FeedReader{
         updated.setUpdated(simplDateFmt.parse(reader.getElementText()));        
         return updated;
     }
-
+    
     private Title readTitle(XMLStreamReader reader) throws Exception{
         Title title = new Title();
         title.setAttributes(getAttributes(reader));
         title.setText(reader.getElementText());
         return title;
     }
-
+    
     private Subtitle readSubtitle(XMLStreamReader reader) throws Exception{
         Subtitle subtitle = new Subtitle();
         subtitle.setAttributes(getAttributes(reader));
         subtitle.setText(reader.getElementText());
         return subtitle;
     }
-
-    private Rights readRights(XMLStreamReader reader) {
-        // TODO Auto-generated method stub
-        return null;
+    
+    private Rights readRights(XMLStreamReader reader) throws Exception{
+        Rights rights = new Rights();
+        rights.setAttributes(getAttributes(reader));
+        rights.setText(reader.getElementText());
+        return rights;
     }
-
-    private Logo readLogo(XMLStreamReader reader) {
-        // TODO Auto-generated method stub
-        return null;
+    
+    private Logo readLogo(XMLStreamReader reader) throws Exception{
+        Logo logo = new Logo();
+        logo.setAttributes(getAttributes(reader));
+        logo.setUri(reader.getElementText());
+        return logo;
     }
-
-    private Link readLink(XMLStreamReader reader) {
-        // TODO Auto-generated method stub
-        return null;
+    
+    private Link readLink(XMLStreamReader reader) throws Exception{
+        Link link = new Link();
+        link.setAttributes(getAttributes(reader));
+        return link;
     }
-
+    
     private Id readId(XMLStreamReader reader) throws Exception{
         Id id = new Id();
         id.setAttributes(getAttributes(reader));
         id.setUri(new URI(reader.getElementText()));        
         return id;
     }
-
-    private Icon readIcon(XMLStreamReader reader) {
-        // TODO Auto-generated method stub
-        return null;
+    
+    private Icon readIcon(XMLStreamReader reader) throws Exception{
+        Icon icon = new Icon();
+        icon.setAttributes(getAttributes(reader));
+        icon.setUri(reader.getElementText());
+        return icon;
     }
-
+    
     private Generator readGenerator(XMLStreamReader reader) throws Exception{
         Generator generator = new Generator();
         generator.setAttributes(getAttributes(reader));
         generator.setText(reader.getElementText());
         return generator;
     }
-
-    private Contributor readContributor(XMLStreamReader reader) {
-        // TODO Auto-generated method stub
-        return null;
+    
+    private Contributor readContributor(XMLStreamReader reader) throws Exception{
+        boolean breakOut = false;
+        Contributor contributor = new Contributor();
+        contributor.setAttributes(getAttributes(reader));
+        while(reader.hasNext()){
+            switch (reader.next()){
+            case XMLStreamConstants.START_ELEMENT:
+                
+                if(reader.getLocalName().equals("name")){
+                    contributor.setName(new Name(reader.getElementText()));
+                }else if(reader.getLocalName().equals("uri")){
+                    contributor.setUri(new URI(reader.getElementText()));
+                }else if(reader.getLocalName().equals("email")){
+                    contributor.setEmail(new Email(reader.getElementText()));
+                }else{
+                    contributor.addExtension(readExtension(reader));
+                }
+                break;
+                
+            case XMLStreamConstants.END_ELEMENT:
+                if(reader.getLocalName().equals("contributor")){
+                    breakOut = true;
+                }else{
+                    reader.next();
+                }
+                break;
+            }
+            if(breakOut){
+                break;
+            }
+        } 
+        
+        return contributor;
     }
-
-    private Category readCategory(XMLStreamReader reader) {
-        // TODO Auto-generated method stub
-        return null;
+    
+    private Category readCategory(XMLStreamReader reader) throws Exception{
+        Category category = new Category();
+        category.setAttributes(getAttributes(reader));
+        return category;
     }
-
+    
     private Author readAuthor(XMLStreamReader reader) throws Exception{
+        boolean breakOut = false;
         Author author = new Author();
         author.setAttributes(getAttributes(reader));
-        //skip to the end.
+        while(reader.hasNext()){
+            switch (reader.next()){
+            case XMLStreamConstants.START_ELEMENT:
+                
+                if(reader.getLocalName().equals("name")){
+                    author.setName(new Name(reader.getElementText()));
+                }else if(reader.getLocalName().equals("uri")){
+                    author.setUri(new URI(reader.getElementText()));
+                }else if(reader.getLocalName().equals("email")){
+                    author.setEmail(new Email(reader.getElementText()));
+                }else{
+                    author.addExtension(readExtension(reader));
+                }
+                break;
+                
+            case XMLStreamConstants.END_ELEMENT:
+                if(reader.getLocalName().equals("author")){
+                    breakOut = true;
+                }else{
+                    reader.next();
+                }
+                break;
+            }
+            if(breakOut){
+                break;
+            }
+        } 
+        
         return author;
     }
     

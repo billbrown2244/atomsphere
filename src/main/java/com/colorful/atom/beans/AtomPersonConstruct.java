@@ -73,4 +73,12 @@ public class AtomPersonConstruct {
     public void setExtensions(List extensions) {
         this.extensions = extensions;
     }
+    
+    public void addExtension(Extension extension) {
+        if(this.extensions == null){
+            this.extensions = new LinkedList();
+        }
+        this.extensions.add(extension);
+        
+    }
 }

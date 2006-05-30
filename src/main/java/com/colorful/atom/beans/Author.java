@@ -63,4 +63,8 @@ public class Author {
     public void setExtensions(List extensions) {
         this.author.setExtensions(extensions);
     }
+    
+    public void addExtension(Extension extension) {
+        this.author.addExtension(extension);        
+    }
 }

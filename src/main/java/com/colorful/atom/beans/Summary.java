@@ -31,4 +31,12 @@ private AtomTextConstruct summary = null;
     public void setText(String text) {
         this.summary.setText(text);
     }
+
+    public AtomTextConstruct getSummary() {
+        return summary;
+    }
+
+    public void setSummary(AtomTextConstruct summary) {
+        this.summary = summary;
+    }
 }

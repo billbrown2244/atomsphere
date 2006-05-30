@@ -31,4 +31,12 @@ public class Title {
     public void setText(String text) {
         this.title.setText(text);
     }
+
+    public AtomTextConstruct getTitle() {
+        return title;
+    }
+
+    public void setTitle(AtomTextConstruct title) {
+        this.title = title;
+    }
 }

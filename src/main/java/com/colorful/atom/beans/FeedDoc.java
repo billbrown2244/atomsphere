@@ -1,9 +1,6 @@
 package com.colorful.atom.beans;
 
 import java.util.Calendar;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import javanet.staxutils.IndentingXMLStreamWriter;
 
@@ -112,6 +109,23 @@ public class FeedDoc {
         Extension extension = new Extension("http://www.w3.org/1999/xhtml","div");
         extension.setContent("<span style='color:red;'>hello there</span>");
         feed.addExtension(extension);
+        
+        Entry entry = new Entry();
+        Id id2 = new Id();
+        id2.setUri(new URI("http://www.colorfulsoftware.com/atom.xml#entry1"));
+        entry.setId(id2);
+        
+        Updated updated2 = new Updated(Calendar.getInstance().getTime());
+        entry.setUpdated(updated2);
+        
+        Title title2 = new Title("an exapmle atom entry");
+        entry.setTitle(title2);
+        
+        Content content = new Content();
+        content.setContent("hello. and welcome the the atomsphere feed builder for atom 1.0 builds.  I hope it is useful for you.");
+        entry.setContent(content);
+        
+        feed.addEntry(entry);
         
         FeedDoc.writeFeedDoc("out.xml",feed,encoding,xml_version);
         

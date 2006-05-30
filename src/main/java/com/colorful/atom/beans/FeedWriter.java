@@ -352,6 +352,8 @@ public class FeedWriter{
             if(entry.getContent() != null){
                 writeContent(writer,entry.getContent());
             }
+            
+            writer.writeEndElement();
         }
     }
 

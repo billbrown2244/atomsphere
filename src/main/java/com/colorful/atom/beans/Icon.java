@@ -4,7 +4,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Icon {
-
+    /*
+     * atomIcon = element atom:icon {
+   atomCommonAttributes,
+   (atomUri)
+}
+     */
     private List attributes = null;
     private String uri = null;
 

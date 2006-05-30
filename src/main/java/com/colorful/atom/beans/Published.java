@@ -23,25 +23,25 @@ public class Published {
     
     private static final SimpleDateFormat format = 
         new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SSS\'"+timeZoneOffset+"\'");
-    private Date updated = null;
+    private Date published = null;
     
-    public Published(Date updated){
-        this.updated = updated;
+    public Published(Date published){
+        this.published = published;
     }
 
     public Published() {
         // TODO Auto-generated constructor stub
     }
 
-    public Date getUpdated() {
-        return updated;
+    public Date getPublished() {
+        return published;
     }
 
-    public void setUpdated(Date updated) {
-        this.updated = updated;
+    public void setPublished(Date published) {
+        this.published = published;
     }
 
     public String getText() {
-        return format.format(updated);
+        return format.format(published);
     }
 }

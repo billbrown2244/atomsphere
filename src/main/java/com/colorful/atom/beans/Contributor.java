@@ -1,6 +1,5 @@
 package com.colorful.atom.beans;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class Contributor {
@@ -62,5 +61,10 @@ public class Contributor {
     }
     public void setExtensions(List extensions) {
         this.contributor.setExtensions(extensions);
+    }
+    
+    public void addExtension(Extension extension) {
+        this.contributor.addExtension(extension);
+        
     }
 }
