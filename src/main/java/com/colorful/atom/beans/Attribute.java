@@ -30,6 +30,15 @@ public class Attribute {
     private String name = null;
     private String value = null;
 
+    public Attribute(){
+        //nothing?
+    }
+    
+    public Attribute(String name){
+        this.name = name;
+        this.value = "";
+    }
+    
     public Attribute(String name, String value){
         this.name = name;
         this.value = value;
