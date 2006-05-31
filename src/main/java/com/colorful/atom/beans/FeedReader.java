@@ -41,7 +41,7 @@ public class FeedReader{
         }else{
             timeZoneOffset = TimeZone.getTimeZone("GMT"+"-"+Math.abs(hours)).getID().substring(3);
         }
-        simplDateFmt = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SSS\'"+timeZoneOffset+"\'");
+        simplDateFmt = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'"+timeZoneOffset+"\'");
     }
     
     public Feed readFeed(XMLStreamReader reader) throws Exception{

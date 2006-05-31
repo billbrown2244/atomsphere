@@ -39,7 +39,7 @@ public class Updated {
     }
     
     private static final SimpleDateFormat format = 
-        new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SSS\'"+timeZoneOffset+"\'");
+        new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'"+timeZoneOffset+"\'");
     private Date updated = null;
     
     public Updated(Date updated){

@@ -21,14 +21,33 @@ package com.colorful.atom.servlet;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.colorful.atom.beans.Attribute;
+import com.colorful.atom.beans.Author;
+import com.colorful.atom.beans.Category;
+import com.colorful.atom.beans.Content;
+import com.colorful.atom.beans.Contributor;
+import com.colorful.atom.beans.Email;
+import com.colorful.atom.beans.Entry;
+import com.colorful.atom.beans.Feed;
+import com.colorful.atom.beans.FeedDoc;
+import com.colorful.atom.beans.Link;
+import com.colorful.atom.beans.Rights;
+import com.colorful.atom.beans.Summary;
+import com.colorful.atom.beans.Title;
+import com.colorful.atom.beans.URI;
+
+/*
 import org.apache.xmlbeans.XmlOptions;
 import org.w3.x2005.atom.AtomPersonConstruct;
 import org.w3.x2005.atom.AtomTextConstruct;
@@ -37,7 +56,7 @@ import org.w3.x2005.atom.CategoryDocument.Category;
 import org.w3.x2005.atom.EntryDocument.Entry;
 import org.w3.x2005.atom.FeedDocument.Feed;
 import org.w3.x2005.atom.LinkDocument.Link;
-
+*/
 
 public class EntryCreateModifyFormServlet extends HttpServlet {
     
@@ -52,9 +71,10 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
         String entryTitle = request.getParameter("entryTitle");
         String relativePath = request.getParameter("relativePath");
         boolean entryExists = false; 
+        String formType = "create";
         
         try{
-            
+            /*
             //required 
             //can have multiple
             AtomPersonConstruct[] authors = null;
@@ -90,187 +110,51 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
             //optional
             AtomTextConstruct[] summary = null;
             String summaryStr = null;
-            
+            */
             
             //determines the type of entry we are working with; new or existing
-            String formType = null;
             
-            //open the file to get the entrys.
-            XmlOptions options = new XmlOptions();
-            options.setLoadStripWhitespace();
-            options.setLoadTrimTextBuffer();
-            FeedDocument entryDoc = FeedDocument.Factory.parse(new File(getServletContext().getRealPath(relativePath)),options);
-            Feed feed = entryDoc.getFeed();
-            Entry[] entries = feed.getEntryArray();
+            
+            //open the file to get the entrys.            
+            Feed feed = FeedDoc.readFeedDoc(getServletContext().getRealPath(relativePath),true);
+            Map entries = feed.getEntries();
             Entry entry = null;
-            int entryIndex = 0;
-            for(int i=0; i < entries.length; i++){
-                AtomTextConstruct title = entries[i].getTitleArray(0);
-                String titleVal = title.getDomNode().getFirstChild().getNodeValue();
-                if(titleVal.equals(entryTitle)){
-                    entryIndex = i;
-                    entryExists = true;
-                    entry = entries[i];
+            
+            //check to see if this entry exists 
+            //if not, we are creating a new one.
+            if(entries != null){
+                Iterator entryItr = entries.keySet().iterator();
+                while(entryItr.hasNext()){
+                    entry = (Entry)entries.get(entryItr.next());                    
+                    if(entry.getTitle().getText().equals(entryTitle)){                        
+                        entryExists = true;
+                        break;
+                    }
                 }
             }
+
             if(entryExists){
                 formType = "modify";
-                //get the list of authors
-                authors = entry.getAuthorArray();
-                authorName = new String[authors.length];
-                authorEmail = new String[authors.length];
-                authorURI = new String[authors.length];
-                for(int i=0; i < authors.length; i++){
-                    authorName[i] = authors[i].getNameArray()[0];
-                    if(authors[i].getEmailArray().length == 0){
-                        authorEmail[i] = "";
-                    }else{
-                        authorEmail[i] = authors[i].getEmailArray()[0];
-                    }
-                    if(authors[i].getUriArray().length == 0){
-                        authorURI[i] = "";
-                    }else{
-                        authorURI[i] = authors[i].getUriArray()[0];
-                    }
-                }
-                
-                //get the list of contributors
-                contributors = entry.getContributorArray();
-                if(contributors.length == 0){
-                    contributorName = new String[1];
-                    contributorEmail = new String[1];
-                    contributorURI = new String[1];
-                    contributorName[0] = "";
-                    contributorEmail[0] = "";
-                    contributorURI[0] = "";
-                }else{
-                contributorName = new String[contributors.length];
-                contributorEmail = new String[contributors.length];
-                contributorURI = new String[contributors.length];
-                }
-                for(int i=0; i < contributors.length; i++){
-                    if(contributors[i].getNameArray().length == 0){
-                        contributorName[i] = "";
-                    }else{
-                        contributorName[i] = contributors[i].getNameArray()[0];
-                    }
-                    if(contributors[i].getEmailArray().length == 0){
-                        contributorEmail[i] = "";
-                    }else{
-                        contributorEmail[i] = contributors[i].getEmailArray()[0];
-                    }
-                    if(contributors[i].getUriArray().length == 0){
-                        contributorURI[i] = "";
-                    }else{
-                        contributorURI[i] = contributors[i].getUriArray()[0];
-                    }
-                }
-                
-                
-                //get the list of categories
-                categories = entry.getCategoryArray();
-                categoryTerm = new String[categories.length];
-                categorySchemeURI = new String[categories.length];
-                categoryLabel = new String[categories.length];
-                for(int i=0; i < categories.length; i++){
-                    if(categories[i].getTerm() == null){
-                        categoryTerm[i] = "";
-                    }else{
-                        categoryTerm[i] = categories[i].getTerm().getDomNode().getFirstChild().getNodeValue();
-                    }
-                    if(categories[i].getScheme() == null){
-                        categorySchemeURI[i] = "";
-                    }else{
-                        categorySchemeURI[i] = categories[i].getScheme().getDomNode().getFirstChild().getNodeValue();
-                    }
-                    if(categories[i].getLabel() == null){
-                        categoryLabel[i] = "";
-                    }else{
-                        categoryLabel[i] = categories[i].getLabel().getDomNode().getFirstChild().getNodeValue();
-                    }
-                }
-                
-                //get the list of links.
-                links = entry.getLinkArray();
-                href = new String[links.length];
-                rel = new String[links.length];
-                type = new String[links.length];
-                hreflang = new String[links.length];
-                linkTitle = new String[links.length];
-                linkLen = new String[links.length];
-                for(int i=0; i < links.length; i++){
-                    if(links[i].getHref() == null){
-                        href[i] = "";
-                    }else{
-                        href[i] = links[i].getHref().getDomNode().getFirstChild().getNodeValue();
-                        href[i] = href[i].substring(AdminServlet.docRootURL.length());
-                        if(href[i].startsWith("/")){
-                            href[i] = href[i].substring(1);
-                        }
-                    }
-                    if(links[i].getRel() == null){
-                        rel[i] = "";
-                    }else{
-                        rel[i] = links[i].getRel().getDomNode().getFirstChild().getNodeValue();
-                    }
-                    if(links[i].getType() == null){
-                        type[i] = "";
-                    }else{
-                        type[i] = links[i].getType();
-                    }
-                    if(links[i].getHreflang() == null){
-                        hreflang[i] = "";
-                    }else{
-                        hreflang[i] = links[i].getHreflang();
-                    }
-                    if(links[i].getTitle() == null){
-                        linkTitle[i] = "";
-                    }else{
-                        linkTitle[i] = links[i].getTitle().getDomNode().getFirstChild().getNodeValue();
-                    }
-                    if(links[i].getLength() == null){
-                        linkLen[i] = "";
-                    }else{
-                        linkLen[i] = links[i].getLength().getDomNode().getFirstChild().getNodeValue();
-                    }
-                }
-                
-                rights = entry.getRightsArray();
-                if(rights.length == 0){
-                    rightsStr = "";
-                }else{
-                    rightsStr = rights[0].getDomNode().getFirstChild().getNodeValue();
-                }
-                
-                summary = entry.getSummaryArray();
-                if(summary.length == 0){
-                    summaryStr = "";
-                }else{
-                    summaryStr = summary[0].getDomNode().getFirstChild().getNodeValue();
-                }
+                //get the authors
+                List authors = entry.getAuthors();                
+                //get the contributors
+                List contributors = entry.getContributors();                
+                //get the categories
+                List categories = entry.getCategories();                
+                //get the links.
+                List links = entry.getLinks();                
+
                 
             }else{
-                formType = "create";
-            entry = Entry.Factory.newInstance();
-            
-           // title = "";
-            summaryStr = "";
-            authorName = new String[]{""};
-            authorEmail = new String[]{""};
-            authorURI = new String[]{""};
-            contributorName = new String[]{""};
-            contributorEmail = new String[]{""};
-            contributorURI = new String[]{""};
-            href = new String[]{""};
-            rel = new String[]{""};
-            type = new String[]{""};
-            hreflang = new String[]{""};
-            linkTitle = new String[]{""};
-            linkLen = new String[]{""};
-            categoryTerm = new String[]{""};
-            categorySchemeURI = new String[]{""};
-            categoryLabel = new String[]{""};
-            rightsStr = "";
+                entry = new Entry();
+                entry.setTitle(new Title());
+                entry.setSummary(new Summary());
+                entry.setContent(new Content());
+                entry.addAuthor(new Author());
+                entry.addContributor(new Contributor());
+                entry.addLink(new Link());
+                entry.addCategory(new Category());
+                entry.setRights(new Rights());
             }
         
 
@@ -288,25 +172,120 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
         out.println("<table>");
         out.println("<tr><td><span style=\"color: green;\">*</span> = Required</td><td><span style=\"color: green;\">(*)</span> = Required for parent</td></tr>");
         
+        //print the title
+        out.println("<tr><td>Title:<span style=\"color: green;\">*</span></td><td><input type=\"text\" name=\"entryTitle\" value=\""+entry.getTitle().getText()+"\" /></td></tr>");
         
-        out.println("<tr><td>Title:<span style=\"color: green;\">*</span></td><td><input type=\"text\" name=\"entryTitle\" value=\""+entryTitle+"\" /></td></tr>");
+        //print the summary
+        out.println("<tr><td>Summary:</td><td><input type=\"text\" name=\"entrySummary\" value=\""+entry.getSummary().getText()+"\" /></td></tr>");
         
-        out.println("<tr><td>Summary:</td><td><input type=\"text\" name=\"entrySummary\" value=\""+summaryStr+"\" /></td></tr>");
+        //print the content
+        if(entry.getContent() != null){
+            Content content = entry.getContent();
+            String type = "text";
+            boolean isLink = false;
+            if(content.getAttributes() != null){
+                //look for the type attribute
+                Iterator attrItr = content.getAttributes().iterator();
+                while(attrItr.hasNext()){
+                    Attribute attr = (Attribute)attrItr.next();
+                    if(attr.getName().equals("type")){
+                        type = attr.getValue();
+                        break;
+                    }
+                }
+                //look for the src attribute
+                attrItr = content.getAttributes().iterator();
+                while(attrItr.hasNext()){
+                    Attribute attr = (Attribute)attrItr.next();
+                    if(attr.getName().equals("src")){
+                        isLink = true;
+                        break;
+                    }
+                }
+            }
+            out.println("<tr><td>Content:<span style=\"color: green;\">*</span></td></tr>");
+            out.println("<tr><td><select id=\"contentType\" name=\"contentType\" onchange=\"showInput()\">");
+            out.println("<option value=\"*\">:::Select:::</option>");
+            if(type.equals("text")){
+                out.println("<option selected=\"true\">text</option>");
+            }else{
+                out.println("<option>text</option>");
+            }
+            if(type.equals("html")){
+                out.println("<option selected=\"true\">html</option>");
+            }else{
+                out.println("<option>html</option>");
+            }
+            if(type.equals("xhtml")){
+                out.println("<option selected=\"true\">xhtml</option>");
+            }else{
+                out.println("<option>xhtml</option>");
+            }
+            if(isLink){
+                out.println("<option selected=\"true\">link</option>");
+            }else{
+                out.println("<option>link</option>");
+            }
+            if(!type.equals("text") && !type.equals("html") && !type.equals("xhtml") && !isLink){
+                out.println("<option selected=\"true\">other</option>");
+            }else{
+                out.println("<option>other</option>");
+            }
+            out.println("</select></td></tr>");
+            if(isLink){//this is a link
+                out.println("<tr><td><div id=\"inputArea\">http://<input type=\"text\" name =\"content\" value=\""+content.getContent()+"\" /></div>"); 
+            }else{
+                out.println("<tr><td><div id=\"inputArea\"><textarea name=\"content\" rows=\"6\" cols=\"40\">"+content.getContent()+"</textarea></div>");
+            }
+        }else{
+            out.println("<tr><td>Content:<span style=\"color: green;\">*</span></td></tr>");
+            out.println("<tr><td><select id=\"contentType\" name=\"contentType\" onchange=\"showInput()\"><option value=\"*\">:::Select:::</option><option>text</option><option>html</option><option>xhtml</option><option>link</option><option>other</option></select></td></tr>");
+            out.println("<tr><td><div id=\"inputArea\"></div>");
+        }
         
-        out.println("<tr><td>Content:<span style=\"color: green;\">*</span></td></tr>");
-        out.println("<tr><td><select id=\"contentType\" name=\"contentType\" onchange=\"showInput()\"><option value=\"*\">:::Select:::</option><option>text</option><option>html</option><option>xhtml</option><option>link</option><option>other</option></select></td></tr>");
-        out.println("<tr><td><div id=\"inputArea\"></div>");
-        
+        //print the first author
+        if(entry.getAuthors() == null){            
         out.println("<tr><td>Author:<span style=\"color: green;\">*</span></td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author Name:<span style=\"color: green;\">(*)</span></td><td><input type=\"text\" name=\"entryAuthorName\" value=\""+authorName[0]+"\" /></td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author Email:</td><td><input type=\"text\" name=\"entryAuthorEmail\" value=\""+authorEmail[0]+"\" /></td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author URI:</td><td><input type=\"text\" name=\"entryAuthorURI\" value=\""+authorURI[0]+"\" /></td></tr>");
-
+        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author Name:<span style=\"color: green;\">(*)</span></td><td><input type=\"text\" name=\"entryAuthorName\" value=\"\" /></td></tr>");
+        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author Email:</td><td><input type=\"text\" name=\"entryAuthorEmail\" value=\"\" /></td></tr>");
+        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author URI:</td><td><input type=\"text\" name=\"entryAuthorURI\" value=\"\" /></td></tr>");
+        }else{
+            Author author = (Author)entry.getAuthors().get(0);
+            if(author.getUri() == null){
+                author.setUri(new URI());
+            }
+            if(author.getEmail() == null){
+                author.setEmail(new Email());
+            }
+            out.println("<tr><td>Author:<span style=\"color: green;\">*</span></td></tr>");
+            out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author Name:<span style=\"color: green;\">(*)</span></td><td><input type=\"text\" name=\"entryAuthorName\" value=\""+author.getName().getText()+"\" /></td></tr>");
+            out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author Email:</td><td><input type=\"text\" name=\"entryAuthorEmail\" value=\""+author.getEmail().getText()+"\" /></td></tr>");
+            out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author URI:</td><td><input type=\"text\" name=\"entryAuthorURI\" value=\""+author.getUri().getText()+"\" /></td></tr>");
+        }
+        
+        //print the first contributor
+        if(entry.getContributors() == null){
         out.println("<tr><td>Contributor:</td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor Name:<span style=\"color: green;\">(*)</td><td><input type=\"text\" name=\"entryContributorName\" value=\""+contributorName[0]+"\" /></td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor Email:</td><td><input type=\"text\" name=\"entryContributorEmail\" value=\""+contributorEmail[0]+"\" /></td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor URI:</td><td><input type=\"text\" name=\"entryContributorURI\" value=\""+contributorURI[0]+"\" /></td></tr>");
- 
+        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor Name:<span style=\"color: green;\">(*)</td><td><input type=\"text\" name=\"entryContributorName\" value=\"\" /></td></tr>");
+        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor Email:</td><td><input type=\"text\" name=\"entryContributorEmail\" value=\"\" /></td></tr>");
+        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor URI:</td><td><input type=\"text\" name=\"entryContributorURI\" value=\"\" /></td></tr>");
+        }else{
+            Contributor contributor = (Contributor)entry.getAuthors().get(0);
+            if(contributor.getUri() == null){
+                contributor.setUri(new URI());
+            }
+            if(contributor.getEmail() == null){
+                contributor.setEmail(new Email());
+            }
+            out.println("<tr><td>Author:<span style=\"color: green;\">*</span></td></tr>");
+            out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author Name:<span style=\"color: green;\">(*)</span></td><td><input type=\"text\" name=\"entryAuthorName\" value=\""+contributor.getName().getText()+"\" /></td></tr>");
+            out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author Email:</td><td><input type=\"text\" name=\"entryAuthorEmail\" value=\""+contributor.getEmail().getText()+"\" /></td></tr>");
+            out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author URI:</td><td><input type=\"text\" name=\"entryAuthorURI\" value=\""+contributor.getUri().getText()+"\" /></td></tr>");
+
+        }
+        
+        //print the first link
+        if(entry.getLinks() == null){
         out.println("<tr><td>Link:<span style=\"color: green;\">*</span></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Path &amp; Name:<span style=\"color: green;\">(*)</span><br />(Leave blank for root)</td><td><input type=\"text\" name=\"entryLinkPath\" value=\""+href[0]+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Rel:<span style=\"color: green;\">(*)</span><br />(ex. self)</td><td><input type=\"text\" name=\"entryLinkRel\" value=\""+rel[0]+"\" /></td></tr>");
@@ -314,13 +293,22 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Language:<br />(ex. en-US)</td><td><input type=\"text\" name=\"entryLinkLanguage\" value=\""+hreflang[0]+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Title:</td><td><input type=\"text\" name=\"entryLinkTitle\" value=\""+linkTitle[0]+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Length:</td><td><input type=\"text\" name=\"entryLinkLength\" value=\""+linkLen[0]+"\" /></td></tr>");
-      
+        }else{
+            
+        }
+        
+        //print the category
+        if(entry.getCategories() == null){
         out.println("<tr><td>Category:</td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Term:<span style=\"color: green;\">(*)</span></td><td><input type=\"text\" name=\"entryCategoryTerm\" value=\""+categoryTerm[0]+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Scheme URI:<br />&nbsp;&nbsp;&nbsp;(full URI required)</td><td><input type=\"text\" name=\"entryCategoryScheme\" value=\""+categorySchemeURI[0]+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Label</td><td><input type=\"text\" name=\"entryCategoryLabel\" value=\""+categoryLabel[0]+"\" /></td></tr>");
-         
-        out.println("<tr><td>Rights:</td><td><input type=\"text\" name=\"entryRights\" value=\""+rightsStr+"\" /></td></tr>");
+        }else{
+            
+        }
+        
+        //print the rights
+        out.println("<tr><td>Rights:</td><td><input type=\"text\" name=\"entryRights\" value=\""+entry.getRights().getText()+"\" /></td></tr>");
         
         
         if(entryExists){
