@@ -30,7 +30,6 @@ public class Id {
      */
     private List attributes = null;
     private URI uri = null;
-    private String text = null;
     
     public Id(){
         //do nothing.

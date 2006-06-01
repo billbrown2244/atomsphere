@@ -31,7 +31,6 @@ public class Logo {
     
     private List attributes = null;
     private URI uri = null;
-    private String text = null;
 
     public Logo(){
         this.uri = new URI();

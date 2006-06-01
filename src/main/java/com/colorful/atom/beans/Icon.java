@@ -30,7 +30,6 @@ public class Icon {
      */
     private List attributes = null;
     private URI uri = null;
-    private String text = null;
 
     public Icon(){
         this.uri = new URI();

@@ -37,12 +37,6 @@ public class Link {
    }
      */
     private List attributes = null;
-    private Attribute href = null;
-    private Attribute rel = null;
-    private Attribute type = null;
-    private Attribute hreflang = null;
-    private Attribute title = null;
-    private Attribute length = null;
     
     public Link(){
         attributes = new LinkedList();
@@ -50,16 +44,13 @@ public class Link {
     
     public Link(String href){
         attributes = new LinkedList();
-        this.href = new Attribute("href",href);
-        attributes.add(this.href);
+        attributes.add(new Attribute("href",href));
     }
     
     public Link(String href, String rel){
         attributes = new LinkedList();
-        this.href = new Attribute("href",href);
-        this.rel = new Attribute("rel",rel);
-        attributes.add(this.href);
-        attributes.add(this.rel);
+        attributes.add(new Attribute("href",href));
+        attributes.add(new Attribute("rel",rel));
     }
 
     public List getAttributes() {
