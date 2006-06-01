@@ -131,7 +131,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
             //print the content
             if(entry.getContent() != null){
                 Content content = entry.getContent();
-                String type = "text";
+                String type = "*";
                 boolean isLink = false;
                 if(content.getAttributes() != null){
                     //look for the type attribute
@@ -227,10 +227,10 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
                 if(contributor.getEmail() == null){
                     contributor.setEmail(new Email());
                 }
-                out.println("<tr><td>Author:<span style=\"color: green;\">*</span></td></tr>");
-                out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author Name:<span style=\"color: green;\">(*)</span></td><td><input type=\"text\" name=\"entryAuthorName\" value=\""+contributor.getName().getText()+"\" /></td></tr>");
-                out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author Email:</td><td><input type=\"text\" name=\"entryAuthorEmail\" value=\""+contributor.getEmail().getText()+"\" /></td></tr>");
-                out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author URI:</td><td><input type=\"text\" name=\"entryAuthorURI\" value=\""+contributor.getUri().getText()+"\" /></td></tr>");
+                out.println("<tr><td>Contributor:<span style=\"color: green;\">*</span></td></tr>");
+                out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor Name:<span style=\"color: green;\">(*)</span></td><td><input type=\"text\" name=\"entryAuthorName\" value=\""+contributor.getName().getText()+"\" /></td></tr>");
+                out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor Email:</td><td><input type=\"text\" name=\"entryAuthorEmail\" value=\""+contributor.getEmail().getText()+"\" /></td></tr>");
+                out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor URI:</td><td><input type=\"text\" name=\"entryAuthorURI\" value=\""+contributor.getUri().getText()+"\" /></td></tr>");
                 
             }
             
