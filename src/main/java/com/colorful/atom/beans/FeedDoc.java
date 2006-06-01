@@ -21,6 +21,7 @@ package com.colorful.atom.beans;
 import java.util.Calendar;
 
 import javanet.staxutils.IndentingXMLStreamWriter;
+import javanet.staxutils.io.StAXStreamWriter;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -48,16 +49,15 @@ public class FeedDoc {
         }
     }
     
-
+    //writes out an feed to an eml string.
     public static String writeFeedToString(Feed feed,String encoding,String version) {
         String feedXML = null;
         try{
-            XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-            XMLStreamWriter writer = outputFactory.createXMLStreamWriter(new java.io.StringWriter());
+            XMLStreamWriter writer = new StAXStreamWriter(new java.io.StringWriter());
             new FeedWriter().writeFeed(writer,feed,encoding,version);
             writer.flush();
-            feedXML = writer.toString();
             writer.close();
+            feedXML = writer.toString();
         }catch(Exception e){
             System.out.println("error creating xml string from feed.");
             e.printStackTrace();
