@@ -35,6 +35,10 @@ public class Id {
         //do nothing.
     }
     
+    public Id(String uri){
+        this.uri = new URI(uri);
+    }
+    
     public List getAttributes() {
         return attributes;
     }
