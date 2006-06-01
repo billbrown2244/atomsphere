@@ -43,6 +43,7 @@ import com.colorful.atom.beans.Summary;
 import com.colorful.atom.beans.Title;
 import com.colorful.atom.beans.Content;
 import com.colorful.atom.beans.URI;
+import com.colorful.atom.beans.Updated;
 
 public class EntryCreateModifyServlet extends HttpServlet {
 
@@ -94,8 +95,8 @@ public class EntryCreateModifyServlet extends HttpServlet {
             String atomIDStr = AdminServlet.docRootURL+relativePath;
             entry.setId(new Id(atomIDStr+"#"+entryTitle));
             
-            //add published (REQUIRED)
-            entry.setPublished(new Published(Calendar.getInstance().getTime()));
+            //add updated (REQUIRED)
+            entry.setUpdated(new Updated(Calendar.getInstance().getTime()));
             
             //add title (REQUIRED)
             Title title = new Title();
@@ -182,6 +183,7 @@ public class EntryCreateModifyServlet extends HttpServlet {
             
             if(create){
                 //create a new entry from the existing feed
+                entry.setPublished(new Published(Calendar.getInstance().getTime()));
                 feed.addEntry(entry);
             }else{
                 //remove the old entry and replace it with the new. 
@@ -190,7 +192,8 @@ public class EntryCreateModifyServlet extends HttpServlet {
                 while(entryItr.hasNext()){
                     Entry oldEntry = (Entry)feed.getEntries().get(entryItr.next());
                     if(oldEntry.getTitle().getText().equals(entryTitle)){
-                        feed.getEntries().remove(oldEntry.getUpdated().getText());
+                        Entry temp = (Entry)feed.getEntries().remove(oldEntry.getUpdated().getText());
+                        entry.setPublished(temp.getPublished());
                         break;
                     }
                 }
