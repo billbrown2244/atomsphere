@@ -45,7 +45,8 @@ public class FeedReader{
     }
     
     public Feed readFeed(XMLStreamReader reader) throws Exception{
-        System.out.println("****DEBUG HELP FOR CONSTANTS*****");
+       /*
+    	System.out.println("****DEBUG HELP FOR CONSTANTS*****");
         System.out.println("START_DOCUMENT = "+XMLStreamConstants.START_DOCUMENT);
         System.out.println("START_ELEMENT = "+XMLStreamConstants.START_ELEMENT);
         System.out.println("ATTRIBUTE = "+XMLStreamConstants.ATTRIBUTE);
@@ -61,13 +62,13 @@ public class FeedReader{
         System.out.println("NOTATION_DECLARATION = "+XMLStreamConstants.NOTATION_DECLARATION);
         System.out.println("PROCESSING_INSTRUCTION = "+XMLStreamConstants.PROCESSING_INSTRUCTION);
         System.out.println("SPACE = "+XMLStreamConstants.SPACE);
-        
+        */
         Feed feed = new Feed();
         while(reader.hasNext()){
             switch (reader.next()){
             
             case XMLStreamConstants.START_DOCUMENT:
-                System.out.println("in new start document.");
+                //System.out.println("in new start document.");
                 FeedDoc.encoding = reader.getEncoding();
                 FeedDoc.xml_version = reader.getVersion();
                 break;
@@ -113,7 +114,7 @@ public class FeedReader{
             case XMLStreamConstants.ATTRIBUTE:
             case XMLStreamConstants.CDATA:
             case XMLStreamConstants.CHARACTERS:
-                System.out.println("characters = "+reader.getText());
+                //System.out.println("characters = "+reader.getText());
             case XMLStreamConstants.COMMENT:
             case XMLStreamConstants.DTD:
             case XMLStreamConstants.END_DOCUMENT:
@@ -123,7 +124,7 @@ public class FeedReader{
             case XMLStreamConstants.NOTATION_DECLARATION:
             case XMLStreamConstants.PROCESSING_INSTRUCTION:
             case XMLStreamConstants.SPACE:
-                System.out.println("event type = "+reader.getEventType());
+                //System.out.println("event type = "+reader.getEventType());
                 break;
             default:
                 throw new Exception("unknown event in the xml file = "+reader.getEventType());
@@ -161,7 +162,7 @@ public class FeedReader{
             }
             attributes.add(new Attribute(attrName,reader.getAttributeValue(i)));
         }
-        System.out.println("number of attributes = "+eventSkip);
+        //System.out.println("number of attributes = "+eventSkip);
         return attributes;
     }
     

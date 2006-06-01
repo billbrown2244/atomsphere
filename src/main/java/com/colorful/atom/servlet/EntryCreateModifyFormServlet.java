@@ -220,7 +220,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
                 out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor Email:</td><td><input type=\"text\" name=\"entryContributorEmail\" value=\"\" /></td></tr>");
                 out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor URI:</td><td><input type=\"text\" name=\"entryContributorURI\" value=\"\" /></td></tr>");
             }else{
-                Contributor contributor = (Contributor)entry.getAuthors().get(0);
+                Contributor contributor = (Contributor)entry.getContributors().get(0);
                 if(contributor.getUri() == null){
                     contributor.setUri(new URI());
                 }

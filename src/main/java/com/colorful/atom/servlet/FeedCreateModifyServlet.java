@@ -229,7 +229,7 @@ public class FeedCreateModifyServlet extends HttpServlet {
             //create the file and write it to its destination             
             AdminServlet.writeFeedToConfigFile(relativePath,feedDoc.toString());
             String fullPath = getServletContext().getRealPath(relativePath);
-            File makeDirs = new File(fullPath.substring(0,fullPath.lastIndexOf("\\")));
+            File makeDirs = new File(fullPath.substring(0,fullPath.lastIndexOf(File.separator)));
             makeDirs.mkdirs();            
             FileWriter feedFile = new FileWriter(fullPath);
             feedFile.write(feedDoc.toString());

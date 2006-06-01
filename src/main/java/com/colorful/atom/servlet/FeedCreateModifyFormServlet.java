@@ -48,6 +48,7 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
     public void doPost( HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
     {
         String relativePath = request.getParameter("relativePath");
+        System.out.println("relativePath = "+relativePath);
         if(relativePath.startsWith("/")){
             relativePath = relativePath.substring(1);
         }
