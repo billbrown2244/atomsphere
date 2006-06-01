@@ -154,8 +154,8 @@ public class ModifyAllServlet extends HttpServlet {
                 Entry entry = (Entry)entries.get(entryItr.next());
                 out.println("<table><tr>"); 
                 out.println("<td>"+entry.getTitle().getText()+"</td>");
-                out.println("<td><form method=\"post\" action=\"atom/modify\"><input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"submit\" value=\"Modify\" /></form></td>");
-                out.println("<td><form method=\"post\" action=\"atom/delete\"><input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"submit\" value=\"Delete\" /></form></td>");
+                out.println("<td><form method=\"post\" action=\"modify/create\"><input name=\"entryTitle\" value=\""+entry.getTitle().getText()+"\" /><input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"hidden\" name=\"updated\" value=\""+entry.getUpdated().getText()+"\" /><input type=\"submit\" value=\"Modify\" /></form></td>");
+                out.println("<td><form method=\"post\" action=\"modify/delete\"><input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"hidden\" name=\"updated\" value=\""+entry.getUpdated().getText()+"\" /><input type=\"submit\" value=\"Delete\" /></form></td>");
                 out.println("</tr></table>");
             }
             }
