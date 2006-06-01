@@ -112,6 +112,7 @@ public class EntryCreateModifyServlet extends HttpServlet {
             
             //add content
             if(!contentType.equals("*")){
+                System.out.println("adding contnet");
                 Content content = new Content(contentType);
                 if(contentType.equals("link")){
                     content.addAttribute(new Attribute("src",contentValue));
@@ -200,7 +201,8 @@ public class EntryCreateModifyServlet extends HttpServlet {
                 feed.addEntry(entry);
             }
             
-            //write the feed to file 
+            //write the feed to the config and atom file
+            AdminServlet.writeFeedToConfigFile(relativePath,FeedDoc.writeFeedToString(feed,FeedDoc.encoding,FeedDoc.xml_version));
             FeedDoc.writeFeedDoc(getServletContext().getRealPath(relativePath),feed,FeedDoc.encoding,FeedDoc.xml_version);
     
         } catch (Exception e){

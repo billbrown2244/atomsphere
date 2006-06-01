@@ -48,6 +48,23 @@ public class FeedDoc {
         }
     }
     
+
+    public static String writeFeedToString(Feed feed,String encoding,String version) {
+        String feedXML = null;
+        try{
+            XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+            XMLStreamWriter writer = outputFactory.createXMLStreamWriter(new java.io.StringWriter());
+            new FeedWriter().writeFeed(writer,feed,encoding,version);
+            writer.flush();
+            feedXML = writer.toString();
+            writer.close();
+        }catch(Exception e){
+            System.out.println("error creating xml string from feed.");
+            e.printStackTrace();
+        }
+        return feedXML;
+    }
+    
     public static Feed readFeedDoc(String fileOrString, boolean isFile) throws Exception{
         
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
@@ -135,4 +152,5 @@ public class FeedDoc {
             e.printStackTrace();
         }
     }
+
 }
