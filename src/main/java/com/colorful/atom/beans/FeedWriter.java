@@ -42,13 +42,15 @@ public class FeedWriter{
                 writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
             }
         }
-        //write the id
+        //write the id (REQUIRED)
         writeID(writer,feed.getId());
-        //write the updated date
+        //write the updated date (REQUIRED)
         writeUpdated(writer,feed.getUpdated());
-        //write the generator
-        writeGenerator(writer,feed.getGenerator());
-        //write the title
+        //write the generator (should be required but isn't)
+        if(feed.getGenerator() != null){
+            writeGenerator(writer,feed.getGenerator());
+        }
+        //write the title (REQUIRED)
         writeTitle(writer,feed.getTitle());
         //write the author
         if(feed.getAuthors() != null){

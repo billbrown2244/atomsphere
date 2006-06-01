@@ -60,6 +60,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
     {
         String entryTitle = request.getParameter("entryTitle");
         String relativePath = request.getParameter("relativePath");
+        String updated = request.getParameter("updated");
         boolean entryExists = false; 
         String formType = "create";
         
@@ -72,16 +73,13 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
             
             //check to see if this entry exists 
             //if not, we are creating a new one.
-            if(entries != null){
-                Iterator entryItr = entries.keySet().iterator();
-                while(entryItr.hasNext()){
-                    entry = (Entry)entries.get(entryItr.next());                    
-                    if(entry.getTitle().getText().equals(entryTitle)){                        
-                        entryExists = true;
-                        break;
-                    }
+            if(entries != null){ 
+                entry = (Entry)entries.get(updated);
+                if( entry != null){                        
+                    entryExists = true;
                 }
             }
+
             
             if(entryExists){
                 formType = "modify";
@@ -201,7 +199,9 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
             if(isLink){//this is a link
                 out.println("<tr><td><div id=\"inputArea\">http://<input type=\"text\" name =\"content\" value=\""+content.getContent()+"\" /></div>"); 
             }else{
-                out.println("<tr><td><div id=\"inputArea\"><textarea name=\"content\" rows=\"6\" cols=\"40\">"+content.getContent()+"</textarea></div>");
+                if(!type.equals("*")){
+                    out.println("<tr><td><div id=\"inputArea\"><textarea name=\"content\" rows=\"6\" cols=\"40\">"+content.getContent()+"</textarea></div>");
+                }
             }
             
             
