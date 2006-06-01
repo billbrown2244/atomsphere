@@ -197,10 +197,12 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
             }
             out.println("</select></td></tr>");
             if(isLink){//this is a link
-                out.println("<tr><td><div id=\"inputArea\">http://<input type=\"text\" name =\"content\" value=\""+content.getContent()+"\" /></div>"); 
+                out.println("<tr><td><div id=\"inputArea\">http://<input type=\"text\" name =\"content\" value=\""+content.getContent()+"\" /></div></td></tr>"); 
             }else{
                 if(!type.equals("*")){
-                    out.println("<tr><td><div id=\"inputArea\"><textarea name=\"content\" rows=\"6\" cols=\"40\">"+content.getContent()+"</textarea></div>");
+                    out.println("<tr><td><div id=\"inputArea\"><textarea name=\"content\" rows=\"6\" cols=\"40\">"+content.getContent()+"</textarea></div></td></tr>");
+                }else{
+                    out.println("<tr><td><div id=\"inputArea\"></div></td></tr>");
                 }
             }
             
