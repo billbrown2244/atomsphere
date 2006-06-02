@@ -67,7 +67,7 @@ public class AdminServlet extends HttpServlet {
 				while(feeds.hasNext()){
 					String relativePath = (String)feeds.next();
                     String fullPath = getServletContext().getRealPath(relativePath);
-                    File makeDirs = new File(fullPath.substring(0,fullPath.lastIndexOf("\\")));
+                    File makeDirs = new File(fullPath.substring(0,fullPath.lastIndexOf(File.separator)));
                     makeDirs.mkdirs();            
 					
                     //read the raw xml text into a new Feed object.

@@ -18,10 +18,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom.beans;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.Calendar;
 
 import javanet.staxutils.IndentingXMLStreamWriter;
-import javanet.staxutils.OutputFactory;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -50,20 +51,21 @@ public class FeedDoc {
     }
     
     //writes out an feed to an eml string.
-    public static String writeFeedToString(Feed feed,String encoding,String version) {
-        String feedXML = null;
+    public static String readFeedString(String file) {
+        StringBuffer feedXML = null;
         try{
-            XMLStreamWriter writer = new OutputFactory().createXMLStreamWriter(new java.io.StringWriter());
-            new FeedWriter().writeFeed(writer,feed,encoding,version);
-            writer.flush();
-            feedXML = writer.toString();
-            writer.close();
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line = null;
+            while((line = reader.readLine()) != null){
+            	feedXML.append(line);
+            }
+            reader.close();
             
         }catch(Exception e){
             System.out.println("error creating xml string from feed.");
             e.printStackTrace();
         }
-        return feedXML;
+        return feedXML.toString();
     }
     
     public static Feed readFeedDoc(String fileOrString, boolean isFile) throws Exception{

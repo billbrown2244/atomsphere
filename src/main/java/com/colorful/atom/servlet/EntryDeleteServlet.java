@@ -45,9 +45,8 @@ public class EntryDeleteServlet extends HttpServlet {
             feed.getEntries().remove(updated);
             
             //rewrite the feed to the config and atom file
-            AdminServlet.writeFeedToConfigFile(relativePath,FeedDoc.writeFeedToString(feed,FeedDoc.encoding,FeedDoc.xml_version));
             FeedDoc.writeFeedDoc(getServletContext().getRealPath(relativePath),feed,FeedDoc.encoding,FeedDoc.xml_version);
-
+            AdminServlet.writeFeedToConfigFile(relativePath,FeedDoc.readFeedString(getServletContext().getRealPath(relativePath)));
             
         }catch(Exception e){
             e.printStackTrace();
