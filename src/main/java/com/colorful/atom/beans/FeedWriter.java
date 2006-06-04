@@ -315,6 +315,7 @@ public class FeedWriter{
     private void writeEntries(XMLStreamWriter writer, Map entries) throws Exception{
         
         Iterator entryItr = entries.keySet().iterator();
+        System.out.println("entries size in feed writer = "+entries.size());
         while(entryItr.hasNext()){
             Entry entry = (Entry)entries.get(entryItr.next());
             writer.writeStartElement("entry");
@@ -369,6 +370,7 @@ public class FeedWriter{
                 writeSummary(writer,entry.getSummary());
             }
             //write the content
+            System.out.println("content in feed writer = "+entry.getContent());
             if(entry.getContent() != null){
                 writeContent(writer,entry.getContent());
             }
@@ -402,6 +404,7 @@ public class FeedWriter{
         //an empty tag.
         boolean externalLink = false;
         if(content.getAttributes() != null){
+        	System.out.println("content has attributes.");
             Iterator contentAttrs = content.getAttributes().iterator();
 
             
@@ -426,8 +429,10 @@ public class FeedWriter{
             }
             
         }else{//there are not attributes so assume default 'text';
+        	System.out.println("content has no attributes");
             writer.writeStartElement("content");
         }
+        System.out.println("content = "+content.getContent());
         if(content.getContent() != null){
             writer.writeCharacters(content.getContent());
         }

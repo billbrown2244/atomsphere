@@ -52,7 +52,7 @@ public class FeedDoc {
     
     //writes out an feed to an eml string.
     public static String readFeedString(String file) {
-        StringBuffer feedXML = null;
+        StringBuffer feedXML = new StringBuffer();
         try{
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line = null;

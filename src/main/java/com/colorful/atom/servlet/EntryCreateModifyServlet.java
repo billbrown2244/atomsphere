@@ -18,7 +18,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom.servlet;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.Iterator;
 
@@ -62,6 +64,7 @@ public class EntryCreateModifyServlet extends HttpServlet {
         String entrySummary = request.getParameter("entrySummary");
         String contentType = request.getParameter("contentType");
         String contentValue = request.getParameter("content");
+        System.out.println("contentValue = "+contentValue);
         String entryAuthorName = request.getParameter("entryAuthorName");
         String entryAuthorEmail = request.getParameter("entryAuthorEmail");
         String entryAuthorURI = request.getParameter("entryAuthorURI");
@@ -119,6 +122,7 @@ public class EntryCreateModifyServlet extends HttpServlet {
                 }else{
                     content.setContent(contentValue);
                 }
+                entry.setContent(content);
             }
             
             //add author
@@ -130,6 +134,7 @@ public class EntryCreateModifyServlet extends HttpServlet {
                 if(entryAuthorURI != null && !entryAuthorURI.equals("")){
                     author.setUri(new URI(entryAuthorURI));
                 }
+                entry.addAuthor(author);
             }
             
             //add contributor
@@ -141,10 +146,11 @@ public class EntryCreateModifyServlet extends HttpServlet {
                 if(entryContributorURI != null && !entryContributorURI.equals("")){
                     contributor.setUri(new URI(entryContributorURI));
                 }
+                entry.addContributor(contributor);
             }
             
             //add link
-            if(entryLinkPath != null && !entryLinkPath.equals("")){
+            if(entryLinkPath != null && !entryLinkPath.equals(File.separator)){
                 Link link = new Link(AdminServlet.docRootURL+entryLinkPath);
                 if(entryLinkRel != null && !entryLinkRel.equals("")){
                     link.setRel(new Attribute("rel",entryLinkRel));
@@ -161,6 +167,7 @@ public class EntryCreateModifyServlet extends HttpServlet {
                 if(entryLinkLength != null && !entryLinkLength.equals("")){
                     link.setLength(new Attribute("length",entryLinkLength));
                 }
+                entry.addLink(link);
             }
             
             //add category
@@ -172,6 +179,7 @@ public class EntryCreateModifyServlet extends HttpServlet {
                 if(entryCategoryLabel != null && !entryCategoryLabel.equals("")){
                     category.setLabel(new Attribute("label",entryCategoryLabel));
                 }
+                entry.addCategory(category);
             }
             
             //add rights
