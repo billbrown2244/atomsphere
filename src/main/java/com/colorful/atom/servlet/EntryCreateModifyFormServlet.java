@@ -18,7 +18,6 @@
  */
 package com.colorful.atom.servlet;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
@@ -198,7 +197,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
             }
             out.println("</select></td></tr>");
             if(isLink){//this is a link
-                out.println("<tr><td><div id=\"inputArea\">http://<input type=\"text\" name =\"content\" value=\""+content.getContent()+"\" /></div></td></tr>"); 
+                out.println("<tr><td><div id=\"inputArea\">&nbsp;&nbsp;&nbsp;(full URI required)<input type=\"text\" name =\"content\" value=\""+content.getContent()+"\" /></div></td></tr>"); 
             }else{
                 if(!type.equals("*")){
                     out.println("<tr><td><div id=\"inputArea\"><textarea name=\"content\" rows=\"6\" cols=\"40\">"+content.getContent()+"</textarea></div></td></tr>");
@@ -222,7 +221,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
             out.println("<tr><td>Author:<span style=\"color: green;\">*</span></td></tr>");
             out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author Name:<span style=\"color: green;\">(*)</span></td><td><input type=\"text\" name=\"entryAuthorName\" value=\""+author.getName().getText()+"\" /></td></tr>");
             out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author Email:</td><td><input type=\"text\" name=\"entryAuthorEmail\" value=\""+author.getEmail().getText()+"\" /></td></tr>");
-            out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author URI:</td><td><input type=\"text\" name=\"entryAuthorURI\" value=\""+author.getUri().getText()+"\" /></td></tr>");
+            out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author URI:&nbsp;&nbsp;&nbsp;(full URI required)</td><td><input type=\"text\" name=\"entryAuthorURI\" value=\""+author.getUri().getText()+"\" /></td></tr>");
             
             
             //print the first contributor
@@ -239,16 +238,12 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
             out.println("<tr><td>Contributor:<span style=\"color: green;\">*</span></td></tr>");
             out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor Name:<span style=\"color: green;\">(*)</span></td><td><input type=\"text\" name=\"entryAuthorName\" value=\""+contributor.getName().getText()+"\" /></td></tr>");
             out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor Email:</td><td><input type=\"text\" name=\"entryAuthorEmail\" value=\""+contributor.getEmail().getText()+"\" /></td></tr>");
-            out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor URI:</td><td><input type=\"text\" name=\"entryAuthorURI\" value=\""+contributor.getUri().getText()+"\" /></td></tr>");
+            out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor URI:&nbsp;&nbsp;&nbsp;(full URI required)</td><td><input type=\"text\" name=\"entryAuthorURI\" value=\""+contributor.getUri().getText()+"\" /></td></tr>");
             
             //print the first link
             Link link = (Link)entry.getLinks().get(0);            
             if(link.getHref() == null){
                 link.setHref(new Attribute("href"));
-            }
-            String path = "";
-            if(!link.getHref().getValue().equals("")){
-                path = link.getHref().getValue().substring(link.getHref().getValue().lastIndexOf(FeedDoc.URL_separator));
             }
             if(link.getRel() == null){
                 link.setRel(new Attribute("rel"));
@@ -266,7 +261,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
                 link.setLength(new Attribute("length"));
             }
             out.println("<tr><td>Link:<span style=\"color: green;\">*</span></td></tr>");
-            out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Path &amp; Name:<span style=\"color: green;\">(*)</span><br />(Leave blank for root)</td><td><input type=\"text\" name=\"entryLinkPath\" value=\""+path+"\" /></td></tr>");
+            out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Path &amp; Name:&nbsp;&nbsp;&nbsp;(full URI required)<span style=\"color: green;\">(*)</span><br />(Leave blank for root)</td><td><input type=\"text\" name=\"entryLinkPath\" value=\""+link.getHref().getValue()+"\" /></td></tr>");
             out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Rel:<span style=\"color: green;\">(*)</span><br />(ex. self)</td><td><input type=\"text\" name=\"entryLinkRel\" value=\""+link.getRel().getValue()+"\" /></td></tr>");
             out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Media Type:<br />(ex.  application/atom+xml or text/html)</td><td><input type=\"text\" name=\"entryLinkMediaType\" value=\""+link.getType().getValue()+"\" /></td></tr>");
             out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Language:<br />(ex. en-US)</td><td><input type=\"text\" name=\"entryLinkLanguage\" value=\""+link.getHreflang().getValue()+"\" /></td></tr>");

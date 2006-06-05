@@ -27,19 +27,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/*
-import org.w3.x2005.atom.AtomPersonConstruct;
-import org.w3.x2005.atom.AtomTextConstruct;
-import org.w3.x2005.atom.FeedDocument;
-import org.w3.x2005.atom.CategoryDocument.Category;
-import org.w3.x2005.atom.FeedDocument.Feed;
-import org.w3.x2005.atom.GeneratorDocument.Generator;
-import org.w3.x2005.atom.IconDocument.Icon;
-import org.w3.x2005.atom.LinkDocument.Link;
-import org.w3.x2005.atom.LogoDocument.Logo;
-import org.apache.xmlbeans.XmlOptions;
-*/
-
 import com.colorful.atom.beans.Attribute;
 import com.colorful.atom.beans.Author;
 import com.colorful.atom.beans.Category;
@@ -47,7 +34,6 @@ import com.colorful.atom.beans.Contributor;
 import com.colorful.atom.beans.Email;
 import com.colorful.atom.beans.Feed;
 import com.colorful.atom.beans.FeedDoc;
-import com.colorful.atom.beans.Generator;
 import com.colorful.atom.beans.Icon;
 import com.colorful.atom.beans.Link;
 import com.colorful.atom.beans.Logo;
@@ -68,7 +54,7 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
     {
         String relativePath = request.getParameter("relativePath");
         System.out.println("relativePath = "+relativePath);
-        if(relativePath.startsWith(FeedDoc.URL_separator)){
+        if(relativePath.startsWith(File.separator) || relativePath.startsWith("/")){
             relativePath = relativePath.substring(1);
         }
         boolean fileExists = false;
@@ -164,7 +150,7 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
         out.println("<tr><td>Author:<span style=\"color: green;\">*</span></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author Name:<span style=\"color: green;\">(*)</span></td><td><input type=\"text\" name=\"feedAuthorName\" value=\""+author.getName().getText()+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author Email:</td><td><input type=\"text\" name=\"feedAuthorEmail\" value=\""+author.getEmail().getText()+"\" /></td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author URI:</td><td><input type=\"text\" name=\"feedAuthorURI\" value=\""+author.getUri().getText()+"\" /></td></tr>");
+        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Author URI:&nbsp;&nbsp;&nbsp;(full URI required)</td><td><input type=\"text\" name=\"feedAuthorURI\" value=\""+author.getUri().getText()+"\" /></td></tr>");
         
         //print contributor
         Contributor contributor = (Contributor)feed.getContributors().get(0);
@@ -180,16 +166,12 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
         out.println("<tr><td>Contributor:</td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor Name:<span style=\"color: green;\">(*)</td><td><input type=\"text\" name=\"feedContributorName\" value=\""+contributor.getName().getText()+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor Email:</td><td><input type=\"text\" name=\"feedContributorEmail\" value=\""+contributor.getEmail().getText()+"\" /></td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor URI:</td><td><input type=\"text\" name=\"feedContributorURI\" value=\""+contributor.getUri().getText()+"\" /></td></tr>");
+        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Contributor URI:&nbsp;&nbsp;&nbsp;(full URI required)</td><td><input type=\"text\" name=\"feedContributorURI\" value=\""+contributor.getUri().getText()+"\" /></td></tr>");
         
         //print link
         Link link = (Link)feed.getLinks().get(0);            
         if(link.getHref() == null){
             link.setHref(new Attribute("href"));
-        }
-        String path = "";
-        if(!link.getHref().getValue().equals("")){
-            path = link.getHref().getValue().substring(link.getHref().getValue().lastIndexOf(FeedDoc.URL_separator));
         }
         if(link.getRel() == null){
             link.setRel(new Attribute("rel"));
@@ -207,7 +189,7 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
             link.setLength(new Attribute("length"));
         }
         out.println("<tr><td>Link:<span style=\"color: green;\">*</span></td></tr>");
-        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Path &amp; Name:<span style=\"color: green;\">(*)</span><br />(Leave blank for root)</td><td><input type=\"text\" name=\"feedLinkPath\" value=\""+path+"\" /></td></tr>");
+        out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Path &amp; Name:<span style=\"color: green;\">(*)&nbsp;&nbsp;&nbsp;(full URI required)</span><br />(Leave blank for root)</td><td><input type=\"text\" name=\"feedLinkPath\" value=\""+link.getHref().getValue()+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Rel:<span style=\"color: green;\">(*)</span><br />(ex. self)</td><td><input type=\"text\" name=\"feedLinkRel\" value=\""+link.getRel().getValue()+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Media Type:<br />(ex.  application/atom+xml or text/html)</td><td><input type=\"text\" name=\"feedLinkMediaType\" value=\""+link.getType().getValue()+"\" /></td></tr>");
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Link Language:<br />(ex. en-US)</td><td><input type=\"text\" name=\"feedLinkLanguage\" value=\""+link.getHreflang().getValue()+"\" /></td></tr>");
@@ -232,10 +214,10 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
         out.println("<tr><td>&nbsp;&nbsp;&nbsp;Category Label</td><td><input type=\"text\" name=\"feedCategoryLabel\" value=\""+category.getLabel().getValue()+"\" /></td></tr>");
         
         //print the icon.
-        out.println("<tr><td>Icon URI:(1hz to 1vt)</td><td><input type=\"text\" name=\"feedIcon\" value=\""+feed.getIcon().getText()+"\" /></td></tr>");
+        out.println("<tr><td>Icon URI:(1hz to 1vt)&nbsp;&nbsp;&nbsp;(full URI required)</td><td><input type=\"text\" name=\"feedIcon\" value=\""+feed.getIcon().getText()+"\" /></td></tr>");
         
         //print the logo.
-        out.println("<tr><td>Logo URI:(2hz to 1vt)</td><td><input type=\"text\" name=\"feedLogo\" value=\""+feed.getLogo().getText()+"\" /></td></tr>");
+        out.println("<tr><td>Logo URI:(2hz to 1vt)&nbsp;&nbsp;&nbsp;(full URI required)</td><td><input type=\"text\" name=\"feedLogo\" value=\""+feed.getLogo().getText()+"\" /></td></tr>");
         
         //print the rights.
         out.println("<tr><td>Rights:</td><td><input type=\"text\" name=\"feedRights\" value=\""+feed.getRights().getText()+"\" /></td></tr>");

@@ -71,7 +71,7 @@ public class EntryCreateModifyServlet extends HttpServlet {
         String entryContributorName = request.getParameter("entryContributorName");
         String entryContributorEmail = request.getParameter("entryContributorEmail");
         String entryContributorURI = request.getParameter("entryContributorURI");
-        String entryLinkPath = FeedDoc.URL_separator+request.getParameter("entryLinkPath").trim();
+        String entryLinkPath = request.getParameter("entryLinkPath").trim();
         String entryLinkRel = request.getParameter("entryLinkRel").trim();
         String entryLinkMediaType = request.getParameter("entryLinkMediaType").trim();
         String entryLinkLanguage = request.getParameter("entryLinkLanguage").trim();
@@ -96,7 +96,7 @@ public class EntryCreateModifyServlet extends HttpServlet {
             
             //add id (REQUIRED)
             String atomIDStr = AdminServlet.docRootURL+relativePath;
-            entry.setId(new Id((atomIDStr+"#"+entryTitle).replaceAll(" ","%20")));
+            entry.setId(new Id((atomIDStr+"#"+entryTitle).replaceAll("[' ']","%20")));
             
             //add updated (REQUIRED)
             entry.setUpdated(new Updated(Calendar.getInstance().getTime()));
@@ -150,7 +150,7 @@ public class EntryCreateModifyServlet extends HttpServlet {
             }
             
             //add link
-            if(entryLinkPath != null && !entryLinkPath.equals(FeedDoc.URL_separator)){
+            if(entryLinkPath != null && !entryLinkPath.equals("")){
                 Link link = new Link(AdminServlet.docRootURL+entryLinkPath);
                 if(entryLinkRel != null && !entryLinkRel.equals("")){
                     link.setRel(new Attribute("rel",entryLinkRel));
