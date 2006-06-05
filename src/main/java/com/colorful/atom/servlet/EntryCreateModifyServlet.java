@@ -97,7 +97,7 @@ public class EntryCreateModifyServlet extends HttpServlet {
             //add id (REQUIRED)
             String atomIDStr = AdminServlet.docRootURL+relativePath;
             entry.setId(new Id((atomIDStr+"#"+entryTitle).replaceAll("[' ']","%20")));
-            
+            System.out.println("entry id = "+entry.getId().getText());
             //add updated (REQUIRED)
             entry.setUpdated(new Updated(Calendar.getInstance().getTime()));
             
