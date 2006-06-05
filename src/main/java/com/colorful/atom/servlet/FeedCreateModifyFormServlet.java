@@ -82,6 +82,37 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
         if(fileExists){//this is an existing document
             feed = FeedDoc.readFeedDoc(getServletContext().getRealPath(relativePath),true);
             formType = "modify";
+            
+            if(feed.getSubtitle() == null){
+                feed.setSubtitle(new Subtitle());
+            }
+            
+            if(feed.getAuthors() == null){
+                feed.addAuthor(new Author());
+            }
+            if(feed.getContributors() == null){
+                feed.addContributor(new Contributor());
+            }
+            
+            if(feed.getLinks() == null){
+                feed.addLink(new Link());
+            }
+            
+            if(feed.getCategories() == null){
+                feed.addCategory(new Category()); 
+            }
+            
+            if(feed.getIcon() == null){
+                feed.setIcon(new Icon());
+            }
+            
+            if(feed.getLogo() == null){
+                feed.setLogo(new Logo());
+            }
+            
+            if(feed.getRights() == null){
+                feed.setRights(new Rights());
+            }
              
         }else{//this is a create request so set everything to blank but the relative path. 
             feed = new Feed(FeedDoc.atomBase,FeedDoc.lang_en);
