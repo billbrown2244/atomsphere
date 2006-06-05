@@ -42,6 +42,8 @@ import org.w3.x2005.atom.FeedDocument.Feed;
 import org.w3.x2005.atom.GeneratorDocument.Generator;
 import org.w3.x2005.atom.LinkDocument.Link;
 
+import com.colorful.atom.beans.FeedDoc;
+
 public class FeedCreateModifyServlet extends HttpServlet {
     
     
@@ -58,13 +60,13 @@ public class FeedCreateModifyServlet extends HttpServlet {
         //paramaters not included are the atomId and atomUpdated
         //atomId will be created with the path and title.
         //atomUpdated will be created with the Calendar.getInstance() method.
-        String relativePath = "/"+request.getParameter("relativePath").trim();
+        String relativePath = FeedDoc.URL_separator+request.getParameter("relativePath").trim();
         String feedAuthorName = request.getParameter("feedAuthorName").trim();
         String feedAuthorURI = request.getParameter("feedAuthorURI").trim();
         String feedAuthorEmail = request.getParameter("feedAuthorEmail").trim();
         String feedTitle = request.getParameter("feedTitle").trim();
         String feedSubTitle = request.getParameter("feedSubTitle").trim();
-        String feedLinkPath = "/"+request.getParameter("feedLinkPath").trim();
+        String feedLinkPath = FeedDoc.URL_separator+request.getParameter("feedLinkPath").trim();
         String feedLinkRel = request.getParameter("feedLinkRel").trim();
         String feedLinkMediaType = request.getParameter("feedLinkMediaType").trim();
         String feedLinkLanguage = request.getParameter("feedLinkLanguage").trim();
@@ -79,8 +81,8 @@ public class FeedCreateModifyServlet extends HttpServlet {
         String feedGenerator = request.getParameter("feedGenerator").trim();
         String feedGeneratorURI = request.getParameter("feedGeneratorURI").trim();
         String feedGeneratorVersion = request.getParameter("feedGeneratorVersion").trim();
-        String feedIcon = "/"+request.getParameter("feedIcon").trim();
-        String feedLogo = "/"+request.getParameter("feedLogo").trim();
+        String feedIcon = FeedDoc.URL_separator+request.getParameter("feedIcon").trim();
+        String feedLogo = FeedDoc.URL_separator+request.getParameter("feedLogo").trim();
         String feedRights = request.getParameter("feedRights").trim();
         String formType = request.getParameter("formType").trim();
         boolean create = false;
@@ -125,6 +127,8 @@ public class FeedCreateModifyServlet extends HttpServlet {
             //add title (REQUIRED)
             feed.addNewTitle().set(XmlString.Factory.newValue(feedTitle));
             
+            //add the generator (Atomsphere)
+            feed.addNewGenerator();
             
             //add subtitle
             if(feedSubTitle != null && !feedSubTitle.equals("")){
@@ -132,7 +136,9 @@ public class FeedCreateModifyServlet extends HttpServlet {
             }
             
             
-            //add author (REQUIRED)            
+            //add author (REQUIRED) 
+            //TODO: add null check
+            if(feedAuthorName != null && !feedAuthorName.equals("")){
             AtomPersonConstruct author = feed.addNewAuthor();            
             author.addName(feedAuthorName);
             
@@ -142,7 +148,7 @@ public class FeedCreateModifyServlet extends HttpServlet {
             if(feedAuthorURI != null && !feedAuthorURI.equals("")){//(RECOMMENDED)
                 author.addUri(feedAuthorURI);
             }
-            
+            }
             
             //add Contributor
             if(feedContributorName != null && !feedContributorName.equals("")){
@@ -159,7 +165,7 @@ public class FeedCreateModifyServlet extends HttpServlet {
             
             
             //add self ref link (RECOMMENDED)
-            if(feedLinkPath != null && !feedLinkPath.equals("/")){
+            if(feedLinkPath != null && !feedLinkPath.equals(FeedDoc.URL_separator)){
             Link link = feed.addNewLink();
             link.setHref(XmlString.Factory.newValue(AdminServlet.docRootURL+feedLinkPath));
             link.setRel(XmlString.Factory.newValue(feedLinkRel));
@@ -205,12 +211,12 @@ public class FeedCreateModifyServlet extends HttpServlet {
             }
             
             //add Icon (1h X 1v)
-            if(feedIcon != null && !feedIcon.equals("/")){
+            if(feedIcon != null && !feedIcon.equals(FeedDoc.URL_separator)){
                 feed.addNewIcon().set(XmlString.Factory.newValue(AdminServlet.docRootURL+feedIcon));
             }
             
             //add Logo (2h X 1v)
-            if(feedLogo != null && !feedLogo.equals("/")){
+            if(feedLogo != null && !feedLogo.equals(FeedDoc.URL_separator)){
                 feed.addNewLogo().set(XmlString.Factory.newValue(AdminServlet.docRootURL+feedLogo));
             }
             

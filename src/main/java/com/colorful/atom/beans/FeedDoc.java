@@ -35,6 +35,8 @@ public class FeedDoc {
     public static final Attribute lang_en = new Attribute("xml:lang","en-US");
     public static String encoding = "utf-8";
     public static String xml_version = "1.0";
+    //utility constant to use instead of File.separator
+    public static final String URL_separator = "/";
 
     //writes files to the output doc. 
     public static void writeFeedDoc(String outFile,Feed feed,String encoding,String version) throws Exception{

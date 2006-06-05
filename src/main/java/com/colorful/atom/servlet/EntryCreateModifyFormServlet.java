@@ -74,7 +74,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
             //check to see if this entry exists 
             //if not, we are creating a new one.
             System.out.println("updated = "+updated);
-            if(entries != null){ 
+            if(entries != null && updated != null){ 
                 entry = (Entry)entries.get(updated);
                 if( entry != null){                        
                     entryExists = true;
@@ -248,7 +248,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
             }
             String path = "";
             if(!link.getHref().getValue().equals("")){
-                path = link.getHref().getValue().substring(link.getHref().getValue().lastIndexOf(File.separator));
+                path = link.getHref().getValue().substring(link.getHref().getValue().lastIndexOf(FeedDoc.URL_separator));
             }
             if(link.getRel() == null){
                 link.setRel(new Attribute("rel"));
