@@ -93,7 +93,6 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
             feed.addContributor(new Contributor());
             feed.addLink(new Link());
             feed.addCategory(new Category());
-            feed.setGenerator(new Generator());
             feed.setIcon(new Icon());
             feed.setLogo(new Logo());
             feed.setRights(new Rights());
