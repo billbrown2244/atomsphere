@@ -203,28 +203,44 @@ public class Feed {
         this.attributes.add(attribute);
     }
     
-    public void addAuthor(Author author) {
+    public void addAuthor(Author author) throws AtomSpecException{
+        //check to make sure there is a name element
+        if(author.getName() == null){
+            throw new AtomSpecException("Person constructs MUST contain exactly one \"atom:name\" element.");
+        }
         if(this.authors == null){
             this.authors = new LinkedList();
         }
         this.authors.add(author);        
     }
 
-    public void addContributor(Contributor contributor) {
+    public void addContributor(Contributor contributor) throws AtomSpecException{
+        //check to make sure there is a name element
+        if(contributor.getName() == null){
+            throw new AtomSpecException("Person constructs MUST contain exactly one \"atom:name\" element.");
+        }
         if(this.contributors == null){
             this.contributors = new LinkedList();
         }
         this.contributors.add(contributor);
     }
 
-    public void addCategory(Category category) {
+    public void addCategory(Category category) throws AtomSpecException{
+        //check to make sure there is a term element
+        if(category.getTerm() == null){
+            throw new AtomSpecException("Category elements MUST have a \"term\" attribute.");
+        }
         if(this.categories == null){
             this.categories = new LinkedList();
         }
         this.categories.add(category);
     }
     
-    public void addLink(Link link) {
+    public void addLink(Link link) throws AtomSpecException{
+        //check to make sure there is a href attribute
+        if(link.getHref() == null){
+            throw new AtomSpecException("atom:link elements MUST have an href attribute, whose value MUST be a IRI reference");
+        }
         if(this.links == null){
             this.links = new LinkedList();
         }
@@ -239,7 +255,14 @@ public class Feed {
         
     }
 
-    public void addEntry(Entry entry) {
+    public void addEntry(Entry entry) throws AtomSpecException{
+        //if there is no author element at the feed level
+        //check to make sure the entry has an author element
+        if (this.authors == null){
+            if(entry.getAuthors() == null){
+                throw new AtomSpecException("atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
+            }
+        }
         if(this.entries == null){
             this.entries = new TreeMap();
         }
