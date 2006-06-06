@@ -21,6 +21,8 @@ package com.colorful.atom.beans;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Calendar;
+import java.util.Iterator;
+import java.util.Map;
 
 import javanet.staxutils.IndentingXMLStreamWriter;
 
@@ -38,6 +40,41 @@ public class FeedDoc {
 
     //writes files to the output doc. 
     public static void writeFeedDoc(String outFile,Feed feed,String encoding,String version) throws Exception{
+        //make sure id is present
+        if(feed.getId() == null){
+            throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:id element.");
+        }
+        //make sure title is present
+        if(feed.getTitle() == null){
+            throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:title element.");
+        }
+        //make sure updated is present
+        if(feed.getUpdated() == null){
+            throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:updated element.");
+        }
+        //check for the author requirement
+        if(feed.getAuthors() == null){
+            if(feed.getEntries() == null){
+                throw new AtomSpecException("atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
+            }else{
+                Map entries = feed.getEntries();
+                Iterator entryKeys = entries.keySet().iterator();
+                while(entryKeys.hasNext()){
+                    Entry entry = (Entry)entries.get(entryKeys.next());
+                    if(entry.getAuthors() == null){
+                        if(entry.getSource() == null){
+                            throw new AtomSpecException("atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
+                        }else{
+                            Source source = entry.getSource();
+                            if(source.getAuthors() == null){
+                                throw new AtomSpecException("atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
         try{
             XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
             XMLStreamWriter writer = new IndentingXMLStreamWriter(outputFactory.createXMLStreamWriter(new java.io.FileOutputStream(outFile),encoding));
@@ -100,8 +137,8 @@ public class FeedDoc {
         title.setText("test feed");
         feed.setTitle(title);
         
-        Author author = new Author("Bill Brown","http://www.earthbeats.net","info@earthbeats.net");
-        feed.addAuthor(author);
+        //Author author = new Author("Bill Brown","http://www.earthbeats.net","info@earthbeats.net");
+        //feed.addAuthor(author);
         
         Contributor contributor = new Contributor("Mad Dog");
         contributor.setEmail(new Email("info@maddog.net"));

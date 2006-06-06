@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom.beans;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -256,11 +257,52 @@ public class Feed {
     }
 
     public void addEntry(Entry entry) throws AtomSpecException{
+        //make sure id is present
+        if(entry.getId() == null){
+            throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:id element.");
+        }
+        //make sure title is present
+        if(entry.getTitle() == null){
+            throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:title element.");
+        }
+        //make sure updated is present
+        if(entry.getUpdated() == null){
+            throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:updated element.");
+        }
         //if there is no author element at the feed level
         //check to make sure the entry has an author element
         if (this.authors == null){
             if(entry.getAuthors() == null){
-                throw new AtomSpecException("atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
+                throw new AtomSpecException("atom:entry elements MUST contain one or more atom:author elements, unless the atom:entry contains an atom:source element that contains an atom:author element or, in an Atom Feed Document, the atom:feed element contains an atom:author element itself.");
+            }
+        }
+        //check for the summary requirement
+        if(entry.getContent() != null){
+            Content content = entry.getContent();
+            if(content.getAttributes() != null){
+                //check for src attribute
+                Iterator attrsItr = content.getAttributes().iterator();
+                while(attrsItr.hasNext()){
+                    Attribute attr = (Attribute)attrsItr.next();
+                    if(attr.getName().equals("src")){
+                        if(entry.getSummary() == null){
+                            throw new AtomSpecException("atom:entry elements MUST contain an atom:summary element in either of the following cases: the atom:entry contains an atom:content that has a \"src\" attribute (and is thus empty).");
+                        }
+                    }
+                }
+                //check for non-xml media type
+                attrsItr = content.getAttributes().iterator();
+                while(attrsItr.hasNext()){
+                    Attribute attr = (Attribute)attrsItr.next();
+                    if(attr.getName().equals("type") 
+                            && !attr.getValue().startsWith("text/")
+                            && !attr.getValue().endsWith("/xml")
+                            && !attr.getValue().endsWith("+xml")){
+                        if(entry.getSummary() == null){
+                            throw new AtomSpecException("atom:entry elements MUST contain an atom:summary element in either of the following cases: the atom:entry contains content that is encoded in Base64; i.e., the \"type\" attribute of atom:content is a MIME media type [MIMEREG], but is not an XML media type [RFC3023], does not begin with \"text/\", and does not end with \"/xml\" or \"+xml\".");
+                        }
+                    }
+                }
             }
         }
         if(this.entries == null){
