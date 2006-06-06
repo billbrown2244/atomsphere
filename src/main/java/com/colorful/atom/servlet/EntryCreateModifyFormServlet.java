@@ -91,17 +91,16 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
                     entry.setContent(new Content());
                 }
                 if(entry.getAuthors() == null){
-                    entry.addAuthor(new Author());
+                    entry.addAuthor(new Author(""));
                 }
                 if(entry.getContributors() == null){
-                    entry.addContributor(new Contributor());
+                    entry.addContributor(new Contributor(""));
                 }
                 if(entry.getLinks() == null){
-                    entry.addLink(new Link());
+                    entry.addLink(new Link(""));
                 }
                 if(entry.getCategories() == null){
-                    Category category = new Category("");
-                    entry.addCategory(category); 
+                    entry.addCategory(new Category("")); 
                 }
                 if(entry.getRights() == null){
                     entry.setRights(new Rights());
@@ -111,10 +110,10 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
                 entry.setTitle(new Title());
                 entry.setSummary(new Summary());
                 entry.setContent(new Content());
-                entry.addAuthor(new Author());
-                entry.addContributor(new Contributor());
-                entry.addLink(new Link());
-                entry.addCategory(new Category());
+                entry.addAuthor(new Author(""));
+                entry.addContributor(new Contributor(""));
+                entry.addLink(new Link(""));
+                entry.addCategory(new Category(""));
                 entry.setRights(new Rights());
             }
             

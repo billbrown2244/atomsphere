@@ -74,18 +74,18 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
             }
             
             if(feed.getAuthors() == null){
-                feed.addAuthor(new Author());
+                feed.addAuthor(new Author(""));
             }
             if(feed.getContributors() == null){
-                feed.addContributor(new Contributor());
+                feed.addContributor(new Contributor(""));
             }
             
             if(feed.getLinks() == null){
-                feed.addLink(new Link());
+                feed.addLink(new Link(""));
             }
             
             if(feed.getCategories() == null){
-                feed.addCategory(new Category()); 
+                feed.addCategory(new Category("")); 
             }
             
             if(feed.getIcon() == null){
@@ -106,10 +106,10 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
             
             feed.setTitle(new Title());
             feed.setSubtitle(new Subtitle());
-            feed.addAuthor(new Author());
-            feed.addContributor(new Contributor());
-            feed.addLink(new Link());
-            feed.addCategory(new Category());
+            feed.addAuthor(new Author(""));
+            feed.addContributor(new Contributor(""));
+            feed.addLink(new Link(""));
+            feed.addCategory(new Category(""));
             feed.setIcon(new Icon());
             feed.setLogo(new Logo());
             feed.setRights(new Rights());
