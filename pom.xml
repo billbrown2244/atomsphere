@@ -9,31 +9,90 @@
   <packaging>war</packaging>
   <version>1.0.0</version>
   <description>Atom Feed Manager</description>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>version</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <ant inheritRefs="true" antfile="src/main/resources/ant.tasks.xml">
+                  <target name="incrementBuildNumber"></target>
+                </ant>
+              </tasks>
+            </configuration>
+          </execution>
+         <!-- <execution>
+            <id>tag</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <ant inheritRefs="true" antfile="src/main/resources/ant.tasks.xml">
+                  <target name="copyTrunkToTag"></target>
+                </ant>
+              </tasks>
+            </configuration>
+          </execution>  -->
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>svnClientAdapter</groupId>
+            <artifactId>svnClientAdapter</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+          </dependency>
+          <dependency>
+            <groupId>svnjavahl</groupId>
+            <artifactId>svnjavahl</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+          </dependency>
+          <dependency>
+            <groupId>svnant</groupId>
+            <artifactId>svnant</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+          </dependency>
+          <dependency>
+            <groupId>ant</groupId>
+            <artifactId>ant-optional</artifactId>
+            <version>1.5.3-1</version>
+            <scope>provided</scope>
+          </dependency>
+        </dependencies>
+        <inherited>false</inherited>
+      </plugin>
+ <!-- <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <printSummary>true</printSummary>
+          <reportFormat>plain</reportFormat>
+          <reportsDirectory>.</reportsDirectory>
+          <useFile>true</useFile>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <configuration>
+          <classpathElements>${warDir}/WEB-INF</classpathElements>
+          <outputDirectory>.</outputDirectory>
+          <reportsDirectory>.</reportsDirectory>
+          <outputName>testOutput.html</outputName>
+        </configuration>
+      </plugin>  -->
+    </plugins>
+  </build>
   <dependencies>
-  	<dependency>
-  		<groupId>xmlbeans</groupId>
-         <artifactId>xmlpublic</artifactId>
-		 <version>2.1.0</version>
-         <scope>compile</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>xmlbeans</groupId>
-         <artifactId>xbean_xpath</artifactId>
-		 <version>2.1.0</version>
-         <scope>compile</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>xmlbeans</groupId>
-     	<artifactId>xmlbeans-jsr173-api</artifactId>
-		<version>2.0-dev</version>
-   		<scope>compile</scope>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.w3c</groupId>
-         <artifactId>atom</artifactId>
-         <version>1.0</version>
-         <scope>compile</scope>
-  	</dependency>
   	<dependency>
   		<groupId>javax.servlet</groupId>
          <artifactId>servlet-api</artifactId>

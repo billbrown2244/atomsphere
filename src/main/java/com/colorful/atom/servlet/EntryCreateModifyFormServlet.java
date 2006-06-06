@@ -100,7 +100,8 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
                     entry.addLink(new Link());
                 }
                 if(entry.getCategories() == null){
-                    entry.addCategory(new Category()); 
+                    Category category = new Category("");
+                    entry.addCategory(category); 
                 }
                 if(entry.getRights() == null){
                     entry.setRights(new Rights());

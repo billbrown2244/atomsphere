@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<project name="buildNumber" basedir="." default="incrementBuildNumber">
+
+	<target name="incrementBuildNumber">
+	
+	<!-- Increment the build number -->
+	<taskdef resource="svntask.properties" classpathref="maven.dependency.classpath"/>
+	   	
+	   	<!-- update the version.properties file -->
+	   	<property name="svnuser"	value="bill"/>
+	   	<property name="svnpasswd"	value="xcv60uft"/>
+	   	<echo message="incrementing the version build number."/> 
+		<propertyfile comment="main properties file" file="src/main/resources/atomsphere.properties">
+			<entry default="0" key="build" operation="+" type="int"/>
+		</propertyfile>
+	
+		<svn  username="${svnuser}" password="${svnpasswd}" javahl="false">
+			<commit file="src/main/resources/atomsphere.properties" message="atomsphere - automatically incrementing cleanroom build number."/>
+		</svn>
+		
+	</target>
+	<!--
+	<target name="copyTrunkToTag">
+		<taskdef resource="svntask.properties" classpathref="maven.dependency.classpath"/>
+		<property name="svnant.trunk.url" value="http://svn/repos/itdev/costUplift/trunk/" />
+		<property name="svnant.tags.url" value="http://svn/repos/itdev/costUplift/tags/"/>
+		<property name="svnuser" value="bill" />
+		<property name="svnpasswd" value="xcv60uft" />
+
+		<property file="src/main/resources/version.properties"/>
+		<svn  username="${svnuser}" password="${svnpasswd}" javahl="false">
+			<copy message="c - copyTrunkToTag" srcURL="${svnant.trunk.url}" destURL="${svnant.tags.url}costUplift_${major}.${minor}.${feature}.${build}"/>
+		</svn>
+		<property id="" name="tag" value="costUplift_${major}.${minor}.${feature}.${build}"/>
+	</target>
+	-->
+</project>
