@@ -67,6 +67,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
             
             //open the file to get the entrys.            
             Feed feed = FeedDoc.readFeedDoc(getServletContext().getRealPath(relativePath),true);
+            
             Map entries = feed.getEntries();
             Entry entry = null;
             
@@ -135,8 +136,11 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
             if(entry.getTitle().getText().equals("")){
                 entry.getTitle().setText(entryTitle);
             }
-            out.println("<tr><td>Title:<span style=\"color: green;\">*</span></td><td><input type=\"text\" name=\"entryTitle\" value=\""+entry.getTitle().getText()+"\" /></td></tr>");
-            
+            if(entryExists){
+                out.println("<tr><td>Title:<span style=\"color: green;\">*</span></td><td><input type=\"text\" name=\"entryTitle\" value=\""+entry.getTitle().getText()+"\" readonly=\"readonly\" /></td></tr>");  
+            }else{
+                out.println("<tr><td>Title:<span style=\"color: green;\">*</span></td><td><input type=\"text\" name=\"entryTitle\" value=\""+entry.getTitle().getText()+"\" /></td></tr>");
+            }
             //print the summary
             out.println("<tr><td>Summary:</td><td><input type=\"text\" name=\"entrySummary\" value=\""+entry.getSummary().getText()+"\" /></td></tr>");
             

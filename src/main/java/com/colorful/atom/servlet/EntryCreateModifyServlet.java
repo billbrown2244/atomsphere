@@ -18,9 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom.servlet;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Calendar;
 import java.util.Iterator;
 
@@ -210,6 +208,7 @@ public class EntryCreateModifyServlet extends HttpServlet {
             }
             
             //write the feed to the config and atom file
+            feed.setUpdated(new Updated(Calendar.getInstance().getTime()));
             FeedDoc.writeFeedDoc(getServletContext().getRealPath(relativePath),feed,FeedDoc.encoding,FeedDoc.xml_version);
             AdminServlet.writeFeedToConfigFile(relativePath,FeedDoc.readFeedString(getServletContext().getRealPath(relativePath)));
             
