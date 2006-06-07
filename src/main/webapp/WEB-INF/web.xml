@@ -30,7 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     	<init-param>
   			<description>The path to the Atom State Config file</description>
   			<param-name>atomConfigFile</param-name>
-  			<param-value>/tmp/atomConfig.xml</param-value>
+  			<param-value>C:/atomConfig.xml</param-value>
   		</init-param>
   		<init-param>
   			<description>The document root URL for the library</description>
@@ -40,7 +40,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   		<init-param>
   			<description>The path and file name of the stylesheet</description>
   			<param-name>cssURL</param-name>
-  			<param-value>http://earthbeats.localhost/scripts/styles.css</param-value>
+  			<param-value>http://www.colorfulsoftware.com/scripts/styles.css</param-value>
   		</init-param>
   		<init-param>
   			<description>The path to the Atom Specification</description>
