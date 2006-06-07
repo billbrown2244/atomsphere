@@ -21,8 +21,6 @@ package com.colorful.atom.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -124,8 +122,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
             response.setContentType("text/html");
             PrintWriter out = response.getWriter();        
             out.println("<html><head><title>Atomsphere</title><link rel=\"stylesheet\" type=\"text/css\" href=\""+AdminServlet.cssURL+"\"/>");
-            ResourceBundle bundle = ResourceBundle.getBundle("atomsphere",Locale.getDefault(),this.getClass().getClassLoader());
-            out.println(bundle.getString("javascript"));
+            out.println(AdminServlet.javascript);
             
             out.println("</head><body>");
             out.println("<a href=\""+AdminServlet.docRootURL+"\" ><h3>Feed Admin Page</h3></a>");

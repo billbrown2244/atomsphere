@@ -28,7 +28,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.TreeMap;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -47,6 +49,8 @@ public class AdminServlet extends HttpServlet {
 	public static String docRootURL = null;
 	public static String cssURL = null;    
 	public static String atomSpecURL = null;
+    public static String VERSION = null;
+    public static String javascript = null;
 	
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
@@ -90,6 +94,10 @@ public class AdminServlet extends HttpServlet {
 			cssURL = config.getInitParameter("cssURL");
 			atomSpecURL = config.getInitParameter("atomSpecURL");
 			
+            //get the properties out of the properties file
+            ResourceBundle bundle = ResourceBundle.getBundle("atomsphere",Locale.getDefault(),this.getClass().getClassLoader());
+            javascript = bundle.getString("javascript");
+            VERSION = bundle.getString("major")+"."+bundle.getString("minor")+"."+bundle.getString("feature")+"."+bundle.getString("build");
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -143,7 +151,7 @@ public class AdminServlet extends HttpServlet {
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();        
 		out.println("<html><head><title>Atomsphere</title><link rel=\"stylesheet\" type=\"text/css\" href=\""+cssURL+"\"/></head><body>");
-        out.println("<a href=\""+docRootURL+"\" ><h3>Feed Admin Page</h3></a>");
+        out.println("<a href=\""+docRootURL+"\" ><h3>Feed Admin Page<span style=\"font-size:9px;\">"+VERSION+"</span></h3></a>");
 		out.println("Document Root = "+docRootURL);
 		out.println("<form method=\"post\" action=\"atom/create\" >");
 		out.println("<table><tr><td>Feed Path and Name:</td><td><input name=\"relativePath\" value=\"\" /></td><td><input type=\"submit\" value=\"New\" /></td></tr></table>");
