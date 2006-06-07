@@ -10,12 +10,13 @@
   <version>1.0.0</version>
   <description>Atom Feed Manager</description>
   <build>
+  	<!-- this plugin increments the build number, builds the javadocs, -->
     <plugins>
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
-            <id>version</id>
+            <id>all</id>
             <phase>generate-sources</phase>
             <goals>
               <goal>run</goal>
@@ -23,7 +24,21 @@
             <configuration>
               <tasks>
                 <ant inheritRefs="true" antfile="src/main/resources/ant.tasks.xml">
-                  <target name="incrementBuildNumber"></target>
+                  <target name="all"></target>
+                </ant>
+              </tasks>
+            </configuration>
+          </execution>
+          <execution>
+            <id>jarLib</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <ant inheritRefs="true" antfile="src/main/resources/ant.tasks.xml">
+                  <target name="libraryJar"></target>
                 </ant>
               </tasks>
             </configuration>

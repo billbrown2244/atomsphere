@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="buildNumber" basedir="." default="incrementBuildNumber">
+<project name="buildNumber" basedir="." default="all">
+
+	<target name="all" depends="incrementBuildNumber,sourceJar,javadoc" />
 
 	<target name="incrementBuildNumber">
 	
@@ -19,6 +21,26 @@
 		</svn>
 		
 	</target>
+	
+	<target name="sourceJar"  description="build the source code jar." >
+		<property file="src/main/resources/atomsphere.properties"/>
+		<mkdir dir="target"/>
+		<jar destfile="target/atomsphere-src-${major}.${minor}.${feature}.jar" 
+			basedir="src/main/java" 
+			includes="**/*.java"
+			update="true" />
+     </target>
+     
+     <target name="libraryJar"  description="build the class file library jar." >
+		<property file="src/main/resources/atomsphere.properties"/>
+		<mkdir dir="target"/>
+		<jar destfile="target/atomsphere-${major}.${minor}.${feature}.jar" 
+			update="true">
+			<fileset dir="target/classes">
+				<exclude name="ant.tasks.xml" />		
+			</fileset>	
+		</jar>
+     </target>
 	
 	<target name="javadoc">
 		<javadoc access="public" author="true" classpath="C:\Documents and Settings\wbrown\.m2\repository\javax\servlet\servlet-api\2.4\servlet-api-2.4.jar;C:\Tomcat5.0\common\lib\jxl.jar;lib/jsr173_1.0_api.jar;C:\Tomcat5.0\common\lib\sso.jar;C:\Tomcat5.0\common\lib\businessObjects.jar;C:\Documents and Settings\wbrown\.m2\repository\com\sun\xml\sjsxp\fcs-1.0\sjsxp-fcs-1.0.jar;C:\Tomcat5.0\common\lib\servlet-api.jar;C:\Tomcat5.0\common\lib\commons-net-1.4.0.jar;C:\Tomcat5.0\common\lib\tools.jar;C:\Tomcat5.0\common\lib\naming-resources.jar;C:\Tomcat5.0\common\lib\commons-beanutils.jar;C:\Tomcat5.0\common\lib\naming-factory.jar;C:\Tomcat5.0\common\lib\naming-common.jar;C:\Tomcat5.0\common\lib\commons-digester-1.7.jar;C:\Documents and Settings\wbrown\.m2\repository\javax\xml\jsr173\1.0\jsr173-1.0.jar;C:\Tomcat5.0\common\lib\quartz.jar;C:\Tomcat5.0\common\lib\commons-collections-3.1.jar;C:\Tomcat5.0\common\lib\jasper-compiler.jar;C:\Tomcat5.0\common\lib\naming-java.jar;src/main/resources;C:\Tomcat5.0\common\lib\jndi.jar;lib/sjsxp.jar;C:\Tomcat5.0\common\lib\heraCommonLibPrincipal.jar;C:\Tomcat5.0\common\lib\xpp3_min-1.1.3.4.K.jar;C:\Tomcat5.0\common\lib\jstl.jar;C:\Tomcat5.0\common\lib\ant.jar;C:\Tomcat5.0\common\lib\commons-beanutils-bean-collections.jar;C:\Tomcat5.0\common\lib\xstream-1.1.1.jar;C:\Tomcat5.0\common\lib\commons-beanutils-core.jar;C:\Tomcat5.0\common\lib\jakarta-oro-2.0.8.jar;C:\Tomcat5.0\common\lib\ant-launcher.jar;C:\Tomcat5.0\common\lib\db2jcc.jar;C:\Documents and Settings\wbrown\.m2\repository\javanet\staxutils\stax-utils\1.0\stax-utils-1.0.jar;lib/stax-utils.jar;C:\Tomcat5.0\common\lib\commons-dbcp-1.2.1.jar;C:\Tomcat5.0\common\lib\commons-validator-1.1.4.jar;C:\Tomcat5.0\common\lib\commons-el.jar;C:\Tomcat5.0\common\lib\db2jcc_license_cu.jar;C:\Tomcat5.0\common\lib\aeConnectionPool.jar;C:\Tomcat5.0\common\lib\jsp-api.jar;C:\Tomcat5.0\common\lib\commons-pool-1.2.jar;C:\Tomcat5.0\common\lib\jasper-runtime.jar;C:\Tomcat5.0\common\lib\commons-fileupload-1.0.jar" destdir="api" doctitle="Atomsphere Project" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="com.colorful.atom.servlet,com.colorful.atom.beans" source="1.3" sourcepath="src/main/resources;src/main/java" splitindex="true" use="true" version="true"/>

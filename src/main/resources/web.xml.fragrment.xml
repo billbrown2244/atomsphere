@@ -1,0 +1,94 @@
+<web-app>
+	<servlet>
+    	<servlet-name>admin</servlet-name>
+    	<servlet-class>com.colorful.atom.servlet.AdminServlet</servlet-class>
+    	<init-param>
+  			<description>The path to the Atom State Config file</description>
+  			<param-name>atomConfigFile</param-name>
+  			<param-value>C:/atomConfig.xml</param-value>
+  		</init-param>
+  		<init-param>
+  			<description>The document root URL for the library</description>
+  			<param-name>docRootURL</param-name>
+  			<param-value>http://localhost:8080/atomsphere</param-value>
+  		</init-param>
+  		<init-param>
+  			<description>The path and file name of the stylesheet</description>
+  			<param-name>cssURL</param-name>
+  			<param-value>http://www.colorfulsoftware.com/scripts/styles.css</param-value>
+  		</init-param>
+  		<init-param>
+  			<description>The path to the Atom Specification</description>
+  			<param-name>atomSpecURL</param-name>
+  			<param-value>http://www.atomenabled.org/developers/syndication/atom-format-spec.php</param-value>
+  		</init-param>
+  		<load-on-startup>1</load-on-startup>
+  	</servlet>
+  	<servlet>
+    	<servlet-name>modifyAll</servlet-name>
+    	<servlet-class>com.colorful.atom.servlet.ModifyAllServlet</servlet-class>
+  	</servlet>
+	<servlet>
+    	<servlet-name>feedCreateForm</servlet-name>
+    	<servlet-class>com.colorful.atom.servlet.FeedCreateModifyFormServlet</servlet-class>  		
+  	</servlet>
+	<servlet>
+    	<servlet-name>feedCreate</servlet-name>
+    	<servlet-class>com.colorful.atom.servlet.FeedCreateModifyServlet</servlet-class>
+  	</servlet>
+  	<servlet>
+    	<servlet-name>feedDelete</servlet-name>
+    	<servlet-class>com.colorful.atom.servlet.FeedDeleteServlet</servlet-class>
+  	</servlet>
+
+  	
+ 	<servlet>
+    	<servlet-name>entryCreateForm</servlet-name>
+    	<servlet-class>com.colorful.atom.servlet.EntryCreateModifyFormServlet</servlet-class>
+  	</servlet>
+  	<servlet>
+    	<servlet-name>entryCreate</servlet-name>
+    	<servlet-class>com.colorful.atom.servlet.EntryCreateModifyServlet</servlet-class>
+  	</servlet>
+  	<servlet>
+    	<servlet-name>entryDelete</servlet-name>
+    	<servlet-class>com.colorful.atom.servlet.EntryDeleteServlet</servlet-class>
+  	</servlet>
+
+  	
+  	
+  	
+ 	<servlet-mapping>
+    	<servlet-name>admin</servlet-name>
+    	<url-pattern>/atom</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
+    	<servlet-name>modifyAll</servlet-name>
+    	<url-pattern>/atom/modify</url-pattern>
+  	</servlet-mapping>
+ 	<servlet-mapping>
+    	<servlet-name>feedCreateForm</servlet-name>
+    	<url-pattern>/atom/create</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
+    	<servlet-name>feedCreate</servlet-name>
+    	<url-pattern>/atom/create/feed</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
+    	<servlet-name>feedDelete</servlet-name>
+    	<url-pattern>/atom/delete</url-pattern>
+  	</servlet-mapping>
+
+  	<servlet-mapping>
+  		<servlet-name>entryCreateForm</servlet-name>
+    	<url-pattern>/atom/modify/create</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
+    	<servlet-name>entryCreate</servlet-name>
+    	<url-pattern>/atom/modify/create/entry</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
+    	<servlet-name>entryDelete</servlet-name>
+    	<url-pattern>/atom/modify/delete</url-pattern>
+  	</servlet-mapping>
+</web-app>
