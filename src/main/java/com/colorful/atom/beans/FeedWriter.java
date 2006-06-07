@@ -314,10 +314,11 @@ public class FeedWriter{
     
     private void writeEntries(XMLStreamWriter writer, Map entries) throws Exception{
         
-        Iterator entryItr = entries.keySet().iterator();
         System.out.println("entries size in feed writer = "+entries.size());
-        while(entryItr.hasNext()){
-            Entry entry = (Entry)entries.get(entryItr.next());
+        //with this sorting, we want to print the last element first.
+        Object[] entryArr = entries.values().toArray();
+        for(int i=(entryArr.length -1); i >=0; i--){
+            Entry entry = (Entry)entryArr[i];
             writer.writeStartElement("entry");
             if(entry.getAttributes() != null){
                 Iterator entryAttrs = entry.getAttributes().iterator();
