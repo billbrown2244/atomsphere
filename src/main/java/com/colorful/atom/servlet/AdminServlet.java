@@ -151,7 +151,7 @@ public class AdminServlet extends HttpServlet {
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();        
 		out.println("<html><head><title>Atomsphere</title><link rel=\"stylesheet\" type=\"text/css\" href=\""+cssURL+"\"/></head><body>");
-        out.println("<a href=\""+docRootURL+"\" ><h3>Feed Admin Page<span style=\"font-size:9px;\">"+VERSION+"</span></h3></a>");
+        out.println("<h3>Feed Admin Page <span style=\"font-size:9px;\">v"+VERSION+"</span></h3>");
 		out.println("Document Root = "+docRootURL);
 		out.println("<form method=\"post\" action=\"atom/create\" >");
 		out.println("<table><tr><td>Feed Path and Name:</td><td><input name=\"relativePath\" value=\"\" /></td><td><input type=\"submit\" value=\"New\" /></td></tr></table>");
