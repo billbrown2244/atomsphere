@@ -143,7 +143,7 @@ public class AdminServlet extends HttpServlet {
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();        
 		out.println("<html><head><title>Atomsphere</title><link rel=\"stylesheet\" type=\"text/css\" href=\""+cssURL+"\"/></head><body>");
-		out.println("<h3>Atom Feed Admin</h3>");
+        out.println("<a href=\""+docRootURL+"\" ><h3>Feed Admin Page</h3></a>");
 		out.println("Document Root = "+docRootURL);
 		out.println("<form method=\"post\" action=\"atom/create\" >");
 		out.println("<table><tr><td>Feed Path and Name:</td><td><input name=\"relativePath\" value=\"\" /></td><td><input type=\"submit\" value=\"New\" /></td></tr></table>");
@@ -160,7 +160,7 @@ public class AdminServlet extends HttpServlet {
 
 				out.println("<table><tr>"); 
 				out.println("<td><a href=\""+feed.getId().getText()+"\" >"+feed.getTitle().getText()+"</a></td>");
-				out.println("<td><form method=\"post\" action=\"atom/modify\"><input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"submit\" value=\"Modify\" /></form></td>");
+				out.println("<td><form method=\"post\" action=\"atom/modify\"><input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"submit\" value=\"Modify\" /></form></td>");
 				out.println("<td><form method=\"post\" action=\"atom/delete\"><input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"submit\" value=\"Delete\" /></form></td>");
 				out.println("</tr></table>");
 			}

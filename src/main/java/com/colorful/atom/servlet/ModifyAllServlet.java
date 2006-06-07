@@ -73,6 +73,7 @@ public class ModifyAllServlet extends HttpServlet {
             response.setContentType("text/html");
             PrintWriter out = response.getWriter(); 
             out.println("<html><head><title>Atomsphere</title><link rel=\"stylesheet\" type=\"text/css\" href=\""+AdminServlet.cssURL+"\"/></head><body>");
+            out.println("<a href=\""+AdminServlet.docRootURL+"\" ><h3>Feed Admin Page</h3></a>");
             out.println("<h3><form method=\"post\" action=\"../atom/create\">Header Data <input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"hidden\" name=\"relativePath\" value=\""+relativePath+"\" /><input type=\"submit\" value=\"Modify\" /></form></h3>");
             out.println("<table>");
             

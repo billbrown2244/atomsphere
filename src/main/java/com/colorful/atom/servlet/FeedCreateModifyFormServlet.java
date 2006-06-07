@@ -119,6 +119,7 @@ public class FeedCreateModifyFormServlet extends HttpServlet {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();        
         out.println("<html><head><title>Atomsphere</title><link rel=\"stylesheet\" type=\"text/css\" href=\""+AdminServlet.cssURL+"\"/></head><body>");
+        out.println("<a href=\""+AdminServlet.docRootURL+"\" ><h3>Feed Admin Page</h3></a>");
         out.println("<form method=\"post\" action=\"create/feed\" >");
 
         out.println("<table>");

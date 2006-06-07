@@ -128,6 +128,7 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
             out.println(bundle.getString("javascript"));
             
             out.println("</head><body>");
+            out.println("<a href=\""+AdminServlet.docRootURL+"\" ><h3>Feed Admin Page</h3></a>");
             out.println("<form method=\"post\" action=\"create/entry\" >");
             out.println("<table>");
             out.println("<tr><td><span style=\"color: green;\">*</span> = Required</td><td><span style=\"color: green;\">(*)</span> = Required for parent</td></tr>");
