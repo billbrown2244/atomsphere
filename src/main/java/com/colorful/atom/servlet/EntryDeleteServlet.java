@@ -51,7 +51,7 @@ public class EntryDeleteServlet extends HttpServlet {
         }catch(Exception e){
             e.printStackTrace();
         }
-        response.sendRedirect("../../atom");
+        response.sendRedirect("../../atom/modify?relativePath="+relativePath);
     }
     
     public void doGet( HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
