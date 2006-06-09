@@ -52,6 +52,12 @@ public class FeedWriter{
         }
         //write the title (REQUIRED)
         writeTitle(writer,feed.getTitle());
+        
+        //write the subtitle
+        if(feed.getSubtitle() != null){
+            writeSubtitle(writer,feed.getSubtitle());
+        }
+        
         //write the author
         if(feed.getAuthors() != null){
             writeAuthors(writer,feed.getAuthors());
@@ -92,6 +98,20 @@ public class FeedWriter{
         writer.writeEndElement();
     }
     
+    private void writeSubtitle(XMLStreamWriter writer, Subtitle subtitle) throws Exception{
+        writer.writeStartElement("subtitle");
+        if(subtitle.getAttributes() != null){
+            Iterator feedAttrs = subtitle.getAttributes().iterator();
+            //write the attributes
+            while(feedAttrs.hasNext()){
+                Attribute feedAttr = (Attribute)feedAttrs.next();
+                writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
+            }
+        }
+        writer.writeCharacters(subtitle.getText());
+        writer.writeEndElement();
+    }
+
     private void writeGenerator(XMLStreamWriter writer,Generator generator) throws Exception{
         writer.writeStartElement("generator");
         if(generator.getAttributes() != null){
