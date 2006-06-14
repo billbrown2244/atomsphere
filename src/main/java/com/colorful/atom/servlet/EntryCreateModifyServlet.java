@@ -62,7 +62,6 @@ public class EntryCreateModifyServlet extends HttpServlet {
         String entrySummary = request.getParameter("entrySummary");
         String contentType = request.getParameter("contentType");
         String contentValue = request.getParameter("content");
-        System.out.println("contentValue = "+contentValue);
         String entryAuthorName = request.getParameter("entryAuthorName");
         String entryAuthorEmail = request.getParameter("entryAuthorEmail");
         String entryAuthorURI = request.getParameter("entryAuthorURI");
@@ -95,7 +94,6 @@ public class EntryCreateModifyServlet extends HttpServlet {
             //add id (REQUIRED)
             String atomIDStr = AdminServlet.docRootURL+relativePath;
             entry.setId(new Id((atomIDStr+"#"+entryTitle).replaceAll("[' ']","%20")));
-            System.out.println("entry id = "+entry.getId().getText());
             //add updated (REQUIRED)
             entry.setUpdated(new Updated(Calendar.getInstance().getTime()));
             
@@ -113,7 +111,6 @@ public class EntryCreateModifyServlet extends HttpServlet {
             
             //add content
             if(!contentType.equals("*")){
-                System.out.println("adding contnet");
                 Content content = new Content(contentType);
                 if(contentType.equals("link")){
                     content.addAttribute(new Attribute("src",contentValue));

@@ -71,7 +71,6 @@ public class EntryCreateModifyFormServlet extends HttpServlet {
             
             //check to see if this entry exists 
             //if not, we are creating a new one.
-            System.out.println("updated = "+updated);
             if(entries != null && updated != null){ 
                 entry = (Entry)entries.get(updated);
                 if( entry != null){                        

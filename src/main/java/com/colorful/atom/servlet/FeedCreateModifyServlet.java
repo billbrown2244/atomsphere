@@ -109,7 +109,6 @@ public class FeedCreateModifyServlet extends HttpServlet {
             
             
             //add id (REQUIRED)
-            System.out.println("relativePath here = "+relativePath);
             if(!relativePath.startsWith("/")){
                 relativePath = "/"+relativePath;
             }
