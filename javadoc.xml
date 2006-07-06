@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="javadoc">
+<target name="javadoc">
+<javadoc access="public" author="true" classpath="/home/bill/.m2/repository/javax/xml/jsr173/1.0/jsr173-1.0.jar:/home/bill/.m2/repository/javax/servlet/servlet-api/2.4/servlet-api-2.4.jar:/home/bill/.m2/repository/javanet/staxutils/stax-utils/1.0/stax-utils-1.0.jar:/home/bill/.m2/repository/com/sun/xml/sjsxp/fcs-1.0/sjsxp-fcs-1.0.jar" destdir="api" doctitle="Atomsphere API" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="com.colorful.atom.servlet,com.colorful.atom.beans" source="1.3" sourcepath="src/main/java" splitindex="true" use="true" version="true"/>
+</target>
+</project>
