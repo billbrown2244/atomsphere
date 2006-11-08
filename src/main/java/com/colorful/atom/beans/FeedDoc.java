@@ -15,11 +15,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+Change History:
+    2006-11-08 wbrown - changed API to include url's and make the method calls more intuitive.
  */
 package com.colorful.atom.beans;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Map;
@@ -56,25 +62,25 @@ public class FeedDoc {
         if(feed.getAuthors() == null){
             if(feed.getEntries() == null){
                 throw new AtomSpecException("atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
-            }else{
-                Map entries = feed.getEntries();
-                Iterator entryKeys = entries.keySet().iterator();
-                while(entryKeys.hasNext()){
-                    Entry entry = (Entry)entries.get(entryKeys.next());
-                    if(entry.getAuthors() == null){
-                        if(entry.getSource() == null){
-                            throw new AtomSpecException("atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
-                        }else{
-                            Source source = entry.getSource();
-                            if(source.getAuthors() == null){
-                                throw new AtomSpecException("atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
-                            }
-                        }
+            }
+            Map entries = feed.getEntries();
+            Iterator entryKeys = entries.keySet().iterator();
+            while(entryKeys.hasNext()){
+                Entry entry = (Entry)entries.get(entryKeys.next());
+                if(entry.getAuthors() == null){
+                    if(entry.getSource() == null){
+                        throw new AtomSpecException("atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
                     }
+                    Source source = entry.getSource();
+                    if(source.getAuthors() == null){
+                        throw new AtomSpecException("atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
+                    }
+
                 }
             }
+
         }
-        
+
         try{
             XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
             XMLStreamWriter writer = new IndentingXMLStreamWriter(outputFactory.createXMLStreamWriter(new java.io.FileOutputStream(outFile),encoding));
@@ -86,108 +92,153 @@ public class FeedDoc {
             e.printStackTrace();
         }
     }
-    
-    //writes out an feed to an eml string.
-    public static String readFeedString(String file) {
+
+    public static String readFeedToString(File file){
         StringBuffer feedXML = new StringBuffer();
         try{
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line = null;
             while((line = reader.readLine()) != null){
-            	feedXML.append(line);
+                feedXML.append(line);
             }
             reader.close();
-            
+
         }catch(Exception e){
             System.out.println("error creating xml string from feed.");
             e.printStackTrace();
         }
         return feedXML.toString();
     }
-    
-    public static Feed readFeedDoc(String fileOrString, boolean isFile) throws Exception{
-        
-        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        
-        XMLStreamReader reader = null;
-        if(isFile){
-            reader = inputFactory.createXMLStreamReader(new java.io.FileInputStream(fileOrString));
-        }else{
-            reader = inputFactory.createXMLStreamReader(new java.io.StringReader(fileOrString));
+
+    public static String readFeedToString(URL url){
+        StringBuffer feedXML = new StringBuffer();
+        try{
+            BufferedReader reader = new BufferedReader( new InputStreamReader(url.openStream()));
+            String line = null;
+            while((line = reader.readLine()) != null){
+                feedXML.append(line);
+            }
+            reader.close();
+        }catch(Exception e){
+            System.out.println("error creating xml string from feed.");
+            e.printStackTrace();
         }
+        return feedXML.toString();
+    }
+
+    /**
+     * @deprecated
+     * @param file
+     * @return writes out an atom feed from a file to an xml string.
+     */
+    public static String readFeedString(String file) {
+        return readFeedToString(new File(file));
+    }
+
+    public static Feed readFeedToBean(String xmlString) throws Exception{
+        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        XMLStreamReader reader = inputFactory.createXMLStreamReader(new java.io.StringReader(xmlString));
         return new FeedReader().readFeed(reader);
     }
-    
+
+    public static Feed readFeedToBean(File file) throws Exception{
+        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        XMLStreamReader reader = inputFactory.createXMLStreamReader(new java.io.FileInputStream(file));
+        return new FeedReader().readFeed(reader);
+    }
+
+    public static Feed readFeedToBean(URL url) throws Exception{
+        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        XMLStreamReader reader = inputFactory.createXMLStreamReader(url.openStream());
+        return new FeedReader().readFeed(reader);
+    }
+
+    /**
+     * @deprecated use one of the readFeedToBean() methods.
+     * @param fileOrString file path or xml string
+     * @param isFile whether the fileOrString is a file
+     * @return a feed bean.
+     * @throws Exception
+     */
+    public static Feed readFeedDoc(String fileOrString, boolean isFile) throws Exception{
+        if(isFile){
+            return readFeedToBean(new File(fileOrString));
+        }
+        return readFeedToBean(fileOrString);
+    }
+
     public static void main(String[] args){
         try{
-        Feed feed = new Feed(atomBase,lang_en);
-        
-        Generator generator = new Generator("http://www.colorfulsoftware.com/projects/atomsphere","1.0.0");
-        generator.setText("Atomsphere");
-        feed.setGenerator(generator);
-        
-        Id id = new Id();
-        id.setUri(new URI("http://www.colorfulsoftware.com/atom.xml"));
-        feed.setId(id);
-        
-        Updated updated = new Updated(Calendar.getInstance().getTime());
-        feed.setUpdated(updated);
-        
-        Title title = new Title();
-        title.setText("test feed");
-        feed.setTitle(title);
-        
-        //Author author = new Author("Bill Brown","http://www.earthbeats.net","info@earthbeats.net");
-        //feed.addAuthor(author);
-        
-        Contributor contributor = new Contributor("Mad Dog");
-        contributor.setEmail(new Email("info@maddog.net"));
-        feed.addContributor(contributor);
-        
-        Rights rights = new Rights();
-        rights.setText("GPL 1.0");
-        feed.setRights(rights);
-        
-        Icon icon = new Icon(new URI("http://host/images/icon.png"));
-        feed.setIcon(icon);
-        
-        Logo logo = new Logo();
-        logo.setUri(new URI("http://host/images/logo.png"));
-        feed.setLogo(logo);
-        
-        Category category = new Category("music","http://mtv.com/genere","music");
-        feed.addCategory(category);
-        
-        Link link = new Link("http://www.yahoo.com","self");
-        link.setHreflang(new Attribute("hreflang","en-US"));
-        feed.addLink(link);
-        
-        Extension extension = new Extension("http://www.w3.org/1999/xhtml","div");
-        extension.setContent("<span style='color:red;'>hello there</span>");
-        feed.addExtension(extension);
-        
-        Entry entry = new Entry();
-        Id id2 = new Id();
-        id2.setUri(new URI("http://www.colorfulsoftware.com/atom.xml#entry1"));
-        entry.setId(id2);
-        
-        Updated updated2 = new Updated(Calendar.getInstance().getTime());
-        entry.setUpdated(updated2);
-        
-        Title title2 = new Title("an exapmle atom entry");
-        entry.setTitle(title2);
-        
-        Content content = new Content();
-        content.setContent("hello. and welcome the the atomsphere feed builder for atom 1.0 builds.  I hope it is useful for you.");
-        entry.setContent(content);
-        
-        feed.addEntry(entry);
-        
-        FeedDoc.writeFeedDoc("out.xml",feed,encoding,xml_version);
-        
-        Feed feed2 = FeedDoc.readFeedDoc("out.xml",true);
-        FeedDoc.writeFeedDoc("out2.xml",feed2,encoding,xml_version);
-        System.out.println("done");
+            Feed feed = new Feed(atomBase,lang_en);
+
+            Generator generator = new Generator("http://www.colorfulsoftware.com/projects/atomsphere","1.0.0");
+            generator.setText("Atomsphere");
+            feed.setGenerator(generator);
+
+            Id id = new Id();
+            id.setUri(new URI("http://www.colorfulsoftware.com/atom.xml"));
+            feed.setId(id);
+
+            Updated updated = new Updated(Calendar.getInstance().getTime());
+            feed.setUpdated(updated);
+
+            Title title = new Title();
+            title.setText("test feed");
+            feed.setTitle(title);
+
+            //Author author = new Author("Bill Brown","http://www.earthbeats.net","info@earthbeats.net");
+            //feed.addAuthor(author);
+
+            Contributor contributor = new Contributor("Mad Dog");
+            contributor.setEmail(new Email("info@maddog.net"));
+            feed.addContributor(contributor);
+
+            Rights rights = new Rights();
+            rights.setText("GPL 1.0");
+            feed.setRights(rights);
+
+            Icon icon = new Icon(new URI("http://host/images/icon.png"));
+            feed.setIcon(icon);
+
+            Logo logo = new Logo();
+            logo.setUri(new URI("http://host/images/logo.png"));
+            feed.setLogo(logo);
+
+            Category category = new Category("music","http://mtv.com/genere","music");
+            feed.addCategory(category);
+
+            Link link = new Link("http://www.yahoo.com","self");
+            link.setHreflang(new Attribute("hreflang","en-US"));
+            feed.addLink(link);
+
+            Extension extension = new Extension("http://www.w3.org/1999/xhtml","div");
+            extension.setContent("<span style='color:red;'>hello there</span>");
+            feed.addExtension(extension);
+
+            Entry entry = new Entry();
+            Id id2 = new Id();
+            id2.setUri(new URI("http://www.colorfulsoftware.com/atom.xml#entry1"));
+            entry.setId(id2);
+
+            Updated updated2 = new Updated(Calendar.getInstance().getTime());
+            entry.setUpdated(updated2);
+
+            Title title2 = new Title("an exapmle atom entry");
+            entry.setTitle(title2);
+
+            Content content = new Content();
+            content.setContent("hello. and welcome the the atomsphere feed builder for atom 1.0 builds.  I hope it is useful for you.");
+            entry.setContent(content);
+
+            entry.addAuthor(new Author("Bill Brown"));
+            
+            feed.addEntry(entry);
+
+            FeedDoc.writeFeedDoc("out.xml",feed,encoding,xml_version);
+
+            Feed feed2 = FeedDoc.readFeedToBean(new File("out.xml"));
+            FeedDoc.writeFeedDoc("out2.xml",feed2,encoding,xml_version);
+            System.out.println("done");
         }catch(Exception e){
             e.printStackTrace();
         }
