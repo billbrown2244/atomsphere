@@ -16,18 +16,27 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+/* Change History:
+ *  2006-11-14 wbrown - added javadoc documentation.
+ */
 package com.colorful.atom.beans;
 
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This class represents an Atom 1.0 icon element.
+ * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
+ * @author wbrown
+ *  <code>
+ *      atomIcon = element atom:icon {
+ *         atomCommonAttributes,
+ *         (atomUri)
+ *       }
+ *  </code>
+ */
 public class Icon {
-    /*
-     * atomIcon = element atom:icon {
-   atomCommonAttributes,
-   (atomUri)
-}
-     */
+
     private List attributes = null;
     private URI uri = null;
 
@@ -35,6 +44,10 @@ public class Icon {
         this.uri = new URI();
     }
     
+    /**
+     * 
+     * @param uri the uri of the icon (typically a URL location).
+     */
     public Icon(URI uri){
         this.uri = uri;
     }

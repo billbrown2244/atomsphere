@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+/* Change History:
+ *  2006-11-14 wbrown - added javadoc documentation.
+ */
 package com.colorful.atom.beans;
 
 
@@ -27,7 +30,11 @@ import java.util.TimeZone;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
-
+/**
+ * This class is used by the FeedDoc to read an xml file into a Feed bean.
+ * @author wbrown
+ *
+ */
 public class FeedReader{
     
     private static SimpleDateFormat simplDateFmt = null;
@@ -44,6 +51,12 @@ public class FeedReader{
         simplDateFmt = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'"+timeZoneOffset+"\'");
     }
     
+    /**
+     * This method transforms an xml stream into a Feed bean
+     * @param reader the object containing the atom data
+     * @return the atom Feed bean
+     * @throws Exception if the stream cannot be parsed.
+     */
     public Feed readFeed(XMLStreamReader reader) throws Exception{
 
         Feed feed = new Feed();

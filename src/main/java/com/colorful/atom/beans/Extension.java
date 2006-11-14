@@ -16,36 +16,50 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+/* Change History:
+ *  2006-11-14 wbrown - added javadoc documentation.
+ */
 package com.colorful.atom.beans;
 
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This class represents an Atom 1.0 extension element.
+ * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
+ * @author wbrown
+ *  <code>
+ *      simpleExtensionElement =
+ *  element * - atom:* {
+ *     text
+ *  }
+ *      
+ *      structuredExtensionElement =
+ *  element * - atom:* {
+ *     (attribute * { text }+,
+ *        (text|anyElement)*)
+ *   | (attribute * { text }*,
+ *      (text?, anyElement+, (text|anyElement)*))
+ *  }
+ *  </code>
+ */
 public class Extension {
-    /*
-     * simpleExtensionElement =
-   element * - atom:* {
-      text
-   }
-       
-       structuredExtensionElement =
-   element * - atom:* {
-      (attribute * { text }+,
-         (text|anyElement)*)
-    | (attribute * { text }*,
-       (text?, anyElement+, (text|anyElement)*))
-   }
-     */
+
     private String elementName = null;
     private List attributes = null;
     private String content = null;
     private Attribute xmlns = null;
     
     public Extension(){
-        //put sutiable defaulst here
+        //put sutiable defaults here
         
     }
 
+    /**
+     * 
+     * @param xmlns the xml namespace
+     * @param elementName the name of the element
+     */
     public Extension(String xmlns, String elementName){
         attributes = new LinkedList();
         attributes.add(new Attribute("xmlns",xmlns));

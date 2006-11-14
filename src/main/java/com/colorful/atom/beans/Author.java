@@ -16,10 +16,21 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+/* Change History:
+ *  2006-11-14 wbrown - added javadoc documentation.
+ */
 package com.colorful.atom.beans;
 
 import java.util.List;
 
+/**
+ * This class represents an Atom 1.0 author.
+ * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
+ * @author wbrown
+ *  <code>
+ *  atomAuthor = element atom:author { atomPersonConstruct }
+ *  </code>
+ */
 public class Author {
     AtomPersonConstruct author;
 
@@ -27,10 +38,20 @@ public class Author {
         author = new AtomPersonConstruct();
     }
     
+    /**
+     * 
+     * @param name the name of the author
+     */
     public Author(String name){
         author = new AtomPersonConstruct(name);
     }
     
+    /**
+     * 
+     * @param name the name of the author
+     * @param uri the uri of the author (eg. homepage)
+     * @param email the email of the author.
+     */
     public Author(String name, String uri, String email){
         author = new AtomPersonConstruct(name,uri,email);
     }

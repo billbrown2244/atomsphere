@@ -16,49 +16,58 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+/* Change History:
+ *  2006-11-14 wbrown - added javadoc documentation.
+ */
 package com.colorful.atom.beans;
 
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This class represents an Atom 1.0 content element.
+ * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
+ * @author wbrown
+ *  <code>
+ *      atomInlineTextContent =
+ *  element atom:content {
+ *     atomCommonAttributes,
+ *     attribute type { "text" | "html" }?,
+ *     (text)*
+ *  }
+ *
+ *  atomInlineXHTMLContent =
+ *  element atom:content {
+ *     atomCommonAttributes,
+ *     attribute type { "xhtml" },
+ *     xhtmlDiv
+ *  }
+
+ *  atomInlineOtherContent =
+ *  element atom:content {
+ *     atomCommonAttributes,
+ *     attribute type { atomMediaType }?,
+ *     (text|anyElement)*
+ *  }
+ *
+ *  atomOutOfLineContent =
+ *  element atom:content {
+ *    atomCommonAttributes,
+ *     attribute type { atomMediaType }?,
+ *     attribute src { atomUri },
+ *     empty
+ *  }
+ * atomContent = atomInlineTextContent
+ * | atomInlineXHTMLContent
+ * | atomInlineOtherContent
+ * | atomOutOfLineContent
+ *  </code>
+ */
 public class Content {
-    /*
-     * atomInlineTextContent =
-   element atom:content {
-      atomCommonAttributes,
-      attribute type { "text" | "html" }?,
-      (text)*
-   }
 
-atomInlineXHTMLContent =
-   element atom:content {
-      atomCommonAttributes,
-      attribute type { "xhtml" },
-      xhtmlDiv
-   }
-
-atomInlineOtherContent =
-   element atom:content {
-      atomCommonAttributes,
-      attribute type { atomMediaType }?,
-      (text|anyElement)*
-   }
-
-atomOutOfLineContent =
-   element atom:content {
-      atomCommonAttributes,
-      attribute type { atomMediaType }?,
-      attribute src { atomUri },
-      empty
-   }
-     * atomContent = atomInlineTextContent
- | atomInlineXHTMLContent
- | atomInlineOtherContent
- | atomOutOfLineContent
-     */
-    public static final String TEXT = "text";
-    public static final String HTML = "html";
-    public static final String XHTML = "xhtml";
+    public static final String TEXT = "text"; //text content
+    public static final String HTML = "html"; //html content
+    public static final String XHTML = "xhtml"; //xhtml content
 
     private List attributes = null;
     private String content = null;
@@ -67,11 +76,20 @@ atomOutOfLineContent =
         //nothing yet.
     }
     
+    /**
+     * 
+     * @param type of content text, html or xhtml
+     */
     public Content(String type){
         attributes = new LinkedList();
         attributes.add(new Attribute("type",type));
     }
     
+    /**
+     * 
+     * @param type of content text, html or xhtml
+     * @param src source of content (URI).
+     */
     public Content(String type, String src){
         attributes = new LinkedList();
         attributes.add(new Attribute("type",type));

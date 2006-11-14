@@ -16,21 +16,32 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+/* Change History:
+ *  2006-11-14 wbrown - added javadoc documentation.
+ */
 package com.colorful.atom.beans;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This class represents an Atom 1.0 category.
+ * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
+ * @author wbrown
+ *  <code>
+ *  atomCategory =
+ *  element atom:category {
+ *  atomCommonAttributes,
+ *  attribute term { text },
+ *  attribute scheme { atomUri }?,
+ *  attribute label { text }?,
+ *  undefinedContent
+ *  </code>
+ */
 public class Category {
     /*
-     * atomCategory =
-   element atom:category {
-      atomCommonAttributes,
-      attribute term { text },
-      attribute scheme { atomUri }?,
-      attribute label { text }?,
-      undefinedContent
+     * 
    }
      */
     
@@ -43,12 +54,22 @@ public class Category {
         attributes = new LinkedList();
     }
     
+    /**
+     * 
+     * @param term identifies the category of the feed.
+     */
     public Category(String term){
         attributes = new LinkedList();
         this.term = new Attribute("term",term);
         attributes.add(this.term);
     }
     
+    /**
+     * 
+     * @param term identifies the category of the feed.
+     * @param scheme identifies a categorization scheme.
+     * @param label provides a human-readable label for display in end-user applications.
+     */
     public Category(String term, String scheme, String label){
         attributes = new LinkedList();
         this.term = new Attribute("term",term);

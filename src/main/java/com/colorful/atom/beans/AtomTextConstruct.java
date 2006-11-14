@@ -21,20 +21,27 @@ package com.colorful.atom.beans;
 import java.util.LinkedList;
 import java.util.List;
 
-
+/**
+ * This class represents an Atom 1.0 text construct.
+ * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
+ *  <code> 
+ *  atomPlainTextConstruct =
+ *   atomCommonAttributes,
+ *   attribute type { "text" | "html" }?,
+ *   text
+ *
+ *   atomXHTMLTextConstruct =
+ *   atomCommonAttributes,
+ *   attribute type { "xhtml" },
+ *   xhtmlDiv
+ *
+ *   atomTextConstruct = atomPlainTextConstruct | atomXHTMLTextConstruct
+ *   </code>
+ *  
+ */
 public class AtomTextConstruct {
     /*
-     * atomPlainTextConstruct =
-   atomCommonAttributes,
-   attribute type { "text" | "html" }?,
-   text
-
-atomXHTMLTextConstruct =
-   atomCommonAttributes,
-   attribute type { "xhtml" },
-   xhtmlDiv
-
-atomTextConstruct = atomPlainTextConstruct | atomXHTMLTextConstruct
+     * 
      */
     private List attributes = null;
     private String text = null;
@@ -42,6 +49,11 @@ atomTextConstruct = atomPlainTextConstruct | atomXHTMLTextConstruct
     public AtomTextConstruct(){
         text = "";
     }
+    
+    /**
+     * 
+     * @param type the type text, html or xhtml
+     */
     public AtomTextConstruct(String type){
         this();
         attributes = new LinkedList();

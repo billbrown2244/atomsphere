@@ -171,10 +171,10 @@ public class FeedDoc {
     }
 
     /**
-     * This method
-     * @param file
-     * @return
-     * @throws Exception
+     * This method reads an xml File object into a Feed bean.
+     * @param file the file object representing an atom file.
+     * @return the atom Feed bean.
+     * @throws Exception if the file cannot be parsed into a Feed bean.
      */
     public static Feed readFeedToBean(File file) throws Exception{
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
@@ -182,6 +182,12 @@ public class FeedDoc {
         return new FeedReader().readFeed(reader);
     }
 
+    /**
+     * This method reads an atom file from the Internet into a Feed bean.
+     * @param url the internet location of an atom file.
+     * @return the atom Feed bean.
+     * @throws Exception if the URL cannot be parsed into a Feed bean.
+     */
     public static Feed readFeedToBean(URL url) throws Exception{
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader reader = inputFactory.createXMLStreamReader(url.openStream());
@@ -192,8 +198,8 @@ public class FeedDoc {
      * @deprecated use one of the readFeedToBean() methods. this method will be removed in the next release.
      * @param fileOrString file path or xml string
      * @param isFile whether the fileOrString is a file
-     * @return a feed bean.
-     * @throws Exception
+     * @return the atom Feed bean.
+     * @throws Exception if the file or string cannot be parsed into a Feed bean.
      */
     public static Feed readFeedDoc(String fileOrString, boolean isFile) throws Exception{
         if(isFile){
@@ -202,6 +208,10 @@ public class FeedDoc {
         return readFeedToBean(fileOrString);
     }
 
+    /**
+     * Test method.
+     * @param args
+     */
     public static void main(String[] args){
         try{
             Feed feed = new Feed(atomBase,lang_en);

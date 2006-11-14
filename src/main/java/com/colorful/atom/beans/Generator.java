@@ -16,15 +16,36 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+/* Change History:
+ *  2006-11-14 wbrown - added javadoc documentation.
+ */
 package com.colorful.atom.beans;
 
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This class represents an Atom 1.0 generator element.
+ * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
+ * @author wbrown
+ *  <code>
+ *      atomGenerator = element atom:generator {
+ *         atomCommonAttributes,
+ *         attribute uri { atomUri }?,
+ *         attribute version { text }?,
+ *         text
+ *      }
+ *  </code>
+ */
 public class Generator {
     private List attributes = null;
     private String text = null;
     
+    /**
+     * 
+     * @param uri the uri of the generator (eg homepage).
+     * @param version the version of the generator.
+     */
     public Generator(String uri,String version){
         attributes = new LinkedList();
         attributes.add(new Attribute("uri",uri));

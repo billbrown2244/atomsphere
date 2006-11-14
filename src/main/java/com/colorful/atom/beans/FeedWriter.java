@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+/* Change History:
+ *  2006-11-14 wbrown - added javadoc documentation
+ */
 package com.colorful.atom.beans;
 
 import java.util.Iterator;
@@ -24,9 +27,21 @@ import java.util.Map;
 
 import javax.xml.stream.XMLStreamWriter;
 
-
+/**
+ * This class is used by the FeedDoc to write a Feed bean to a xml file or java String.
+ * @author wbrown
+ *
+ */
 public class FeedWriter{
     
+    /**
+     * This method writes out the string representation of an atom feed to an xml file or java string.
+     * @param writer transforms the object to a string
+     * @param feed contains the data
+     * @param encoding file encoding
+     * @param version xml version
+     * @throws Exception if the file cannot be written to disk or if the string cannot be transformed.
+     */
     public void writeFeed(XMLStreamWriter writer, Feed feed,String encoding,String version) throws Exception{
         
         //write the xml header.

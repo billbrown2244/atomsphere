@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+/* Change History:
+ *  2006-11-14 wbrown - added javadoc documentation.
+ */
 package com.colorful.atom.beans;
 
 import java.util.Iterator;
@@ -24,28 +27,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * This class represents an Atom 1.0 feed element.
+ * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
+ * @author wbrown
+ *  <code>
+ *      atomFeed =
+ *  element atom:feed {
+ *     atomCommonAttributes,
+ *     (atomAuthor*
+ *      & atomCategory*
+ *      & atomContributor*
+ *      & atomGenerator?
+ *      & atomIcon?
+ *      & atomId
+ *      & atomLink*
+ *      & atomLogo?
+ *      & atomRights?
+ *      & atomSubtitle?
+ *      & atomTitle
+ *      & atomUpdated
+ *      & extensionElement*),
+ *     atomEntry*
+ *  }
+ *  </code>
+ */
 public class Feed {
-    /*
-     * atomFeed =
-   element atom:feed {
-      atomCommonAttributes,
-      (atomAuthor*
-       & atomCategory*
-       & atomContributor*
-       & atomGenerator?
-       & atomIcon?
-       & atomId
-       & atomLink*
-       & atomLogo?
-       & atomRights?
-       & atomSubtitle?
-       & atomTitle
-       & atomUpdated
-       & extensionElement*),
-      atomEntry*
-   }
-     */
-    
+     
     private List attributes = null;
     private List authors = null;
     private List categories = null;
@@ -66,11 +74,20 @@ public class Feed {
         attributes = new LinkedList();
     }
     
+    /**
+     * 
+     * @param attribute an attribute for the feed
+     */
     public Feed(Attribute attribute){
         attributes = new LinkedList();
         attributes.add(attribute);
     }
     
+    /**
+     * 
+     * @param attribute1 an attribute for the feed
+     * @param attribute2 an attribute for the feed
+     */
     public Feed(Attribute attribute1, Attribute attribute2){
         attributes = new LinkedList();
         attributes.add(attribute1);

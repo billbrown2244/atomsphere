@@ -16,8 +16,22 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+/* Change History:
+ *  2006-11-14 wbrown - added javadoc documentation.
+ */
 package com.colorful.atom.beans;
 
+/**
+ * This class represents an Atom 1.0 attribute.
+ * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
+ * @author wbrown
+ *  <code>
+ *  atomCommonAttributes =
+ *  attribute xml:base { atomUri }?,
+ *  attribute xml:lang { atomLanguageTag }?,
+ *  undefinedAttribute*
+ *  </code>
+ */
 public class Attribute {
     
     /*
