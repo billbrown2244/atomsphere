@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Change History:
     2006-11-08 wbrown - changed API to include url's and make the method calls more intuitive.
+    2006-11-12 wbrown - added javadoc documentation.
  */
 package com.colorful.atom.beans;
 
@@ -37,6 +38,11 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
+/**
+ * This class reads and writes atom feeds to and from xml files and beans or xml strings.
+ * @author bill
+ *
+ */
 public class FeedDoc {
 
     public static final Attribute atomBase = new Attribute("xmlns","http://www.w3.org/2005/Atom");
@@ -44,7 +50,14 @@ public class FeedDoc {
     public static String encoding = "utf-8";
     public static String xml_version = "1.0";
 
-    //writes files to the output doc. 
+    /**
+     * Writes the atom feed to an xml file.
+     * @param outFile the path and name of the file to write.
+     * @param feed the atom feed bean containing the content of the feed
+     * @param encoding the file encoding (default is utf-8)
+     * @param version the xml version (default is 1.0)
+     * @throws Exception thrown if the feed cannot be written to the outFile 
+     */
     public static void writeFeedDoc(String outFile,Feed feed,String encoding,String version) throws Exception{
         //make sure id is present
         if(feed.getId() == null){
@@ -93,6 +106,11 @@ public class FeedDoc {
         }
     }
 
+    /**
+     * This method reads a file from disk and outputs an atom 1.0 xml document string.
+     * @param file the atom xml file to be read
+     * @return an atom feed document string.
+     */
     public static String readFeedToString(File file){
         StringBuffer feedXML = new StringBuffer();
         try{
@@ -110,6 +128,11 @@ public class FeedDoc {
         return feedXML.toString();
     }
 
+    /**
+     * This method reads an atom file from the internet and writes it out to an atom feed string.
+     * @param url the location of the atom file on the internet
+     * @return an atom feed document string.
+     */
     public static String readFeedToString(URL url){
         StringBuffer feedXML = new StringBuffer();
         try{
@@ -127,20 +150,32 @@ public class FeedDoc {
     }
 
     /**
-     * @deprecated
-     * @param file
-     * @return writes out an atom feed from a file to an xml string.
+     * @deprecated (use one of the readFeedToString() methods.  This will be removed in the next release.)
+     * @param file the file path and name to be written to a string.
+     * @return an atom feed document string.
      */
     public static String readFeedString(String file) {
         return readFeedToString(new File(file));
     }
 
+    /**
+     * This method reads an xml string into a Feed bean.
+     * @param xmlString the xml string to be transformed into a Feed bean.
+     * @return the atom Feed bean
+     * @throws Exception if the string cannot be parsed into a Feed bean.
+     */
     public static Feed readFeedToBean(String xmlString) throws Exception{
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader reader = inputFactory.createXMLStreamReader(new java.io.StringReader(xmlString));
         return new FeedReader().readFeed(reader);
     }
 
+    /**
+     * This method
+     * @param file
+     * @return
+     * @throws Exception
+     */
     public static Feed readFeedToBean(File file) throws Exception{
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader reader = inputFactory.createXMLStreamReader(new java.io.FileInputStream(file));
@@ -154,7 +189,7 @@ public class FeedDoc {
     }
 
     /**
-     * @deprecated use one of the readFeedToBean() methods.
+     * @deprecated use one of the readFeedToBean() methods. this method will be removed in the next release.
      * @param fileOrString file path or xml string
      * @param isFile whether the fileOrString is a file
      * @return a feed bean.

@@ -16,21 +16,30 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+/* Change History:
+ * 2006-11-12 wbrown - added javadoc documentation.
+ */
 package com.colorful.atom.beans;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class AtomPersonConstruct {
 
-    /*
-     * atomPersonConstruct =
-   atomCommonAttributes,
-   (element atom:name { text }
-    & element atom:uri { atomUri }?
-    & element atom:email { atomEmailAddress }?
-    & extensionElement*)
-     */
+/**
+ * This class represents an Atom 1.0 person construct.
+ * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
+ *	<code> 
+ * atomPersonConstruct =
+ *  atomCommonAttributes,
+ *  (element atom:name { text }
+ *   & element atom:uri { atomUri }?
+ *   & element atom:email { atomEmailAddress }?
+ *   & extensionElement*)
+ *   </code>
+ * @author bill
+ *
+ */
+public class AtomPersonConstruct {
     
     private List attributes = null;
     private Name name = null;
@@ -42,16 +51,30 @@ public class AtomPersonConstruct {
         this.name = new Name();
     }
     
+    /**
+     * 
+     * @param name the name of the person
+     */
     public AtomPersonConstruct(String name){
         this.name = new Name(name); 
     }
     
+    /**
+     * 
+     * @param name the name of the person
+     * @param uri the uri of the person
+     * @param email the email address of the person
+     */
     public AtomPersonConstruct(String name, String uri, String email){
         this.name = new Name(name);
         this.uri = new URI(uri);
         this.email = new Email(email);
     }
     
+    /**
+     * 
+     * @return the attributes of this element
+     */
     public List getAttributes() {
         return attributes;
     }
@@ -59,6 +82,10 @@ public class AtomPersonConstruct {
         this.attributes = attributes;
     }
     
+    /**
+     * 
+     * @param attribute the attribute to add to this element.
+     */
     public void addAttribute(Attribute attribute){
         if(this.attributes == null){
             this.attributes = new LinkedList();
