@@ -27,17 +27,17 @@ import java.util.List;
 
 /**
  * This class represents an Atom 1.0 category.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author wbrown
- *  <code>
- *  atomCategory =
- *  element atom:category {
- *  atomCommonAttributes,
- *  attribute term { text },
- *  attribute scheme { atomUri }?,
- *  attribute label { text }?,
- *  undefinedContent
- *  </code>
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *  <pre>
+ *      atomCategory =
+ *          element atom:category {
+ *          atomCommonAttributes,
+ *          attribute term { text },
+ *          attribute scheme { atomUri }?,
+ *          attribute label { text }?,
+ *          undefinedContent
+ *  </pre>
  */
 public class Category {
     /*

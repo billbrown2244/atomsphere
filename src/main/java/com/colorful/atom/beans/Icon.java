@@ -26,14 +26,14 @@ import java.util.List;
 
 /**
  * This class represents an Atom 1.0 icon element.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author wbrown
- *  <code>
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *  <pre>
  *      atomIcon = element atom:icon {
- *         atomCommonAttributes,
- *         (atomUri)
- *       }
- *  </code>
+ *          atomCommonAttributes,
+ *          (atomUri)
+ *          }
+ *  </pre>
  */
 public class Icon {
 

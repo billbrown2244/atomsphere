@@ -25,11 +25,11 @@ import java.util.List;
 
 /**
  * This class represents an Atom 1.0 author.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author wbrown
- *  <code>
- *  atomAuthor = element atom:author { atomPersonConstruct }
- *  </code>
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *  <pre>
+ *      atomAuthor = element atom:author { atomPersonConstruct }
+ *  </pre>
  */
 public class Author {
     AtomPersonConstruct author;

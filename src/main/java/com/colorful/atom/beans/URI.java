@@ -23,9 +23,11 @@ package com.colorful.atom.beans;
 
 /**
  * This class represents an Atom 1.0 uri element.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author bill
- *
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *  <pre>
+ *      the content of the uri according to Section 7 of [RFC3986]
+ *  </pre>
  */
 public class URI {
 

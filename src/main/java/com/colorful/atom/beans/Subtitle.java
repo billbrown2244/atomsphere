@@ -25,11 +25,11 @@ import java.util.List;
 
 /**
  * This class represents an Atom 1.0 subtitle element.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author bill
- *	<code>
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *	<pre>
  *		atomSubsubtitle = element atom:subsubtitle { atomTextConstruct }
- *	</code>
+ *	</pre>
  */
 public class Subtitle {
 	

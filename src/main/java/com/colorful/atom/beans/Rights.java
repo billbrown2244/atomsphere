@@ -25,11 +25,11 @@ import java.util.List;
 
 /**
  * This class represents an Atom 1.0 rights element.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author bill
- *	<code>
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *	<pre>
  *		atomRights = element atom:rights { atomTextConstruct }
- *	</code>
+ *	</pre>
  */
 public class Rights {
 

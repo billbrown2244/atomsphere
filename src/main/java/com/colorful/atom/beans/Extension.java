@@ -26,22 +26,22 @@ import java.util.List;
 
 /**
  * This class represents an Atom 1.0 extension element.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author wbrown
- *  <code>
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *  <pre>
  *      simpleExtensionElement =
- *  element * - atom:* {
- *     text
- *  }
+ *          element * - atom:* {
+ *          text
+ *          }
  *      
  *      structuredExtensionElement =
- *  element * - atom:* {
- *     (attribute * { text }+,
- *        (text|anyElement)*)
- *   | (attribute * { text }*,
- *      (text?, anyElement+, (text|anyElement)*))
- *  }
- *  </code>
+ *          element * - atom:* {
+ *          (attribute * { text }+,
+ *          (text|anyElement)*)
+ *          | (attribute * { text }*,
+ *          (text?, anyElement+, (text|anyElement)*))
+ *          }
+ *  </pre>
  */
 public class Extension {
 

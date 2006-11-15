@@ -23,13 +23,13 @@ package com.colorful.atom.beans;
 
 /**
  * This class represents an Atom 1.0 Contributor element.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author wbrown
- *  <code>
- *  "atom:email" element's content conveys an e-mail address associated with the person. 
- *  Person constructs MAY contain an atom:email element, but MUST NOT contain more than one. 
- *  Its content MUST conform to the "addr-spec" production in [RFC2822].
- *  </code>
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *  <pre>
+ *      "atom:email" element's content conveys an e-mail address associated with the person. 
+ *      Person constructs MAY contain an atom:email element, but MUST NOT contain more than one. 
+ *      Its content MUST conform to the "addr-spec" production in [RFC2822].
+ *  </pre>
  */
 public class Email {
 

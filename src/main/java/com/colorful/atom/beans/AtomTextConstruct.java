@@ -23,20 +23,21 @@ import java.util.List;
 
 /**
  * This class represents an Atom 1.0 text construct.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- *  <code> 
- *  atomPlainTextConstruct =
- *   atomCommonAttributes,
- *   attribute type { "text" | "html" }?,
- *   text
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *  <pre> 
+ *      atomPlainTextConstruct =
+ *          atomCommonAttributes,
+ *          attribute type { "text" | "html" }?,
+ *          text
  *
- *   atomXHTMLTextConstruct =
- *   atomCommonAttributes,
- *   attribute type { "xhtml" },
- *   xhtmlDiv
+ *      atomXHTMLTextConstruct =
+ *          atomCommonAttributes,
+ *          attribute type { "xhtml" },
+ *          xhtmlDiv
  *
- *   atomTextConstruct = atomPlainTextConstruct | atomXHTMLTextConstruct
- *   </code>
+ *      atomTextConstruct = atomPlainTextConstruct | atomXHTMLTextConstruct
+ *  </pre>
  *  
  */
 public class AtomTextConstruct {

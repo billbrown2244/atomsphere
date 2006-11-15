@@ -27,11 +27,11 @@ import java.util.TimeZone;
 
 /**
  * This class represents an Atom 1.0 updated element.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author bill
- *	<code>
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *	<pre>
  *		atomUpdated = element atom:updated { atomDateConstruct}
- *	</code>
+ *	</pre>
  */
 public class Updated {
     

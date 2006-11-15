@@ -27,21 +27,21 @@ import java.util.List;
 
 /**
  * This class represents an Atom 1.0 link element.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author bill
- * <code>
- * 	atomLink =
- * element atom:link {
- *    atomCommonAttributes,
- *    attribute href { atomUri },
- *    attribute rel { atomNCName | atomUri }?,
- *    attribute type { atomMediaType }?,
- *    attribute hreflang { atomLanguageTag }?,
- *    attribute title { text }?,
- *    attribute length { text }?,
- *    undefinedContent
-   }
- * </code>
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ * <pre>
+ * 	    atomLink =
+ *          element atom:link {
+ *          atomCommonAttributes,
+ *          attribute href { atomUri },
+ *          attribute rel { atomNCName | atomUri }?,
+ *          attribute type { atomMediaType }?,
+ *          attribute hreflang { atomLanguageTag }?,
+ *          attribute title { text }?,
+ *          attribute length { text }?,
+ *          undefinedContent
+ *         }
+ * </pre>
  */
 public class Link {
     

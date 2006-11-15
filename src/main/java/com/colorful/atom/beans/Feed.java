@@ -29,28 +29,28 @@ import java.util.TreeMap;
 
 /**
  * This class represents an Atom 1.0 feed element.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author wbrown
- *  <code>
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *  <pre>
  *      atomFeed =
- *  element atom:feed {
- *     atomCommonAttributes,
- *     (atomAuthor*
- *      & atomCategory*
- *      & atomContributor*
- *      & atomGenerator?
- *      & atomIcon?
- *      & atomId
- *      & atomLink*
- *      & atomLogo?
- *      & atomRights?
- *      & atomSubtitle?
- *      & atomTitle
- *      & atomUpdated
- *      & extensionElement*),
- *     atomEntry*
- *  }
- *  </code>
+ *          element atom:feed {
+ *          atomCommonAttributes,
+ *          (atomAuthor*
+ *          & atomCategory*
+ *          & atomContributor*
+ *          & atomGenerator?
+ *          & atomIcon?
+ *          & atomId
+ *          & atomLink*
+ *          & atomLogo?
+ *          & atomRights?
+ *          & atomSubtitle?
+ *          & atomTitle
+ *          & atomUpdated
+ *          & extensionElement*),
+ *          atomEntry*
+ *          }
+ *  </pre>
  */
 public class Feed {
      

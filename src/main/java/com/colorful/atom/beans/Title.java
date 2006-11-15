@@ -25,11 +25,11 @@ import java.util.List;
 
 /**
  * This class represents an Atom 1.0 title element.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author bill
- *	<code>
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *	<pre>
  *		atomTitle = element atom:title { atomTextConstruct }
- *	</code>
+ *	</pre>
  */
 public class Title {
     

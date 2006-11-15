@@ -29,7 +29,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 /**
  * This class is used by the FeedDoc to write a Feed bean to a xml file or java String.
- * @author wbrown
+ * @author Bill Brown
  *
  */
 public class FeedWriter{

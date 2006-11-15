@@ -40,7 +40,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 /**
  * This class reads and writes atom feeds to and from xml files and beans or xml strings.
- * @author bill
+ * @author Bill Brown
  *
  */
 public class FeedDoc {

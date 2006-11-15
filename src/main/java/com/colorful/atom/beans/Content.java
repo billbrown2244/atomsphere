@@ -26,42 +26,43 @@ import java.util.List;
 
 /**
  * This class represents an Atom 1.0 content element.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author wbrown
- *  <code>
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *  <pre>
  *      atomInlineTextContent =
- *  element atom:content {
- *     atomCommonAttributes,
- *     attribute type { "text" | "html" }?,
- *     (text)*
- *  }
+ *          element atom:content {
+ *          atomCommonAttributes,
+ *          attribute type { "text" | "html" }?,
+ *          (text)*
+ *          }
  *
- *  atomInlineXHTMLContent =
- *  element atom:content {
- *     atomCommonAttributes,
- *     attribute type { "xhtml" },
- *     xhtmlDiv
- *  }
+ *      atomInlineXHTMLContent =
+ *          element atom:content {
+ *          atomCommonAttributes,
+ *          attribute type { "xhtml" },
+ *          xhtmlDiv
+ *          }
 
- *  atomInlineOtherContent =
- *  element atom:content {
- *     atomCommonAttributes,
- *     attribute type { atomMediaType }?,
- *     (text|anyElement)*
- *  }
+ *      atomInlineOtherContent =
+ *          element atom:content {
+ *          atomCommonAttributes,
+ *          attribute type { atomMediaType }?,
+ *          (text|anyElement)*
+ *          }
  *
- *  atomOutOfLineContent =
- *  element atom:content {
- *    atomCommonAttributes,
- *     attribute type { atomMediaType }?,
- *     attribute src { atomUri },
- *     empty
- *  }
- * atomContent = atomInlineTextContent
- * | atomInlineXHTMLContent
- * | atomInlineOtherContent
- * | atomOutOfLineContent
- *  </code>
+ *      atomOutOfLineContent =
+ *          element atom:content {
+ *          atomCommonAttributes,
+ *          attribute type { atomMediaType }?,
+ *          attribute src { atomUri },
+ *          empty
+ *          }
+ *          
+ *      atomContent = atomInlineTextContent
+ *          | atomInlineXHTMLContent
+ *          | atomInlineOtherContent
+ *          | atomOutOfLineContent
+ *  </pre>
  */
 public class Content {
 

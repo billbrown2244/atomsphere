@@ -26,16 +26,16 @@ import java.util.List;
 
 /**
  * This class represents an Atom 1.0 generator element.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author wbrown
- *  <code>
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *  <pre>
  *      atomGenerator = element atom:generator {
- *         atomCommonAttributes,
- *         attribute uri { atomUri }?,
- *         attribute version { text }?,
- *         text
- *      }
- *  </code>
+ *          atomCommonAttributes,
+ *          attribute uri { atomUri }?,
+ *          attribute version { text }?,
+ *          text
+ *          }
+ *  </pre>
  */
 public class Generator {
     private List attributes = null;

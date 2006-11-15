@@ -23,11 +23,11 @@ package com.colorful.atom.beans;
 
 /**
  * This class represents an Atom 1.0 name element.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author bill
- *	<code>
- *		element atom:name { text }
- *	</code>
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *	<pre>
+ *      atom:name { text }
+ *	</pre>
  */
 public class Name {
 

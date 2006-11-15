@@ -27,17 +27,16 @@ import java.util.List;
 
 /**
  * This class represents an Atom 1.0 person construct.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- *	<code> 
- * atomPersonConstruct =
- *  atomCommonAttributes,
- *  (element atom:name { text }
- *   & element atom:uri { atomUri }?
- *   & element atom:email { atomEmailAddress }?
- *   & extensionElement*)
- *   </code>
- * @author bill
- *
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *  <pre> 
+ *      atomPersonConstruct =
+ *          atomCommonAttributes,
+ *          (element atom:name { text }
+ *          & element atom:uri { atomUri }?
+ *          & element atom:email { atomEmailAddress }?
+ *          & extensionElement*)
+ *  </pre>
  */
 public class AtomPersonConstruct {
     

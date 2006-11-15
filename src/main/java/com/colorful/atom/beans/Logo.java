@@ -26,14 +26,14 @@ import java.util.List;
 
 /**
  * This class represents an Atom 1.0 logo element.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author bill
- *	<code>
- *		atomLogo = element atom:logo {
- * 		 atomCommonAttributes,
- * 		 (atomUri)
- *		}
- *	</code>
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *	<pre>
+ *      atomLogo = element atom:logo {
+ *          atomCommonAttributes,
+ * 		    (atomUri)
+ *	        }
+ *	</pre>
  */
 public class Logo {
     

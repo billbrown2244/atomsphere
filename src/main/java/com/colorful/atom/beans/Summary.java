@@ -25,11 +25,11 @@ import java.util.List;
 
 /**
  * This class represents an Atom 1.0 summary element.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author bill
- *	<code>
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *	<pre>
  *		atomSummary = element atom:summary { atomTextConstruct }
- *	</code>
+ *	</pre>
  */
 public class Summary {
     

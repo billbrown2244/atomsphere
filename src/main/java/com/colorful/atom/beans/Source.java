@@ -26,27 +26,27 @@ import java.util.List;
 
 /**
  * This class represents an Atom 1.0 source element.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author bill
- *	<code>
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *	<pre>
  *		atomSource =
- *  element atom:source {
- *     atomCommonAttributes,
- *     (atomAuthor*
- *      & atomCategory*
- *      & atomContributor*
- *      & atomGenerator?
- *      & atomIcon?
- *      & atomId?
- *      & atomLink*
- *      & atomLogo?
- *      & atomRights?
- *      & atomSubtitle?
- *      & atomTitle?
- *      & atomUpdated?
- *      & extensionElement*)
- *  }
- *	</code>
+ *          element atom:source {
+ *          atomCommonAttributes,
+ *          (atomAuthor*
+ *          & atomCategory*
+ *          & atomContributor*
+ *          & atomGenerator?
+ *          & atomIcon?
+ *          & atomId?
+ *          & atomLink*
+ *          & atomLogo?
+ *          & atomRights?
+ *          & atomSubtitle?
+ *          & atomTitle?
+ *          & atomUpdated?
+ *          & extensionElement*)
+ *          }
+ *	</pre>
  */
 public class Source {
 

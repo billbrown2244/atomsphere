@@ -23,8 +23,7 @@ package com.colorful.atom.beans;
 
 /**
  * This is an exception for data that doesn't match the spec.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author wbrown
+ * @author Bill Brown
  *
  */
 public class AtomSpecException extends Exception {

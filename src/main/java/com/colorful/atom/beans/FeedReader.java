@@ -32,7 +32,7 @@ import javax.xml.stream.XMLStreamReader;
 
 /**
  * This class is used by the FeedDoc to read an xml file into a Feed bean.
- * @author wbrown
+ * @author Bill Brown
  *
  */
 public class FeedReader{

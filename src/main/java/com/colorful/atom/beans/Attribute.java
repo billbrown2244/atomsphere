@@ -23,14 +23,14 @@ package com.colorful.atom.beans;
 
 /**
  * This class represents an Atom 1.0 attribute.
- * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
- * @author wbrown
- *  <code>
- *  atomCommonAttributes =
- *  attribute xml:base { atomUri }?,
- *  attribute xml:lang { atomLanguageTag }?,
- *  undefinedAttribute*
- *  </code>
+ * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * @author Bill Brown
+ *  <pre>
+ *      atomCommonAttributes =
+ *          attribute xml:base { atomUri }?,
+ *          attribute xml:lang { atomLanguageTag }?,
+ *          undefinedAttribute*
+ *  </pre>
  */
 public class Attribute {
     
