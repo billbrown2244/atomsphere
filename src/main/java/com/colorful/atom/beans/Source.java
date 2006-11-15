@@ -16,31 +16,40 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+/* Change History:
+ *  2006-11-14 wbrown - added javadoc documentation.
+ */
 package com.colorful.atom.beans;
 
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This class represents an Atom 1.0 source element.
+ * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
+ * @author bill
+ *	<code>
+ *		atomSource =
+ *  element atom:source {
+ *     atomCommonAttributes,
+ *     (atomAuthor*
+ *      & atomCategory*
+ *      & atomContributor*
+ *      & atomGenerator?
+ *      & atomIcon?
+ *      & atomId?
+ *      & atomLink*
+ *      & atomLogo?
+ *      & atomRights?
+ *      & atomSubtitle?
+ *      & atomTitle?
+ *      & atomUpdated?
+ *      & extensionElement*)
+ *  }
+ *	</code>
+ */
 public class Source {
-    /*
-     * atomSource =
-   element atom:source {
-      atomCommonAttributes,
-      (atomAuthor*
-       & atomCategory*
-       & atomContributor*
-       & atomGenerator?
-       & atomIcon?
-       & atomId?
-       & atomLink*
-       & atomLogo?
-       & atomRights?
-       & atomSubtitle?
-       & atomTitle?
-       & atomUpdated?
-       & extensionElement*)
-   }
-     */
+
     private List attributes = null;
     private List authors = null;
     private List categories = null;

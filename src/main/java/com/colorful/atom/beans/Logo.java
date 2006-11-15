@@ -16,18 +16,26 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+/* Change History:
+ *  2006-11-14 wbrown - added javadoc documentation.
+ */
 package com.colorful.atom.beans;
 
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This class represents an Atom 1.0 logo element.
+ * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
+ * @author bill
+ *	<code>
+ *		atomLogo = element atom:logo {
+ * 		 atomCommonAttributes,
+ * 		 (atomUri)
+ *		}
+ *	</code>
+ */
 public class Logo {
-    /*
-     * atomLogo = element atom:logo {
-   atomCommonAttributes,
-   (atomUri)
-}
-     */
     
     private List attributes = null;
     private URI uri = null;
@@ -36,6 +44,10 @@ public class Logo {
         this.uri = new URI();
     }
     
+    /**
+     * 
+     * @param uri identification for the logo (possibly a URL for the location)
+     */
     public Logo(URI uri){
         this.uri = uri;
     }

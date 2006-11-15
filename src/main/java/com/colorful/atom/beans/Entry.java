@@ -65,6 +65,10 @@ public class Entry {
     private Updated updated;
     private List extensions;
     
+    public Entry(){
+    	//nothing specific here.
+    }
+    
     public List getAttributes() {
         return attributes;
     }

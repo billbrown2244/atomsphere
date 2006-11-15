@@ -16,8 +16,17 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+/* Change History:
+ *  2006-11-14 wbrown - added javadoc documentation.
+ */
 package com.colorful.atom.beans;
 
+/**
+ * This class represents an Atom 1.0 uri element.
+ * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
+ * @author bill
+ *
+ */
 public class URI {
 
     private String text = null;
@@ -26,6 +35,10 @@ public class URI {
         this.text = "";
     }
     
+    /**
+     * 
+     * @param text the content of the uri according to Section 7 of [RFC3986]
+     */
     public URI(String text){
         this.text = text;
     }

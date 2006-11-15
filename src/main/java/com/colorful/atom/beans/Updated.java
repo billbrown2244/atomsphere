@@ -16,16 +16,25 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+/* Change History:
+ *  2006-11-14 wbrown - added javadoc documentation.
+ */
 package com.colorful.atom.beans;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+/**
+ * This class represents an Atom 1.0 updated element.
+ * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
+ * @author bill
+ *	<code>
+ *		atomUpdated = element atom:updated { atomDateConstruct}
+ *	</code>
+ */
 public class Updated {
-    /*
-     * atomUpdated = element atom:updated { atomDateConstruct}
-     */
+    
     //example 2006-04-28T12:50:43.337-05:00
     private static String timeZoneOffset = null;
     static{
@@ -42,12 +51,16 @@ public class Updated {
         new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'"+timeZoneOffset+"\'");
     private Date updated = null;
     
+    /**
+     * 
+     * @param updated the date formatted to [RFC3339]
+     */
     public Updated(Date updated){
         this.updated = updated;
     }
 
     public Updated() {
-        // TODO Auto-generated constructor stub
+        // nothing
     }
 
     public Date getUpdated() {

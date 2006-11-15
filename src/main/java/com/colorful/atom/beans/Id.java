@@ -16,18 +16,27 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+/* Change History:
+ *  2006-11-14 wbrown - added javadoc documentation.
+ */
 package com.colorful.atom.beans;
 
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This class represents an Atom 1.0 id element.
+ * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
+ * @author bill
+ *	<code>
+ *	atomId = element atom:id {
+ * 		atomCommonAttributes,
+ * 		(atomUri)
+ *	}
+ *	</code>
+ */
 public class Id {
-    /*
-     * atomId = element atom:id {
-   atomCommonAttributes,
-   (atomUri)
-}
-     */
+
     private List attributes = null;
     private URI uri = null;
     
@@ -35,6 +44,10 @@ public class Id {
         //do nothing.
     }
     
+    /**
+     * 
+     * @param uri the unique identifier for the document.
+     */
     public Id(String uri){
         this.uri = new URI(uri);
     }

@@ -16,16 +16,29 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+/* Change History:
+ *  2006-11-14 wbrown - added javadoc documentation.
+ */
 package com.colorful.atom.beans;
 
 import java.util.List;
 
+/**
+ * This class represents an Atom 1.0 title element.
+ * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
+ * @author bill
+ *	<code>
+ *		atomTitle = element atom:title { atomTextConstruct }
+ *	</code>
+ */
 public class Title {
-    /*
-     * atomTitle = element atom:title { atomTextConstruct }
-     */
+    
     private AtomTextConstruct title = null;
     
+    /**
+     * 
+     * @param type the type of text construct text, html or xhtml.
+     */
     public Title(String type){
         title = new AtomTextConstruct(type);
     }

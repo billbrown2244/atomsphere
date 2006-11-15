@@ -16,37 +16,55 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+/* Change History:
+ *  2006-11-14 wbrown - added javadoc documentation.
+ */
 package com.colorful.atom.beans;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Link {
-    /*
-     * atomLink =
-   element atom:link {
-      atomCommonAttributes,
-      attribute href { atomUri },
-      attribute rel { atomNCName | atomUri }?,
-      attribute type { atomMediaType }?,
-      attribute hreflang { atomLanguageTag }?,
-      attribute title { text }?,
-      attribute length { text }?,
-      undefinedContent
+/**
+ * This class represents an Atom 1.0 link element.
+ * @see http://www.atomenabled.org/developers/syndication/atom-format-spec.php
+ * @author bill
+ * <code>
+ * 	atomLink =
+ * element atom:link {
+ *    atomCommonAttributes,
+ *    attribute href { atomUri },
+ *    attribute rel { atomNCName | atomUri }?,
+ *    attribute type { atomMediaType }?,
+ *    attribute hreflang { atomLanguageTag }?,
+ *    attribute title { text }?,
+ *    attribute length { text }?,
+ *    undefinedContent
    }
-     */
+ * </code>
+ */
+public class Link {
+    
     private List attributes = null;
     
     public Link(){
         attributes = new LinkedList();
     }
     
+    /**
+     * 
+     * @param href the link location
+     */
     public Link(String href){
         attributes = new LinkedList();
         attributes.add(new Attribute("href",href));
     }
     
+    /**
+     * 
+     * @param href the link location.
+     * @param rel the link relation type.
+     */
     public Link(String href, String rel){
         attributes = new LinkedList();
         attributes.add(new Attribute("href",href));
