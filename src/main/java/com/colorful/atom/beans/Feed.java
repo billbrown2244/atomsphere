@@ -18,9 +18,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
+ *  2007-02-05 wbrown - added sort method for sorting entries.
  */
 package com.colorful.atom.beans;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,6 +53,8 @@ import java.util.TreeMap;
  *          atomEntry*
  *          }
  *  </pre>
+ *  
+ *  The default ordering of the entries is by date updated date descending. 
  */
 public class Feed {
      
@@ -326,5 +330,17 @@ public class Feed {
             this.entries = new TreeMap();
         }
         this.entries.put(entry.getUpdated().getText(),entry);
+    }
+    
+    /**
+     * This method sorts the entries of the feed.  The default ordering of the entries is by date updated descending 
+     * @param comparator this gives the ordering for the entries.
+     */
+    public void sortEntries(Comparator comparator){
+        if(this.entries != null){
+            Map temp = new TreeMap(comparator);
+            temp.putAll(this.entries);
+            this.entries = temp;
+        }
     }
 }
