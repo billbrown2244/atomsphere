@@ -343,7 +343,7 @@ public class Feed {
             while(entryItr.hasNext()){
                 Entry entry = (Entry)entryItr.next();
                 if (elementType instanceof Updated){
-                    temp.put(entry.getUpdated().getUpdated(),entry);
+                    temp.put(entry.getUpdated().getText(),entry);
                 }
                 if (elementType instanceof Title){
                     temp.put(entry.getTitle().getText(),entry);
