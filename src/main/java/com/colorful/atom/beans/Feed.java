@@ -336,10 +336,19 @@ public class Feed {
      * This method sorts the entries of the feed.  The default ordering of the entries is by date updated descending 
      * @param comparator this gives the ordering for the entries.
      */
-    public void sortEntries(Comparator comparator){
+    public void sortEntries(Comparator comparator, Object elementType){
         if(this.entries != null){
             Map temp = new TreeMap(comparator);
-            temp.putAll(this.entries);
+            Iterator entryItr = this.entries.values().iterator();
+            while(entryItr.hasNext()){
+                Entry entry = (Entry)entryItr.next();
+                if (elementType instanceof Updated){
+                    temp.put(entry.getUpdated().getUpdated(),entry);
+                }
+                if (elementType instanceof Title){
+                    temp.put(entry.getTitle().getText(),entry);
+                }
+            }
             this.entries = temp;
         }
     }
