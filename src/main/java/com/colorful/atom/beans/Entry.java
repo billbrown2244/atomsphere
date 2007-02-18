@@ -216,20 +216,12 @@ public class Entry {
     
     public static final Comparator SORT_DESC = new Comparator(){        
         public int compare(Object entry1, Object entry2) {
-            System.out.println("in SORT_DESC.");
-            System.out.println("entry1 = "+entry1.toString());
-            System.out.println("entry2 = "+entry2.toString());
-            System.out.println("in desc entry1.toString().compareTo(entry2.toString()) = "+entry1.toString().compareTo(entry2.toString()));
             return entry1.toString().compareTo(entry2.toString());
            
         }
     };
     public static final Comparator SORT_ASC = new Comparator(){
         public int compare(Object entry1, Object entry2) {
-            System.out.println("in SORT_ASC.");
-            System.out.println("entry1 = "+entry1.toString());
-            System.out.println("entry2 = "+entry2.toString());
-            System.out.println("in asc entry2.toString().compareTo(entry1.toString()) = "+entry2.toString().compareTo(entry1.toString()));
             return entry2.toString().compareTo(entry1.toString());
         }
     };
