@@ -214,13 +214,13 @@ public class Entry {
         
     }
     
-    public static final Comparator SORT_DESC = new Comparator(){        
+    public static final Comparator SORT_ASC = new Comparator(){        
         public int compare(Object entry1, Object entry2) {
             return entry1.toString().compareTo(entry2.toString());
            
         }
     };
-    public static final Comparator SORT_ASC = new Comparator(){
+    public static final Comparator SORT_DESC = new Comparator(){
         public int compare(Object entry1, Object entry2) {
             return entry2.toString().compareTo(entry1.toString());
         }
