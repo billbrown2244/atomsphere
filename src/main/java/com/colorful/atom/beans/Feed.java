@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
  *  2007-02-05 wbrown - added sort method for sorting entries.
+ *  2007-02-19 wbrown - add support for sorting entries by title and updated date.
  */
 package com.colorful.atom.beans;
 
@@ -326,6 +327,8 @@ public class Feed {
 				}
 			}
 		}
+        
+        //sort the entries based on the sort comparator.
 		if(this.entries == null){
 			this.entries = new TreeMap(sortComparator);
 		}

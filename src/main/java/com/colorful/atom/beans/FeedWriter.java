@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation
+ *  2007-02-19 wbrown - change looping through entries to be the same for all projects.
  */
 package com.colorful.atom.beans;
 
@@ -349,10 +350,10 @@ public class FeedWriter{
     
     private void writeEntries(XMLStreamWriter writer, Map entries) throws Exception{
 
-        //with this sorting, we want to print the last element first.
-        Object[] entryArr = entries.values().toArray();
-        for(int i=(entryArr.length -1); i >=0; i--){
-            Entry entry = (Entry)entryArr[i];
+        //print out the entries.
+        Iterator entryItr = entries.values().iterator();
+        while(entryItr.hasNext()){
+            Entry entry = (Entry)entryItr.next();
             writer.writeStartElement("entry");
             if(entry.getAttributes() != null){
                 Iterator entryAttrs = entry.getAttributes().iterator();
