@@ -1,0 +1,19 @@
+# -*- rnc -*-
+# RELAX NG Compact Syntax Grammar for the
+# Atom Spec Sort structuredExtension version 1.0.0.0
+
+namespace sort = "http://www.colorfulsoftware.com/atomsphere/extension/sort/1.0.0.0"
+
+start = asc | desc 
+
+# Ascending order
+asc =
+   element sort:asc {
+      attribute type { "updated" | "title" }
+   }
+   
+# Descending order
+desc =
+   element sort:desc {
+      attribute type { "updated" | "title" }
+   }

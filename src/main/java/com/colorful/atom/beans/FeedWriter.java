@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation
  *  2007-02-19 wbrown - change looping through entries to be the same for all projects.
+ *                      added support for writing empty extension elements.
  */
 package com.colorful.atom.beans;
 
@@ -332,19 +333,35 @@ public class FeedWriter{
         Iterator extensionsList = extensions.iterator();
         while(extensionsList.hasNext()){
             Extension extension = (Extension)extensionsList.next();
-            writer.writeStartElement(extension.getElementName());
-            if(extension.getAttributes() != null){
-                Iterator feedAttrs = extension.getAttributes().iterator();
-                //write the attributes
-                while(feedAttrs.hasNext()){
-                    Attribute feedAttr = (Attribute)feedAttrs.next();
-                    writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
+
+            //if there is no content, then write an empty extension element.
+            if(extension.getContent() == null){
+                writer.writeEmptyElement(extension.getElementName());                        
+                if(extension.getAttributes() != null){
+                    Iterator feedAttrs = extension.getAttributes().iterator();
+                    //write the attributes
+                    while(feedAttrs.hasNext()){
+                        Attribute feedAttr = (Attribute)feedAttrs.next();
+                        writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
+                    }
                 }
-            }
-            if(extension.getContent() != null){
+            }else{
+
+                writer.writeStartElement(extension.getElementName());
+                if(extension.getAttributes() != null){
+                    Iterator feedAttrs = extension.getAttributes().iterator();
+                    //write the attributes
+                    while(feedAttrs.hasNext()){
+                        Attribute feedAttr = (Attribute)feedAttrs.next();
+                        writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
+                    }
+                }
+                //add the content.
                 writer.writeCharacters(extension.getContent());
+
+                //close the element.
+                writer.writeEndElement();
             }
-            writer.writeEndElement();
         }
     }
     
