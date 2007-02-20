@@ -1,8 +1,10 @@
 # -*- rnc -*-
 # RELAX NG Compact Syntax Grammar for the
 # Atom Spec Sort structuredExtension version 1.0.0.0
-
-namespace sort = "http://www.colorfulsoftware.com/atomsphere/extension/sort/1.0.0.0"
+#
+# The entries in the document should be listed in the order of the sort element.
+#
+namespace sort = "http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"
 
 start = asc | desc 
 

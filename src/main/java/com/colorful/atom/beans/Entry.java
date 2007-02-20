@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom.beans;
 
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -213,16 +212,4 @@ public class Entry {
         this.extensions.add(extension);
         
     }
-    
-    public static final Comparator SORT_ASC = new Comparator(){        
-        public int compare(Object entry1, Object entry2) {
-            return entry1.toString().compareTo(entry2.toString());
-           
-        }
-    };
-    public static final Comparator SORT_DESC = new Comparator(){
-        public int compare(Object entry1, Object entry2) {
-            return entry2.toString().compareTo(entry1.toString());
-        }
-    };
 }

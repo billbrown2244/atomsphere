@@ -59,313 +59,459 @@ import java.util.TreeMap;
  */
 public class Feed {
 
-	private List attributes = null;
-	private List authors = null;
-	private List categories = null;
-	private List contributors = null;
-	private Generator generator = null;
-	private Icon icon = null;
-	private Id id = null;
-	private List links = null;
-	private Logo logo = null;
-	private Rights rights = null;
-	private Subtitle subtitle = null;
-	private Title title = null;
-	private Updated updated = null;
-	private List extensions = null;
-	private Map entries = null;
+    private List attributes = null;
+    private List authors = null;
+    private List categories = null;
+    private List contributors = null;
+    private Generator generator = null;
+    private Icon icon = null;
+    private Id id = null;
+    private List links = null;
+    private Logo logo = null;
+    private Rights rights = null;
+    private Subtitle subtitle = null;
+    private Title title = null;
+    private Updated updated = null;
+    private List extensions = null;
+    private Map entries = null;
+    public static final Comparator SORT_ASC = new Comparator(){        
+        public int compare(Object key1, Object key2) {
+            return key1.toString().compareTo(key2.toString());
 
-	public Feed(){
-		attributes = new LinkedList();
-	}
+        }
+    };
+    public static final Comparator SORT_DESC = new Comparator(){
+        public int compare(Object key1, Object key2) {
+            return key2.toString().compareTo(key1.toString());
+        }
+    };
 
-	/**
-	 * 
-	 * @param attribute an attribute for the feed
-	 */
-	public Feed(Attribute attribute){
-		attributes = new LinkedList();
-		attributes.add(attribute);
-	}
 
-	/**
-	 * 
-	 * @param attribute1 an attribute for the feed
-	 * @param attribute2 an attribute for the feed
-	 */
-	public Feed(Attribute attribute1, Attribute attribute2){
-		attributes = new LinkedList();
-		attributes.add(attribute1);
-		attributes.add(attribute2);
-	}
+    public Feed(){
+        attributes = new LinkedList();
+    }
 
-	public List getAttributes() {
-		return attributes;
-	}
+    /**
+     * 
+     * @param attribute an attribute for the feed
+     */
+    public Feed(Attribute attribute){
+        attributes = new LinkedList();
+        attributes.add(attribute);
+    }
 
-	public void setAttributes(List attributes) {
-		this.attributes = attributes;
-	}
+    /**
+     * 
+     * @param attribute1 an attribute for the feed
+     * @param attribute2 an attribute for the feed
+     */
+    public Feed(Attribute attribute1, Attribute attribute2){
+        attributes = new LinkedList();
+        attributes.add(attribute1);
+        attributes.add(attribute2);
+    }
 
-	public List getAuthors() {
-		return authors;
-	}
+    public List getAttributes() {
+        return attributes;
+    }
 
-	public void setAuthors(List authors) {
-		this.authors = authors;
-	}
+    public void setAttributes(List attributes) {
+        this.attributes = attributes;
+    }
 
-	public List getCategories() {
-		return categories;
-	}
+    public List getAuthors() {
+        return authors;
+    }
 
-	public void setCategories(List categories) {
-		this.categories = categories;
-	}
+    public void setAuthors(List authors) {
+        this.authors = authors;
+    }
 
-	public List getContributors() {
-		return contributors;
-	}
+    public List getCategories() {
+        return categories;
+    }
 
-	public void setContributors(List contributors) {
-		this.contributors = contributors;
-	}
+    public void setCategories(List categories) {
+        this.categories = categories;
+    }
 
-	public Map getEntries() {
-		return entries;
-	}
+    public List getContributors() {
+        return contributors;
+    }
 
-	public void setEntries(Map entries) {
-		this.entries = entries;
-	}
+    public void setContributors(List contributors) {
+        this.contributors = contributors;
+    }
 
-	public List getExtensions() {
-		return extensions;
-	}
+    public Map getEntries() {
+        return entries;
+    }
 
-	public void setExtensions(List extensions) {
-		this.extensions = extensions;
-	}
+    public void setEntries(Map entries) {
+        this.entries = entries;
+    }
 
-	public Generator getGenerator() {
-		return generator;
-	}
+    public List getExtensions() {
+        return extensions;
+    }
 
-	public void setGenerator(Generator generator) {
-		this.generator = generator;
-	}
+    public void setExtensions(List extensions) {
+        this.extensions = extensions;
+    }
 
-	public Icon getIcon() {
-		return icon;
-	}
+    public Generator getGenerator() {
+        return generator;
+    }
 
-	public void setIcon(Icon icon) {
-		this.icon = icon;
-	}
+    public void setGenerator(Generator generator) {
+        this.generator = generator;
+    }
 
-	public Id getId() {
-		return id;
-	}
+    public Icon getIcon() {
+        return icon;
+    }
 
-	public void setId(Id id) {
-		this.id = id;
-	}
+    public void setIcon(Icon icon) {
+        this.icon = icon;
+    }
 
-	public List getLinks() {
-		return links;
-	}
+    public Id getId() {
+        return id;
+    }
 
-	public void setLinks(List links) {
-		this.links = links;
-	}
+    public void setId(Id id) {
+        this.id = id;
+    }
 
-	public Logo getLogo() {
-		return logo;
-	}
+    public List getLinks() {
+        return links;
+    }
 
-	public void setLogo(Logo logo) {
-		this.logo = logo;
-	}
+    public void setLinks(List links) {
+        this.links = links;
+    }
 
-	public Rights getRights() {
-		return rights;
-	}
+    public Logo getLogo() {
+        return logo;
+    }
 
-	public void setRights(Rights rights) {
-		this.rights = rights;
-	}
+    public void setLogo(Logo logo) {
+        this.logo = logo;
+    }
 
-	public Subtitle getSubtitle() {
-		return subtitle;
-	}
+    public Rights getRights() {
+        return rights;
+    }
 
-	public void setSubtitle(Subtitle subtitle) {
-		this.subtitle = subtitle;
-	}
+    public void setRights(Rights rights) {
+        this.rights = rights;
+    }
 
-	public Title getTitle() {
-		return title;
-	}
+    public Subtitle getSubtitle() {
+        return subtitle;
+    }
 
-	public void setTitle(Title title) {
-		this.title = title;
-	}
+    public void setSubtitle(Subtitle subtitle) {
+        this.subtitle = subtitle;
+    }
 
-	public Updated getUpdated() {
-		return updated;
-	}
+    public Title getTitle() {
+        return title;
+    }
 
-	public void setUpdated(Updated updated) {
-		this.updated = updated;
-	}
+    public void setTitle(Title title) {
+        this.title = title;
+    }
 
-	public void addAttribute(Attribute attribute){
-		if(this.attributes == null){
-			this.attributes = new LinkedList();
-		}
-		this.attributes.add(attribute);
-	}
+    public Updated getUpdated() {
+        return updated;
+    }
 
-	public void addAuthor(Author author) throws AtomSpecException{
-		//check to make sure there is a name element
-		if(author.getName() == null){
-			throw new AtomSpecException("Person constructs MUST contain exactly one \"atom:name\" element.");
-		}
-		if(this.authors == null){
-			this.authors = new LinkedList();
-		}
-		this.authors.add(author);        
-	}
+    public void setUpdated(Updated updated) {
+        this.updated = updated;
+    }
 
-	public void addContributor(Contributor contributor) throws AtomSpecException{
-		//check to make sure there is a name element
-		if(contributor.getName() == null){
-			throw new AtomSpecException("Person constructs MUST contain exactly one \"atom:name\" element.");
-		}
-		if(this.contributors == null){
-			this.contributors = new LinkedList();
-		}
-		this.contributors.add(contributor);
-	}
+    public void addAttribute(Attribute attribute){
+        if(this.attributes == null){
+            this.attributes = new LinkedList();
+        }
+        this.attributes.add(attribute);
+    }
 
-	public void addCategory(Category category) throws AtomSpecException{
-		//check to make sure there is a term element
-		if(category.getTerm() == null){
-			throw new AtomSpecException("Category elements MUST have a \"term\" attribute.");
-		}
-		if(this.categories == null){
-			this.categories = new LinkedList();
-		}
-		this.categories.add(category);
-	}
+    public void addAuthor(Author author) throws AtomSpecException{
+        //check to make sure there is a name element
+        if(author.getName() == null){
+            throw new AtomSpecException("Person constructs MUST contain exactly one \"atom:name\" element.");
+        }
+        if(this.authors == null){
+            this.authors = new LinkedList();
+        }
+        this.authors.add(author);        
+    }
 
-	public void addLink(Link link) throws AtomSpecException{
-		//check to make sure there is a href attribute
-		if(link.getHref() == null){
-			throw new AtomSpecException("atom:link elements MUST have an href attribute, whose value MUST be a IRI reference");
-		}
-		if(this.links == null){
-			this.links = new LinkedList();
-		}
-		this.links.add(link);
-	}
+    public void addContributor(Contributor contributor) throws AtomSpecException{
+        //check to make sure there is a name element
+        if(contributor.getName() == null){
+            throw new AtomSpecException("Person constructs MUST contain exactly one \"atom:name\" element.");
+        }
+        if(this.contributors == null){
+            this.contributors = new LinkedList();
+        }
+        this.contributors.add(contributor);
+    }
 
-	public void addExtension(Extension extension) {
-		if(this.extensions == null){
-			this.extensions = new LinkedList();
-		}
-		this.extensions.add(extension);
+    public void addCategory(Category category) throws AtomSpecException{
+        //check to make sure there is a term element
+        if(category.getTerm() == null){
+            throw new AtomSpecException("Category elements MUST have a \"term\" attribute.");
+        }
+        if(this.categories == null){
+            this.categories = new LinkedList();
+        }
+        this.categories.add(category);
+    }
 
-	}
+    public void addLink(Link link) throws AtomSpecException{
+        //check to make sure there is a href attribute
+        if(link.getHref() == null){
+            throw new AtomSpecException("atom:link elements MUST have an href attribute, whose value MUST be a IRI reference");
+        }
+        if(this.links == null){
+            this.links = new LinkedList();
+        }
+        this.links.add(link);
+    }
 
-	public void addEntry(Entry entry) throws AtomSpecException{
-		//make sure id is present
-		if(entry.getId() == null){
-			throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:id element.");
-		}
-		//make sure title is present
-		if(entry.getTitle() == null){
-			throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:title element.");
-		}
-		//make sure updated is present
-		if(entry.getUpdated() == null){
-			throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:updated element.");
-		}
-		//if there is no author element at the feed level
-		//check to make sure the entry has an author element
-		if (this.authors == null){
-			if(entry.getAuthors() == null){
-				throw new AtomSpecException("atom:entry elements MUST contain one or more atom:author elements, unless the atom:entry contains an atom:source element that contains an atom:author element or, in an Atom Feed Document, the atom:feed element contains an atom:author element itself.");
-			}
-		}
-		//check for the summary requirement
-		if(entry.getContent() != null){
-			Content content = entry.getContent();
-			if(content.getAttributes() != null){
-				//check for src attribute
-				Iterator attrsItr = content.getAttributes().iterator();
-				while(attrsItr.hasNext()){
-					Attribute attr = (Attribute)attrsItr.next();
-					if(attr.getName().equals("src")){
-						if(entry.getSummary() == null){
-							throw new AtomSpecException("atom:entry elements MUST contain an atom:summary element in either of the following cases: the atom:entry contains an atom:content that has a \"src\" attribute (and is thus empty).");
-						}
-					}
-				}
-				//check for non-xml media type
-				attrsItr = content.getAttributes().iterator();
-				while(attrsItr.hasNext()){
-					Attribute attr = (Attribute)attrsItr.next();
-					if(attr.getName().equals("type") 
-							&& !attr.getValue().startsWith("text/")
-							&& !attr.getValue().endsWith("/xml")
-							&& !attr.getValue().endsWith("+xml")){
-						if(entry.getSummary() == null){
-							throw new AtomSpecException("atom:entry elements MUST contain an atom:summary element in either of the following cases: the atom:entry contains content that is encoded in Base64; i.e., the \"type\" attribute of atom:content is a MIME media type [MIMEREG], but is not an XML media type [RFC3023], does not begin with \"text/\", and does not end with \"/xml\" or \"+xml\".");
-						}
-					}
-				}
-			}
-		}
-        
+    public void addExtension(Extension extension) {
+        if(this.extensions == null){
+            this.extensions = new LinkedList();
+        }
+        this.extensions.add(extension);
+
+    }
+
+    public void addEntry(Entry entry) throws AtomSpecException{
+        //make sure id is present
+        if(entry.getId() == null){
+            throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:id element.");
+        }
+        //make sure title is present
+        if(entry.getTitle() == null){
+            throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:title element.");
+        }
+        //make sure updated is present
+        if(entry.getUpdated() == null){
+            throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:updated element.");
+        }
+        //if there is no author element at the feed level
+        //check to make sure the entry has an author element
+        if (this.authors == null){
+            if(entry.getAuthors() == null){
+                throw new AtomSpecException("atom:entry elements MUST contain one or more atom:author elements, unless the atom:entry contains an atom:source element that contains an atom:author element or, in an Atom Feed Document, the atom:feed element contains an atom:author element itself.");
+            }
+        }
+        //check for the summary requirement
+        if(entry.getContent() != null){
+            Content content = entry.getContent();
+            if(content.getAttributes() != null){
+                //check for src attribute
+                Iterator attrsItr = content.getAttributes().iterator();
+                while(attrsItr.hasNext()){
+                    Attribute attr = (Attribute)attrsItr.next();
+                    if(attr.getName().equals("src")){
+                        if(entry.getSummary() == null){
+                            throw new AtomSpecException("atom:entry elements MUST contain an atom:summary element in either of the following cases: the atom:entry contains an atom:content that has a \"src\" attribute (and is thus empty).");
+                        }
+                    }
+                }
+                //check for non-xml media type
+                attrsItr = content.getAttributes().iterator();
+                while(attrsItr.hasNext()){
+                    Attribute attr = (Attribute)attrsItr.next();
+                    if(attr.getName().equals("type") 
+                            && !attr.getValue().startsWith("text/")
+                            && !attr.getValue().endsWith("/xml")
+                            && !attr.getValue().endsWith("+xml")){
+                        if(entry.getSummary() == null){
+                            throw new AtomSpecException("atom:entry elements MUST contain an atom:summary element in either of the following cases: the atom:entry contains content that is encoded in Base64; i.e., the \"type\" attribute of atom:content is a MIME media type [MIMEREG], but is not an XML media type [RFC3023], does not begin with \"text/\", and does not end with \"/xml\" or \"+xml\".");
+                        }
+                    }
+                }
+            }
+        }
+
+
+        //get the sortType and sortComparator setup.
+        sortType = checkForSortExtension();
+
+
         //sort the entries based on the sort comparator.
-		if(this.entries == null){
-			this.entries = new TreeMap(sortComparator);
-		}
+        if(this.entries == null){
+            this.entries = new TreeMap(sortComparator);
+        }
 
-		//add the entry based on the static sort type.
-		if (sortType instanceof Updated){
-			this.entries.put(entry.getUpdated().getText(),entry);
-		}
-		if (sortType instanceof Title){
-			this.entries.put(entry.getTitle().getText(),entry);
-		}
+        //add the entry based on the sort type.
+        if (sortType instanceof Updated){
+            this.entries.put(entry.getUpdated().getText(),entry);
+        }
+        if (sortType instanceof Title){
+            this.entries.put(entry.getTitle().getText(),entry);
+        }
 
-	}
+    }
 
-	private static Object sortType = new Updated(); //default is updated
-	private static Comparator sortComparator = Entry.SORT_DESC;
+    private Object sortType = null; //default will be set to updated
+    private Comparator sortComparator = null; //default will be set to desc (newest entry first.)
 
-	/**
-	 * This method sorts the entries of the feed.  The default ordering of the entries is by date updated descending 
-	 * @param comparator this gives the ordering for the entries.
-	 */
-	public void sortEntries(Comparator comparator, Object type){
-		sortComparator = comparator;
-		sortType = type;
-		if(this.entries != null){
-			Map temp = new TreeMap(sortComparator);
-			Iterator entryItr = this.entries.values().iterator();
-			while(entryItr.hasNext()){
-				Entry entry = (Entry)entryItr.next();
-				if (sortType instanceof Updated){
-					temp.put(entry.getUpdated().getText(),entry);
-				}
-				if (sortType instanceof Title){
-					temp.put(entry.getTitle().getText(),entry);
-				}
-			}
-			this.entries = temp;
-		}
-	}
+    /**
+     * This method sorts the entries of the feed.  The default ordering of the entries is by updated descending 
+     * @param comparator this gives the ordering for the entries.
+     * @param type and instance of the type to sort by.
+     */
+    public void sortEntries(Comparator comparator, Object sortInstance){
+        this.sortComparator = comparator;
+        this.sortType = sortInstance;
+        if(this.entries != null){
+
+            //add the sort extension declaration if it isn't already there.
+            if(attributes != null){
+                boolean addSort = true;
+                Iterator attrItr = attributes.iterator();
+                while(attrItr.hasNext()){
+                    Attribute attr = (Attribute)attrItr.next();
+                    if(attr.getName().equalsIgnoreCase("xmlns:sort")){
+                        addSort = false;
+                    }
+                }
+                if(addSort){
+                    addAttribute(new Attribute("xmlns:sort","http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
+                }
+            }else{
+                addAttribute(new Attribute("xmlns:sort","http://wwww.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
+            }
+
+            Extension extension = null;            
+            if(comparator == Feed.SORT_ASC){
+                extension = new Extension("sort:asc");
+            }else{
+                extension = new Extension("sort:desc");
+            }
+
+            //sort the entries
+            Map temp = new TreeMap(sortComparator);
+            Iterator entryItr = this.entries.values().iterator();
+            while(entryItr.hasNext()){
+                Entry entry = (Entry)entryItr.next();
+                if (sortInstance instanceof Updated){                    
+                    extension.addAttribute(new Attribute("type","updated"));
+                    temp.put(entry.getUpdated().getText(),entry);
+                }
+                if (sortInstance instanceof Title){
+                    extension.addAttribute(new Attribute("type","title"));
+                    temp.put(entry.getTitle().getText(),entry);
+                }
+            }
+            this.entries = temp;
+
+
+            //add or replace this extension element.
+            if(extensions != null){
+                boolean addExt = true;
+                Iterator extensionItr = extensions.iterator();
+                while(extensionItr.hasNext()){
+                    Extension extn = (Extension)extensionItr.next();
+                    if(extn.getElementName().equalsIgnoreCase("sort:asc")
+                            || extn.getElementName().equalsIgnoreCase("sort:desc")){
+                        extn = extension;
+                        addExt = false;
+                    }
+                }
+                if(addExt){
+                    extensions.add(extension);
+                }
+            }else{
+                extensions.add(extension);
+            }
+        }
+    }
+
+    //sets the sort comparator and returns the sort type.
+    private Object checkForSortExtension() {
+
+        //short circut test.
+        if(sortType != null && sortComparator != null){
+            return sortType;
+        }
+
+        //if there aren't any attributes for the feed and thus no xmlns:sort attr
+        //return the defaults.
+        if(this.attributes == null){
+            sortComparator = SORT_DESC;
+            return sortType = new Updated();
+        }
+
+        //check for the sort namespace
+        boolean containsSort = false;
+        Iterator attrs = attributes.iterator();
+        while(attrs.hasNext()){
+            Attribute attr = (Attribute)attrs.next();
+            if(attr.getName().equalsIgnoreCase("xmlns:sort")){
+                containsSort = true;
+            }
+        }
+        
+        //if the namespace doesn't exist just return the defaults
+        if(!containsSort){
+            sortComparator = SORT_DESC;
+            return sortType = new Updated(); 
+        }
+
+        //if the namespace exists and there are no extension elements.
+        //return the defaults.
+        if(extensions == null){
+            sortComparator = SORT_DESC;
+            return sortType = new Updated();
+        }
+
+        //look for the extension element if the namespace exists.
+        Iterator extItr = extensions.iterator();
+        while(extItr.hasNext()){
+            Extension ext = (Extension)extItr.next();
+            if(ext.getElementName().equals("sort:asc")){
+                sortComparator = SORT_ASC;
+                attrs = ext.getAttributes().iterator();
+                while(attrs.hasNext()){
+                    Attribute attr = (Attribute)attrs.next();
+                    if(attr.getName().equalsIgnoreCase("type")){
+                        String value = attr.getValue();
+                        if(value.equals("updated")){
+                            return sortType = new Updated(); 
+                        }
+                        if(value.equals("title")){
+                            return sortType = new Title();
+                        }
+                    }
+                }
+            }else if(ext.getElementName().equals("sort:desc")){
+                sortComparator = SORT_DESC;
+                attrs = ext.getAttributes().iterator();
+                while(attrs.hasNext()){
+                    Attribute attr = (Attribute)attrs.next();
+                    if(attr.getName().equalsIgnoreCase("type")){
+                        String value = attr.getValue();
+                        if(value.equals("updated")){
+                            return sortType = new Updated(); 
+                        }
+                        if(value.equals("title")){
+                            return sortType = new Title();
+                        }
+                    }
+                }
+            }
+        }
+        
+        //we didn't have a supported extension sort element there so return the defaults. 
+        sortComparator = SORT_DESC;
+        return sortType = new Updated(); 
+    }
 }
