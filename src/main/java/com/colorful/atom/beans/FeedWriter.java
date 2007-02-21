@@ -336,7 +336,14 @@ public class FeedWriter{
 
             //if there is no content, then write an empty extension element.
             if(extension.getContent() == null){
-                writer.writeEmptyElement(extension.getElementName());                        
+            	String elementName = extension.getElementName();
+            	if(elementName.indexOf(":") == -1){
+            		writer.writeEmptyElement(elementName);
+            	}else{
+            		String prefix = elementName.substring(0,elementName.indexOf(":"));
+            		String localName = elementName.substring(elementName.indexOf(":")+1);
+            		writer.writeEmptyElement(prefix,localName,"");
+            	}
                 if(extension.getAttributes() != null){
                     Iterator feedAttrs = extension.getAttributes().iterator();
                     //write the attributes
@@ -346,8 +353,14 @@ public class FeedWriter{
                     }
                 }
             }else{
-
-                writer.writeStartElement(extension.getElementName());
+            	String elementName = extension.getElementName();
+            	if(elementName.indexOf(":") == -1){
+            		writer.writeStartElement(elementName);
+            	}else{
+            		String prefix = elementName.substring(0,elementName.indexOf(":"));
+            		String localName = elementName.substring(elementName.indexOf(":")+1);
+            		writer.writeStartElement(prefix,localName,"");
+            	}
                 if(extension.getAttributes() != null){
                     Iterator feedAttrs = extension.getAttributes().iterator();
                     //write the attributes

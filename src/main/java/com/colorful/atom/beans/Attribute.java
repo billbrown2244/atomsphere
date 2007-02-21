@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
+ *  2007-02-20 wbrown - added override of equals method.
  */
 package com.colorful.atom.beans;
 
@@ -78,4 +79,23 @@ public class Attribute {
         return name+"=\""+value+"\" ";
     }
     
+    
+    /**
+     * @Override return true if the name and value of the attribute are equal.
+     */
+    public boolean equals(Object obj) {
+    	if(obj instanceof Attribute){
+    		System.out.println("doing local equals check.");    		
+    		Attribute local = (Attribute)obj;
+    		System.out.println("local name = '"+local.name+"'");
+    		System.out.println("this name = '"+this.name+"'");
+    		System.out.println("local value = '"+local.value+"'");
+    		System.out.println("this value = '"+this.value+"'");
+    		System.out.println("are the attributes equal? "+(local.name.equals(this.name)
+    			&& local.value.equals(this.value)));
+    		return local.name.equals(this.name)
+    			&& local.value.equals(this.value);
+    	}
+    	return false;
+    }
 }

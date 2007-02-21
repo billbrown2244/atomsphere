@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
  *  2007-02-05 wbrown - added sort method for sorting entries.
- *  2007-02-19 wbrown - add support for sorting entries by title and updated date.
+ *  2007-02-19 wbrown - add support for sorting entries by title and updated.
  */
 package com.colorful.atom.beans;
 
@@ -341,27 +341,16 @@ public class Feed {
         }
 
 
-        //get the sortType and sortComparator setup.
-        sortType = checkForSortExtension();
-
-
-        //sort the entries based on the sort comparator.
+        //sort the entries with the default sort type initially.
         if(this.entries == null){
-            this.entries = new TreeMap(sortComparator);
+            this.entries = new TreeMap(Feed.SORT_DESC);
         }
 
-        //add the entry based on the sort type.
-        if (sortType instanceof Updated){
-            this.entries.put(entry.getUpdated().getText(),entry);
-        }
-        if (sortType instanceof Title){
-            this.entries.put(entry.getTitle().getText(),entry);
-        }
+        //add the entry with the default keyType of Updated.
+        this.entries.put(entry.getUpdated().getText(),entry);
 
     }
 
-    private Object sortType = null; //default will be set to updated
-    private Comparator sortComparator = null; //default will be set to desc (newest entry first.)
 
     /**
      * This method sorts the entries of the feed.  The default ordering of the entries is by updated descending 
@@ -369,52 +358,53 @@ public class Feed {
      * @param type and instance of the type to sort by.
      */
     public void sortEntries(Comparator comparator, Object sortInstance){
-        this.sortComparator = comparator;
-        this.sortType = sortInstance;
+
         if(this.entries != null){
+        	
+        	//sort the entries with the passed in instance as the key
+            Map temp = new TreeMap(comparator);
+            Iterator entryItr = this.entries.values().iterator();
+            while(entryItr.hasNext()){
+                Entry entry = (Entry)entryItr.next();
+                if (sortInstance instanceof Updated){   
+                	temp.put(entry.getUpdated().getText(),entry);
+                }
+                if (sortInstance instanceof Title){
+                    temp.put(entry.getTitle().getText(),entry);
+                }
+            }
+            this.entries = temp;
 
             //add the sort extension declaration if it isn't already there.
-            if(attributes != null){
+            Attribute attrLocal = new Attribute("xmlns:sort","http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0");
+        	if(attributes != null){
                 boolean addSort = true;
                 Iterator attrItr = attributes.iterator();
                 while(attrItr.hasNext()){
                     Attribute attr = (Attribute)attrItr.next();
-                    if(attr.getName().equalsIgnoreCase("xmlns:sort")){
+                    if(attr.equals(attrLocal)){
                         addSort = false;
                     }
                 }
                 if(addSort){
-                    addAttribute(new Attribute("xmlns:sort","http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
+                    addAttribute(attrLocal);
                 }
             }else{
-                addAttribute(new Attribute("xmlns:sort","http://wwww.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
+                addAttribute(attrLocal);
             }
 
+            //add or replace this extension element. 
             Extension extension = null;            
             if(comparator == Feed.SORT_ASC){
                 extension = new Extension("sort:asc");
             }else{
                 extension = new Extension("sort:desc");
             }
-
-            //sort the entries
-            Map temp = new TreeMap(sortComparator);
-            Iterator entryItr = this.entries.values().iterator();
-            while(entryItr.hasNext()){
-                Entry entry = (Entry)entryItr.next();
-                if (sortInstance instanceof Updated){                    
-                    extension.addAttribute(new Attribute("type","updated"));
-                    temp.put(entry.getUpdated().getText(),entry);
-                }
-                if (sortInstance instanceof Title){
-                    extension.addAttribute(new Attribute("type","title"));
-                    temp.put(entry.getTitle().getText(),entry);
-                }
+            if(sortInstance instanceof Updated){
+            	extension.addAttribute(new Attribute("type","updated"));
+            }else{
+            	extension.addAttribute(new Attribute("type","title"));
             }
-            this.entries = temp;
-
-
-            //add or replace this extension element.
             if(extensions != null){
                 boolean addExt = true;
                 Iterator extensionItr = extensions.iterator();
@@ -427,91 +417,81 @@ public class Feed {
                     }
                 }
                 if(addExt){
-                    extensions.add(extension);
+                    addExtension(extension);
                 }
             }else{
-                extensions.add(extension);
+            	addExtension(extension);
             }
         }
     }
 
-    //sets the sort comparator and returns the sort type.
-    private Object checkForSortExtension() {
-
-        //short circut test.
-        if(sortType != null && sortComparator != null){
-            return sortType;
-        }
+    /**
+     * Checks the namespace argument and applies the extension if it is recognized by the atomsphere library.
+     * @param xmlns the structuredExtension element's.
+     */
+    protected void checkForAndApplyExtension(Attribute xmlns) {
 
         //if there aren't any attributes for the feed and thus no xmlns:sort attr
         //return the defaults.
         if(this.attributes == null){
-            sortComparator = SORT_DESC;
-            return sortType = new Updated();
+            return;
         }
 
-        //check for the sort namespace
-        boolean containsSort = false;
+        //check for the first supported extension
+        //currently only sort is implemented.
+        System.out.println("attributes size = "+attributes.size());
         Iterator attrs = attributes.iterator();
         while(attrs.hasNext()){
             Attribute attr = (Attribute)attrs.next();
-            if(attr.getName().equalsIgnoreCase("xmlns:sort")){
-                containsSort = true;
+            if(attr.equals(xmlns)){
+            	applySort();
             }
         }
-        
-        //if the namespace doesn't exist just return the defaults
-        if(!containsSort){
-            sortComparator = SORT_DESC;
-            return sortType = new Updated(); 
-        }
-
-        //if the namespace exists and there are no extension elements.
-        //return the defaults.
-        if(extensions == null){
-            sortComparator = SORT_DESC;
-            return sortType = new Updated();
-        }
-
-        //look for the extension element if the namespace exists.
-        Iterator extItr = extensions.iterator();
-        while(extItr.hasNext()){
-            Extension ext = (Extension)extItr.next();
-            if(ext.getElementName().equals("sort:asc")){
-                sortComparator = SORT_ASC;
-                attrs = ext.getAttributes().iterator();
-                while(attrs.hasNext()){
-                    Attribute attr = (Attribute)attrs.next();
-                    if(attr.getName().equalsIgnoreCase("type")){
-                        String value = attr.getValue();
-                        if(value.equals("updated")){
-                            return sortType = new Updated(); 
-                        }
-                        if(value.equals("title")){
-                            return sortType = new Title();
-                        }
-                    }
-                }
-            }else if(ext.getElementName().equals("sort:desc")){
-                sortComparator = SORT_DESC;
-                attrs = ext.getAttributes().iterator();
-                while(attrs.hasNext()){
-                    Attribute attr = (Attribute)attrs.next();
-                    if(attr.getName().equalsIgnoreCase("type")){
-                        String value = attr.getValue();
-                        if(value.equals("updated")){
-                            return sortType = new Updated(); 
-                        }
-                        if(value.equals("title")){
-                            return sortType = new Title();
-                        }
-                    }
-                }
-            }
-        }
-        
-        //we didn't have a supported extension sort element there so return the defaults. 
-        sortComparator = SORT_DESC;
-        return sortType = new Updated(); 
     }
+
+    //check for and apply the first sort extension.
+	private void applySort() {
+		//only do the work if there are extensions.
+        if(extensions != null){
+        	//look for the first extension element if the namespace exists.
+	        Iterator extItr = extensions.iterator();
+	        Iterator attrs;
+	        while(extItr.hasNext()){
+	            Extension ext = (Extension)extItr.next();
+	            if(ext.getElementName().equals("sort:asc")){
+	                attrs = ext.getAttributes().iterator();
+	                while(attrs.hasNext()){
+	                    Attribute attr = (Attribute)attrs.next();
+	                    if(attr.getName().equalsIgnoreCase("type")){
+	                        String value = attr.getValue();
+	                        if(value.equals("updated")){
+	                        	sortEntries(SORT_ASC, new Updated()); 
+	                        	return;
+	                        }
+	                        if(value.equals("title")){
+	                        	sortEntries(SORT_ASC, new Title());
+	                        	return;
+	                        }
+	                    }
+	                }
+	            }else if(ext.getElementName().equals("sort:desc")){
+	                attrs = ext.getAttributes().iterator();
+	                while(attrs.hasNext()){
+	                    Attribute attr = (Attribute)attrs.next();
+	                    if(attr.getName().equalsIgnoreCase("type")){
+	                        String value = attr.getValue();
+	                        if(value.equals("updated")){
+	                        	sortEntries(SORT_DESC, new Updated()); 
+	                        	return;
+	                        }
+	                        if(value.equals("title")){
+	                        	sortEntries(SORT_DESC, new Title());
+	                        	return;
+	                        }
+	                    }
+	                }
+	            }
+	        }
+        }
+	}
 }
