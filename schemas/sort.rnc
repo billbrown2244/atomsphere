@@ -1,6 +1,6 @@
 # -*- rnc -*-
 # RELAX NG Compact Syntax Grammar for the
-# Atom Spec Sort structuredExtension version 1.0.0.0
+# Atom Spec Sort structuredExtension version 1.0
 #
 # The entries in the document should be listed in the order of the sort element.
 #

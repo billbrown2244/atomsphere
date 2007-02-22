@@ -81,18 +81,11 @@ public class Attribute {
     
     
     /**
-     * @Override return true if the name and value of the attribute are equal.
+     * @Override return true if the name and value of the attributes are equal.
      */
     public boolean equals(Object obj) {
-    	if(obj instanceof Attribute){
-    		System.out.println("doing local equals check.");    		
+    	if(obj instanceof Attribute){   		
     		Attribute local = (Attribute)obj;
-    		System.out.println("local name = '"+local.name+"'");
-    		System.out.println("this name = '"+this.name+"'");
-    		System.out.println("local value = '"+local.value+"'");
-    		System.out.println("this value = '"+this.value+"'");
-    		System.out.println("are the attributes equal? "+(local.name.equals(this.name)
-    			&& local.value.equals(this.value)));
     		return local.name.equals(this.name)
     			&& local.value.equals(this.value);
     	}

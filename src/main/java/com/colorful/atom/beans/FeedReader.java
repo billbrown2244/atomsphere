@@ -164,7 +164,12 @@ public class FeedReader{
     
     private Extension readExtension(XMLStreamReader reader) throws Exception{
         Extension extension = new Extension();
-        extension.setElementName(reader.getLocalName());
+        String prefix = reader.getPrefix();
+        if(prefix != null && !prefix.equals("")){
+            extension.setElementName(prefix+":"+reader.getLocalName());
+        }else{
+            extension.setElementName(reader.getLocalName());
+        }
         extension.setAttributes(getAttributes(reader));
         extension.setContent(reader.getElementText());
         return extension;

@@ -360,13 +360,12 @@ public class Feed {
     public void sortEntries(Comparator comparator, Object sortInstance){
 
         if(this.entries != null){
-        	
         	//sort the entries with the passed in instance as the key
             Map temp = new TreeMap(comparator);
             Iterator entryItr = this.entries.values().iterator();
             while(entryItr.hasNext()){
                 Entry entry = (Entry)entryItr.next();
-                if (sortInstance instanceof Updated){   
+                if (sortInstance instanceof Updated){  
                 	temp.put(entry.getUpdated().getText(),entry);
                 }
                 if (sortInstance instanceof Title){
@@ -405,22 +404,35 @@ public class Feed {
             }else{
             	extension.addAttribute(new Attribute("type","title"));
             }
-            if(extensions != null){
+            //if there are already extensions,
+            //we have to look for the sort extension and 
+            //replace any occurances of it with the one we just created.
+            if(extensions == null){
+                addExtension(extension);
+            }else{
                 boolean addExt = true;
                 Iterator extensionItr = extensions.iterator();
+                List tempExtensions = new LinkedList();
                 while(extensionItr.hasNext()){
                     Extension extn = (Extension)extensionItr.next();
+                    //if we find the extension remove it.
                     if(extn.getElementName().equalsIgnoreCase("sort:asc")
                             || extn.getElementName().equalsIgnoreCase("sort:desc")){
-                        extn = extension;
-                        addExt = false;
+                       tempExtensions.add(extn);
                     }
                 }
+                //remove any sort extension we found above
+                if(tempExtensions.size() > 0){
+                    extensionItr = tempExtensions.iterator();
+                    while(extensionItr.hasNext()){
+                        extensions.remove(extensionItr.next());
+                    }
+                }
+                
+                //finally add the new one.
                 if(addExt){
                     addExtension(extension);
                 }
-            }else{
-            	addExtension(extension);
             }
         }
     }
@@ -439,7 +451,6 @@ public class Feed {
 
         //check for the first supported extension
         //currently only sort is implemented.
-        System.out.println("attributes size = "+attributes.size());
         Iterator attrs = attributes.iterator();
         while(attrs.hasNext()){
             Attribute attr = (Attribute)attrs.next();

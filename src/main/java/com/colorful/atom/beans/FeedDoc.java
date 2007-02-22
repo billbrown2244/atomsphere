@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 Change History:
     2006-11-08 wbrown - changed API to include url's and make the method calls more intuitive.
     2006-11-12 wbrown - added javadoc documentation.
+    2007-02-22 wbrown - removed deprecated methods.
  */
 package com.colorful.atom.beans;
 
@@ -101,7 +102,7 @@ public class FeedDoc {
             writer.flush();
             writer.close();
         }catch(Exception e){
-            System.out.println("error creating xml file.");
+            System.err.println("error creating xml file.");
             e.printStackTrace();
         }
     }
@@ -122,7 +123,7 @@ public class FeedDoc {
             reader.close();
 
         }catch(Exception e){
-            System.out.println("error creating xml string from feed.");
+            System.err.println("error creating xml string from feed.");
             e.printStackTrace();
         }
         return feedXML.toString();
@@ -143,19 +144,10 @@ public class FeedDoc {
             }
             reader.close();
         }catch(Exception e){
-            System.out.println("error creating xml string from feed.");
+            System.err.println("error creating xml string from feed.");
             e.printStackTrace();
         }
         return feedXML.toString();
-    }
-
-    /**
-     * @deprecated (use one of the readFeedToString() methods.  This will be removed in the next release.)
-     * @param file the file path and name to be written to a string.
-     * @return an atom feed document string.
-     */
-    public static String readFeedString(String file) {
-        return readFeedToString(new File(file));
     }
 
     /**
@@ -195,20 +187,6 @@ public class FeedDoc {
     }
 
     /**
-     * @deprecated use one of the readFeedToBean() methods. this method will be removed in the next release.
-     * @param fileOrString file path or xml string
-     * @param isFile whether the fileOrString is a file
-     * @return the atom Feed bean.
-     * @throws Exception if the file or string cannot be parsed into a Feed bean.
-     */
-    public static Feed readFeedDoc(String fileOrString, boolean isFile) throws Exception{
-        if(isFile){
-            return readFeedToBean(new File(fileOrString));
-        }
-        return readFeedToBean(fileOrString);
-    }
-
-    /**
      * Test method.
      * @param args
      */
@@ -230,9 +208,6 @@ public class FeedDoc {
             Title title = new Title();
             title.setText("test feed");
             feed.setTitle(title);
-
-            //Author author = new Author("Bill Brown","http://www.earthbeats.net","info@earthbeats.net");
-            //feed.addAuthor(author);
 
             Contributor contributor = new Contributor("Mad Dog");
             contributor.setEmail(new Email("info@maddog.net"));
@@ -256,7 +231,7 @@ public class FeedDoc {
             link.setHreflang(new Attribute("hreflang","en-US"));
             feed.addLink(link);
 
-            Extension extension = new Extension("http://www.w3.org/1999/xhtml","div");
+            Extension extension = new Extension("xhtml:div");
             extension.setContent("<span style='color:red;'>hello there</span>");
             feed.addExtension(extension);
 
@@ -283,7 +258,6 @@ public class FeedDoc {
 
             Feed feed2 = FeedDoc.readFeedToBean(new File("out.xml"));
             FeedDoc.writeFeedDoc("out2.xml",feed2,encoding,xml_version);
-            System.out.println("done");
         }catch(Exception e){
             e.printStackTrace();
         }

@@ -18,8 +18,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
- *  2007-02-19 wbrown - deprecated constructor setting the xmlns attribute.
- *                      this should be set in the feed element.
+ *  2007-02-19 wbrown - deprecated constructor and getter / setter for the xmlns field.
+ *                      this should be set as an attribute in the feed element.
  */
 package com.colorful.atom.beans;
 
@@ -62,7 +62,7 @@ public class Extension {
     }
     
     /**
-     * @deprecated  the namespace for the extension should be set in the feed element.
+     * @deprecated  the namespace for the extension should be set/declared as an attribute in the feed element.
      * @param xmlns the xml namespace
      * @param elementName the name of the element
      */
@@ -103,10 +103,18 @@ public class Extension {
         this.elementName = elementName;
     }
 
+    /**
+     * @deprecated the namespace should be declared/placed in the feed element.
+     * @return the namespace for this extension.
+     */
     public Attribute getXmlns() {
         return xmlns;
     }
 
+    /**
+     * @deprecated the namespace should be declared/placed in the feed element.
+     * @param xmlns the namespace for this extension.
+     */
     public void setXmlns(Attribute xmlns) {
         this.xmlns = xmlns;
     }
