@@ -1,9 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Change History 
+	2007-02-23 wbrown - updating version from 1.0.1.1 to 1.0.2.0 for sorting, tag display and web lib feature improvements.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.colorful</groupId>
 	<artifactId>atomsphere</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.1.1-SNAPSHOT</version>
+	<version>1.0.2.0-SNAPSHOT</version>
 	<description>Atomsphere - An Atom 1.0 Feed Library</description>
 	<scm>
 		<connection>scm:svn:https://bill@gyenyame/repo/atomsphere/trunk</connection>
