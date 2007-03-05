@@ -1,9 +1,20 @@
 # -*- rnc -*-
 # RELAX NG Compact Syntax Grammar for the
-# Atom Spec Sort structuredExtension version 1.0
+# Atomsphere sort structuredExtension version 1.0
 #
-# The entries in the document should be listed in the order of the sort element.
-#
+# Although it is not required by the generator,
+# the entries in the document should be listed in the order of the sort element.
+# 
+# here is an example of what the sort extension looks like in a document:
+# <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en-US" xmlns:sort="http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0">
+# ...
+# 	<sort:asc type="title" />
+# <entry>
+#	...
+# </entry>
+#	...
+# </feed>
+
 namespace sort = "http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"
 
 start = asc | desc 
