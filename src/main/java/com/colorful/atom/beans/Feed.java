@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *  2006-11-14 wbrown - added javadoc documentation.
  *  2007-02-05 wbrown - added sort method for sorting entries.
  *  2007-02-19 wbrown - add support for sorting entries by title and updated.
+ *  2007-06-20 wbrown - adding support for sorting by summary. 
  */
 package com.colorful.atom.beans;
 
@@ -371,6 +372,9 @@ public class Feed {
                 if (sortInstance instanceof Title){
                     temp.put(entry.getTitle().getText(),entry);
                 }
+                if (sortInstance instanceof Summary){
+                    temp.put(entry.getSummary().getText(),entry);
+                }
             }
             this.entries = temp;
 
@@ -401,8 +405,10 @@ public class Feed {
             }
             if(sortInstance instanceof Updated){
             	extension.addAttribute(new Attribute("type","updated"));
-            }else{
+            }else if(sortInstance instanceof Title){
             	extension.addAttribute(new Attribute("type","title"));
+            }else if(sortInstance instanceof Summary){
+            	extension.addAttribute(new Attribute("type","summary"));
             }
             //if there are already extensions,
             //we have to look for the sort extension and 

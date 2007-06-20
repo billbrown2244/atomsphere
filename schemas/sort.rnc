@@ -22,11 +22,11 @@ start = asc | desc
 # Ascending order
 asc =
    element sort:asc {
-      attribute type { "updated" | "title" }
+      attribute type { "updated" | "title" | "summary" }
    }
    
 # Descending order
 desc =
    element sort:desc {
-      attribute type { "updated" | "title" }
+      attribute type { "updated" | "title" | "summary" }
    }
