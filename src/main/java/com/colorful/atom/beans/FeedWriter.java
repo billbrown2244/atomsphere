@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *  2006-11-14 wbrown - added javadoc documentation
  *  2007-02-19 wbrown - change looping through entries to be the same for all projects.
  *                      added support for writing empty extension elements.
+ *  2007-06-20 wbrown - change the scope of writing entries to protected so that the FeedDoc.readEntryToString(Entry entry)  will work.
  */
 package com.colorful.atom.beans;
 
@@ -378,7 +379,7 @@ public class FeedWriter{
         }
     }
     
-    private void writeEntries(XMLStreamWriter writer, Map entries) throws Exception{
+    protected void writeEntries(XMLStreamWriter writer, Map entries) throws Exception{
 
         //print out the entries.
         Iterator entryItr = entries.values().iterator();

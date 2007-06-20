@@ -20,6 +20,7 @@ Change History:
     2006-11-08 wbrown - changed API to include url's and make the method calls more intuitive.
     2006-11-12 wbrown - added javadoc documentation.
     2007-02-22 wbrown - removed deprecated methods.
+    2007-06-20 wbrown - added 2 methods readFeedToString(Feed feed) and readEntryToString(Entry entry)
  */
 package com.colorful.atom.beans;
 
@@ -27,6 +28,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -150,6 +152,50 @@ public class FeedDoc {
         return feedXML.toString();
     }
 
+    /**
+     * This method reads in a Feed bean and returns the contents as an atom feed string.
+     * @param feed the feed to be converted to an atom string.
+     * @return an atom feed document string.
+     */
+    public static String readFeedToString(Feed feed){
+    	
+    	StringWriter theString = new StringWriter();
+    	try{
+            XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+            XMLStreamWriter writer = new IndentingXMLStreamWriter(outputFactory.createXMLStreamWriter(theString));
+            new FeedWriter().writeFeed(writer,feed,encoding,xml_version);
+            writer.flush();
+            writer.close();
+        }catch(Exception e){
+            System.err.println("error creating xml file.");
+            e.printStackTrace();
+        }
+        return theString.toString();
+    }
+    
+    /**
+     * This method reads in an atom Entry bean and returns the contents as an atom feed string containing the entry.
+     * @param entry the entry to be converted to an atom string.
+     * @return an atom entry element string containing the entry passed in.
+     */
+    public static String readEntryToString(Entry entry) throws Exception{
+    	
+    	StringWriter theString = new StringWriter();
+    	try{
+            XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+            XMLStreamWriter writer = new IndentingXMLStreamWriter(outputFactory.createXMLStreamWriter(theString));
+            Feed wrapper = new Feed();
+        	wrapper.addEntry(entry);
+            new FeedWriter().writeEntries(writer, wrapper.getEntries());
+            writer.flush();
+            writer.close();
+        }catch(Exception e){
+            System.err.println("error creating xml file.");
+            e.printStackTrace();
+        }
+        return theString.toString();
+    }
+    
     /**
      * This method reads an xml string into a Feed bean.
      * @param xmlString the xml string to be transformed into a Feed bean.
