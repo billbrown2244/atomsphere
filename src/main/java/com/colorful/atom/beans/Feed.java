@@ -489,6 +489,10 @@ public class Feed {
 	                        	sortEntries(SORT_ASC, new Title());
 	                        	return;
 	                        }
+	                        if(value.equals("summary")){
+	                        	sortEntries(SORT_ASC, new Summary());
+	                        	return;
+	                        }
 	                    }
 	                }
 	            }else if(ext.getElementName().equals("sort:desc")){
@@ -503,6 +507,10 @@ public class Feed {
 	                        }
 	                        if(value.equals("title")){
 	                        	sortEntries(SORT_DESC, new Title());
+	                        	return;
+	                        }
+	                        if(value.equals("summary")){
+	                        	sortEntries(SORT_DESC, new Summary());
 	                        	return;
 	                        }
 	                    }
