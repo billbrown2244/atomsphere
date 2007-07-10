@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *  2007-02-05 wbrown - added sort method for sorting entries.
  *  2007-02-19 wbrown - add support for sorting entries by title and updated.
  *  2007-06-20 wbrown - adding support for sorting by summary. 
+ *  2007-07-10 wbrown - commented out debug code.
  */
 package com.colorful.atom.beans;
 
@@ -366,18 +367,28 @@ public class Feed {
             Iterator entryItr = this.entries.values().iterator();
             while(entryItr.hasNext()){
                 Entry entry = (Entry)entryItr.next();
-                if (sortInstance instanceof Updated){  
+                if (sortInstance instanceof Updated){ 
+                	//System.out.println("updated key = "+entry.getUpdated().getText());
                 	temp.put(entry.getUpdated().getText(),entry);
                 }
                 if (sortInstance instanceof Title){
+                	//System.out.println("title key = "+entry.getTitle().getText());
                     temp.put(entry.getTitle().getText(),entry);
                 }
                 if (sortInstance instanceof Summary){
+                	//System.out.println("summary key = "+entry.getSummary().getText());
                     temp.put(entry.getSummary().getText(),entry);
                 }
             }
             this.entries = temp;
 
+            /*debug 
+            entryItr = this.entries.values().iterator();
+            while(entryItr.hasNext()){
+            	System.out.println("sorted value = "+(String)entryItr.next());
+            }
+            */
+            
             //add the sort extension declaration if it isn't already there.
             Attribute attrLocal = new Attribute("xmlns:sort","http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0");
         	if(attributes != null){
@@ -412,7 +423,7 @@ public class Feed {
             }
             //if there are already extensions,
             //we have to look for the sort extension and 
-            //replace any occurances of it with the one we just created.
+            //replace any occurrences of it with the one we just created.
             if(extensions == null){
                 addExtension(extension);
             }else{
@@ -482,14 +493,17 @@ public class Feed {
 	                    if(attr.getName().equalsIgnoreCase("type")){
 	                        String value = attr.getValue();
 	                        if(value.equals("updated")){
+	                        	//System.out.println("sorting by updated ascending.");
 	                        	sortEntries(SORT_ASC, new Updated()); 
 	                        	return;
 	                        }
 	                        if(value.equals("title")){
+	                        	//System.out.println("sorting by title ascending.");
 	                        	sortEntries(SORT_ASC, new Title());
 	                        	return;
 	                        }
 	                        if(value.equals("summary")){
+	                        	//System.out.println("sorting by summary ascending.");
 	                        	sortEntries(SORT_ASC, new Summary());
 	                        	return;
 	                        }
@@ -502,14 +516,17 @@ public class Feed {
 	                    if(attr.getName().equalsIgnoreCase("type")){
 	                        String value = attr.getValue();
 	                        if(value.equals("updated")){
+	                        	//System.out.println("sorting by updated descending.");
 	                        	sortEntries(SORT_DESC, new Updated()); 
 	                        	return;
 	                        }
 	                        if(value.equals("title")){
+	                        	//System.out.println("sorting by title descending.");
 	                        	sortEntries(SORT_DESC, new Title());
 	                        	return;
 	                        }
 	                        if(value.equals("summary")){
+	                        	//System.out.println("sorting by summary descending.");
 	                        	sortEntries(SORT_DESC, new Summary());
 	                        	return;
 	                        }
