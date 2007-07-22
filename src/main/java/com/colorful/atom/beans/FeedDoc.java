@@ -64,15 +64,15 @@ public class FeedDoc {
     public static void writeFeedDoc(String outFile,Feed feed,String encoding,String version) throws Exception{
         //make sure id is present
         if(feed.getId() == null){
-            throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:id element.");
+            throw new AtomSpecException("atom:feed elements MUST contain exactly one atom:id element.");
         }
         //make sure title is present
         if(feed.getTitle() == null){
-            throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:title element.");
+            throw new AtomSpecException("atom:feed elements MUST contain exactly one atom:title element.");
         }
         //make sure updated is present
         if(feed.getUpdated() == null){
-            throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:updated element.");
+            throw new AtomSpecException("atom:feed elements MUST contain exactly one atom:updated element.");
         }
         //check for the author requirement
         if(feed.getAuthors() == null){
