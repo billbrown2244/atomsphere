@@ -1,10 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Change History 
-	2007-02-23 wbrown - updating version from 1.0.1.1 to 1.0.2.0 for sorting, tag display and web lib feature improvements.
-	2007-05-02 wbrown - updated version of sjsxp.
-	2007-06-20 wbrown - updated version of sjsxp.
-						updated version to 1.0.3.0 for additional sorting.
--->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.colorful</groupId>
@@ -12,12 +5,12 @@
 	<packaging>jar</packaging>
 	<name>Atomsphere</name>
 	<url>http://www.colorfulsoftware.com/projects/atomsphere/</url>
-	<version>1.0.3.0-SNAPSHOT</version>
+	<version>1.0.3.0</version>
 	<description>Atomsphere - An Atom 1.0 Feed Library</description>
 	<scm>
-		<connection>scm:svn:https://bill@gyenyame/repo/atomsphere/trunk</connection>
-		<url>scm:svn:https://bill@gyenyame/repo/atomsphere/trunk</url>
-		<developerConnection>scm:svn:https://bill@gyenyame/repo/atomsphere/trunk</developerConnection>
+		<connection>scm:svn:https://bill@gyenyame/repo/atomsphere/tags/atomsphere-1.0.3.0</connection>
+		<url>scm:svn:https://bill@gyenyame/repo/atomsphere/tags/atomsphere-1.0.3.0</url>
+		<developerConnection>scm:svn:https://bill@gyenyame/repo/atomsphere/tags/atomsphere-1.0.3.0</developerConnection>
 	</scm>
 	<ciManagement>
 		<system>continuum</system>
