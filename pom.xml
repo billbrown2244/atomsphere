@@ -8,9 +8,9 @@
 	<version>1.0.3.1-SNAPSHOT</version>
 	<description>Atomsphere - An Atom 1.0 Feed Library</description>
 	<scm>
-		<connection>scm:svn:https://bill@gyenyame/repo/atomsphere/trunk</connection>
-		<url>scm:svn:https://bill@gyenyame/repo/atomsphere/trunk</url>
-		<developerConnection>scm:svn:https://bill@gyenyame/repo/atomsphere/trunk</developerConnection>
+		<connection>scm:svn:https://billbrown.homelinux.net/repo/atomsphere/trunk</connection>
+		<url>scm:svn:https://billbrown.homelinux.net/repo/atomsphere/trunk</url>
+		<developerConnection>scm:svn:https://billbrown.homelinux.net/repo/atomsphere/trunk</developerConnection>
 	</scm>
 	<ciManagement>
 		<system>continuum</system>
