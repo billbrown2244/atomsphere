@@ -5,12 +5,12 @@
 	<packaging>jar</packaging>
 	<name>Atomsphere</name>
 	<url>http://www.colorfulsoftware.com/projects/atomsphere/</url>
-	<version>1.0.3.3-SNAPSHOT</version>
+	<version>1.0.3.3</version>
 	<description>Atomsphere - An Atom 1.0 Feed Library</description>
 	<scm>
-		<connection>scm:svn:https://billbrown.homelinux.net/repo/atomsphere/tags/atomsphere-1.0.3.1</connection>
-		<url>scm:svn:https://billbrown.homelinux.net/repo/atomsphere/tags/atomsphere-1.0.3.1</url>
-		<developerConnection>scm:svn:https://billbrown.homelinux.net/repo/atomsphere/tags/atomsphere-1.0.3.1</developerConnection>
+		<connection>scm:svn:https://billbrown.homelinux.net/repo/atomsphere/tags/atomsphere-1.0.3.3</connection>
+		<url>scm:svn:https://billbrown.homelinux.net/repo/atomsphere/tags/atomsphere-1.0.3.3</url>
+		<developerConnection>scm:svn:https://billbrown.homelinux.net/repo/atomsphere/tags/atomsphere-1.0.3.3</developerConnection>
 	</scm>
 	<ciManagement>
 		<system>continuum</system>
