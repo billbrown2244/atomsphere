@@ -232,7 +232,20 @@ public class FeedReader{
     private Summary readSummary(XMLStreamReader reader) throws Exception{
         Summary summary = new Summary();
         summary.setAttributes(getAttributes(reader));
-        summary.setText(reader.getElementText());
+        while(reader.hasNext()){
+            switch (reader.next()){            
+            case XMLStreamConstants.START_ELEMENT:
+            	if(reader.getLocalName().equals("div")){
+            		getAttributes(reader);
+            	}
+            	break;
+            case XMLStreamConstants.END_ELEMENT:
+                reader.next();
+                break;
+            default:
+            	summary.setText(reader.getElementText());
+            }
+        }
         return summary;
     }
 
@@ -324,21 +337,60 @@ public class FeedReader{
     private Title readTitle(XMLStreamReader reader) throws Exception{
         Title title = new Title();
         title.setAttributes(getAttributes(reader));
-        title.setText(reader.getElementText());
+        while(reader.hasNext()){
+            switch (reader.next()){            
+            case XMLStreamConstants.START_ELEMENT:
+            	if(reader.getLocalName().equals("div")){
+            		getAttributes(reader);
+            	}
+            	break;
+            case XMLStreamConstants.END_ELEMENT:
+                reader.next();
+                break;
+            default:
+            	title.setText(reader.getElementText());
+            }
+        }
         return title;
     }
     
     private Subtitle readSubtitle(XMLStreamReader reader) throws Exception{
         Subtitle subtitle = new Subtitle();
         subtitle.setAttributes(getAttributes(reader));
-        subtitle.setText(reader.getElementText());
+        while(reader.hasNext()){
+            switch (reader.next()){            
+            case XMLStreamConstants.START_ELEMENT:
+            	if(reader.getLocalName().equals("div")){
+            		getAttributes(reader);
+            	}
+            	break;
+            case XMLStreamConstants.END_ELEMENT:
+                reader.next();
+                break;
+            default:
+            	subtitle.setText(reader.getElementText());
+            }
+        }
         return subtitle;
     }
     
     private Rights readRights(XMLStreamReader reader) throws Exception{
         Rights rights = new Rights();
         rights.setAttributes(getAttributes(reader));
-        rights.setText(reader.getElementText());
+        while(reader.hasNext()){
+            switch (reader.next()){            
+            case XMLStreamConstants.START_ELEMENT:
+            	if(reader.getLocalName().equals("div")){
+            		getAttributes(reader);
+            	}
+            	break;
+            case XMLStreamConstants.END_ELEMENT:
+                reader.next();
+                break;
+            default:
+            	rights.setText(reader.getElementText());
+            }
+        }
         return rights;
     }
     
