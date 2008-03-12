@@ -5,7 +5,7 @@
 	<packaging>jar</packaging>
 	<name>Atomsphere</name>
 	<url>http://www.colorfulsoftware.com/projects/atomsphere/</url>
-	<version>1.0.3.1</version>
+	<version>1.0.3.2-SNAPSHOT</version>
 	<description>Atomsphere - An Atom 1.0 Feed Library</description>
 	<scm>
 		<connection>scm:svn:https://billbrown.homelinux.net/repo/atomsphere/tags/atomsphere-1.0.3.1</connection>
