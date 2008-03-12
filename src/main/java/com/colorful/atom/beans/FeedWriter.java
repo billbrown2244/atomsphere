@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *  2007-02-19 wbrown - change looping through entries to be the same for all projects.
  *                      added support for writing empty extension elements.
  *  2007-06-20 wbrown - change the scope of writing entries to protected so that the FeedDoc.readEntryToString(Entry entry)  will work.
+ *  2008-03-11 wbrown - fix bug for atomXHTMLTextConstruct to wrap contents in xhtml:div element.
  */
 package com.colorful.atom.beans;
 
@@ -117,6 +118,7 @@ public class FeedWriter{
     }
     
     private void writeSubtitle(XMLStreamWriter writer, Subtitle subtitle) throws Exception{
+    	boolean wrapInXhtmlDiv = false;
         writer.writeStartElement("subtitle");
         if(subtitle.getAttributes() != null){
             Iterator feedAttrs = subtitle.getAttributes().iterator();
@@ -124,9 +126,22 @@ public class FeedWriter{
             while(feedAttrs.hasNext()){
                 Attribute feedAttr = (Attribute)feedAttrs.next();
                 writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
+                
+                //check to see if we need to wrap the text in a an <xhtml:div> tag.
+                if(feedAttr.getName().equals("type") && feedAttr.getValue().equals("xhtml")){
+                	wrapInXhtmlDiv = true;
+                }
             }
         }
-        writer.writeCharacters(subtitle.getText());
+        
+        if(wrapInXhtmlDiv){
+        	writer.writeStartElement("http://www.w3.org/1999/xhtml","div");
+        	writer.writeCharacters(subtitle.getText());
+        	writer.writeEndElement();
+        }else{
+        	writer.writeCharacters(subtitle.getText());
+        }
+        
         writer.writeEndElement();
     }
 
@@ -165,6 +180,7 @@ public class FeedWriter{
     }
     
     private void writeTitle(XMLStreamWriter writer,Title title) throws Exception{
+    	boolean wrapInXhtmlDiv = false;
         writer.writeStartElement("title");
         if(title.getAttributes() != null){
             Iterator feedAttrs = title.getAttributes().iterator();
@@ -172,9 +188,22 @@ public class FeedWriter{
             while(feedAttrs.hasNext()){
                 Attribute feedAttr = (Attribute)feedAttrs.next();
                 writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
+                
+                //check to see if we need to wrap the text in a an <xhtml:div> tag.
+                if(feedAttr.getName().equals("type") && feedAttr.getValue().equals("xhtml")){
+                	wrapInXhtmlDiv = true;
+                }
             }
         }
-        writer.writeCharacters(title.getText());
+        
+        if(wrapInXhtmlDiv){
+        	writer.writeStartElement("http://www.w3.org/1999/xhtml","div");
+        	writer.writeCharacters(title.getText());
+        	writer.writeEndElement();
+        }else{
+        	writer.writeCharacters(title.getText());
+        }
+        
         writer.writeEndElement();
     }
     
@@ -254,6 +283,7 @@ public class FeedWriter{
     }
     
     private void writeRights(XMLStreamWriter writer, Rights rights) throws Exception{
+    	boolean wrapInXhtmlDiv = false;
         writer.writeStartElement("rights");
         if(rights.getAttributes() != null){
             Iterator feedAttrs = rights.getAttributes().iterator();
@@ -261,9 +291,20 @@ public class FeedWriter{
             while(feedAttrs.hasNext()){
                 Attribute feedAttr = (Attribute)feedAttrs.next();
                 writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
+                
+                //check to see if we need to wrap the text in a an <xhtml:div> tag.
+                if(feedAttr.getName().equals("type") && feedAttr.getValue().equals("xhtml")){
+                	wrapInXhtmlDiv = true;
+                }
             }
         }
-        writer.writeCharacters(rights.getText());
+        if(wrapInXhtmlDiv){
+        	writer.writeStartElement("http://www.w3.org/1999/xhtml","div");
+        	writer.writeCharacters(rights.getText());
+        	writer.writeEndElement();
+        }else{
+        	writer.writeCharacters(rights.getText());
+        }
         writer.writeEndElement();
         
     }
@@ -446,6 +487,7 @@ public class FeedWriter{
     }
 
     private void writeSummary(XMLStreamWriter writer, Summary summary) throws Exception{
+    	boolean wrapInXhtmlDiv = false;
         writer.writeStartElement("summary");
         if(summary.getAttributes() != null){
             Iterator feedAttrs = summary.getAttributes().iterator();
@@ -453,9 +495,22 @@ public class FeedWriter{
             while(feedAttrs.hasNext()){
                 Attribute feedAttr = (Attribute)feedAttrs.next();
                 writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
+                
+                //check to see if we need to wrap the text in a an <xhtml:div> tag.
+                if(feedAttr.getName().equals("type") && feedAttr.getValue().equals("xhtml")){
+                	wrapInXhtmlDiv = true;
+                }
             }
         }
-        writer.writeCharacters(summary.getText());
+        
+        if(wrapInXhtmlDiv){
+        	writer.writeStartElement("http://www.w3.org/1999/xhtml","div");
+        	writer.writeCharacters(summary.getText());
+        	writer.writeEndElement();
+        }else{
+        	writer.writeCharacters(summary.getText());
+        }
+        
         writer.writeEndElement();
     }
 
