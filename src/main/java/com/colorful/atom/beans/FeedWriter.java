@@ -135,7 +135,8 @@ public class FeedWriter{
         }
         
         if(wrapInXhtmlDiv){
-        	writer.writeStartElement("http://www.w3.org/1999/xhtml","div");
+        	writer.writeStartElement("div");
+        	writer.writeAttribute("xmlns","http://www.w3.org/1999/xhtml");
         	writer.writeCharacters(subtitle.getText());
         	writer.writeEndElement();
         }else{
@@ -197,7 +198,8 @@ public class FeedWriter{
         }
         
         if(wrapInXhtmlDiv){
-        	writer.writeStartElement("http://www.w3.org/1999/xhtml","div");
+        	writer.writeStartElement("div");
+        	writer.writeAttribute("xmlns","http://www.w3.org/1999/xhtml");
         	writer.writeCharacters(title.getText());
         	writer.writeEndElement();
         }else{
@@ -299,7 +301,8 @@ public class FeedWriter{
             }
         }
         if(wrapInXhtmlDiv){
-        	writer.writeStartElement("http://www.w3.org/1999/xhtml","div");
+        	writer.writeStartElement("div");
+        	writer.writeAttribute("xmlns","http://www.w3.org/1999/xhtml");
         	writer.writeCharacters(rights.getText());
         	writer.writeEndElement();
         }else{
@@ -504,7 +507,8 @@ public class FeedWriter{
         }
         
         if(wrapInXhtmlDiv){
-        	writer.writeStartElement("http://www.w3.org/1999/xhtml","div");
+        	writer.writeStartElement("div");
+        	writer.writeAttribute("xmlns","http://www.w3.org/1999/xhtml");
         	writer.writeCharacters(summary.getText());
         	writer.writeEndElement();
         }else{
