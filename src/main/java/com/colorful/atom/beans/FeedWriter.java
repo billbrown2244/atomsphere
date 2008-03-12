@@ -528,6 +528,7 @@ public class FeedWriter{
         //look for the src attribute to see if we need to build
         //an empty tag.
         boolean externalLink = false;
+        boolean wrapInXhtmlDiv = false;
         if(content.getAttributes() != null){
             Iterator contentAttrs = content.getAttributes().iterator();
 
@@ -550,13 +551,25 @@ public class FeedWriter{
             while(contentAttrs.hasNext()){
                 Attribute contentAttr = (Attribute)contentAttrs.next();
                 writer.writeAttribute(contentAttr.getName(),contentAttr.getValue());
+                
+                //check to see if we need to wrap the text in a an <xhtml:div> tag.
+                if(contentAttr.getName().equals("type") && contentAttr.getValue().equals("xhtml")){
+                	wrapInXhtmlDiv = true;
+                }
             }
             
         }else{//there are not attributes so assume default 'text';
             writer.writeStartElement("content");
         }
         if(content.getContent() != null){
-            writer.writeCharacters(content.getContent());
+        	if(wrapInXhtmlDiv){
+            	writer.writeStartElement("div");
+            	writer.writeAttribute("xmlns","http://www.w3.org/1999/xhtml");
+            	writer.writeCharacters(content.getContent());
+            	writer.writeEndElement();
+            }else{
+            	writer.writeCharacters(content.getContent());
+            } 
         }
         if(!externalLink){
             writer.writeEndElement();
