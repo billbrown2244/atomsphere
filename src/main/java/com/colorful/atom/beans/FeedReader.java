@@ -237,13 +237,12 @@ public class FeedReader{
             case XMLStreamConstants.START_ELEMENT:
             	if(reader.getLocalName().equals("div")){
             		getAttributes(reader);
+            		summary.setText(reader.getElementText());
+            		return summary;
             	}
-            	break;
-            case XMLStreamConstants.END_ELEMENT:
-                reader.next();
-                break;
             default:
-            	summary.setText(reader.getElementText());
+            	summary.setText(reader.getText());
+            	return summary;
             }
         }
         return summary;
@@ -342,13 +341,12 @@ public class FeedReader{
             case XMLStreamConstants.START_ELEMENT:
             	if(reader.getLocalName().equals("div")){
             		getAttributes(reader);
+            		title.setText(reader.getElementText());
+            		return title;
             	}
-            	break;
-            case XMLStreamConstants.END_ELEMENT:
-                reader.next();
-                break;
             default:
-            	title.setText(reader.getElementText());
+            	title.setText(reader.getText());
+            	return title;
             }
         }
         return title;
@@ -362,13 +360,12 @@ public class FeedReader{
             case XMLStreamConstants.START_ELEMENT:
             	if(reader.getLocalName().equals("div")){
             		getAttributes(reader);
+            		subtitle.setText(reader.getElementText());
+            		return subtitle;
             	}
-            	break;
-            case XMLStreamConstants.END_ELEMENT:
-                reader.next();
-                break;
             default:
-            	subtitle.setText(reader.getElementText());
+            	subtitle.setText(reader.getText());
+            	return subtitle;
             }
         }
         return subtitle;
@@ -382,13 +379,12 @@ public class FeedReader{
             case XMLStreamConstants.START_ELEMENT:
             	if(reader.getLocalName().equals("div")){
             		getAttributes(reader);
+            		rights.setText(reader.getElementText());
+            		return rights;
             	}
-            	break;
-            case XMLStreamConstants.END_ELEMENT:
-                reader.next();
-                break;
             default:
-            	rights.setText(reader.getElementText());
+            	rights.setText(reader.getText());
+            	return rights;
             }
         }
         return rights;
