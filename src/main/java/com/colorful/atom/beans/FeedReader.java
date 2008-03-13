@@ -232,6 +232,7 @@ public class FeedReader{
 	}
 
 	private Summary readSummary(XMLStreamReader reader) throws Exception{
+		System.out.println("in summary");
 		Summary summary = new Summary();
 		summary.setAttributes(getAttributes(reader));
 		//if the content is XHTML, we need to read in the contents of the div.
@@ -245,7 +246,7 @@ public class FeedReader{
 						summary.setText(reader.getElementText());
 					}
 				case XMLStreamConstants.END_ELEMENT:
-					if(reader.getLocalName().equals("contributor")){
+					if(reader.getLocalName().equals("div")){
 						breakOut = true;
 					}else{
 						reader.next();
@@ -268,12 +269,55 @@ public class FeedReader{
 			//look for the xhtml type.
 			while(attrsItr.hasNext()){
 				Attribute attribute = (Attribute)attrsItr.next();            
+				System.out.println("attribute.getName()"+attribute.getName());
+				System.out.println("attribute.getValue()"+attribute.getValue());
 				if(attribute.getName().equals("type") && attribute.getValue().equals("xhtml")){
+					System.out.println("returning true");
 					return true;
 				}
 			}
 		}
+		System.out.println("returning false");
 		return false;
+	}
+	
+	private boolean containsHTML(List attributes) {
+		if(attributes != null){
+			Iterator attrsItr = attributes.iterator();
+			//look for the xhtml type.
+			while(attrsItr.hasNext()){
+				Attribute attribute = (Attribute)attrsItr.next();            
+				System.out.println("attribute.getName()"+attribute.getName());
+				System.out.println("attribute.getValue()"+attribute.getValue());
+				if(attribute.getName().equals("type") && attribute.getValue().equals("html")){
+					System.out.println("returning true");
+					return true;
+				}
+			}
+		}
+		System.out.println("returning false");
+		return false;
+	}
+	
+	//catch all
+	private boolean containsText(List attributes) {
+		if(attributes != null){
+			Iterator attrsItr = attributes.iterator();
+			//look for the xhtml type.
+			while(attrsItr.hasNext()){
+				Attribute attribute = (Attribute)attrsItr.next();            
+				System.out.println("attribute.getName()"+attribute.getName());
+				System.out.println("attribute.getValue()"+attribute.getValue());
+				if(attribute.getName().equals("type") && (attribute.getValue().startsWith("text")
+						|| attribute.getValue().startsWith("text/"))){
+					System.out.println("returning true");
+					return true;
+				}
+			}
+			return false;
+		}else{		
+			return false;
+		}
 	}
 
 	private Source readSource(XMLStreamReader reader) throws Exception{
@@ -316,7 +360,7 @@ public class FeedReader{
 				break;
 
 			case XMLStreamConstants.END_ELEMENT:
-				if(reader.getLocalName().equals("contributor")){
+				if(reader.getLocalName().equals("source")){
 					breakOut = true;
 				}else{
 					reader.next();
@@ -341,11 +385,14 @@ public class FeedReader{
 		}
 		return published;
 	}
+	
 
+	
 	private Content readContent(XMLStreamReader reader) throws Exception{
+		System.out.println("in content");
 		Content content = new Content();
 		content.setAttributes(getAttributes(reader));
-		//if the content is XHTML, we need to read in the contents of the div.
+		//if the content is XHTML, we need to skip the contents of the div.
 		if(containsXHTML(content.getAttributes())){
 			while(reader.hasNext()){
 				boolean breakOut = false;
@@ -356,7 +403,7 @@ public class FeedReader{
 						content.setContent(reader.getElementText());
 					}
 				case XMLStreamConstants.END_ELEMENT:
-					if(reader.getLocalName().equals("contributor")){
+					if(reader.getLocalName().equals("div")){
 						breakOut = true;
 					}else{
 						reader.next();
@@ -368,10 +415,12 @@ public class FeedReader{
 				}
 			}
 		}else{
+			
 			content.setContent(reader.getElementText());
 		}
 		return content;
 	}
+	
 
 	private Updated readUpdated(XMLStreamReader reader) throws Exception{
 		Updated updated = new Updated();
@@ -386,6 +435,7 @@ public class FeedReader{
 	}
 
 	private Title readTitle(XMLStreamReader reader) throws Exception{
+		System.out.println("in title");
 		Title title = new Title();
 		title.setAttributes(getAttributes(reader));
 		//if the content is XHTML, we need to read in the contents of the div.
@@ -399,7 +449,7 @@ public class FeedReader{
 						title.setText(reader.getElementText());
 					}
 				case XMLStreamConstants.END_ELEMENT:
-					if(reader.getLocalName().equals("contributor")){
+					if(reader.getLocalName().equals("div")){
 						breakOut = true;
 					}else{
 						reader.next();
@@ -417,6 +467,7 @@ public class FeedReader{
 	}
 
 	private Subtitle readSubtitle(XMLStreamReader reader) throws Exception{
+		System.out.println("in Subtitle");
 		Subtitle subtitle = new Subtitle();
 		subtitle.setAttributes(getAttributes(reader));
 		//if the content is XHTML, we need to read in the contents of the div.
@@ -430,7 +481,7 @@ public class FeedReader{
 						subtitle.setText(reader.getElementText());
 					}
 				case XMLStreamConstants.END_ELEMENT:
-					if(reader.getLocalName().equals("contributor")){
+					if(reader.getLocalName().equals("div")){
 						breakOut = true;
 					}else{
 						reader.next();
@@ -448,6 +499,7 @@ public class FeedReader{
 	}
 
 	private Rights readRights(XMLStreamReader reader) throws Exception{
+		System.out.println("in Rights");
 		Rights rights = new Rights();
 		rights.setAttributes(getAttributes(reader));
 		//if the content is XHTML, we need to read in the contents of the div.
@@ -461,7 +513,7 @@ public class FeedReader{
 						rights.setText(reader.getElementText());
 					}
 				case XMLStreamConstants.END_ELEMENT:
-					if(reader.getLocalName().equals("contributor")){
+					if(reader.getLocalName().equals("div")){
 						breakOut = true;
 					}else{
 						reader.next();
@@ -494,7 +546,8 @@ public class FeedReader{
 	private Id readId(XMLStreamReader reader) throws Exception{
 		Id id = new Id();
 		id.setAttributes(getAttributes(reader));
-		id.setUri(new URI(reader.getElementText()));        
+		id.setUri(new URI(reader.getElementText())); 
+		System.out.println("file name = "+id.getUri().getText());
 		return id;
 	}
 
