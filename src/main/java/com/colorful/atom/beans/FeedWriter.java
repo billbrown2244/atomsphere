@@ -229,7 +229,7 @@ public class FeedWriter{
 	    				//if the name has a prefix, just write it as part of the local name.
 	    				writer.writeEmptyElement(attributes[0]);
 	    				for(int i=1; i < attributes.length; i++){
-	    					writer.writeAttribute(attributes[i].split("=")[0], attributes[i].split("=")[1]);
+	    					writer.writeAttribute(attributes[i].split("\\=")[0], attributes[i].split("\\=")[1]);
 	    				}
 	    			}else{
 	    				//if the name has a prefix, just write it as part of the local name.
@@ -244,7 +244,7 @@ public class FeedWriter{
 	    				//if the name has a prefix, just write it as part of the local name.
 	    				writer.writeStartElement(attributes[0]);
 	    				for(int i=1; i < attributes.length; i++){
-	    					writer.writeAttribute(attributes[i].split("=")[0], attributes[i].split("=")[1]);
+	    					writer.writeAttribute(attributes[i].split("\\=")[0], attributes[i].split("\\=")[1]);
 	    				}
 	    			}else{
 	    				//if the name has a prefix, just write it as part of the local name.
@@ -254,10 +254,10 @@ public class FeedWriter{
 	    			text = text.substring(startElement.length()+1);
 	    			if(attributes.length > 1){
 	    				writer.writeCharacters(text.substring(0,text.indexOf("</"+attributes[0])));
-	    				text = text.substring(text.indexOf("</"+attributes[0])+("</"+attributes[0]+">").length()+1);
+	    				text = text.substring(text.indexOf("</"+attributes[0])+("</"+attributes[0]+">").length());
 	    			}else{
 	    				writer.writeCharacters(text.substring(0,text.indexOf("</"+startElement)));
-	    				text = text.substring(text.indexOf("</"+startElement)+("</"+startElement+">").length()+1);
+	    				text = text.substring(text.indexOf("</"+startElement)+("</"+startElement+">").length());
 	    			}
 	    			
 	    			//write the end element
