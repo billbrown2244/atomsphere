@@ -137,7 +137,7 @@ public class FeedWriter{
         if(wrapInXhtmlDiv){
         	writer.writeStartElement("div");
         	writer.writeAttribute("xmlns","http://www.w3.org/1999/xhtml");
-        	writer.writeCharacters(subtitle.getText());
+        	writeXHTML(writer,subtitle.getText());
         	writer.writeEndElement();
         }else{
         	writer.writeCharacters(subtitle.getText());
@@ -200,7 +200,7 @@ public class FeedWriter{
         if(wrapInXhtmlDiv){
         	writer.writeStartElement("div");
         	writer.writeAttribute("xmlns","http://www.w3.org/1999/xhtml");
-        	writer.writeCharacters(title.getText());
+        	writeXHTML(writer,title.getText());
         	writer.writeEndElement();
         }else{
         	writer.writeCharacters(title.getText());
@@ -209,7 +209,69 @@ public class FeedWriter{
         writer.writeEndElement();
     }
     
-    private void writeAuthors(XMLStreamWriter writer,List authors) throws Exception{
+    private void writeXHTML(XMLStreamWriter writer, String text) throws Exception{
+    	try{
+    
+	    	if(text.indexOf('<') == -1){
+	    		writer.writeCharacters(text);
+	    	}else{
+	    		//write up until the first element
+	    		writer.writeCharacters(text.substring(0,text.indexOf('<')));
+	    		text = text.substring(text.indexOf('<')+1);
+	    		
+	    		//get the opening element content 
+	    		String startElement = text.substring(0,text.indexOf('>'));
+	    		//check for empty element
+	    		if(startElement.indexOf('/') == startElement.length()-1){
+	    			//check for attributes
+	    			String[] attributes = startElement.split(" ");
+	    			if(attributes.length > 1){
+	    				//if the name has a prefix, just write it as part of the local name.
+	    				writer.writeEmptyElement(attributes[0]);
+	    				for(int i=1; i < attributes.length; i++){
+	    					writer.writeAttribute(attributes[i].split("=")[0], attributes[i].split("=")[1]);
+	    				}
+	    			}else{
+	    				//if the name has a prefix, just write it as part of the local name.
+	    				writer.writeEmptyElement(startElement.trim());
+	    			}
+	    			//search for the next element 
+	    			writeXHTML(writer,text.substring(text.indexOf('>')+1));
+	    		}else{//this is regular start element
+	    			//check for attributes
+	    			String[] attributes = startElement.split(" ");
+	    			if(attributes.length > 1){
+	    				//if the name has a prefix, just write it as part of the local name.
+	    				writer.writeStartElement(attributes[0]);
+	    				for(int i=1; i < attributes.length; i++){
+	    					writer.writeAttribute(attributes[i].split("=")[0], attributes[i].split("=")[1]);
+	    				}
+	    			}else{
+	    				//if the name has a prefix, just write it as part of the local name.
+	    				writer.writeStartElement(startElement.trim());
+	    			}
+	    			//write the characters up until the begining of the end element.
+	    			text = text.substring(startElement.length()+1);
+	    			if(attributes.length > 1){
+	    				writer.writeCharacters(text.substring(0,text.indexOf("</"+attributes[0])));
+	    				text = text.substring(text.indexOf("</"+attributes[0])+("</"+attributes[0]+">").length()+1);
+	    			}else{
+	    				writer.writeCharacters(text.substring(0,text.indexOf("</"+startElement)));
+	    				text = text.substring(text.indexOf("</"+startElement)+("</"+startElement+">").length()+1);
+	    			}
+	    			
+	    			//write the end element
+	    			writer.writeEndElement();
+	    			
+	    			writeXHTML(writer,text);
+	    		}
+	    	}
+    	}catch(Exception e){
+    		throw new Exception("Content is not valid XHTML",e);
+    	}
+    }
+
+	private void writeAuthors(XMLStreamWriter writer,List authors) throws Exception{
         //loop through and print out each author.
         Iterator authorList = authors.iterator();
         while(authorList.hasNext()){
@@ -303,7 +365,7 @@ public class FeedWriter{
         if(wrapInXhtmlDiv){
         	writer.writeStartElement("div");
         	writer.writeAttribute("xmlns","http://www.w3.org/1999/xhtml");
-        	writer.writeCharacters(rights.getText());
+        	writeXHTML(writer,rights.getText());
         	writer.writeEndElement();
         }else{
         	writer.writeCharacters(rights.getText());
@@ -509,7 +571,7 @@ public class FeedWriter{
         if(wrapInXhtmlDiv){
         	writer.writeStartElement("div");
         	writer.writeAttribute("xmlns","http://www.w3.org/1999/xhtml");
-        	writer.writeCharacters(summary.getText());
+        	writeXHTML(writer,summary.getText());
         	writer.writeEndElement();
         }else{
         	writer.writeCharacters(summary.getText());
@@ -565,7 +627,7 @@ public class FeedWriter{
         	if(wrapInXhtmlDiv){
             	writer.writeStartElement("div");
             	writer.writeAttribute("xmlns","http://www.w3.org/1999/xhtml");
-            	writer.writeCharacters(content.getContent());
+            	writeXHTML(writer,content.getContent());
             	writer.writeEndElement();
             }else{
             	writer.writeCharacters(content.getContent());

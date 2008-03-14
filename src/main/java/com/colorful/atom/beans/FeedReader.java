@@ -237,23 +237,52 @@ public class FeedReader{
 		summary.setAttributes(getAttributes(reader));
 		//if the content is XHTML, we need to read in the contents of the div.
 		if(containsXHTML(summary.getAttributes())){
+			StringBuffer xhtml = new StringBuffer();
 			while(reader.hasNext()){
 				boolean breakOut = false;
 				switch (reader.next()){                 
-				case XMLStreamConstants.START_ELEMENT:
-					if(reader.getLocalName().equals("div")){
-						getAttributes(reader);
-						summary.setText(reader.getElementText());
-					}
-				case XMLStreamConstants.END_ELEMENT:
-					if(reader.getLocalName().equals("div")){
-						breakOut = true;
-					}else{
-						reader.next();
-					}
-					break;
+					case XMLStreamConstants.START_ELEMENT:
+						if(reader.getLocalName().equals("div")){
+							getAttributes(reader);
+						}else{
+							if(reader.getPrefix() != null){
+								xhtml.append("<"+reader.getPrefix()+":"+reader.getLocalName());
+							}else{
+								xhtml.append("<"+reader.getLocalName());
+							}
+							List attributes = getAttributes(reader);
+							//add the attributes
+							if(attributes != null){
+								Iterator attrItr = attributes.iterator();
+								while(attrItr.hasNext()){
+									Attribute attr = (Attribute)attrItr.next();
+									xhtml.append(" "+attr.getName()+"=\""+attr.getValue()+"\"");
+								}
+								xhtml.append(" ");
+							}
+							xhtml.append(">");
+							
+						}
+					case XMLStreamConstants.END_ELEMENT:
+						if(reader.getLocalName().equals("div")){
+							breakOut = true;
+						}else{
+							if(reader.getPrefix() != null){
+								xhtml.append("</"+reader.getPrefix()+":"+reader.getLocalName()+">");
+							}else{
+								xhtml.append("</"+reader.getLocalName()+">");
+							}
+						}
+						break;
+					case XMLStreamConstants.CDATA:
+					case XMLStreamConstants.CHARACTERS:
+					case XMLStreamConstants.COMMENT:
+					case XMLStreamConstants.SPACE:
+						xhtml.append(reader.getText());
 				}
 				if(breakOut){
+					String xhtmlStr = xhtml.toString().replaceAll("<br></br>","<br />").replaceAll("<hr></hr>","<hr />");				
+					summary.setText(xhtmlStr);
 					break;
 				}
 			}
@@ -279,45 +308,6 @@ public class FeedReader{
 		}
 		System.out.println("returning false");
 		return false;
-	}
-	
-	private boolean containsHTML(List attributes) {
-		if(attributes != null){
-			Iterator attrsItr = attributes.iterator();
-			//look for the xhtml type.
-			while(attrsItr.hasNext()){
-				Attribute attribute = (Attribute)attrsItr.next();            
-				System.out.println("attribute.getName()"+attribute.getName());
-				System.out.println("attribute.getValue()"+attribute.getValue());
-				if(attribute.getName().equals("type") && attribute.getValue().equals("html")){
-					System.out.println("returning true");
-					return true;
-				}
-			}
-		}
-		System.out.println("returning false");
-		return false;
-	}
-	
-	//catch all
-	private boolean containsText(List attributes) {
-		if(attributes != null){
-			Iterator attrsItr = attributes.iterator();
-			//look for the xhtml type.
-			while(attrsItr.hasNext()){
-				Attribute attribute = (Attribute)attrsItr.next();            
-				System.out.println("attribute.getName()"+attribute.getName());
-				System.out.println("attribute.getValue()"+attribute.getValue());
-				if(attribute.getName().equals("type") && (attribute.getValue().startsWith("text")
-						|| attribute.getValue().startsWith("text/"))){
-					System.out.println("returning true");
-					return true;
-				}
-			}
-			return false;
-		}else{		
-			return false;
-		}
 	}
 
 	private Source readSource(XMLStreamReader reader) throws Exception{
@@ -394,23 +384,52 @@ public class FeedReader{
 		content.setAttributes(getAttributes(reader));
 		//if the content is XHTML, we need to skip the contents of the div.
 		if(containsXHTML(content.getAttributes())){
+			StringBuffer xhtml = new StringBuffer();
 			while(reader.hasNext()){
 				boolean breakOut = false;
 				switch (reader.next()){                 
-				case XMLStreamConstants.START_ELEMENT:
-					if(reader.getLocalName().equals("div")){
-						getAttributes(reader);
-						content.setContent(reader.getElementText());
-					}
-				case XMLStreamConstants.END_ELEMENT:
-					if(reader.getLocalName().equals("div")){
-						breakOut = true;
-					}else{
-						reader.next();
-					}
-					break;
+					case XMLStreamConstants.START_ELEMENT:
+						if(reader.getLocalName().equals("div")){
+							getAttributes(reader);
+						}else{
+							if(reader.getPrefix() != null){
+								xhtml.append("<"+reader.getPrefix()+":"+reader.getLocalName());
+							}else{
+								xhtml.append("<"+reader.getLocalName());
+							}
+							List attributes = getAttributes(reader);
+							//add the attributes
+							if(attributes != null){
+								Iterator attrItr = attributes.iterator();
+								while(attrItr.hasNext()){
+									Attribute attr = (Attribute)attrItr.next();
+									xhtml.append(" "+attr.getName()+"=\""+attr.getValue()+"\"");
+								}
+								xhtml.append(" ");
+							}
+							xhtml.append(">");
+							
+						}
+					case XMLStreamConstants.END_ELEMENT:
+						if(reader.getLocalName().equals("div")){
+							breakOut = true;
+						}else{
+							if(reader.getPrefix() != null){
+								xhtml.append("</"+reader.getPrefix()+":"+reader.getLocalName()+">");
+							}else{
+								xhtml.append("</"+reader.getLocalName()+">");
+							}
+						}
+						break;
+					case XMLStreamConstants.CDATA:
+					case XMLStreamConstants.CHARACTERS:
+					case XMLStreamConstants.COMMENT:
+					case XMLStreamConstants.SPACE:
+						xhtml.append(reader.getText());
 				}
 				if(breakOut){
+					String xhtmlStr = xhtml.toString().replaceAll("<br></br>","<br />").replaceAll("<hr></hr>","<hr />");				
+					content.setContent(xhtmlStr);
 					break;
 				}
 			}
@@ -440,23 +459,52 @@ public class FeedReader{
 		title.setAttributes(getAttributes(reader));
 		//if the content is XHTML, we need to read in the contents of the div.
 		if(containsXHTML(title.getAttributes())){
+			StringBuffer xhtml = new StringBuffer();
 			while(reader.hasNext()){
 				boolean breakOut = false;
 				switch (reader.next()){                 
-				case XMLStreamConstants.START_ELEMENT:
-					if(reader.getLocalName().equals("div")){
-						getAttributes(reader);
-						title.setText(reader.getElementText());
-					}
-				case XMLStreamConstants.END_ELEMENT:
-					if(reader.getLocalName().equals("div")){
-						breakOut = true;
-					}else{
-						reader.next();
-					}
-					break;
+					case XMLStreamConstants.START_ELEMENT:
+						if(reader.getLocalName().equals("div")){
+							getAttributes(reader);
+						}else{
+							if(reader.getPrefix() != null){
+								xhtml.append("<"+reader.getPrefix()+":"+reader.getLocalName());
+							}else{
+								xhtml.append("<"+reader.getLocalName());
+							}
+							List attributes = getAttributes(reader);
+							//add the attributes
+							if(attributes != null){
+								Iterator attrItr = attributes.iterator();
+								while(attrItr.hasNext()){
+									Attribute attr = (Attribute)attrItr.next();
+									xhtml.append(" "+attr.getName()+"=\""+attr.getValue()+"\"");
+								}
+								xhtml.append(" ");
+							}
+							xhtml.append(">");
+							
+						}
+					case XMLStreamConstants.END_ELEMENT:
+						if(reader.getLocalName().equals("div")){
+							breakOut = true;
+						}else{
+							if(reader.getPrefix() != null){
+								xhtml.append("</"+reader.getPrefix()+":"+reader.getLocalName()+">");
+							}else{
+								xhtml.append("</"+reader.getLocalName()+">");
+							}
+						}
+						break;
+					case XMLStreamConstants.CDATA:
+					case XMLStreamConstants.CHARACTERS:
+					case XMLStreamConstants.COMMENT:
+					case XMLStreamConstants.SPACE:
+						xhtml.append(reader.getText());
 				}
 				if(breakOut){
+					String xhtmlStr = xhtml.toString().replaceAll("<br></br>","<br />").replaceAll("<hr></hr>","<hr />");				
+					title.setText(xhtmlStr);
 					break;
 				}
 			}	
@@ -472,23 +520,52 @@ public class FeedReader{
 		subtitle.setAttributes(getAttributes(reader));
 		//if the content is XHTML, we need to read in the contents of the div.
 		if(containsXHTML(subtitle.getAttributes())){
+			StringBuffer xhtml = new StringBuffer();
 			while(reader.hasNext()){
 				boolean breakOut = false;
 				switch (reader.next()){                 
-				case XMLStreamConstants.START_ELEMENT:
-					if(reader.getLocalName().equals("div")){
-						getAttributes(reader);
-						subtitle.setText(reader.getElementText());
-					}
-				case XMLStreamConstants.END_ELEMENT:
-					if(reader.getLocalName().equals("div")){
-						breakOut = true;
-					}else{
-						reader.next();
-					}
-					break;
+					case XMLStreamConstants.START_ELEMENT:
+						if(reader.getLocalName().equals("div")){
+							getAttributes(reader);
+						}else{
+							if(reader.getPrefix() != null){
+								xhtml.append("<"+reader.getPrefix()+":"+reader.getLocalName());
+							}else{
+								xhtml.append("<"+reader.getLocalName());
+							}
+							List attributes = getAttributes(reader);
+							//add the attributes
+							if(attributes != null){
+								Iterator attrItr = attributes.iterator();
+								while(attrItr.hasNext()){
+									Attribute attr = (Attribute)attrItr.next();
+									xhtml.append(" "+attr.getName()+"=\""+attr.getValue()+"\"");
+								}
+								xhtml.append(" ");
+							}
+							xhtml.append(">");
+							
+						}
+					case XMLStreamConstants.END_ELEMENT:
+						if(reader.getLocalName().equals("div")){
+							breakOut = true;
+						}else{
+							if(reader.getPrefix() != null){
+								xhtml.append("</"+reader.getPrefix()+":"+reader.getLocalName()+">");
+							}else{
+								xhtml.append("</"+reader.getLocalName()+">");
+							}
+						}
+						break;
+					case XMLStreamConstants.CDATA:
+					case XMLStreamConstants.CHARACTERS:
+					case XMLStreamConstants.COMMENT:
+					case XMLStreamConstants.SPACE:
+						xhtml.append(reader.getText());
 				}
 				if(breakOut){
+					String xhtmlStr = xhtml.toString().replaceAll("<br></br>","<br />").replaceAll("<hr></hr>","<hr />");				
+					subtitle.setText(xhtmlStr);
 					break;
 				}
 			}
@@ -504,23 +581,52 @@ public class FeedReader{
 		rights.setAttributes(getAttributes(reader));
 		//if the content is XHTML, we need to read in the contents of the div.
 		if(containsXHTML(rights.getAttributes())){
+			StringBuffer xhtml = new StringBuffer();
 			while(reader.hasNext()){
 				boolean breakOut = false;
 				switch (reader.next()){                 
-				case XMLStreamConstants.START_ELEMENT:
-					if(reader.getLocalName().equals("div")){
-						getAttributes(reader);
-						rights.setText(reader.getElementText());
-					}
-				case XMLStreamConstants.END_ELEMENT:
-					if(reader.getLocalName().equals("div")){
-						breakOut = true;
-					}else{
-						reader.next();
-					}
-					break;
+					case XMLStreamConstants.START_ELEMENT:
+						if(reader.getLocalName().equals("div")){
+							getAttributes(reader);
+						}else{
+							if(reader.getPrefix() != null){
+								xhtml.append("<"+reader.getPrefix()+":"+reader.getLocalName());
+							}else{
+								xhtml.append("<"+reader.getLocalName());
+							}
+							List attributes = getAttributes(reader);
+							//add the attributes
+							if(attributes != null){
+								Iterator attrItr = attributes.iterator();
+								while(attrItr.hasNext()){
+									Attribute attr = (Attribute)attrItr.next();
+									xhtml.append(" "+attr.getName()+"=\""+attr.getValue()+"\"");
+								}
+								xhtml.append(" ");
+							}
+							xhtml.append(">");
+							
+						}
+					case XMLStreamConstants.END_ELEMENT:
+						if(reader.getLocalName().equals("div")){
+							breakOut = true;
+						}else{
+							if(reader.getPrefix() != null){
+								xhtml.append("</"+reader.getPrefix()+":"+reader.getLocalName()+">");
+							}else{
+								xhtml.append("</"+reader.getLocalName()+">");
+							}
+						}
+						break;
+					case XMLStreamConstants.CDATA:
+					case XMLStreamConstants.CHARACTERS:
+					case XMLStreamConstants.COMMENT:
+					case XMLStreamConstants.SPACE:
+						xhtml.append(reader.getText());
 				}
 				if(breakOut){
+					String xhtmlStr = xhtml.toString().replaceAll("<br></br>","<br />").replaceAll("<hr></hr>","<hr />");				
+					rights.setText(xhtmlStr);
 					break;
 				}
 			}
