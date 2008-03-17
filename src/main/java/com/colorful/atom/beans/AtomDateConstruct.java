@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class AtomDateConstruct {
+public abstract class AtomDateConstruct {
 
 	private final Date dateTime;
     
@@ -34,11 +34,15 @@ public class AtomDateConstruct {
      * @param updated the date formatted to [RFC3339]
      */
     public AtomDateConstruct(Date dateTime){
-        this.dateTime = new Date(dateTime.getTime());
+    	if(dateTime == null){
+    		this.dateTime = null;
+    	}else{
+    		this.dateTime = new Date(dateTime.getTime());
+    	}
     }
     
     protected Date getDateTime(){
-    	return new Date(dateTime.getTime());
+    	return (dateTime == null)? null: new Date(dateTime.getTime());
     }
     
     /**
@@ -47,6 +51,9 @@ public class AtomDateConstruct {
      * 	for example 2006-04-28T12:50:43.337-05:00
      */
     public String getText() {
+    	if(dateTime == null){
+    		return null;
+    	}
     	//example 2006-04-28T12:50:43.337-05:00
     	final String timeZoneOffset;
     	TimeZone timeZone = TimeZone.getDefault();

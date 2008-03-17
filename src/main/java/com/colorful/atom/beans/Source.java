@@ -18,10 +18,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
+ *  2008-03-17 wbrown - made class immutable.
  */
 package com.colorful.atom.beans;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -48,196 +48,50 @@ import java.util.List;
  *          }
  *	</pre>
  */
-public class Source {
+public class Source extends AtomEntrySourceAdaptor{
 
-    private List attributes = null;
-    private List authors = null;
-    private List categories = null;
-    private List contributors = null;
-    private Generator generator = null;
-    private Icon icon = null;
-    private Id id = null;
-    private List links = null;
-    private Logo logo = null;
-    private Rights rights = null;
+	private Generator generator = null;
+    private Icon icon = null;    
+    private Logo logo = null;    
     private Subtitle subtitle = null;
-    private Title title = null;
-    private Updated updated = null;
-    private List extensions = null;
 
-    
-    public Source(){
-        //nothing
+    public Source(Id id
+    		,Title title
+    		,Updated updated
+    		,Rights rights
+    		,List<Author> authors
+    		,List<Category> categories    		
+    		,List<Contributor> contributors
+    		,List<Link> links
+    		,List<Attribute> attributes
+    		,List<Extension> extensions
+    		,Generator generator
+    		,Subtitle subtitle
+    		,Icon icon
+    		,Logo logo) throws AtomSpecException {
+    	super(id,title,updated,rights,authors,categories,contributors,links,attributes,extensions);
+    	this.generator = (generator == null)?null: new Generator(generator.getUri(),generator.getVersion()
+    			,generator.getAttributes(),generator.getText());
+    	this.subtitle = (subtitle == null)?null: new Subtitle(subtitle.getText(),subtitle.getAttributes());
+    	this.icon = (icon == null)?null: new Icon(icon.getAtomUri(),icon.getAttributes());
+    	this.logo = (logo == null)?null: new Logo(logo.getAtomUri(),logo.getAttributes());
     }
 
-    public List getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(List attributes) {
-        this.attributes = attributes;
-    }
-
-    public List getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(List authors) {
-        this.authors = authors;
-    }
-
-    public List getCategories() {
-        return categories;
-    }
-
-    public void setCategories(List categories) {
-        this.categories = categories;
-    }
-
-    public List getContributors() {
-        return contributors;
-    }
-
-    public void setContributors(List contributors) {
-        this.contributors = contributors;
-    }
-
-    public List getExtensions() {
-        return extensions;
-    }
-
-    public void setExtensions(List extensions) {
-        this.extensions = extensions;
-    }
 
     public Generator getGenerator() {
-        return generator;
-    }
-
-    public void setGenerator(Generator generator) {
-        this.generator = generator;
+        return (generator == null)?null: new Generator(generator.getUri(),generator.getVersion()
+    			,generator.getAttributes(),generator.getText());
     }
 
     public Icon getIcon() {
-        return icon;
-    }
-
-    public void setIcon(Icon icon) {
-        this.icon = icon;
-    }
-
-    public Id getId() {
-        return id;
-    }
-
-    public void setId(Id id) {
-        this.id = id;
-    }
-
-    public List getLinks() {
-        return links;
-    }
-
-    public void setLinks(List links) {
-        this.links = links;
+        return (icon == null)?null: new Icon(icon.getAtomUri(),icon.getAttributes());
     }
 
     public Logo getLogo() {
-        return logo;
-    }
-
-    public void setLogo(Logo logo) {
-        this.logo = logo;
-    }
-
-    public Rights getRights() {
-        return rights;
-    }
-
-    public void setRights(Rights rights) {
-        this.rights = rights;
+        return (logo == null)?null: new Logo(logo.getAtomUri(),logo.getAttributes());
     }
 
     public Subtitle getSubtitle() {
-        return subtitle;
-    }
-
-    public void setSubtitle(Subtitle subtitle) {
-        this.subtitle = subtitle;
-    }
-
-    public Title getTitle() {
-        return title;
-    }
-
-    public void setTitle(Title title) {
-        this.title = title;
-    }
-
-    public Updated getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Updated updated) {
-        this.updated = updated;
-    }
-
-    public void addAttribute(Attribute attribute){
-        if(this.attributes == null){
-            this.attributes = new LinkedList();
-        }
-        this.attributes.add(attribute);
-    }
-    
-    public void addAuthor(Author author) throws AtomSpecException{
-        //check to make sure there is a name element
-        if(author.getName() == null){
-            throw new AtomSpecException("Person constructs MUST contain exactly one \"atom:name\" element.");
-        }
-        if(this.authors == null){
-            this.authors = new LinkedList();
-        }
-        this.authors.add(author);        
-    }
-
-    public void addContributor(Contributor contributor) throws AtomSpecException{
-        //check to make sure there is a name element
-        if(contributor.getName() == null){
-            throw new AtomSpecException("Person constructs MUST contain exactly one \"atom:name\" element.");
-        }
-        if(this.contributors == null){
-            this.contributors = new LinkedList();
-        }
-        this.contributors.add(contributor);
-    }
-
-    public void addCategory(Category category) throws AtomSpecException{
-        //check to make sure there is a term element
-        if(category.getTerm() == null){
-            throw new AtomSpecException("Category elements MUST have a \"term\" attribute.");
-        }
-        if(this.categories == null){
-            this.categories = new LinkedList();
-        }
-        this.categories.add(category);
-    }
-    
-    public void addLink(Link link) throws AtomSpecException{
-        //check to make sure there is a href attribute
-        if(link.getHref() == null){
-            throw new AtomSpecException("atom:link elements MUST have an href attribute, whose value MUST be a IRI reference");
-        }
-        if(this.links == null){
-            this.links = new LinkedList();
-        }
-        this.links.add(link);
-    }
-
-    public void addExtension(Extension extension) {
-        if(this.extensions == null){
-            this.extensions = new LinkedList();
-        }
-        this.extensions.add(extension);
-        
+        return (subtitle == null)?null: new Subtitle(subtitle.getText(),subtitle.getAttributes());
     }
 }

@@ -45,134 +45,151 @@ import java.util.List;
  */
 public class Link {
     
-    private List attributes = null;
-    
-    public Link(){
-        attributes = new LinkedList();
-    }
-    
-    /**
-     * 
-     * @param href the link location
-     */
-    public Link(String href){
-        attributes = new LinkedList();
-        attributes.add(new Attribute("href",href));
-    }
+    private final List<Attribute> attributes;
+    private final Attribute href;
+    private final Attribute rel;
+    private final Attribute type;
+    private final Attribute hreflang;
+    private final Attribute title;
+    private final Attribute length;
+    private final String content;
     
     /**
      * 
-     * @param href the link location.
-     * @param rel the link relation type.
+     * @param href
+     * @param rel
+     * @param type
+     * @param hreflang
+     * @param title
+     * @param length
+     * @param attributes
+     * @param content
      */
-    public Link(String href, String rel){
-        attributes = new LinkedList();
-        attributes.add(new Attribute("href",href));
-        attributes.add(new Attribute("rel",rel));
-    }
-
-    public List getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(List attributes) {
-        this.attributes = attributes;
-    }
-
-    public void addAttribute(Attribute attribute){
-        if(this.attributes == null){
-            this.attributes = new LinkedList();
+    public Link(Attribute href, Attribute rel, Attribute type
+    		, Attribute hreflang, Attribute title
+    		,Attribute length, List<Attribute> attributes
+    		, String content) throws AtomSpecException {
+    	
+    	if(href == null){
+    		throw new AtomSpecException("atom:link elements MUST have an href attribute, whose value MUST be a IRI reference");
+    	}else{
+    		this.href = new Attribute(href.getName(),href.getValue());
+    	}
+    	
+    	this.rel = (rel == null)?null:new Attribute(rel.getName(),rel.getValue());
+    	this.type = (type == null)?null:new Attribute(type.getName(),type.getValue());
+    	this.hreflang = (hreflang == null)?null:new Attribute(hreflang.getName(),hreflang.getValue());
+    	this.title = (rel == title)?null:new Attribute(title.getName(),title.getValue());
+    	this.length = (length == null)?null:new Attribute(length.getName(),length.getValue());
+        
+        if(attributes == null){
+        	this.attributes = new LinkedList<Attribute>();
+    	}else{
+    		this.attributes = new LinkedList<Attribute>();
+    		Iterator<Attribute> attrItr = attributes.iterator();
+    		while(attrItr.hasNext()){
+    			Attribute attr = attrItr.next();
+    			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
+    		}
+    	}
+        
+        if(href != null){
+        	attributes.add(this.href);
         }
-        this.attributes.add(attribute);
+        
+        if(rel != null){
+        	attributes.add(this.rel);
+        }
+        
+        if(type != null){
+        	attributes.add(this.type);
+        }
+        
+        if(hreflang != null){
+        	attributes.add(this.hreflang);
+        }
+        
+        if(title != null){
+        	attributes.add(this.title);
+        }
+        
+        if(length != null){
+        	attributes.add(this.length);
+        }
+        
+        this.content = content;
     }
-    
+
+    /**
+     * 
+     * @return the category attribute list.
+     */
+    public List<Attribute> getAttributes() {
+    	if(attributes == null){
+    		return null;
+    	}
+    	List<Attribute> attrsCopy = new LinkedList<Attribute>();
+		Iterator<Attribute> attrItr = this.attributes.iterator();
+		while(attrItr.hasNext()){
+			Attribute attr = attrItr.next();
+			attrsCopy.add(new Attribute(attr.getName(),attr.getValue()));
+		}
+        return attrsCopy;
+    }
+
+    /**
+     * 
+     * @return the href contains the link's IRI
+     */
     public Attribute getHref() {
-        Iterator attrs = attributes.iterator();
-        while(attrs.hasNext()){
-            Attribute attr = (Attribute)attrs.next();
-            if (attr.getName().equals("href")){
-                return attr;
-            }
-        }
-        return null;
+    	return (href == null)?null:new Attribute(href.getName(),href.getValue());
     }
 
-    public void setHref(Attribute href) {
-        this.attributes.add(href);
-    }
-
+    /**
+     * 
+     * @return the hreflang describes the language of the resource pointed to by the href attribute.
+     */
     public Attribute getHreflang() {
-        Iterator attrs = attributes.iterator();
-        while(attrs.hasNext()){
-            Attribute attr = (Attribute)attrs.next();
-            if (attr.getName().equals("hreflang")){
-                return attr;
-            }
-        }
-        return null;
-    }
+    	return (hreflang == null)?null:new Attribute(hreflang.getName(),hreflang.getValue());
+     }
 
-    public void setHreflang(Attribute hreflang) {
-        this.attributes.add(hreflang);
-    }
-
+    /**
+     * 
+     * @return the length indicates an advisory length of the linked content in octets.
+     */
     public Attribute getLength() {
-        Iterator attrs = attributes.iterator();
-        while(attrs.hasNext()){
-            Attribute attr = (Attribute)attrs.next();
-            if (attr.getName().equals("length")){
-                return attr;
-            }
-        }
-        return null;
+    	return (length == null)?null:new Attribute(length.getName(),length.getValue());
     }
 
-    public void setLength(Attribute length) {
-        this.attributes.add(length);
-    }
-
+    /**
+     * 
+     * @return the rel which matches either the "isegment-nz-nc" or the "IRI" production in [RFC3987]
+     */
     public Attribute getRel() {
-        Iterator attrs = attributes.iterator();
-        while(attrs.hasNext()){
-            Attribute attr = (Attribute)attrs.next();
-            if (attr.getName().equals("rel")){
-                return attr;
-            }
-        }
-        return null;
+    	return (rel == null)?null:new Attribute(rel.getName(),rel.getValue());
     }
 
-    public void setRel(Attribute rel) {
-        this.attributes.add(rel);
-    }
-
+    /**
+     * 
+     * @return the title conveys human-readable information about the link.
+     */
     public Attribute getTitle() {
-        Iterator attrs = attributes.iterator();
-        while(attrs.hasNext()){
-            Attribute attr = (Attribute)attrs.next();
-            if (attr.getName().equals("title")){
-                return attr;
-            }
-        }
-        return null;
+    	return (title == null)?null:new Attribute(title.getName(),title.getValue());
     }
 
-    public void setTitle(Attribute title) {
-        this.attributes.add(title);
-    }
-
+    /**
+     * 
+     * @return the type which is an advisory media type
+     */
     public Attribute getType() {
-        Iterator attrs = attributes.iterator();
-        while(attrs.hasNext()){
-            Attribute attr = (Attribute)attrs.next();
-            if (attr.getName().equals("type")){
-                return attr;
-            }
-        }
-        return null;
+    	return (type == null)?null:new Attribute(type.getName(),type.getValue());
     }
 
-    public void setType(Attribute type) {
-        this.attributes.add(type);
+    /**
+     * 
+     * @return undefined text content or undefined element.
+     */
+    public String getContent() {
+    	return content;
     }
 }

@@ -33,8 +33,9 @@ import java.util.List;
  *  </pre>
  */
 public class Contributor extends AtomPersonConstruct{
-	public Contributor(Name name, URI uri, Email email, List<Attribute> attributes
-			, List<Extension> extensions){
+	public Contributor(Name name, URI uri, Email email
+			,List<Attribute> attributes
+			,List<Extension> extensions) throws AtomSpecException{
 		super(name,uri,email,attributes,extensions);
 	}
 }

@@ -78,8 +78,10 @@ public class Attribute {
     public boolean equals(Object obj) {
     	if(obj instanceof Attribute){   		
     		Attribute local = (Attribute)obj;
-    		return local.name.equals(this.name)
-    			&& local.value.equals(this.value);
+    		if(local.name != null && local.value != null){
+    			return local.name.equals(this.name)
+    				&& local.value.equals(this.value);
+    		}
     	}
     	return false;
     }

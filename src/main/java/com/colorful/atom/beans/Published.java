@@ -41,9 +41,4 @@ public class Published extends AtomDateConstruct{
     public Published(Date published){
         super(published);
     }
-
-
-    public Date getPublished() {
-        return getDateTime();
-    }
 }

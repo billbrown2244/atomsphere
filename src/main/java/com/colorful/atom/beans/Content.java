@@ -97,6 +97,9 @@ public class Content {
      * @return the attributes for this element.
      */
     public List<Attribute> getAttributes() {
+    	if(attributes == null){
+    		return null;
+    	}
     	List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		Iterator<Attribute> attrItr = this.attributes.iterator();
 		while(attrItr.hasNext()){

@@ -18,11 +18,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
+ *  2008-03-16 wbrown - made class immutable.
  */
 package com.colorful.atom.beans;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -49,259 +49,119 @@ import java.util.List;
  *          }
  * </pre>
  */
-public class Entry {
+public class Entry extends AtomEntrySourceAdaptor{
     
-    private final List<Attribute> attributes;
-    private final List<Author> authors;
-    private final List<Category> categories;
-    private final Content content;
-    private final List<Contributor> contributors;
-    private final Id id;
-    private final List<Link> links;
+	private final Content content;         
     private final Published published;
-    private final Rights rights;
     private final Source source;
     private final Summary summary;
-    private final Title title;
-    private final Updated updated;
-    private final List<Extension> extensions;
     
     public Entry(Id id
     		,Title title
     		,Updated updated
-    		,List<Author> authors
-    		,List<Category> categories
-    		,Content content
-    		,List<Contributor> contributor
-    		,List<Link> link
-    		,Published published
     		,Rights rights
-    		,Source source
-    		,Summary summary
+    		,List<Author> authors
+    		,List<Category> categories    		
+    		,List<Contributor> contributors
+    		,List<Link> links
     		,List<Attribute> attributes
-    		,List<Extension> extensions
-    		){
-    	this.id = (id == null)?null: new Id(id.getAtomUri(),id.getAttributes());
-    	this.title = (title == null)?null: new Title(title.getText(),title.getAttributes());
-    	this.updated = (updated == null)?null: new Updated(updated.getUpdated());
-    	this.content = (content == null)?null: new Content(content.getContent(),content.getAttributes());
-    	this.published = (published == null)?null: new Published(published.getPublished());
-    	this.rights = (rights == null)?null: new Rights(rights.getText(),rights.getAttributes());
-    	this.source = (source == null)?null: new Source();
-    	this.summary = (summary == null)?null: new Summary(summary.getText(),summary.getAttributes());
+    		,List<Extension> extensions    		
+    		,Published published
+    		,Summary summary
+    		,Source source
+    		,Content content) throws AtomSpecException {
     	
-    	if(authors == null){
-    		this.authors = null;
-    	}else{
-    		this.authors = new LinkedList<Author>();
-    		Iterator<Author> attrItr = authors.iterator();
-    		while(attrItr.hasNext()){
-    			Author author = attrItr.next();
-    			this.authors.add(new Author(author.getName()
-    					,author.getUri()
-    					,author.getEmail()
-    					,author.getAttributes()
-    					,author.getExtensions()));
-    		}
-    	}
-    	
-    	if(extensions == null){
-    		this.extensions = null;
-    	}else{
-    		this.extensions = new LinkedList<Extension>();
-    		Iterator<Extension> extItr = extensions.iterator();
-    		while(extItr.hasNext()){
-    			Extension extension = extItr.next();
-    			this.extensions.add(new Extension(extension.getElementName(),extension.getContent(),extension.getAttributes()));
-    		}
-    	}
-    	
-    	if(attributes == null){
-    		this.attributes = null;
-    	}else{
-    		this.attributes = new LinkedList<Attribute>();
-    		Iterator<Attribute> attrItr = attributes.iterator();
-    		while(attrItr.hasNext()){
-    			Attribute attr = attrItr.next();
-    			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
-    		}
-    	}
-    	
-    	if(extensions == null){
-    		this.extensions = null;
-    	}else{
-    		this.extensions = new LinkedList<Extension>();
-    		Iterator<Extension> extItr = extensions.iterator();
-    		while(extItr.hasNext()){
-    			Extension extension = extItr.next();
-    			this.extensions.add(new Extension(extension.getElementName(),extension.getContent(),extension.getAttributes()));
-    		}
-    	}
-    	
-    	if(attributes == null){
-    		this.attributes = null;
-    	}else{
-    		this.attributes = new LinkedList<Attribute>();
-    		Iterator<Attribute> attrItr = attributes.iterator();
-    		while(attrItr.hasNext()){
-    			Attribute attr = attrItr.next();
-    			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
-    		}
-    	}
-    	
-    	if(extensions == null){
-    		this.extensions = null;
-    	}else{
-    		this.extensions = new LinkedList<Extension>();
-    		Iterator<Extension> extItr = extensions.iterator();
-    		while(extItr.hasNext()){
-    			Extension extension = extItr.next();
-    			this.extensions.add(new Extension(extension.getElementName(),extension.getContent(),extension.getAttributes()));
-    		}
-    	}
-    }
-    
-    public List getAttributes() {
-        return attributes;
-    }
-    public void setAttributes(List attributes) {
-        this.attributes = attributes;
-    }
-    public List getAuthors() {
-        return authors;
-    }
-    public void setAuthors(List authors) {
-        this.authors = authors;
-    }
-    public List getCategories() {
-        return categories;
-    }
-    public void setCategories(List categories) {
-        this.categories = categories;
-    }
-    public Content getContent() {
-        return content;
-    }
-    public void setContent(Content content) {
-        this.content = content;
-    }
-    public List getContributors() {
-        return contributors;
-    }
-    public void setContributors(List contributors) {
-        this.contributors = contributors;
-    }
-    public List getExtensions() {
-        return extensions;
-    }
-    public void setExtensions(List extensions) {
-        this.extensions = extensions;
-    }
-    public Id getId() {
-        return id;
-    }
-    public void setId(Id id) {
-        this.id = id;
-    }
-    public List getLinks() {
-        return links;
-    }
-    public void setLinks(List links) {
-        this.links = links;
-    }
-    public Published getPublished() {
-        return published;
-    }
-    public void setPublished(Published published) {
-        this.published = published;
-    }
-    public Rights getRights() {
-        return rights;
-    }
-    public void setRights(Rights rights) {
-        this.rights = rights;
-    }
-    public Source getSource() {
-        return source;
-    }
-    public void setSource(Source source) {
-        this.source = source;
-    }
-    public Summary getSummary() {
-        return summary;
-    }
-    public void setSummary(Summary summary) {
-        this.summary = summary;
-    }
-    public Title getTitle() {
-        return title;
-    }
-    public void setTitle(Title title) {
-        this.title = title;
-    }
-    public Updated getUpdated() {
-        return updated;
-    }
-    public void setUpdated(Updated updated) {
-        this.updated = updated;
-    }
-    
-    public void addAttribute(Attribute attribute){
-        if(this.attributes == null){
-            this.attributes = new LinkedList();
-        }
-        this.attributes.add(attribute);
-    }
-    
-    public void addAuthor(Author author) throws AtomSpecException{
-        //check to make sure there is a name element
-        if(author.getName() == null){
-            throw new AtomSpecException("Person constructs MUST contain exactly one \"atom:name\" element.");
-        }
-        if(this.authors == null){
-            this.authors = new LinkedList();
-        }
-        this.authors.add(author);        
-    }
+    	super(id,title,updated,rights,authors,categories,contributors,links,attributes,extensions);
 
-    public void addContributor(Contributor contributor) throws AtomSpecException{
-        //check to make sure there is a name element
-        if(contributor.getName() == null){
-            throw new AtomSpecException("Person constructs MUST contain exactly one \"atom:name\" element.");
+    	//check for functional requirements here because 
+    	//they are all optional for a Source element.
+    	
+    	//make sure id is present
+        if(id == null){
+            throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:id element.");
         }
-        if(this.contributors == null){
-            this.contributors = new LinkedList();
+        //make sure title is present
+        if(title == null){
+            throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:title element.");
         }
-        this.contributors.add(contributor);
-    }
-
-    public void addCategory(Category category) throws AtomSpecException{
-        //check to make sure there is a term element
-        if(category.getTerm() == null){
-            throw new AtomSpecException("Category elements MUST have a \"term\" attribute.");
+        //make sure updated is present
+        if(updated == null){
+            throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:updated element.");
         }
-        if(this.categories == null){
-            this.categories = new LinkedList();
-        }
-        this.categories.add(category);
-    }
-    
-    public void addLink(Link link) throws AtomSpecException{
-        //check to make sure there is a href attribute
-        if(link.getHref() == null){
-            throw new AtomSpecException("atom:link elements MUST have an href attribute, whose value MUST be a IRI reference");
-        }
-        if(this.links == null){
-            this.links = new LinkedList();
-        }
-        this.links.add(link);
-    }
-
-    public void addExtension(Extension extension) {
-        if(this.extensions == null){
-            this.extensions = new LinkedList();
-        }
-        this.extensions.add(extension);
         
+        if(content == null){
+        	this.content = null;
+        }else{
+	        
+	        Iterator<Attribute> attrsItr = content.getAttributes().iterator();
+	        while(attrsItr.hasNext()){
+	            Attribute attr = (Attribute)attrsItr.next();
+	            //check for src attribute
+	            if(attr.getName().equals("src") && summary == null){
+	            	throw new AtomSpecException("atom:entry elements MUST contain an atom:summary element in either of the following cases: the atom:entry contains an atom:content that has a \"src\" attribute (and is thus empty).");
+	            }
+	            //check for valid xml mime type.
+	            if(attr.getName().equals("type")
+	            	&& !attr.getValue().startsWith("text/")
+	            	&& !attr.getValue().endsWith("/xml")
+	            	&& !attr.getValue().endsWith("\\+xml"))
+	            	throw new AtomSpecException("the atom:entry contains content that is encoded in Base64; i.e., the \"type\" attribute of atom:content is a MIME media type [MIMEREG], but is not an XML media type [RFC3023], does not begin with \"text/\", and does not end with \"/xml\" or \"+xml\".");
+	            }
+	        
+        	this.content = new Content(content.getContent(),content.getAttributes());
+        }
+        
+    	this.published = (published == null)?null: new Published(published.getDateTime());
+    	this.source = (source == null)?null: new Source(source.getId(),source.getTitle()
+    			,source.getUpdated(),source.getRights(),source.getAuthors()
+    			,source.getCategories(),source.getContributors(),source.getLinks()
+    			,source.getAttributes(),source.getExtensions(),source.getGenerator()
+    			,source.getSubtitle(),source.getIcon(),source.getLogo());
+    	this.summary = (summary == null)?null: new Summary(summary.getText(),summary.getAttributes());
+    }
+
+    /**
+     * 
+     * @return the content for this entry.
+     */
+    public Content getContent() {
+    	return (content == null)?null:new Content(content.getContent()
+    			,content.getAttributes());
+    }
+
+    /**
+     * 
+     * @return the published date for this entry.
+     */
+    public Published getPublished() {
+    	return (published == null)?null:new Published(published.getDateTime());
+    }
+
+    /**
+     * 
+     * @return the source for this element.
+     */
+    public Source getSource() {
+    	try{
+    		return (source == null)?null: new Source(source.getId(),source.getTitle()
+    				,source.getUpdated(),source.getRights(),source.getAuthors()
+    				,source.getCategories(),source.getContributors(),source.getLinks()
+    				,source.getAttributes(),source.getExtensions(),source.getGenerator()
+    				,source.getSubtitle(),source.getIcon(),source.getLogo());
+    	}catch(Exception e){
+			//this should never happen because 
+			//we check for errors on initial creation
+			//but if it does, print the stack trace
+			e.printStackTrace();
+			return null;
+		}
+    }
+
+    /**
+     * 
+     * @return the summary for this element.
+     */
+    public Summary getSummary() {
+        return (summary == null)?null: new Summary(summary.getText(),summary.getAttributes());
     }
 }

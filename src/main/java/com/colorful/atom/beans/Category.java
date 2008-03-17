@@ -46,6 +46,7 @@ public class Category {
     private final Attribute term; //required
     private final Attribute scheme;
     private final Attribute label;
+    private final String content;
     
     /**
      * 
@@ -54,16 +55,18 @@ public class Category {
      * @param label provides a human-readable label for display in end-user applications.
      * @param attributes additional attributes for this element which may or may not contain any of the first three 
      */
-    public Category(Attribute term, Attribute scheme, Attribute label, List<Attribute> attributes){
+    public Category(Attribute term, Attribute scheme
+    		, Attribute label, List<Attribute> attributes
+    		, String content) throws AtomSpecException {
     	
-    	this.term = (term == null)?null:new Attribute(term.getName(),term.getValue());
+    	if(term == null){
+    		throw new AtomSpecException("Category elements MUST have a \"term\" attribute.");
+    	}else{
+    		this.term = new Attribute(term.getName(),term.getValue());
+    	}
+    	
     	this.scheme = (scheme == null)?null:new Attribute(scheme.getName(),scheme.getValue());
     	this.label = (label == null)?null:new Attribute(label.getName(),label.getValue());
-    	
-    	if(term == null && scheme == null && label == null && attributes == null){
-    		this.attributes = null;
-    		return;
-    	}
         
         if(attributes == null){
         	this.attributes = new LinkedList<Attribute>();
@@ -87,6 +90,8 @@ public class Category {
         if(label != null){
         	attributes.add(this.label);
         }
+        
+        this.content = content;
     }
     
     /**
@@ -94,6 +99,9 @@ public class Category {
      * @return the category attribute list.
      */
     public List<Attribute> getAttributes() {
+    	if(attributes == null){
+    		return null;
+    	}
     	List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		Iterator<Attribute> attrItr = this.attributes.iterator();
 		while(attrItr.hasNext()){
@@ -125,6 +133,14 @@ public class Category {
      */
     public Attribute getTerm() {
     	return (term == null)?null:new Attribute(term.getName(),term.getValue());
+    }
+    
+    /**
+     * 
+     * @return undefined text content or undefined element.
+     */
+    public String getContent() {
+    	return content;
     }
 
 }

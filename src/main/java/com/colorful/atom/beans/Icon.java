@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom.beans;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -35,53 +34,9 @@ import java.util.List;
  *          }
  *  </pre>
  */
-public class Icon {
+public class Icon extends AtomURIConstruct{
 
-    private List attributes = null;
-    private URI uri = null;
-
-    public Icon(){
-        this.uri = new URI();
-    }
-    
-    /**
-     * 
-     * @param uri the uri of the icon (typically a URL location).
-     */
-    public Icon(URI uri){
-        this.uri = uri;
-    }
-    
-    public URI getUri() {
-        return uri;
-    }
-
-
-    public void setUri(URI uri) {
-        this.uri = uri;
-    }
-    
-    public List getAttributes() {
-        return attributes;
-    }
-
-
-    public void setAttributes(List attributes) {
-        this.attributes = attributes;
-    }
-    
-    public void addAttribute(Attribute attribute){
-        if(this.attributes == null){
-            this.attributes = new LinkedList();
-        }
-        this.attributes.add(attribute);
-    }
-
-    public String getText() {
-        return this.uri.getText();
-    }
-
-    public void setText(String text) {
-        this.uri.setText(text);
-    }
+	 public Icon(String atomUri, List<Attribute> attributes){
+	    	super(atomUri,attributes);
+	 }
 }

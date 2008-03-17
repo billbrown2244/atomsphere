@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom.beans;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,45 +39,90 @@ import java.util.List;
  *  </pre>
  */
 public class Generator {
-    private List attributes = null;
-    private String text = null;
+    private final List<Attribute> attributes;
+    private final Attribute uri;
+    private final Attribute version;
+    private final String text;
     
     /**
      * 
      * @param uri the uri of the generator (eg homepage).
      * @param version the version of the generator.
+     * @param attributes the attributes for this element.
+     * @param text the text content for this element.
      */
-    public Generator(String uri,String version){
-        attributes = new LinkedList();
-        attributes.add(new Attribute("uri",uri));
-        attributes.add(new Attribute("version",version));
+    public Generator(Attribute uri,Attribute version, List<Attribute> attributes, String text){
+    	
+    	this.uri = (uri == null)?null:new Attribute(uri.getName(),uri.getValue());
+    	this.version = (version == null)?null:new Attribute(version.getName(),version.getValue());
+    	
+    	if(uri == null && version == null && attributes == null){
+    		this.text = text;
+    		this.attributes = null;
+    		return;
+    	}
+        
+        if(attributes == null){
+        	this.attributes = new LinkedList<Attribute>();
+    	}else{
+    		this.attributes = new LinkedList<Attribute>();
+    		Iterator<Attribute> attrItr = attributes.iterator();
+    		while(attrItr.hasNext()){
+    			Attribute attr = attrItr.next();
+    			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
+    		}
+    	}
+        
+        if(uri != null){
+        	attributes.add(this.uri);
+        }
+        
+        if(version != null){
+        	attributes.add(this.version);
+        }
+        
+        this.text = text;
     }
 
-    public Generator() {
-        // TODO Auto-generated constructor stub
-    }
-
-    public List getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(List attributes) {
-        this.attributes = attributes;
+    /**
+     * 
+     * @return the category attribute list.
+     */
+    public List<Attribute> getAttributes() {
+    	if(attributes == null){
+    		return null;
+    	}
+    	List<Attribute> attrsCopy = new LinkedList<Attribute>();
+		Iterator<Attribute> attrItr = this.attributes.iterator();
+		while(attrItr.hasNext()){
+			Attribute attr = attrItr.next();
+			attrsCopy.add(new Attribute(attr.getName(),attr.getValue()));
+		}
+        return attrsCopy;
     }
     
-    public void addAttribute(Attribute attribute){
-        if(this.attributes == null){
-            this.attributes = new LinkedList();
-        }
-        this.attributes.add(attribute);
+    /**
+     * 
+     * @return the label attribute
+     */
+    public Attribute getUri() {
+    	return (uri == null)?null:new Attribute(uri.getName(),uri.getValue());
     }
 
+    /**
+     * 
+     * @return the scheme attribute
+     */
+    public Attribute getVersion() {
+    	return (version == null)?null:new Attribute(version.getName(),version.getValue());
+    }
+
+    /**
+     * 
+     * @return the text content for this element.
+     */
     public String getText() {
         return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
     }
 
 }

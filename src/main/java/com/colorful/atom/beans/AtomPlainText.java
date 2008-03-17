@@ -17,28 +17,23 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
- *  2006-11-14 wbrown - added javadoc documentation.
- *  2008-03-16 wbrown - made class immutable.
+ *  2008-03-16 wbrown - made class to share text fied for email, uri and name.
  */
 package com.colorful.atom.beans;
 
-import java.util.Date;
+public abstract class AtomPlainText {
 
-/**
- * This class represents an Atom 1.0 updated element.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
- * @author Bill Brown
- *	<pre>
- *		atomUpdated = element atom:updated { atomDateConstruct}
- *	</pre>
- */
-public class Updated extends AtomDateConstruct{
+	private final String text;
     
     /**
      * 
-     * @param updated the date formatted to [RFC3339]
+     * @param text the plain text.
      */
-    public Updated(Date updated){
-        super(updated);
+    public AtomPlainText(String text){
+        this.text = text;
+    }
+
+    public String getText() {
+        return text;
     }
 }

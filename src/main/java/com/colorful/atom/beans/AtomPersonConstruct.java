@@ -40,7 +40,7 @@ import java.util.List;
  *          & extensionElement*)
  *  </pre>
  */
-public class AtomPersonConstruct {
+public abstract class AtomPersonConstruct {
     
     private final List<Attribute> attributes;
     private final Name name;
@@ -56,9 +56,16 @@ public class AtomPersonConstruct {
      * @param attributes
      * @param extensions
      */
-    public AtomPersonConstruct(Name name, URI uri, Email email, List<Attribute> attributes, List<Extension> extensions){
+    public AtomPersonConstruct(Name name, URI uri
+    		, Email email, List<Attribute> attributes
+    		, List<Extension> extensions) throws AtomSpecException{
     	
-    	this.name = (name == null)?null:new Name(name.getText());
+    	//check to make sure there is a name element
+    	if(name == null){
+    		throw new AtomSpecException("Person constructs MUST contain exactly one \"atom:name\" element.");
+    	}else{
+    		this.name = new Name(name.getText());
+    	}
     	
     	this.uri = (uri == null)?null:new URI(uri.getText());
     	
@@ -93,6 +100,9 @@ public class AtomPersonConstruct {
      * @return the attributes for this element.
      */
     public List<Attribute> getAttributes() {
+    	if(attributes == null){
+    		return null;
+    	}
     	List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		Iterator<Attribute> attrItr = this.attributes.iterator();
 		while(attrItr.hasNext()){
@@ -107,7 +117,7 @@ public class AtomPersonConstruct {
      * @return the email address for this element.
      */
     public Email getEmail() {
-        return new Email(email.getText());
+        return (email == null)?null: new Email(email.getText());
     }
 
     /**
@@ -115,7 +125,7 @@ public class AtomPersonConstruct {
      * @return the name for this element.
      */
     public Name getName() {
-        return new Name(name.getText());
+        return (name == null)?null: new Name(name.getText());
     }
 
     /**
@@ -123,7 +133,7 @@ public class AtomPersonConstruct {
      * @return the URI for this element.
      */
     public URI getUri() {
-        return new URI(uri.getText());
+        return (uri == null)?null: new URI(uri.getText());
     }
 
     /**
@@ -131,6 +141,9 @@ public class AtomPersonConstruct {
      * @return the extensions for this element.
      */
     public List<Extension> getExtensions() {
+    	if(extensions == null){
+    		return null;
+    	}
     	List<Extension> extnsCopy = new LinkedList<Extension>();
 		Iterator<Extension> extItr = extensions.iterator();
 		while(extItr.hasNext()){

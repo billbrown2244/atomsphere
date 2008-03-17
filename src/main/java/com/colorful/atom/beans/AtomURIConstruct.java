@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
- * 2008-03-16 wbrown - made class immutable.
+ *  2008-03-16 wbrown - Introduced to share between Id, Icon and Logo.
  */
 package com.colorful.atom.beans;
 
@@ -25,43 +25,19 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * This class represents an Atom 1.0 text construct.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
- * @author Bill Brown
- *  <pre> 
- *      atomPlainTextConstruct =
- *          atomCommonAttributes,
- *          attribute type { "text" | "html" }?,
- *          text
- *
- *      atomXHTMLTextConstruct =
- *          atomCommonAttributes,
- *          attribute type { "xhtml" },
- *          xhtmlDiv
- *
- *      atomTextConstruct = atomPlainTextConstruct | atomXHTMLTextConstruct
- *  </pre>
- *  
- */
-public abstract class AtomTextConstruct {
-    /*
-     * 
-     */
-    private final List<Attribute> attributes ;
-    private final String text;
-    
+public abstract class AtomURIConstruct {
+	
+	private final List<Attribute> attributes;
+    private final String atomUri;
+   
     /**
      * 
-     * @param text the text content of the element
-     * @param attributes the attributes of the element.
-     * 		the attributes should contain a "type" attribute specifying either text,html, or xhtml.
+     * @param atomUri the unique identifier for the document.
      */
-    public AtomTextConstruct(String text, List<Attribute> attributes){
-    	
-    	this.text = text;
-    	    	
-    	if(attributes == null){
+    public AtomURIConstruct(String atomUri, List<Attribute> attributes){
+        this.atomUri = atomUri;
+        
+        if(attributes == null){
     		this.attributes = null;
     	}else{
     		this.attributes = new LinkedList<Attribute>();
@@ -72,7 +48,7 @@ public abstract class AtomTextConstruct {
     		}
     	}
     }
-
+    
     /**
      * 
      * @return the attributes for this element.
@@ -90,11 +66,12 @@ public abstract class AtomTextConstruct {
         return attrsCopy;
     }
     
-    /**
+    
+    /** 
      * 
-     * @return the text content for this element.
+     * @return the unique identifier for this document.
      */
-    public String getText() {
-        return text;
+    public String getAtomUri() {
+        return atomUri;
     }
 }

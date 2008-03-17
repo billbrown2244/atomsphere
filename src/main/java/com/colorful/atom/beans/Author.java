@@ -36,7 +36,7 @@ import java.util.List;
 public class Author extends AtomPersonConstruct{
 	
 	public Author(Name name, URI uri, Email email, List<Attribute> attributes
-			, List<Extension> extensions){
+			, List<Extension> extensions) throws AtomSpecException{
 		super(name,uri,email,attributes,extensions);
 	}
 }

@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
+ *  2008-03-16 wbrown - made class immutable.
  */
 package com.colorful.atom.beans;
 
@@ -29,27 +30,13 @@ package com.colorful.atom.beans;
  *      atom:name { text }
  *	</pre>
  */
-public class Name {
+public class Name extends AtomPlainText{
 
-    private String text = null;
-    
-    public Name(){
-        text = "";
-    }
-    
     /**
      * 
      * @param text a human-readable name for the person
      */
-    public Name(String text){
-        this.text = text;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
+    public Name(String name){
+        super(name);
     }
 }

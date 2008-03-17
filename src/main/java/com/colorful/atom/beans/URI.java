@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
+ *  2008-03-16 wbrown - made class immutable.
  */
 package com.colorful.atom.beans;
 
@@ -29,23 +30,13 @@ package com.colorful.atom.beans;
  *      the content of the uri according to Section 7 of [RFC3986]
  *  </pre>
  */
-public class URI {
+public class URI extends AtomPlainText {
 
-    private final String text;
-    
     /**
      * 
      * @param text the content of the uri according to Section 7 of [RFC3986]
      */
-    public URI(String text){
-        this.text = text;
-    }
-
-    /**
-     * 
-     * @return an atomUri
-     */
-    public String getText() {
-        return text;
+    public URI(String uri){
+        super(uri);
     }
 }

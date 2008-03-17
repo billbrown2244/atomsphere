@@ -20,9 +20,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *  2006-11-14 wbrown - added javadoc documentation.
  *  2007-02-19 wbrown - deprecated constructor and getter / setter for the xmlns field.
  *                      this should be set as an attribute in the feed element.
+ *  2008-03-17 wbrown - made class immutable.
  */
 package com.colorful.atom.beans;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,79 +49,57 @@ import java.util.List;
  */
 public class Extension {
 
-    private String elementName = null;
-    private List<Attribute> attributes = null;
-    private String content = null;
-    private Attribute xmlns = null;
-    
-    public Extension(){
-        //put sutiable defaults here
-        
-    }
-    
-    public Extension(String elementName, String content, List<Attribute> attributes){
-    	
-    }
+    private final String elementName;
+    private final List<Attribute> attributes;
+    private final String content;
 
-    public Extension(String elementName){
-        this.elementName = elementName; 
-    }
     
     /**
-     * @deprecated  the namespace for the extension should be set/declared as an attribute in the feed element.
-     * @param xmlns the xml namespace
-     * @param elementName the name of the element
+     * 
+     * @param elementName the name of the extension element.
+     * @param content the content of the extension element.
+     * @param attributes the attributes for this extension elements (should contain attribute xmlns).
      */
-    public Extension(String xmlns, String elementName){
-        attributes = new LinkedList();
-        attributes.add(new Attribute("xmlns",xmlns));
-        this.elementName = elementName;
+    public Extension(String elementName, String content, List<Attribute> attributes){
+    		
+    	this.elementName = elementName;
+    	this.content = content;
+    		
+    	if(attributes == null){
+    		this.attributes = null;
+    	}else{
+    		this.attributes = new LinkedList<Attribute>();
+    		Iterator<Attribute> attrItr = attributes.iterator();
+    		while(attrItr.hasNext()){
+    			Attribute attr = attrItr.next();
+    			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
+    		}
+    	}
     }
+
     
+    /**
+     * 
+     * @return the attributes for this element.
+     */
     public List<Attribute> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(List attributes) {
-        this.attributes = attributes;
-    }
-
-    public void addAttribute(Attribute attribute){
-        if(this.attributes == null){
-            this.attributes = new LinkedList();
-        }
-        this.attributes.add(attribute);
+    	if(attributes == null){
+    		return null;
+    	}
+    	List<Attribute> attrsCopy = new LinkedList<Attribute>();
+		Iterator<Attribute> attrItr = this.attributes.iterator();
+		while(attrItr.hasNext()){
+			Attribute attr = attrItr.next();
+			attrsCopy.add(new Attribute(attr.getName(),attr.getValue()));
+		}
+        return attrsCopy;
     }
     
     public String getContent() {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public String getElementName() {
         return elementName;
-    }
-
-    public void setElementName(String elementName) {
-        this.elementName = elementName;
-    }
-
-    /**
-     * @deprecated the namespace should be declared/placed in the feed element.
-     * @return the namespace for this extension.
-     */
-    public Attribute getXmlns() {
-        return xmlns;
-    }
-
-    /**
-     * @deprecated the namespace should be declared/placed in the feed element.
-     * @param xmlns the namespace for this extension.
-     */
-    public void setXmlns(Attribute xmlns) {
-        this.xmlns = xmlns;
     }
 }

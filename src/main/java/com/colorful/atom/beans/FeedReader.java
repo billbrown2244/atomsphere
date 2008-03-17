@@ -129,7 +129,7 @@ public class FeedReader{
 
 		//because the sort extension does not enforce placement of the element
 		//do a check after the feed is built to determine if it needs to be sorted.
-		feed.checkForAndApplyExtension(new Attribute("xmlns:sort","http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
+		feed = feed.checkForAndApplyExtension(new Attribute("xmlns:sort","http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
 
 		return feed;
 	}
