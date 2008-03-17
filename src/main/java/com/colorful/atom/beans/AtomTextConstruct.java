@@ -16,8 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+/* Change History:
+ * 2008-03-16 wbrown - made class immutable.
+ */
 package com.colorful.atom.beans;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,43 +48,49 @@ public class AtomTextConstruct {
     /*
      * 
      */
-    private List attributes = null;
-    private String text = null;
+    private final List<Attribute> attributes ;
+    private final String text;
     
-    public AtomTextConstruct(){
-        text = "";
+    /**
+     * 
+     * @param text the text content of the element
+     * @param attributes the attributes of the element.
+     * 		the attributes should contain a "type" attribute specifying either text,html, or xhtml.
+     */
+    public AtomTextConstruct(String text, List<Attribute> attributes){
+    	this.text = text;
+    	
+    	if(attributes == null){
+    		this.attributes = null;
+    	}else{
+    		this.attributes = new LinkedList<Attribute>();
+    		Iterator<Attribute> attrItr = attributes.iterator();
+    		while(attrItr.hasNext()){
+    			Attribute attr = attrItr.next();
+    			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
+    		}
+    	}
+    }
+
+    /**
+     * 
+     * @return the attributes for this element.
+     */
+    public List<Attribute> getAttributes() {
+    	List<Attribute> attrsCopy = new LinkedList<Attribute>();
+		Iterator<Attribute> attrItr = this.attributes.iterator();
+		while(attrItr.hasNext()){
+			Attribute attr = attrItr.next();
+			attrsCopy.add(new Attribute(attr.getName(),attr.getValue()));
+		}
+        return attrsCopy;
     }
     
     /**
      * 
-     * @param type the type text, html or xhtml
+     * @return the text content for this element.
      */
-    public AtomTextConstruct(String type){
-        this();
-        attributes = new LinkedList();
-        attributes.add(new Attribute("type",type));        
-    }
-
-    public List getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(List attributes) {
-        this.attributes = attributes;
-    }
-
-    public void addAttribute(Attribute attribute){
-        if(this.attributes == null){
-            this.attributes = new LinkedList();
-        }
-        this.attributes.add(attribute);
-    }
-    
     public String getText() {
         return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
     }
 }

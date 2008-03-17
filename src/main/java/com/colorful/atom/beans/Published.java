@@ -18,12 +18,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
+ *  2008-03-16 wbrown - made class immutable.
  */
 package com.colorful.atom.beans;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * This class represents an Atom 1.0 published element.
@@ -33,46 +32,18 @@ import java.util.TimeZone;
  *		atomPublished = element atom:published { atomDateConstruct}
  *	</pre>
  */
-public class Published {
-
-    
-	//example 2006-04-28T12:50:43.337-05:00
-    private static String timeZoneOffset = null;
-    static{
-        TimeZone timeZone = TimeZone.getDefault();
-        int hours = (((timeZone.getRawOffset()/1000)/60)/60);
-        if(hours >= 0){
-            timeZoneOffset = TimeZone.getTimeZone("GMT"+"+"+hours).getID().substring(3);
-        }else{
-            timeZoneOffset = TimeZone.getTimeZone("GMT"+"-"+Math.abs(hours)).getID().substring(3);
-        }
-    }
-    
-    private static final SimpleDateFormat format = 
-        new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'"+timeZoneOffset+"\'");
-    private Date published = null;
+public class Published extends AtomDateConstruct{
     
     /**
      * 
      * @param published the date formatted to [RFC3339]
      */
     public Published(Date published){
-        this.published = published;
+        super(published);
     }
 
-    public Published() {
-        // TODO Auto-generated constructor stub
-    }
 
     public Date getPublished() {
-        return published;
-    }
-
-    public void setPublished(Date published) {
-        this.published = published;
-    }
-
-    public String getText() {
-        return format.format(published);
+        return getDateTime();
     }
 }

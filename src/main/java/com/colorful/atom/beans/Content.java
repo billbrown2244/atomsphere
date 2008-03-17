@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom.beans;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -65,58 +66,85 @@ import java.util.List;
  *  </pre>
  */
 public class Content {
-
-    public static final String TEXT = "text"; //text content
-    public static final String HTML = "html"; //html content
-    public static final String XHTML = "xhtml"; //xhtml content
-
-    private List attributes = null;
-    private String content = null;
+	
+	public enum ContentType {TEXT,HTML,XHTML,OTHER,EXTERNAL}; 
+	
+    private final List<Attribute> attributes;
+    private final String content;
     
-    public Content(){
-        //nothing yet.
+    /**
+     * 
+     * @param content the text content of the element
+     * @param attributes the attributes 
+     */
+    public Content(String content, List<Attribute> attributes){
+    	this.content = content;
+    	
+    	if(attributes == null){
+    		this.attributes = null;
+    	}else{
+    		this.attributes = new LinkedList<Attribute>();
+    		Iterator<Attribute> attrItr = attributes.iterator();
+    		while(attrItr.hasNext()){
+    			Attribute attr = attrItr.next();
+    			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
+    		}
+    	}
     }
     
     /**
      * 
-     * @param type of content text, html or xhtml
+     * @return the attributes for this element.
      */
-    public Content(String type){
-        attributes = new LinkedList();
-        attributes.add(new Attribute("type",type));
+    public List<Attribute> getAttributes() {
+    	List<Attribute> attrsCopy = new LinkedList<Attribute>();
+		Iterator<Attribute> attrItr = this.attributes.iterator();
+		while(attrItr.hasNext()){
+			Attribute attr = attrItr.next();
+			attrsCopy.add(new Attribute(attr.getName(),attr.getValue()));
+		}
+        return attrsCopy;
     }
-    
+
     /**
      * 
-     * @param type of content text, html or xhtml
-     * @param src source of content (URI).
+     * @return the content for this element.
      */
-    public Content(String type, String src){
-        attributes = new LinkedList();
-        attributes.add(new Attribute("type",type));
-        attributes.add(new Attribute("src",src));
-    }
-    
-    public void addAttribute(Attribute attribute){
-        if(this.attributes == null){
-            this.attributes = new LinkedList();
-        }
-        this.attributes.add(attribute);
-    }
-
-    public List getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(List attributes) {
-        this.attributes = attributes;
-    }
-
     public String getContent() {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    /**
+     * Convenience method for getting the content type for this element
+     * @return the content type for this element. One of TEXT,HTML,XHTML,OTHER or EXTERNAL
+     */
+    public ContentType getContentType(){
+    	ContentType contentType = null;
+		Iterator<Attribute> attrItr = attributes.iterator();
+		while(attrItr.hasNext()){
+			Attribute attr = attrItr.next();
+			if(attr.getName().equals("type") && attr.getValue().equals("text")){
+				contentType = ContentType.TEXT;
+				break;
+			}else if(attr.getName().equals("type") && attr.getValue().equals("html")){
+				contentType = ContentType.HTML;
+				break;
+			}else if(attr.getName().equals("type") && attr.getValue().equals("xhtml")){
+				contentType = ContentType.XHTML;
+			}else if(attr.getName().equals("type") && (!attr.getValue().equals("text")
+					&& !attr.getValue().equals("html")
+					&& !attr.getValue().equals("xhtml"))){
+				contentType = ContentType.OTHER;
+				break;
+			}else if(attr.getName().equals("src")){
+				contentType = ContentType.EXTERNAL;
+				break;
+			}
+		}
+		//default.
+		if(contentType == null){
+			contentType = ContentType.TEXT;
+		}
+		return contentType;
     }
 }

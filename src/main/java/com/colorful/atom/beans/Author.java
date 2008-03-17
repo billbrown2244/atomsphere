@@ -18,10 +18,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
+ *  2008-03-16 wbrown - made class immutable.
  */
 package com.colorful.atom.beans;
 
 import java.util.List;
+
 
 /**
  * This class represents an Atom 1.0 author.
@@ -31,78 +33,10 @@ import java.util.List;
  *      atomAuthor = element atom:author { atomPersonConstruct }
  *  </pre>
  */
-public class Author {
-    AtomPersonConstruct author;
-
-    public Author(){
-        author = new AtomPersonConstruct();
-    }
-    
-    /**
-     * 
-     * @param name the name of the author
-     */
-    public Author(String name){
-        author = new AtomPersonConstruct(name);
-    }
-    
-    /**
-     * 
-     * @param name the name of the author
-     * @param uri the uri of the author (eg. homepage)
-     * @param email the email of the author.
-     */
-    public Author(String name, String uri, String email){
-        author = new AtomPersonConstruct(name,uri,email);
-    }
-    
-    public AtomPersonConstruct getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(AtomPersonConstruct author) {
-        this.author = author;
-    }
-    
-    public List getAttributes() {
-        return this.author.getAttributes();
-    }
-    
-    public void setAttributes(List attributes) {
-        this.author.setAttributes(attributes);
-    }
-    
-    public void addAttribute(Attribute attribute){
-        this.author.addAttribute(attribute);
-    }
-    
-    public Email getEmail() {
-        return this.author.getEmail();
-    }
-    public void setEmail(Email email) {
-        this.author.setEmail(email);
-    }
-    public Name getName() {
-        return this.author.getName();
-    }
-    public void setName(Name name) {
-        this.author.setName(name);
-    }
-    public URI getUri() {
-        return this.author.getUri();
-    }
-    public void setUri(URI uri) {
-        this.author.setUri(uri);
-    }
-    
-    public List getExtensions() {
-        return this.author.getExtensions();
-    }
-    public void setExtensions(List extensions) {
-        this.author.setExtensions(extensions);
-    }
-    
-    public void addExtension(Extension extension) {
-        this.author.addExtension(extension);        
-    }
+public class Author extends AtomPersonConstruct{
+	
+	public Author(Name name, URI uri, Email email, List<Attribute> attributes
+			, List<Extension> extensions){
+		super(name,uri,email,attributes,extensions);
+	}
 }

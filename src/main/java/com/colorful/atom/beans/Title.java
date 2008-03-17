@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
+ *  2008-03-16 wbrown - made class immutable.
  */
 package com.colorful.atom.beans;
 
@@ -31,43 +32,9 @@ import java.util.List;
  *		atomTitle = element atom:title { atomTextConstruct }
  *	</pre>
  */
-public class Title {
+public class Title extends AtomTextConstruct{
     
-    private AtomTextConstruct title = null;
-    
-    /**
-     * 
-     * @param type the type of text construct text, html or xhtml.
-     */
-    public Title(String type){
-        title = new AtomTextConstruct(type);
-    }
-    
-    public Title() {
-        title = new AtomTextConstruct();
-    }
-
-    public List getAttributes() {
-        return title.getAttributes();
-    }
-
-    public void setAttributes(List attributes) {
-        this.title.setAttributes(attributes);
-    }
-
-    public String getText() {
-        return title.getText();
-    }
-
-    public void setText(String text) {
-        this.title.setText(text);
-    }
-
-    public AtomTextConstruct getTitle() {
-        return title;
-    }
-
-    public void setTitle(AtomTextConstruct title) {
-        this.title = title;
+    public Title(String text, List<Attribute> attributes){
+    	super(text,attributes);
     }
 }

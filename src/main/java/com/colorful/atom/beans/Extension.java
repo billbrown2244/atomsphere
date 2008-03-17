@@ -48,13 +48,17 @@ import java.util.List;
 public class Extension {
 
     private String elementName = null;
-    private List attributes = null;
+    private List<Attribute> attributes = null;
     private String content = null;
     private Attribute xmlns = null;
     
     public Extension(){
         //put sutiable defaults here
         
+    }
+    
+    public Extension(String elementName, String content, List<Attribute> attributes){
+    	
     }
 
     public Extension(String elementName){
@@ -72,7 +76,7 @@ public class Extension {
         this.elementName = elementName;
     }
     
-    public List getAttributes() {
+    public List<Attribute> getAttributes() {
         return attributes;
     }
 

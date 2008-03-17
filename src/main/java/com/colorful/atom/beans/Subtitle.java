@@ -31,43 +31,9 @@ import java.util.List;
  *		atomSubsubtitle = element atom:subsubtitle { atomTextConstruct }
  *	</pre>
  */
-public class Subtitle {
-	
-private AtomTextConstruct subtitle = null;
+public class Subtitle extends AtomTextConstruct{
     
-	/**
-	 * 
-	 * @param type the type of text construct text, html or xhtml.
-	 */
-    public Subtitle(String type){
-        subtitle = new AtomTextConstruct(type);
-    }
-    
-    public Subtitle() {
-        subtitle = new AtomTextConstruct();
-    }
-
-    public List getAttributes() {
-        return subtitle.getAttributes();
-    }
-
-    public void setAttributes(List attributes) {
-        this.subtitle.setAttributes(attributes);
-    }
-
-    public String getText() {
-        return subtitle.getText();
-    }
-
-    public void setText(String text) {
-        this.subtitle.setText(text);
-    }
-
-    public AtomTextConstruct getSubtitle() {
-        return subtitle;
-    }
-
-    public void setSubtitle(AtomTextConstruct subtitle) {
-        this.subtitle = subtitle;
-    }
+	public Subtitle(String subtitle, List<Attribute> attributes){
+	    super(subtitle,attributes);
+	}
 }

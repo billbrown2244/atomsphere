@@ -40,98 +40,91 @@ import java.util.List;
  *  </pre>
  */
 public class Category {
-    /*
-     * 
-   }
-     */
+
     
-    List attributes = null;
-    Attribute term = null; //required
-    Attribute scheme = null;
-    Attribute label = null;
-    
-    public Category(){
-        attributes = new LinkedList();
-    }
-    
-    /**
-     * 
-     * @param term identifies the category of the feed.
-     */
-    public Category(String term){
-        attributes = new LinkedList();
-        this.term = new Attribute("term",term);
-        attributes.add(this.term);
-    }
+    private final List<Attribute> attributes;
+    private final Attribute term; //required
+    private final Attribute scheme;
+    private final Attribute label;
     
     /**
      * 
      * @param term identifies the category of the feed.
      * @param scheme identifies a categorization scheme.
      * @param label provides a human-readable label for display in end-user applications.
+     * @param attributes additional attributes for this element which may or may not contain any of the first three 
      */
-    public Category(String term, String scheme, String label){
-        attributes = new LinkedList();
-        this.term = new Attribute("term",term);
-        this.scheme = new Attribute("scheme",scheme);
-        this.label = new Attribute("label",label);
-        attributes.add(this.term);
-        attributes.add(this.scheme);
-        attributes.add(this.label);
-    }
-    
-    public List getAttributes() {
-        return attributes;
-    }
-    public void setAttributes(List attributes) {
-        this.attributes = attributes;
-    }
-    
-    public void addAttribute(Attribute attribute){
-        if(this.attributes == null){
-            this.attributes = new LinkedList();
+    public Category(Attribute term, Attribute scheme, Attribute label, List<Attribute> attributes){
+    	
+    	this.term = (term == null)?null:new Attribute(term.getName(),term.getValue());
+    	this.scheme = (scheme == null)?null:new Attribute(scheme.getName(),scheme.getValue());
+    	this.label = (label == null)?null:new Attribute(label.getName(),label.getValue());
+    	
+    	if(term == null && scheme == null && label == null && attributes == null){
+    		this.attributes = null;
+    		return;
+    	}
+        
+        if(attributes == null){
+        	this.attributes = new LinkedList<Attribute>();
+    	}else{
+    		this.attributes = new LinkedList<Attribute>();
+    		Iterator<Attribute> attrItr = attributes.iterator();
+    		while(attrItr.hasNext()){
+    			Attribute attr = attrItr.next();
+    			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
+    		}
+    	}
+        
+        if(term != null){
+        	attributes.add(this.term);
         }
-        this.attributes.add(attribute);
+        
+        if(scheme != null){
+        	attributes.add(this.scheme);
+        }
+        
+        if(label != null){
+        	attributes.add(this.label);
+        }
     }
     
+    /**
+     * 
+     * @return the category attribute list.
+     */
+    public List<Attribute> getAttributes() {
+    	List<Attribute> attrsCopy = new LinkedList<Attribute>();
+		Iterator<Attribute> attrItr = this.attributes.iterator();
+		while(attrItr.hasNext()){
+			Attribute attr = attrItr.next();
+			attrsCopy.add(new Attribute(attr.getName(),attr.getValue()));
+		}
+        return attrsCopy;
+    }
+    
+    /**
+     * 
+     * @return the label attribute
+     */
     public Attribute getLabel() {
-        Iterator attrs = attributes.iterator();
-        while(attrs.hasNext()){
-            Attribute attr = (Attribute)attrs.next();
-            if (attr.getName().equals("label")){
-                return attr;
-            }
-        }
-        return null;
+    	return (label == null)?null:new Attribute(label.getName(),label.getValue());
     }
-    public void setLabel(Attribute label) {
-        this.attributes.add(label);
 
-    }
+    /**
+     * 
+     * @return the scheme attribute
+     */
     public Attribute getScheme() {
-        Iterator attrs = attributes.iterator();
-        while(attrs.hasNext()){
-            Attribute attr = (Attribute)attrs.next();
-            if (attr.getName().equals("scheme")){
-                return attr;
-            }
-        }
-        return null;
+    	return (scheme == null)?null:new Attribute(scheme.getName(),scheme.getValue());
     }
-    public void setScheme(Attribute scheme) {
-        this.attributes.add(scheme);
-    }
+
+    /**
+     * 
+     * @return the term attribute
+     */
     public Attribute getTerm() {
-        Iterator attrs = attributes.iterator();
-        while(attrs.hasNext()){
-            Attribute attr = (Attribute)attrs.next();
-            if (attr.getName().equals("term")){
-                return attr;
-            }
-        }
-        return null;
+    	return (term == null)?null:new Attribute(term.getName(),term.getValue());
     }
-    public void setTerm(Attribute term) {
-        this.attributes.add(term);
-    }
+
 }

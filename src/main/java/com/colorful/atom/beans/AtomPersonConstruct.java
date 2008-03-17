@@ -18,9 +18,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  * 2006-11-12 wbrown - added javadoc documentation.
+ * 2008-03-16 wbrown - made class immutable.
  */
 package com.colorful.atom.beans;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,89 +42,102 @@ import java.util.List;
  */
 public class AtomPersonConstruct {
     
-    private List attributes = null;
-    private Name name = null;
-    private URI uri = null;
-    private Email email = null;
-    private List extensions = null;
-    
-    public AtomPersonConstruct(){
-        this.name = new Name();
-    }
-    
-    /**
-     * 
-     * @param name the name of the person
-     */
-    public AtomPersonConstruct(String name){
-        this.name = new Name(name); 
-    }
+    private final List<Attribute> attributes;
+    private final Name name;
+    private final URI uri;
+    private final Email email;
+    private final List<Extension> extensions;
     
     /**
      * 
      * @param name the name of the person
      * @param uri the uri of the person
      * @param email the email address of the person
+     * @param attributes
+     * @param extensions
      */
-    public AtomPersonConstruct(String name, String uri, String email){
-        this.name = new Name(name);
-        this.uri = new URI(uri);
-        this.email = new Email(email);
+    public AtomPersonConstruct(Name name, URI uri, Email email, List<Attribute> attributes, List<Extension> extensions){
+    	
+    	this.name = (name == null)?null:new Name(name.getText());
+    	
+    	this.uri = (uri == null)?null:new URI(uri.getText());
+    	
+    	this.email = (email == null)?null:new Email(email.getText());
+    	
+    	if(attributes == null){
+    		this.attributes = null;
+    	}else{
+    		this.attributes = new LinkedList<Attribute>();
+    		Iterator<Attribute> attrItr = attributes.iterator();
+    		while(attrItr.hasNext()){
+    			Attribute attr = attrItr.next();
+    			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
+    		}
+    	}
+    	
+    	if(extensions == null){
+    		this.extensions = null;
+    	}else{
+    		this.extensions = new LinkedList<Extension>();
+    		Iterator<Extension> extItr = extensions.iterator();
+    		while(extItr.hasNext()){
+    			Extension extension = extItr.next();
+    			this.extensions.add(new Extension(extension.getElementName(),extension.getContent(),extension.getAttributes()));
+    		}
+    	}
+    	
     }
     
     /**
      * 
-     * @return the attributes of this element
+     * @return the attributes for this element.
      */
-    public List getAttributes() {
-        return attributes;
-    }
-    public void setAttributes(List attributes) {
-        this.attributes = attributes;
+    public List<Attribute> getAttributes() {
+    	List<Attribute> attrsCopy = new LinkedList<Attribute>();
+		Iterator<Attribute> attrItr = this.attributes.iterator();
+		while(attrItr.hasNext()){
+			Attribute attr = attrItr.next();
+			attrsCopy.add(new Attribute(attr.getName(),attr.getValue()));
+		}
+        return attrsCopy;
     }
     
     /**
      * 
-     * @param attribute the attribute to add to this element.
+     * @return the email address for this element.
      */
-    public void addAttribute(Attribute attribute){
-        if(this.attributes == null){
-            this.attributes = new LinkedList();
-        }
-        this.attributes.add(attribute);
-    }
-    
     public Email getEmail() {
-        return email;
+        return new Email(email.getText());
     }
-    public void setEmail(Email email) {
-        this.email = email;
-    }
+
+    /**
+     * 
+     * @return the name for this element.
+     */
     public Name getName() {
-        return name;
+        return new Name(name.getText());
     }
-    public void setName(Name name) {
-        this.name = name;
-    }
+
+    /**
+     * 
+     * @return the URI for this element.
+     */
     public URI getUri() {
-        return uri;
+        return new URI(uri.getText());
     }
-    public void setUri(URI uri) {
-        this.uri = uri;
+
+    /**
+     * 
+     * @return the extensions for this element.
+     */
+    public List<Extension> getExtensions() {
+    	List<Extension> extnsCopy = new LinkedList<Extension>();
+		Iterator<Extension> extItr = extensions.iterator();
+		while(extItr.hasNext()){
+			Extension extension = extItr.next();
+			extnsCopy.add(new Extension(extension.getElementName(),extension.getContent(),extension.getAttributes()));
+		}
+        return extnsCopy;
     }
-    
-    public List getExtensions() {
-        return extensions;
-    }
-    public void setExtensions(List extensions) {
-        this.extensions = extensions;
-    }
-    
-    public void addExtension(Extension extension) {
-        if(this.extensions == null){
-            this.extensions = new LinkedList();
-        }
-        this.extensions.add(extension);
-        
-    }
+
 }

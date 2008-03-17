@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
+ *  2008-03-16 wbrown - made class immutable.
  */
 package com.colorful.atom.beans;
 
@@ -33,11 +34,7 @@ package com.colorful.atom.beans;
  */
 public class Email {
 
-    private String text = null;
-    
-    public Email(){
-        this.text = "";
-    }
+    private final String text;
     
     /**
      * 
@@ -49,9 +46,5 @@ public class Email {
 
     public String getText() {
         return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
     }
 }

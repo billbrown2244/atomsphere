@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom.beans;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -50,23 +51,114 @@ import java.util.List;
  */
 public class Entry {
     
-    private List attributes;
-    private List authors;
-    private List categories;
-    private Content content;
-    private List contributors;
-    private Id id;
-    private List links;
-    private Published published;
-    private Rights rights;
-    private Source source;
-    private Summary summary;
-    private Title title;
-    private Updated updated;
-    private List extensions;
+    private final List<Attribute> attributes;
+    private final List<Author> authors;
+    private final List<Category> categories;
+    private final Content content;
+    private final List<Contributor> contributors;
+    private final Id id;
+    private final List<Link> links;
+    private final Published published;
+    private final Rights rights;
+    private final Source source;
+    private final Summary summary;
+    private final Title title;
+    private final Updated updated;
+    private final List<Extension> extensions;
     
-    public Entry(){
-    	//nothing specific here.
+    public Entry(Id id
+    		,Title title
+    		,Updated updated
+    		,List<Author> authors
+    		,List<Category> categories
+    		,Content content
+    		,List<Contributor> contributor
+    		,List<Link> link
+    		,Published published
+    		,Rights rights
+    		,Source source
+    		,Summary summary
+    		,List<Attribute> attributes
+    		,List<Extension> extensions
+    		){
+    	this.id = (id == null)?null: new Id(id.getAtomUri(),id.getAttributes());
+    	this.title = (title == null)?null: new Title(title.getText(),title.getAttributes());
+    	this.updated = (updated == null)?null: new Updated(updated.getUpdated());
+    	this.content = (content == null)?null: new Content(content.getContent(),content.getAttributes());
+    	this.published = (published == null)?null: new Published(published.getPublished());
+    	this.rights = (rights == null)?null: new Rights(rights.getText(),rights.getAttributes());
+    	this.source = (source == null)?null: new Source();
+    	this.summary = (summary == null)?null: new Summary(summary.getText(),summary.getAttributes());
+    	
+    	if(authors == null){
+    		this.authors = null;
+    	}else{
+    		this.authors = new LinkedList<Author>();
+    		Iterator<Author> attrItr = authors.iterator();
+    		while(attrItr.hasNext()){
+    			Author author = attrItr.next();
+    			this.authors.add(new Author(author.getName()
+    					,author.getUri()
+    					,author.getEmail()
+    					,author.getAttributes()
+    					,author.getExtensions()));
+    		}
+    	}
+    	
+    	if(extensions == null){
+    		this.extensions = null;
+    	}else{
+    		this.extensions = new LinkedList<Extension>();
+    		Iterator<Extension> extItr = extensions.iterator();
+    		while(extItr.hasNext()){
+    			Extension extension = extItr.next();
+    			this.extensions.add(new Extension(extension.getElementName(),extension.getContent(),extension.getAttributes()));
+    		}
+    	}
+    	
+    	if(attributes == null){
+    		this.attributes = null;
+    	}else{
+    		this.attributes = new LinkedList<Attribute>();
+    		Iterator<Attribute> attrItr = attributes.iterator();
+    		while(attrItr.hasNext()){
+    			Attribute attr = attrItr.next();
+    			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
+    		}
+    	}
+    	
+    	if(extensions == null){
+    		this.extensions = null;
+    	}else{
+    		this.extensions = new LinkedList<Extension>();
+    		Iterator<Extension> extItr = extensions.iterator();
+    		while(extItr.hasNext()){
+    			Extension extension = extItr.next();
+    			this.extensions.add(new Extension(extension.getElementName(),extension.getContent(),extension.getAttributes()));
+    		}
+    	}
+    	
+    	if(attributes == null){
+    		this.attributes = null;
+    	}else{
+    		this.attributes = new LinkedList<Attribute>();
+    		Iterator<Attribute> attrItr = attributes.iterator();
+    		while(attrItr.hasNext()){
+    			Attribute attr = attrItr.next();
+    			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
+    		}
+    	}
+    	
+    	if(extensions == null){
+    		this.extensions = null;
+    	}else{
+    		this.extensions = new LinkedList<Extension>();
+    		Iterator<Extension> extItr = extensions.iterator();
+    		while(extItr.hasNext()){
+    			Extension extension = extItr.next();
+    			this.extensions.add(new Extension(extension.getElementName(),extension.getContent(),extension.getAttributes()));
+    		}
+    	}
     }
     
     public List getAttributes() {

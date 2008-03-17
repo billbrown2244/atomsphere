@@ -18,9 +18,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
+ *  2008-03-16 wbrown - made class immutable.
  */
 package com.colorful.atom.beans;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,47 +39,48 @@ import java.util.List;
  */
 public class Id {
 
-    private List attributes = null;
-    private URI uri = null;
-    
-    public Id(){
-        //do nothing.
+    private final List<Attribute> attributes;
+    private final String atomUri;
+   
+    /**
+     * 
+     * @param atomUri the unique identifier for the document.
+     */
+    public Id(String atomUri, List<Attribute> attributes){
+        this.atomUri = atomUri;
+        
+        if(attributes == null){
+    		this.attributes = null;
+    	}else{
+    		this.attributes = new LinkedList<Attribute>();
+    		Iterator<Attribute> attrItr = attributes.iterator();
+    		while(attrItr.hasNext()){
+    			Attribute attr = attrItr.next();
+    			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
+    		}
+    	}
     }
     
     /**
      * 
-     * @param uri the unique identifier for the document.
+     * @return the attributes for this element.
      */
-    public Id(String uri){
-        this.uri = new URI(uri);
+    public List<Attribute> getAttributes() {
+    	List<Attribute> attrsCopy = new LinkedList<Attribute>();
+		Iterator<Attribute> attrItr = this.attributes.iterator();
+		while(attrItr.hasNext()){
+			Attribute attr = attrItr.next();
+			attrsCopy.add(new Attribute(attr.getName(),attr.getValue()));
+		}
+        return attrsCopy;
     }
     
-    public List getAttributes() {
-        return attributes;
-    }
-    public void setAttributes(List attributes) {
-        this.attributes = attributes;
-    }
     
-    public void addAttribute(Attribute attribute){
-        if(this.attributes == null){
-            this.attributes = new LinkedList();
-        }
-        this.attributes.add(attribute);
-    }
-    
-    public URI getUri() {
-        return uri;
-    }
-    public void setUri(URI uri) {
-        this.uri = uri;
-    }
-
-    public String getText() {
-        return this.uri.getText();
-    }
-
-    public void setText(String text) {
-        this.uri.setText(text);
+    /** 
+     * 
+     * @return the unique identifief for this document.
+     */
+    public String getAtomUri() {
+        return atomUri;
     }
 }

@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
+ *  2008-03-16 wbrown - made class immutable.
  */
 package com.colorful.atom.beans;
 
@@ -31,47 +32,9 @@ import java.util.List;
  *		atomRights = element atom:rights { atomTextConstruct }
  *	</pre>
  */
-public class Rights {
+public class Rights extends AtomTextConstruct{
 
-private AtomTextConstruct rights = null;
-    
-	/**
-	 * 
-	 * @param type the type of text construct text, html or xhtml.
-	 */
-    public Rights(String type){
-        rights = new AtomTextConstruct(type);
-    }
-    
-    public Rights() {
-        rights = new AtomTextConstruct();
-    }
-
-    public List getAttributes() {
-        return rights.getAttributes();
-    }
-
-    public void setAttributes(List attributes) {
-        this.rights.setAttributes(attributes);
-    }
-    
-    public void addAttribute(Attribute attribute){
-        this.rights.addAttribute(attribute);
-    }
-
-    public String getText() {
-        return rights.getText();
-    }
-
-    public void setText(String text) {
-        this.rights.setText(text);
-    }
-
-    public AtomTextConstruct getRights() {
-        return rights;
-    }
-
-    public void setRights(AtomTextConstruct rights) {
-        this.rights = rights;
+    public Rights(String rights, List<Attribute> attributes){
+        super(rights,attributes);
     }
 }

@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
+ *  2008-03-16 wbrown - made class immutable.
  */
 package com.colorful.atom.beans;
 
@@ -31,43 +32,9 @@ import java.util.List;
  *		atomSummary = element atom:summary { atomTextConstruct }
  *	</pre>
  */
-public class Summary {
+public class Summary extends AtomTextConstruct{
     
-private AtomTextConstruct summary = null;
-    
-	/**
-	 * 
-	 * @param type the type of text construct text, html or xhtml.
-	 */
-    public Summary(String type){
-        summary = new AtomTextConstruct(type);
-    }
-    
-    public Summary() {
-        summary = new AtomTextConstruct();
-    }
-
-    public List getAttributes() {
-        return summary.getAttributes();
-    }
-
-    public void setAttributes(List attributes) {
-        this.summary.setAttributes(attributes);
-    }
-
-    public String getText() {
-        return summary.getText();
-    }
-
-    public void setText(String text) {
-        this.summary.setText(text);
-    }
-
-    public AtomTextConstruct getSummary() {
-        return summary;
-    }
-
-    public void setSummary(AtomTextConstruct summary) {
-        this.summary = summary;
-    }
+	public Summary(String summary, List<Attribute> attributes){
+	    super(summary,attributes);
+	}
 }

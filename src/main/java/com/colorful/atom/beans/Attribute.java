@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
  *  2007-02-20 wbrown - added override of equals method.
+ *  2008-03-16 wbrown - made class immutable.
  */
 package com.colorful.atom.beans;
 
@@ -42,43 +43,34 @@ public class Attribute {
    undefinedAttribute*
      */
     
-    private String name = null;
-    private String value = null;
-
-    public Attribute(){
-        //nothing?
-    }
+    private final String name;
+    private final String value;
     
-    public Attribute(String name){
-        this.name = name;
-        this.value = "";
-    }
-    
+    /**
+     * 
+     * @param name the attribute name.
+     * @param value the attribute value.
+     */
     public Attribute(String name, String value){
         this.name = name;
         this.value = value;
     }
     
+    /**
+     * 
+     * @return the name of this attribute
+     */
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    /**
+     * 
+     * @return the value of this attribute
+     */
     public String getValue() {
         return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-    
-    public String toXML(){
-        return name+"=\""+value+"\" ";
-    }
-    
+    }    
     
     /**
      * @Override return true if the name and value of the attributes are equal.

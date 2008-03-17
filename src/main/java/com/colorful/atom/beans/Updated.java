@@ -18,12 +18,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
+ *  2008-03-16 wbrown - made class immutable.
  */
 package com.colorful.atom.beans;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * This class represents an Atom 1.0 updated element.
@@ -33,46 +32,17 @@ import java.util.TimeZone;
  *		atomUpdated = element atom:updated { atomDateConstruct}
  *	</pre>
  */
-public class Updated {
-    
-    //example 2006-04-28T12:50:43.337-05:00
-    private static String timeZoneOffset = null;
-    static{
-        TimeZone timeZone = TimeZone.getDefault();
-        int hours = (((timeZone.getRawOffset()/1000)/60)/60);
-        if(hours >= 0){
-            timeZoneOffset = TimeZone.getTimeZone("GMT"+"+"+hours).getID().substring(3);
-        }else{
-            timeZoneOffset = TimeZone.getTimeZone("GMT"+"-"+Math.abs(hours)).getID().substring(3);
-        }
-    }
-    
-    private static final SimpleDateFormat format = 
-        new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'"+timeZoneOffset+"\'");
-    private Date updated = null;
+public class Updated extends AtomDateConstruct{
     
     /**
      * 
      * @param updated the date formatted to [RFC3339]
      */
     public Updated(Date updated){
-        this.updated = updated;
-    }
-
-    public Updated() {
-        // nothing
+        super(updated);
     }
 
     public Date getUpdated() {
-        return updated;
+        return getDateTime();
     }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
-    }
-
-    public String getText() {
-        return format.format(updated);
-    }
-
 }
