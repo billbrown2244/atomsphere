@@ -139,7 +139,7 @@ public abstract class AtomEntrySourceAdaptor {
 			Iterator<Extension> extItr = extensions.iterator();
 			while(extItr.hasNext()){
 				Extension extension = extItr.next();
-				this.extensions.add(new Extension(extension.getElementName(),extension.getContent(),extension.getAttributes()));
+				this.extensions.add(new Extension(extension.getElementName(),extension.getAttributes(),extension.getContent()));
 			}
 		}
 	}
@@ -254,7 +254,7 @@ public abstract class AtomEntrySourceAdaptor {
 		 Iterator<Extension> extItr = extensions.iterator();
 		 while(extItr.hasNext()){
 			 Extension extension = extItr.next();
-			 extsCopy.add(new Extension(extension.getElementName(),extension.getContent(),extension.getAttributes()));
+			 extsCopy.add(new Extension(extension.getElementName(),extension.getAttributes(),extension.getContent()));
 		 }
 		 return extsCopy;
 	 }

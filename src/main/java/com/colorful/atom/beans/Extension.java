@@ -60,7 +60,7 @@ public class Extension {
      * @param content the content of the extension element.
      * @param attributes the attributes for this extension elements (should contain attribute xmlns).
      */
-    public Extension(String elementName, String content, List<Attribute> attributes){
+    public Extension(String elementName, List<Attribute> attributes, String content){
     		
     	this.elementName = elementName;
     	this.content = content;

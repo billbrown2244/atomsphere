@@ -27,7 +27,9 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.TreeMap;
 
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -62,7 +64,22 @@ public class FeedReader{
 	 */
 	public Feed readFeed(XMLStreamReader reader) throws Exception{
 
-		Feed feed = new Feed();
+		List<Attribute> attributes = null;
+		List<Author> authors = null;
+		List<Category> categories = null;
+		List<Contributor> contributors = null;
+		List<Link> links = null;
+		List<Extension> extensions = null;
+		Generator generator = null;
+		Icon icon = null;
+		Id id = null;
+		Logo logo = null;
+		Rights rights = null;
+		Subtitle subtitle = null;
+		Title title = null;
+		Updated updated = null;
+		Map<String,Entry> entries = null;
+		
 		while(reader.hasNext()){
 			switch (reader.next()){
 
@@ -74,35 +91,35 @@ public class FeedReader{
 			case XMLStreamConstants.START_ELEMENT:
 				//call each feed elements read method depending on the name
 				if(reader.getLocalName().equals("feed")){
-					feed.setAttributes(getAttributes(reader));
+					attributes = getAttributes(reader,attributes);
 				}else if(reader.getLocalName().equals("author")){
-					feed.addAuthor(readAuthor(reader));
+					authors = readAuthor(reader,authors);
 				}else if(reader.getLocalName().equals("category")){
-					feed.addCategory(readCategory(reader));
+					categories = readCategory(reader,categories);
 				}else if(reader.getLocalName().equals("contributor")){
-					feed.addContributor(readContributor(reader));
+					contributors = readContributor(reader,contributors);
 				}else if(reader.getLocalName().equals("generator")){
-					feed.setGenerator(readGenerator(reader));
+					generator = readGenerator(reader);
 				}else if(reader.getLocalName().equals("icon")){
-					feed.setIcon(readIcon(reader));
+					icon = readIcon(reader);
 				}else if(reader.getLocalName().equals("id")){
-					feed.setId(readId(reader));
+					id = readId(reader);
 				}else if(reader.getLocalName().equals("link")){
-					feed.addLink(readLink(reader));
+					links = readLink(reader,links);
 				}else if(reader.getLocalName().equals("logo")){
-					feed.setLogo(readLogo(reader));
+					logo = readLogo(reader);
 				}else if(reader.getLocalName().equals("rights")){
-					feed.setRights(readRights(reader));
+					rights = readRights(reader);
 				}else if(reader.getLocalName().equals("subtitle")){
-					feed.setSubtitle(readSubtitle(reader));
+					subtitle = readSubtitle(reader);
 				}else if(reader.getLocalName().equals("title")){
-					feed.setTitle(readTitle(reader));
+					title = readTitle(reader);
 				}else if(reader.getLocalName().equals("updated")){
-					feed.setUpdated(readUpdated(reader));
+					updated = readUpdated(reader);
 				}else if(reader.getLocalName().equals("entry")){
-					feed.addEntry(readEntry(reader));
+					entries = readEntry(reader,entries);
 				}else {//extension
-					feed.addExtension(readExtension(reader));
+					extensions = readExtension(reader,extensions);
 				}                
 				break;
 
@@ -126,16 +143,20 @@ public class FeedReader{
 				throw new Exception("unknown event in the xml file = "+reader.getEventType());
 			}
 		}
+		
+		Feed feed = new Feed(id,title,updated,rights
+        		,authors,categories,contributors,links
+        		,attributes,extensions,generator,subtitle,icon,logo,entries);
 
 		//because the sort extension does not enforce placement of the element
 		//do a check after the feed is built to determine if it needs to be sorted.
-		feed = feed.checkForAndApplyExtension(new Attribute("xmlns:sort","http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
-
-		return feed;
+		return feed.checkForAndApplyExtension(new Attribute("xmlns:sort","http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
 	}
 
-	private List getAttributes(XMLStreamReader reader) throws Exception{
-		List attributes = null;
+	private List<Attribute> getAttributes(XMLStreamReader reader,List<Attribute> attributes) throws Exception{
+		if(attributes == null){
+			attributes = new LinkedList<Attribute>();
+		}
 		int eventSkip = 0;
 		for(int i=0; i < reader.getNamespaceCount(); i++){
 			eventSkip++;
@@ -144,7 +165,7 @@ public class FeedReader{
 				attrName += ":"+reader.getNamespacePrefix(i);
 			}
 			if(attributes == null){
-				attributes = new LinkedList();
+				attributes = new LinkedList<Attribute>();
 			}
 			attributes.add(new Attribute(attrName,reader.getNamespaceURI(i)));
 		}
@@ -165,23 +186,49 @@ public class FeedReader{
 		return attributes;
 	}
 
-	private Extension readExtension(XMLStreamReader reader) throws Exception{
-		Extension extension = new Extension();
+	private List<Extension> readExtension(XMLStreamReader reader
+			,List<Extension> extensions) throws Exception{
+		
+		if(extensions == null){
+			extensions = new LinkedList<Extension>();
+		}
+		
+		String elementName = null;
 		String prefix = reader.getPrefix();
 		if(prefix != null && !prefix.equals("")){
-			extension.setElementName(prefix+":"+reader.getLocalName());
+			elementName = prefix+":"+reader.getLocalName();
 		}else{
-			extension.setElementName(reader.getLocalName());
+			elementName = reader.getLocalName();
 		}
-		extension.setAttributes(getAttributes(reader));
-		extension.setContent(reader.getElementText());
-		return extension;
+		
+		extensions.add(new Extension(elementName
+				,getAttributes(reader,null),reader.getElementText()));
+		return extensions;
 	}
 
-	private Entry readEntry(XMLStreamReader reader) throws Exception{
+	private Map<String,Entry> readEntry(XMLStreamReader reader, Map<String,Entry> entries) throws Exception{
+		if(entries == null){
+			entries = new TreeMap<String,Entry>();
+		}
 		boolean breakOut = false;
-		Entry entry = new Entry();
-		entry.setAttributes(getAttributes(reader));
+		
+		Id id = null;
+		Title title = null;
+		Updated updated = null;
+		Rights rights = null;
+		Content content = null;
+		List<Attribute> attributes = null;
+		List<Author> authors = null;
+		List<Category> categories = null;
+		List<Contributor> contributors = null;
+		List<Link> links = null;
+		List<Extension> extensions = null;
+		Published published = null;
+		Summary summary = null;
+		Source source = null;
+		
+		attributes = getAttributes(reader,attributes);
+		
 		while(reader.hasNext()){
 			switch (reader.next()){
 			case XMLStreamConstants.START_ELEMENT:
@@ -229,7 +276,12 @@ public class FeedReader{
 				break;
 			}
 		}
-		return entry;
+		
+		entries.put(updated.getText(),new Entry(id,title,updated,rights,content
+				,authors,categories,contributors,links,attributes
+				,extensions,published,summary,source));
+		
+		return entries;
 	}
 
 	private Summary readSummary(XMLStreamReader reader) throws Exception{
@@ -454,10 +506,13 @@ public class FeedReader{
 		return logo;
 	}
 
-	private Link readLink(XMLStreamReader reader) throws Exception{
-		Link link = new Link();
-		link.setAttributes(getAttributes(reader));
-		return link;
+	private List<Link> readLink(XMLStreamReader reader, List<Link> links) throws Exception{
+		if(links == null){
+			links = new LinkedList<Link>();
+		}
+		links.add(new Link(null,null,null,null,null,null
+				,getAttributes(reader,null),reader.getElementText()));
+		return links;
 	}
 
 	private Id readId(XMLStreamReader reader) throws Exception{
@@ -482,27 +537,68 @@ public class FeedReader{
 		return generator;
 	}
 
-	private Contributor readContributor(XMLStreamReader reader) throws Exception{
+	private List<Contributor> readContributor(XMLStreamReader reader
+			, List<Contributor> contributors) throws Exception{
+		
+		if(contributors == null){
+			contributors = new LinkedList<Contributor>();
+		}
+		
+		AtomPersonConstruct person = readAtomPersonConstruct(reader,"contributor");
+		contributors.add(new Contributor(person.getName(),person.getUri()
+				,person.getEmail(),person.getAttributes(),person.getExtensions()));
+
+		return contributors;
+	}
+
+	private List<Category> readCategory(XMLStreamReader reader, List<Category> categories) throws Exception{
+		if(categories == null){
+			categories = new LinkedList<Category>();
+		}
+		categories.add(new Category(null,null,null
+				,getAttributes(reader,null),reader.getElementText()));
+		return categories;
+	}
+
+	private List<Author> readAuthor(XMLStreamReader reader
+			, List<Author> authors) throws Exception{
+		if(authors == null){
+			authors = new LinkedList<Author>();
+		}
+		AtomPersonConstruct person = readAtomPersonConstruct(reader,"author");
+		authors.add(new Author(person.getName(),person.getUri()
+				,person.getEmail(),person.getAttributes(),person.getExtensions()));
+		return authors;
+	}
+
+	private AtomPersonConstruct readAtomPersonConstruct
+	(XMLStreamReader reader,String personType) throws Exception{
 		boolean breakOut = false;
-		Contributor contributor = new Contributor();
-		contributor.setAttributes(getAttributes(reader));
+		final List<Attribute> attributes = getAttributes(reader,null);
+		Name name = null;
+		URI uri = null;
+		Email email = null;
+		List<Extension> extensions = null;
 		while(reader.hasNext()){
 			switch (reader.next()){
 			case XMLStreamConstants.START_ELEMENT:
 
 				if(reader.getLocalName().equals("name")){
-					contributor.setName(new Name(reader.getElementText()));
+					name = new Name(reader.getElementText());
 				}else if(reader.getLocalName().equals("uri")){
-					contributor.setUri(new URI(reader.getElementText()));
+					uri = new URI(reader.getElementText());
 				}else if(reader.getLocalName().equals("email")){
-					contributor.setEmail(new Email(reader.getElementText()));
+					email = new Email(reader.getElementText());
 				}else{
-					contributor.addExtension(readExtension(reader));
+					if(extensions == null){
+						extensions = new LinkedList<Extension>();
+					}
+					extensions.add(readExtension(reader));
 				}
 				break;
 
 			case XMLStreamConstants.END_ELEMENT:
-				if(reader.getLocalName().equals("contributor")){
+				if(reader.getLocalName().equals(personType)){
 					breakOut = true;
 				}else{
 					reader.next();
@@ -512,51 +608,8 @@ public class FeedReader{
 			if(breakOut){
 				break;
 			}
-		} 
-
-		return contributor;
+			
+		}
+		return new AtomPersonConstruct(name,uri,email,attributes,extensions);
 	}
-
-	private Category readCategory(XMLStreamReader reader) throws Exception{
-		Category category = new Category();
-		category.setAttributes(getAttributes(reader));
-		return category;
-	}
-
-	private Author readAuthor(XMLStreamReader reader) throws Exception{
-		boolean breakOut = false;
-		Author author = new Author();
-		author.setAttributes(getAttributes(reader));
-		while(reader.hasNext()){
-			switch (reader.next()){
-			case XMLStreamConstants.START_ELEMENT:
-
-				if(reader.getLocalName().equals("name")){
-					author.setName(new Name(reader.getElementText()));
-				}else if(reader.getLocalName().equals("uri")){
-					author.setUri(new URI(reader.getElementText()));
-				}else if(reader.getLocalName().equals("email")){
-					author.setEmail(new Email(reader.getElementText()));
-				}else{
-					author.addExtension(readExtension(reader));
-				}
-				break;
-
-			case XMLStreamConstants.END_ELEMENT:
-				if(reader.getLocalName().equals("author")){
-					breakOut = true;
-				}else{
-					reader.next();
-				}
-				break;
-			}
-			if(breakOut){
-				break;
-			}
-		} 
-
-		return author;
-	}
-
-
 }

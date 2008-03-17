@@ -60,6 +60,7 @@ public class Entry extends AtomEntrySourceAdaptor{
     		,Title title
     		,Updated updated
     		,Rights rights
+    		,Content content
     		,List<Author> authors
     		,List<Category> categories    		
     		,List<Contributor> contributors
@@ -68,8 +69,7 @@ public class Entry extends AtomEntrySourceAdaptor{
     		,List<Extension> extensions    		
     		,Published published
     		,Summary summary
-    		,Source source
-    		,Content content) throws AtomSpecException {
+    		,Source source) throws AtomSpecException {
     	
     	super(id,title,updated,rights,authors,categories,contributors,links,attributes,extensions);
 

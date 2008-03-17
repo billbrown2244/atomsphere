@@ -115,13 +115,11 @@ public class Feed extends Source{
 				this.entries.put(entry.getUpdated().getText(),
 						new Entry(entry.getId()
 								,entry.getTitle(),entry.getUpdated()
-								,entry.getRights(),entry.getAuthors()
+								,entry.getRights(),entry.getContent(),entry.getAuthors()
 								,entry.getCategories(),entry.getContributors()
 								,entry.getLinks(),entry.getAttributes()
 								,entry.getExtensions(),entry.getPublished()
 								,entry.getSummary(),entry.getSource()
-								,entry.getContent()
-
 						));
 			}
 		}
@@ -140,13 +138,11 @@ public class Feed extends Source{
 				entriesCopy.put(entry.getUpdated().getText(),
 						new Entry(entry.getId()
 								,entry.getTitle(),entry.getUpdated()
-								,entry.getRights(),entry.getAuthors()
+								,entry.getRights(),entry.getContent(),entry.getAuthors()
 								,entry.getCategories(),entry.getContributors()
 								,entry.getLinks(),entry.getAttributes()
 								,entry.getExtensions(),entry.getPublished()
 								,entry.getSummary(),entry.getSource()
-								,entry.getContent()
-
 						));
 			}catch(Exception e){
 				//this should never happen because 
@@ -220,7 +216,7 @@ public class Feed extends Source{
 			}
 			List<Attribute> extAttrs = new LinkedList<Attribute>();
 			extAttrs.add(sortElement);
-			Extension localFeedExtension = new Extension(elementName,null,extAttrs); 
+			Extension localFeedExtension = new Extension(elementName,extAttrs,null); 
 
 			//if there are already extensions,
 			//we have to look for the sort extension and 

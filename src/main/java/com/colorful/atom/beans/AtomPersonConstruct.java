@@ -40,7 +40,7 @@ import java.util.List;
  *          & extensionElement*)
  *  </pre>
  */
-public abstract class AtomPersonConstruct {
+public class AtomPersonConstruct {
     
     private final List<Attribute> attributes;
     private final Name name;
@@ -89,7 +89,7 @@ public abstract class AtomPersonConstruct {
     		Iterator<Extension> extItr = extensions.iterator();
     		while(extItr.hasNext()){
     			Extension extension = extItr.next();
-    			this.extensions.add(new Extension(extension.getElementName(),extension.getContent(),extension.getAttributes()));
+    			this.extensions.add(new Extension(extension.getElementName(),extension.getAttributes(),extension.getContent()));
     		}
     	}
     	
@@ -148,7 +148,7 @@ public abstract class AtomPersonConstruct {
 		Iterator<Extension> extItr = extensions.iterator();
 		while(extItr.hasNext()){
 			Extension extension = extItr.next();
-			extnsCopy.add(new Extension(extension.getElementName(),extension.getContent(),extension.getAttributes()));
+			extnsCopy.add(new Extension(extension.getElementName(),extension.getAttributes(),extension.getContent()));
 		}
         return extnsCopy;
     }

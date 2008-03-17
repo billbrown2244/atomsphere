@@ -32,7 +32,10 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javanet.staxutils.IndentingXMLStreamWriter;
 
@@ -79,8 +82,8 @@ public class FeedDoc {
             if(feed.getEntries() == null){
                 throw new AtomSpecException("atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
             }
-            Map entries = feed.getEntries();
-            Iterator entryKeys = entries.keySet().iterator();
+            Map<String,Entry> entries = feed.getEntries();
+            Iterator<String> entryKeys = entries.keySet().iterator();
             while(entryKeys.hasNext()){
                 Entry entry = (Entry)entries.get(entryKeys.next());
                 if(entry.getAuthors() == null){
@@ -184,8 +187,10 @@ public class FeedDoc {
     	try{
             XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
             XMLStreamWriter writer = new IndentingXMLStreamWriter(outputFactory.createXMLStreamWriter(theString));
-            Feed wrapper = new Feed();
-        	wrapper.addEntry(entry);
+            Map<String,Entry> entries = new TreeMap<String,Entry>();
+            entries.put(entry.getUpdated().getText(),entry);
+            Feed wrapper = new Feed(entry.getId(),entry.getTitle(),entry.getUpdated(),entry.getRights()
+            		,null,null,null,null,null,null,null,null,null,null,entries);
             new FeedWriter().writeEntries(writer, wrapper.getEntries());
             writer.flush();
             writer.close();
@@ -238,68 +243,76 @@ public class FeedDoc {
      */
     public static void main(String[] args){
         try{
-            Feed feed = new Feed(atomBase,lang_en);
+        	//the base attributes.
+            List<Attribute> attributes = new LinkedList<Attribute>();
+            attributes.add(atomBase);
+            attributes.add(lang_en);
+            
+            
+            Generator generator = new Generator(new Attribute("uri","http://www.colorfulsoftware.com/projects/atomsphere"),
+            		new Attribute("version","2.0.0.0"),null,"Atomsphere");
 
-            Generator generator = new Generator("http://www.colorfulsoftware.com/projects/atomsphere","1.0.0");
-            generator.setText("Atomsphere");
-            feed.setGenerator(generator);
-
-            Id id = new Id();
-            id.setUri(new URI("http://www.colorfulsoftware.com/atom.xml"));
-            feed.setId(id);
+            Id id = new Id("http://www.colorfulsoftware.com/atom.xml",null);
 
             Updated updated = new Updated(Calendar.getInstance().getTime());
-            feed.setUpdated(updated);
 
-            Title title = new Title();
-            title.setText("test feed");
-            feed.setTitle(title);
+            Title title = new Title("test feed",null);
 
-            Contributor contributor = new Contributor("Mad Dog");
-            contributor.setEmail(new Email("info@maddog.net"));
-            feed.addContributor(contributor);
-
-            Rights rights = new Rights();
-            rights.setText("GPL 1.0");
-            feed.setRights(rights);
-
-            Icon icon = new Icon(new URI("http://host/images/icon.png"));
-            feed.setIcon(icon);
-
-            Logo logo = new Logo();
-            logo.setUri(new URI("http://host/images/logo.png"));
-            feed.setLogo(logo);
-
-            Category category = new Category("music","http://mtv.com/genere","music");
-            feed.addCategory(category);
-
-            Link link = new Link("http://www.yahoo.com","self");
-            link.setHreflang(new Attribute("hreflang","en-US"));
-            feed.addLink(link);
-
-            Extension extension = new Extension("xhtml:div");
-            extension.setContent("<span style='color:red;'>hello there</span>");
-            feed.addExtension(extension);
-
-            Entry entry = new Entry();
-            Id id2 = new Id();
-            id2.setUri(new URI("http://www.colorfulsoftware.com/atom.xml#entry1"));
-            entry.setId(id2);
-
-            Updated updated2 = new Updated(Calendar.getInstance().getTime());
-            entry.setUpdated(updated2);
-
-            Title title2 = new Title("an exapmle atom entry");
-            entry.setTitle(title2);
-
-            Content content = new Content();
-            content.setContent("hello. and welcome the the atomsphere feed builder for atom 1.0 builds.  I hope it is useful for you.");
-            entry.setContent(content);
-
-            entry.addAuthor(new Author("Bill Brown"));
+            List<Contributor> contributors = new LinkedList<Contributor>();
+            Contributor contributor = new Contributor(new Name("Mad Dog"),null
+            		,new Email("info@maddog.net"),null,null);
+            contributors.add(contributor);
             
-            feed.addEntry(entry);
+            Rights rights = new Rights("GPL 1.0",null);
 
+            Icon icon = new Icon("http://host/images/icon.png",null);
+
+            Logo logo = new Logo("http://host/images/logo.png",null);
+
+            List<Category> categories = new LinkedList<Category>();
+            Category category = new Category(new Attribute("term","music")
+            ,new Attribute("scheme","http://mtv.com/genere")
+            ,new Attribute("label","music"),null,null);
+            categories.add(category);
+            
+            List<Link> links = new LinkedList<Link>();
+            Link link = new Link(new Attribute("href","http://www.yahoo.com")
+            	,new Attribute("rel","self"),null,new Attribute("hreflang","en-US")
+            ,null,null,null,null);
+            links.add(link);
+            
+            List<Extension> extensions = new LinkedList<Extension>();
+            Extension extension = new Extension("xhtml:div",null
+            		,"<span style='color:red;'>hello there</span>");
+            extensions.add(extension);
+            
+            List<Author> authors = new LinkedList<Author>();
+            authors.add(new Author(new Name("Bill Brown"),null,null,null,null));
+            Entry entry = new Entry(
+            new Id("http://www.colorfulsoftware.com/atom.xml#entry1",null)
+            ,new Title("an exapmle atom entry",null)
+            ,new Updated(Calendar.getInstance().getTime())
+            ,null
+            ,new Content("hello. and welcome the the atomsphere feed builder for atom 1.0 builds.  I hope it is useful for you.",null)
+            ,authors
+            ,null
+            ,null
+            ,null
+            ,null
+            ,null
+            ,null
+            ,null
+            ,null
+            );
+
+            Map<String,Entry> entries = new TreeMap<String,Entry>();
+            entries.put(entry.getUpdated().getText(),entry);
+            
+            
+            Feed feed = new Feed(id,title,updated,rights
+            		,null,categories,contributors,links
+            		,attributes,extensions,generator,null,icon,logo,entries);
+            
             FeedDoc.writeFeedDoc("out.xml",feed,encoding,xml_version);
 
             Feed feed2 = FeedDoc.readFeedToBean(new File("out.xml"));
