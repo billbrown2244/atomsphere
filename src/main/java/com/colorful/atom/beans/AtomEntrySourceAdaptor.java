@@ -32,7 +32,7 @@ import java.util.List;
  * @author billbrown
  *
  */
-public abstract class AtomEntrySourceAdaptor {
+class AtomEntrySourceAdaptor {
 
 	private final List<Attribute> attributes;
 	private final List<Author> authors;

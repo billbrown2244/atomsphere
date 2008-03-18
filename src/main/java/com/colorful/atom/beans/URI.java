@@ -30,13 +30,23 @@ package com.colorful.atom.beans;
  *      the content of the uri according to Section 7 of [RFC3986]
  *  </pre>
  */
-public class URI extends AtomPlainText {
+public class URI {
 
+	private final AtomPlainText uri;
+	
     /**
      * 
      * @param text the content of the uri according to Section 7 of [RFC3986]
      */
     public URI(String uri){
-        super(uri);
+        this.uri = new AtomPlainText(uri);
     }
+    
+    /**
+     * 
+     * @return the uri text.
+     */
+    public String getText(){
+		return uri.getText();
+	}
 }

@@ -32,9 +32,27 @@ import java.util.List;
  *		atomSubsubtitle = element atom:subsubtitle { atomTextConstruct }
  *	</pre>
  */
-public class Subtitle extends AtomTextConstruct{
+public class Subtitle {
     
-	public Subtitle(String subtitle, List<Attribute> attributes){
-	    super(subtitle,attributes);
-	}
+private final AtomTextConstruct subtitle;
+	
+    public Subtitle(String subtitle, List<Attribute> attributes){
+        this.subtitle = new AtomTextConstruct(subtitle,attributes);
+    }
+    
+    /**
+     * 
+     * @return the text content for this element.
+     */
+    public String getText(){
+    	return subtitle.getText();
+    }
+    
+    /**
+     * 
+     * @return the attributes for this element.
+     */
+    public List<Attribute> getAttributes(){
+    	return subtitle.getAttributes();
+    }
 }

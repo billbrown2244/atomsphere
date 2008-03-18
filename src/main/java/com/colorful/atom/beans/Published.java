@@ -32,13 +32,32 @@ import java.util.Date;
  *		atomPublished = element atom:published { atomDateConstruct}
  *	</pre>
  */
-public class Published extends AtomDateConstruct{
+public class Published {
     
+	private final AtomDateConstruct published;
+	
     /**
      * 
      * @param published the date formatted to [RFC3339]
      */
     public Published(Date published){
-        super(published);
+        this.published = new AtomDateConstruct(published);
+    }
+    
+    /**
+     * 
+     * @return the date timestamp for this element.
+     */
+    public Date getDateTime(){
+    	return published.getDateTime();
+    }
+    
+    /**
+     * 
+     * @return the string formated version of the time
+     * 	for example 2006-04-28T12:50:43.337-05:00
+     */
+    public String getText(){
+    	return published.getText();
     }
 }

@@ -34,9 +34,27 @@ import java.util.List;
  *	        }
  *	</pre>
  */
-public class Logo extends AtomURIConstruct{
-    
+public class Logo {
+
+	private final AtomURIConstruct logo;
+
 	public Logo(String atomUri, List<Attribute> attributes){
-    	super(atomUri,attributes);
+		this.logo = new AtomURIConstruct(atomUri,attributes);
+	}
+
+	/** 
+	 * 
+	 * @return the unique identifier for this document.
+	 */
+	public String getAtomUri(){
+		return logo.getAtomUri();
+	}
+
+	/**
+	 * 
+	 * @return the attributes for this element.
+	 */
+	public List<Attribute> getAttributes(){
+		return logo.getAttributes();
 	}
 }

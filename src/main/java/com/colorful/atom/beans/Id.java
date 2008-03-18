@@ -35,9 +35,27 @@ import java.util.List;
  *	     }
  *	</pre>
  */
-public class Id extends AtomURIConstruct{
+public class Id {
 
-	 public Id(String atomUri, List<Attribute> attributes){
-	    	super(atomUri,attributes);
-	 }
+	private final AtomURIConstruct id;
+
+	public Id(String atomUri, List<Attribute> attributes){
+		this.id = new AtomURIConstruct(atomUri,attributes);
+	}
+
+	/** 
+	 * 
+	 * @return the unique identifier for this document.
+	 */
+	public String getAtomUri(){
+		return id.getAtomUri();
+	}
+
+	/**
+	 * 
+	 * @return the attributes for this element.
+	 */
+	public List<Attribute> getAttributes(){
+		return id.getAttributes();
+	}
 }

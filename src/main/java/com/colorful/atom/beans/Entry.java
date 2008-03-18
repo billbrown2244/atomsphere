@@ -49,8 +49,9 @@ import java.util.List;
  *          }
  * </pre>
  */
-public class Entry extends AtomEntrySourceAdaptor{
+public class Entry {
     
+	private final AtomEntrySourceAdaptor entryAdaptor;
 	private final Content content;         
     private final Published published;
     private final Source source;
@@ -71,7 +72,7 @@ public class Entry extends AtomEntrySourceAdaptor{
     		,Summary summary
     		,Source source) throws AtomSpecException {
     	
-    	super(id,title,updated,rights,authors,categories,contributors,links,attributes,extensions);
+    	this.entryAdaptor = new AtomEntrySourceAdaptor(id,title,updated,rights,authors,categories,contributors,links,attributes,extensions);
 
     	//check for functional requirements here because 
     	//they are all optional for a Source element.
@@ -163,5 +164,85 @@ public class Entry extends AtomEntrySourceAdaptor{
      */
     public Summary getSummary() {
         return (summary == null)?null: new Summary(summary.getText(),summary.getAttributes());
+    }
+    
+    /**
+	  * 
+	  * @return the unique identifier for this entry.
+	  */
+    public Id getId(){
+    	return entryAdaptor.getId();
+    }
+    
+    /**
+	  * 
+	  * @return the title for this element.
+	  */
+    public Title getTitle(){
+    	return entryAdaptor.getTitle();
+    }
+    
+    /**
+	  * 
+	  * @return the updated date for this element.
+	  */
+    public Updated getUpdated(){
+    	return entryAdaptor.getUpdated();
+    }
+    
+    /**
+	  * 
+	  * @return the associated rights for this entry.
+	  */
+    public Rights getRights(){
+    	return entryAdaptor.getRights();
+    }
+    
+    /**
+	  * 
+	  * @return the authors for this entry.
+	  */
+    public List<Author> getAuthors(){
+    	return entryAdaptor.getAuthors();
+    }
+    
+    /**
+	  * 
+	  * @return the categories for this element.
+	  */
+    public List<Category> getCategories(){
+    	return entryAdaptor.getCategories();
+    }
+    
+    /**
+	  * 
+	  * @return the contributors for this entry.
+	  */
+    public List<Contributor> getContributors(){
+    	return entryAdaptor.getContributors();
+    }
+    
+    /**
+	  * 
+	  * @return the links for this entry.
+	  */
+    public List<Link> getLinks(){
+    	return entryAdaptor.getLinks();
+    }
+    
+    /**
+	 * 
+	 * @return the category attribute list.
+	 */
+    public List<Attribute> getAttributes(){
+    	return entryAdaptor.getAttributes();
+    }
+    
+    /**
+	  * 
+	  * @return the extensions for this entry.
+	  */
+    public List<Extension> getExtensions(){
+    	return entryAdaptor.getExtensions();
     }
 }

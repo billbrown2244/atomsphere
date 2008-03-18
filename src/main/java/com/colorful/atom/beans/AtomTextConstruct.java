@@ -44,7 +44,7 @@ import java.util.List;
  *  </pre>
  *  
  */
-public abstract class AtomTextConstruct {
+class AtomTextConstruct {
     /*
      * 
      */

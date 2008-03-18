@@ -34,9 +34,27 @@ import java.util.List;
  *          }
  *  </pre>
  */
-public class Icon extends AtomURIConstruct{
+public class Icon {
 
-	 public Icon(String atomUri, List<Attribute> attributes){
-	    	super(atomUri,attributes);
-	 }
+	private final AtomURIConstruct icon;
+
+	public Icon(String atomUri, List<Attribute> attributes){
+		this.icon = new AtomURIConstruct(atomUri,attributes);
+	}
+
+	/** 
+	 * 
+	 * @return the unique identifier for this document.
+	 */
+	public String getAtomUri(){
+		return icon.getAtomUri();
+	}
+
+	/**
+	 * 
+	 * @return the attributes for this element.
+	 */
+	public List<Attribute> getAttributes(){
+		return icon.getAttributes();
+	}
 }

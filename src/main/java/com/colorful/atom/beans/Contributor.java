@@ -32,10 +32,32 @@ import java.util.List;
  *      atomContributor = element atom:contributor { atomPersonConstruct }
  *  </pre>
  */
-public class Contributor extends AtomPersonConstruct{
-	public Contributor(Name name, URI uri, Email email
-			,List<Attribute> attributes
-			,List<Extension> extensions) throws AtomSpecException{
-		super(name,uri,email,attributes,extensions);
+public class Contributor {
+	
+	private final AtomPersonConstruct person;
+	
+	public Contributor(Name name, URI uri, Email email, List<Attribute> attributes
+			, List<Extension> extensions) throws AtomSpecException{
+		this.person = new AtomPersonConstruct(name,uri,email,attributes,extensions);
+	}
+	
+	public Name getName(){
+		return person.getName();
+	}
+	
+	public URI getUri(){
+		return person.getUri();
+	}
+	
+	public Email getEmail(){
+		return person.getEmail();
+	}
+	
+	public List<Attribute> getAttributes(){
+		return person.getAttributes();
+	}
+	
+	public List<Extension> getExtensions(){
+		return person.getExtensions();
 	}
 }

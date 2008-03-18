@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class AtomURIConstruct {
+class AtomURIConstruct {
 	
 	private final List<Attribute> attributes;
     private final String atomUri;

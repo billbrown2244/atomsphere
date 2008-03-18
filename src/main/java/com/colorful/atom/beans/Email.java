@@ -32,9 +32,23 @@ package com.colorful.atom.beans;
  *      Its content MUST conform to the "addr-spec" production in [RFC2822].
  *  </pre>
  */
-public class Email extends AtomPlainText{
+public class Email {
 
+	private final AtomPlainText email;
+	
+	/**
+     * 
+     * @param text a human-readable email for the person
+     */
 	public Email(String email){
-		super(email);
+		this.email = new AtomPlainText(email);
+	}
+	
+	/**
+     * 
+     * @return the email text.
+     */
+	public String getText(){
+		return email.getText();
 	}
 }

@@ -30,13 +30,24 @@ package com.colorful.atom.beans;
  *      atom:name { text }
  *	</pre>
  */
-public class Name extends AtomPlainText{
+public class Name {
 
-    /**
+	private final AtomPlainText name;
+	
+	/**
      * 
      * @param text a human-readable name for the person
      */
-    public Name(String name){
-        super(name);
-    }
+	public Name(String name){
+		this.name = new AtomPlainText(name);
+	}
+	
+	/**
+     * 
+     * @return the name text.
+     */
+	public String getText(){
+		return name.getText();
+	}
+
 }

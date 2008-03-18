@@ -48,12 +48,13 @@ import java.util.List;
  *          }
  *	</pre>
  */
-public class Source extends AtomEntrySourceAdaptor{
+public class Source {
 
-	private Generator generator = null;
-    private Icon icon = null;    
-    private Logo logo = null;    
-    private Subtitle subtitle = null;
+	private final AtomEntrySourceAdaptor sourceAdaptor;
+	private final Generator generator;
+    private final Icon icon;    
+    private final Logo logo;    
+    private final Subtitle subtitle;
 
     public Source(Id id
     		,Title title
@@ -69,7 +70,7 @@ public class Source extends AtomEntrySourceAdaptor{
     		,Subtitle subtitle
     		,Icon icon
     		,Logo logo) throws AtomSpecException {
-    	super(id,title,updated,rights,authors,categories,contributors,links,attributes,extensions);
+    	this.sourceAdaptor = new AtomEntrySourceAdaptor(id,title,updated,rights,authors,categories,contributors,links,attributes,extensions);
     	this.generator = (generator == null)?null: new Generator(generator.getUri(),generator.getVersion()
     			,generator.getAttributes(),generator.getText());
     	this.subtitle = (subtitle == null)?null: new Subtitle(subtitle.getText(),subtitle.getAttributes());
@@ -77,21 +78,117 @@ public class Source extends AtomEntrySourceAdaptor{
     	this.logo = (logo == null)?null: new Logo(logo.getAtomUri(),logo.getAttributes());
     }
 
-
+    /**
+     * 
+     * @return the generator for this element.
+     */
     public Generator getGenerator() {
         return (generator == null)?null: new Generator(generator.getUri(),generator.getVersion()
     			,generator.getAttributes(),generator.getText());
     }
 
+    /**
+     * 
+     * @return the icon for this element.
+     */
     public Icon getIcon() {
         return (icon == null)?null: new Icon(icon.getAtomUri(),icon.getAttributes());
     }
 
+    /**
+     * 
+     * @return the logo for this element.
+     */
     public Logo getLogo() {
         return (logo == null)?null: new Logo(logo.getAtomUri(),logo.getAttributes());
     }
 
+    /**
+     * 
+     * @return the subtitle for this element.
+     */
     public Subtitle getSubtitle() {
         return (subtitle == null)?null: new Subtitle(subtitle.getText(),subtitle.getAttributes());
+    }
+    
+    
+    /**
+	  * 
+	  * @return the unique identifier for this entry.
+	  */
+    public Id getId(){
+    	return sourceAdaptor.getId();
+    }
+    
+    /**
+	  * 
+	  * @return the title for this element.
+	  */
+    public Title getTitle(){
+    	return sourceAdaptor.getTitle();
+    }
+    
+    /**
+	  * 
+	  * @return the updated date for this element.
+	  */
+    public Updated getUpdated(){
+    	return sourceAdaptor.getUpdated();
+    }
+    
+    /**
+	  * 
+	  * @return the associated rights for this entry.
+	  */
+    public Rights getRights(){
+    	return sourceAdaptor.getRights();
+    }
+    
+    /**
+	  * 
+	  * @return the authors for this entry.
+	  */
+    public List<Author> getAuthors(){
+    	return sourceAdaptor.getAuthors();
+    }
+    
+    /**
+	  * 
+	  * @return the categories for this element.
+	  */
+    public List<Category> getCategories(){
+    	return sourceAdaptor.getCategories();
+    }
+    
+    /**
+	  * 
+	  * @return the contributors for this entry.
+	  */
+    public List<Contributor> getContributors(){
+    	return sourceAdaptor.getContributors();
+    }
+    
+    /**
+	  * 
+	  * @return the links for this entry.
+	  */
+    public List<Link> getLinks(){
+    	return sourceAdaptor.getLinks();
+    }
+    
+    /**
+	 * 
+	 * @return the category attribute list.
+	 */
+    public List<Attribute> getAttributes(){
+    	return sourceAdaptor.getAttributes();
+    }
+    
+    /**
+	  * 
+	  * @return the extensions for this entry.
+	  */
+    public List<Extension> getExtensions(){
+    	return sourceAdaptor.getExtensions();
     }
 }

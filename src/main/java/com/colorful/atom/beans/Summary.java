@@ -32,9 +32,27 @@ import java.util.List;
  *		atomSummary = element atom:summary { atomTextConstruct }
  *	</pre>
  */
-public class Summary extends AtomTextConstruct{
+public class Summary {
     
-	public Summary(String summary, List<Attribute> attributes){
-	    super(summary,attributes);
-	}
+	private final AtomTextConstruct summary;
+	
+    public Summary(String summary, List<Attribute> attributes){
+        this.summary = new AtomTextConstruct(summary,attributes);
+    }
+    
+    /**
+     * 
+     * @return the text content for this element.
+     */
+    public String getText(){
+    	return summary.getText();
+    }
+    
+    /**
+     * 
+     * @return the attributes for this element.
+     */
+    public List<Attribute> getAttributes(){
+    	return summary.getAttributes();
+    }
 }

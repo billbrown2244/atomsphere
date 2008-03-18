@@ -32,9 +32,27 @@ import java.util.List;
  *		atomRights = element atom:rights { atomTextConstruct }
  *	</pre>
  */
-public class Rights extends AtomTextConstruct{
+public class Rights {
 
+	private final AtomTextConstruct rights;
+	
     public Rights(String rights, List<Attribute> attributes){
-        super(rights,attributes);
+        this.rights = new AtomTextConstruct(rights,attributes);
+    }
+    
+    /**
+     * 
+     * @return the text content for this element.
+     */
+    public String getText(){
+    	return rights.getText();
+    }
+    
+    /**
+     * 
+     * @return the attributes for this element.
+     */
+    public List<Attribute> getAttributes(){
+    	return rights.getAttributes();
     }
 }

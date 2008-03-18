@@ -40,7 +40,7 @@ import java.util.List;
  *          & extensionElement*)
  *  </pre>
  */
-public class AtomPersonConstruct {
+class AtomPersonConstruct {
     
     private final List<Attribute> attributes;
     private final Name name;

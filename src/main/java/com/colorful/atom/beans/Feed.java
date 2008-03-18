@@ -60,8 +60,9 @@ import java.util.TreeMap;
  *  
  *  The default ordering of the entries is by date updated date descending. 
  */
-public class Feed extends Source{
+public class Feed {
 
+	private final Source source;
 	private final Map<String,Entry> entries;
 
 	public static final Comparator<String> SORT_ASC = new Comparator<String>(){        
@@ -92,7 +93,7 @@ public class Feed extends Source{
 			,Icon icon
 			,Logo logo
 			,Map<String,Entry> entries) throws AtomSpecException {
-		super(id,title,updated,rights,authors,categories
+		this.source = new Source(id,title,updated,rights,authors,categories
 				,contributors,links,attributes,extensions
 				,generator,subtitle,icon,logo);
 
@@ -338,4 +339,117 @@ public class Feed extends Source{
 		}
 		return this;
 	}
+	
+	/**
+     * 
+     * @return the generator for this element.
+     */
+    public Generator getGenerator() {
+        return source.getGenerator();
+    }
+
+    /**
+     * 
+     * @return the icon for this element.
+     */
+    public Icon getIcon() {
+        return source.getIcon();
+    }
+
+    /**
+     * 
+     * @return the logo for this element.
+     */
+    public Logo getLogo() {
+        return source.getLogo();
+    }
+
+    /**
+     * 
+     * @return the subtitle for this element.
+     */
+    public Subtitle getSubtitle() {
+        return source.getSubtitle();
+    }
+    
+    
+    /**
+	  * 
+	  * @return the unique identifier for this entry.
+	  */
+    public Id getId(){
+    	return source.getId();
+    }
+    
+    /**
+	  * 
+	  * @return the title for this element.
+	  */
+    public Title getTitle(){
+    	return source.getTitle();
+    }
+    
+    /**
+	  * 
+	  * @return the updated date for this element.
+	  */
+    public Updated getUpdated(){
+    	return source.getUpdated();
+    }
+    
+    /**
+	  * 
+	  * @return the associated rights for this entry.
+	  */
+    public Rights getRights(){
+    	return source.getRights();
+    }
+    
+    /**
+	  * 
+	  * @return the authors for this entry.
+	  */
+    public List<Author> getAuthors(){
+    	return source.getAuthors();
+    }
+    
+    /**
+	  * 
+	  * @return the categories for this element.
+	  */
+    public List<Category> getCategories(){
+    	return source.getCategories();
+    }
+    
+    /**
+	  * 
+	  * @return the contributors for this entry.
+	  */
+    public List<Contributor> getContributors(){
+    	return source.getContributors();
+    }
+    
+    /**
+	  * 
+	  * @return the links for this entry.
+	  */
+    public List<Link> getLinks(){
+    	return source.getLinks();
+    }
+    
+    /**
+	 * 
+	 * @return the category attribute list.
+	 */
+    public List<Attribute> getAttributes(){
+    	return source.getAttributes();
+    }
+    
+    /**
+	  * 
+	  * @return the extensions for this entry.
+	  */
+    public List<Extension> getExtensions(){
+    	return source.getExtensions();
+    }
 }

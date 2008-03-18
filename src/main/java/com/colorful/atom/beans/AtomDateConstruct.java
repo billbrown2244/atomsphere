@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-public abstract class AtomDateConstruct {
+class AtomDateConstruct {
 
 	private final Date dateTime;
     
@@ -41,6 +41,10 @@ public abstract class AtomDateConstruct {
     	}
     }
     
+    /**
+     * 
+     * @return the date timestamp for this element.
+     */
     protected Date getDateTime(){
     	return (dateTime == null)? null: new Date(dateTime.getTime());
     }

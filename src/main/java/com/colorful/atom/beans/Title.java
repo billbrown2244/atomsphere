@@ -32,9 +32,27 @@ import java.util.List;
  *		atomTitle = element atom:title { atomTextConstruct }
  *	</pre>
  */
-public class Title extends AtomTextConstruct{
+public class Title {
     
-    public Title(String text, List<Attribute> attributes){
-    	super(text,attributes);
+private final AtomTextConstruct title;
+	
+    public Title(String title, List<Attribute> attributes){
+        this.title = new AtomTextConstruct(title,attributes);
+    }
+    
+    /**
+     * 
+     * @return the text content for this element.
+     */
+    public String getText(){
+    	return title.getText();
+    }
+    
+    /**
+     * 
+     * @return the attributes for this element.
+     */
+    public List<Attribute> getAttributes(){
+    	return title.getAttributes();
     }
 }
