@@ -241,91 +241,6 @@ public class FeedDoc {
     }
 
     /**
-     * Test method.
-     * @param args
-     */
-    public static void main(String[] args){
-        try{
-        	//the base attributes.
-            List<Attribute> attributes = new LinkedList<Attribute>();
-            attributes.add(atomBase);
-            attributes.add(lang_en);
-            
-            
-            Generator generator = buildGeneratorGenerator(buildAttribute("uri","http://www.colorfulsoftware.com/projects/atomsphere"),
-            		buildAttribute("version","2.0.0.0"),null,"Atomsphere");
-
-            Id id = buildId("http://www.colorfulsoftware.com/atom.xml",null);
-
-            Updated updated = buildUpdated(Calendar.getInstance().getTime());
-
-            Title title = buildTitle("test feed",null);
-
-            List<Contributor> contributors = new LinkedList<Contributor>();
-            Contributor contributor = buildContributor(new Name("Mad Dog"),null
-            		,buildEmail("info@maddog.net"),null,null);
-            contributors.add(contributor);
-            
-            Rights rights = buildRights("GPL 1.0",null);
-
-            Icon icon = buildIcon("http://host/images/icon.png",null);
-
-            Logo logo = buildLogo("http://host/images/logo.png",null);
-
-            List<Category> categories = new LinkedList<Category>();
-            Category category = buildCategory(new Attribute("term","music")
-            ,buildAttribute("scheme","http://mtv.com/genere")
-            ,buildAttribute("label","music"),null,null);
-            categories.add(category);
-            
-            List<Link> links = new LinkedList<Link>();
-            Link link = buildLink(buildAttribute("href","http://www.yahoo.com")
-            	,buildAttribute("rel","self"),null,buildAttribute("hreflang","en-US")
-            ,null,null,null,null);
-            links.add(link);
-            
-            List<Extension> extensions = new LinkedList<Extension>();
-            Extension extension = buildExtension("xhtml:div",null
-            		,"<span style='color:red;'>hello there</span>");
-            extensions.add(extension);
-            
-            List<Author> authors = new LinkedList<Author>();
-            authors.add(buildAuthor(buildName("Bill Brown"),null,null,null,null));
-            Entry entry = buildEntry(
-            		buildId("http://www.colorfulsoftware.com/atom.xml#entry1",null)
-            ,buildTitle("an exapmle atom entry",null)
-            ,buildUpdated(Calendar.getInstance().getTime())
-            ,null
-            ,buildContent("hello. and welcome the the atomsphere feed builder for atom 1.0 builds.  I hope it is useful for you.",null)
-            ,authors
-            ,null
-            ,null
-            ,null
-            ,null
-            ,null
-            ,null
-            ,null
-            ,null
-            );
-
-            Map<String,Entry> entries = new TreeMap<String,Entry>();
-            entries.put(entry.getUpdated().getText(),entry);
-            
-            
-            Feed feed = buildFeed(id,title,updated,rights
-            		,null,categories,contributors,links
-            		,attributes,extensions,generator,null,icon,logo,entries);
-            
-            FeedDoc.writeFeedDoc("out.xml",feed,encoding,xml_version);
-
-            Feed feed2 = FeedDoc.readFeedToBean(new File("out.xml"));
-            FeedDoc.writeFeedDoc("out2.xml",feed2,encoding,xml_version);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * 
      * @param id the unique id element (optional)
      * @param title the title element (optional)
@@ -392,18 +307,15 @@ public class FeedDoc {
     
     /**
      * 
-     * @param term the term attribute (required)
-     * @param scheme the scheme attribute.
-     * @param label the label attribute.
-     * @param attributes additional attributes or any or all of the signature attributes.
+     * @param attributes the attributes list which must contain "term" /
+     * 		and may contain "scheme", "label" or others
      * @param content the undefined element content.
      * @return an immutable Category object.
      * @throws AtomSpecException
      */
-    public static Category buildCategory(Attribute term, Attribute scheme
-    		, Attribute label, List<Attribute> attributes
+    public static Category buildCategory(List<Attribute> attributes
     		, String content) throws AtomSpecException {
-    	return new Category(term,scheme,label,attributes,content);
+    	return new Category(attributes,content);
     }
     
     /**
@@ -497,13 +409,12 @@ public class FeedDoc {
      * 
      * @param uri the URI reference attribute.
      * @param version the version attribute.
-     * @param attributes additional attributes.
+     * @param attributes the attributes list which can contain "uri" and or "version" or others 
      * @param text the text content.
      * @return an immutable Generator object.
      */
-    public static Generator buildGeneratorGenerator(Attribute uri
-    		,Attribute version, List<Attribute> attributes, String text){
-    	return new Generator(uri,version,attributes,text);
+    public static Generator buildGenerator(List<Attribute> attributes, String text){
+    	return new Generator(attributes,text);
     }
     
     /**
@@ -528,23 +439,15 @@ public class FeedDoc {
     
     /**
      * 
-     * @param href the href attribute.
-     * @param rel the rel attribute.
-     * @param type the type attribute.
-     * @param hreflang the hreflang attribute.
-     * @param title the title attribute.
-     * @param length the length attribute.
-     * @param attributes additional attributes or any or all of the signature attributes.
+     * @param attributes the attributes list which must contain "href" /
+     * 		and may contain "rel", "type", "hreflang", "title", "length" or others
      * @param content the undefined link content.
      * @return an immutable Link object.
      * @throws AtomSpecException
      */
-    public static Link buildLink(Attribute href, Attribute rel, Attribute type
-    		, Attribute hreflang, Attribute title
-    		,Attribute length, List<Attribute> attributes
+    public static Link buildLink(List<Attribute> attributes
     		, String content) throws AtomSpecException {
-    	return new Link(href,rel,type,hreflang
-    			,title,length,attributes,content);
+    	return new Link(attributes,content);
     }
     
     /**
@@ -675,11 +578,121 @@ public class FeedDoc {
     	return new URI(uri);
     }
     
-    //used internally by feed reader and writer
+    //used internally by feed reader
     static AtomPersonConstruct buildAtomPersonConstruct(Name name
     		, URI uri, Email email
     		, List<Attribute> attributes
     		, List<Extension> extensions) throws AtomSpecException {
     	return new AtomPersonConstruct(name,uri,email,attributes,extensions);
+    }
+    
+    //used to prevent duplicates.
+    static Attribute getAttributeFromGroup(List<Attribute> attributes, String attributeName) {    	
+    	if(attributes != null){
+	    	Iterator<Attribute> attrItr = attributes.iterator();
+			while(attrItr.hasNext()){
+				Attribute current = attrItr.next();
+				if(current.getName().equalsIgnoreCase(attributeName)){
+						return buildAttribute(current.getName(),current.getValue());
+				}	
+			}
+    	}
+		return null;
+	}
+    
+    /**
+     * Test method.
+     * @param args
+     */
+    public static void main(String[] args){
+        try{
+            
+            List<Attribute> genAttrs = new LinkedList<Attribute>();
+            genAttrs.add(buildAttribute("uri","http://www.colorfulsoftware.com/projects/atomsphere"));
+            genAttrs.add(buildAttribute("version","2.0.0.0"));
+            Generator generator = buildGenerator(genAttrs,"Atomsphere");
+
+            Id id = buildId("http://www.colorfulsoftware.com/atom.xml",null);
+
+            Updated updated = buildUpdated(Calendar.getInstance().getTime());
+
+            Title title = buildTitle("test feed",null);
+
+            List<Contributor> contributors = new LinkedList<Contributor>();
+            Contributor contributor = buildContributor(new Name("Mad Dog"),null
+            		,buildEmail("info@maddog.net"),null,null);
+            contributors.add(contributor);
+            
+            Rights rights = buildRights("GPL 1.0",null);
+
+            Icon icon = buildIcon("http://host/images/icon.png",null);
+
+            Logo logo = buildLogo("http://host/images/logo.png",null);
+
+            List<Attribute> catAttrs = new LinkedList<Attribute>();
+            catAttrs.add(buildAttribute("term","music"));
+            catAttrs.add(buildAttribute("scheme","http://mtv.com/genere"));
+            catAttrs.add(buildAttribute("label","music"));
+            List<Category> categories = new LinkedList<Category>();
+            Category category = buildCategory(catAttrs,null);
+            categories.add(category);
+            
+            List<Attribute> linkAttrs = new LinkedList<Attribute>();
+            linkAttrs.add(buildAttribute("href","http://www.yahoo.com"));
+            linkAttrs.add(buildAttribute("rel","self"));
+            linkAttrs.add(buildAttribute("hreflang","en-US"));
+            List<Link> links = new LinkedList<Link>();
+            Link link = buildLink(linkAttrs,null);
+            links.add(link);
+            
+            Attribute extAttr = buildAttribute("xmlns:xhtml","http://www.w3.org/1999/xhtml");
+            List<Attribute> extAttrs = new LinkedList<Attribute>();
+            extAttrs.add(extAttr);
+            
+            //the base feed attributes.
+            List<Attribute> feedAttrs = new LinkedList<Attribute>();
+            feedAttrs.add(atomBase);
+            feedAttrs.add(lang_en);
+            feedAttrs.addAll(extAttrs);
+            
+            List<Extension> extensions = new LinkedList<Extension>();
+            Extension extension = buildExtension("xhtml:div",null
+            		,"<span style='color:red;'>hello there</span>");
+            extensions.add(extension);
+            
+            List<Author> authors = new LinkedList<Author>();
+            authors.add(buildAuthor(buildName("Bill Brown"),null,null,null,null));
+            Entry entry = buildEntry(
+            		buildId("http://www.colorfulsoftware.com/atom.xml#entry1",null)
+            ,buildTitle("an exapmle atom entry",null)
+            ,buildUpdated(Calendar.getInstance().getTime())
+            ,null
+            ,buildContent("hello. and welcome the the atomsphere feed builder for atom 1.0 builds.  I hope it is useful for you.",null)
+            ,authors
+            ,null
+            ,null
+            ,null
+            ,null
+            ,null
+            ,null
+            ,null
+            ,null
+            );
+
+            Map<String,Entry> entries = new TreeMap<String,Entry>();
+            entries.put(entry.getUpdated().getText(),entry);
+            
+            
+            Feed feed = buildFeed(id,title,updated,rights
+            		,null,categories,contributors,links
+            		,feedAttrs,extensions,generator,null,icon,logo,entries);
+            
+            FeedDoc.writeFeedDoc("out.xml",feed,encoding,xml_version);
+
+            Feed feed2 = FeedDoc.readFeedToBean(new File("out.xml"));
+            FeedDoc.writeFeedDoc("out2.xml",feed2,encoding,xml_version);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }

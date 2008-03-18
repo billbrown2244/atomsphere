@@ -289,12 +289,10 @@ public class FeedReader{
 				System.out.println("attribute.getName()"+attribute.getName());
 				System.out.println("attribute.getValue()"+attribute.getValue());
 				if(attribute.getName().equals("type") && attribute.getValue().equals("xhtml")){
-					System.out.println("returning true");
 					return true;
 				}
 			}
 		}
-		System.out.println("returning false");
 		return false;
 	}
 
@@ -513,8 +511,7 @@ public class FeedReader{
 		if(links == null){
 			links = new LinkedList<Link>();
 		}
-		links.add(FeedDoc.buildLink(null,null,null,null,null,null
-				,getAttributes(reader,null),reader.getElementText()));
+		links.add(FeedDoc.buildLink(getAttributes(reader,null),reader.getElementText()));
 		return links;
 	}
 
@@ -529,8 +526,7 @@ public class FeedReader{
 	}
 
 	private Generator readGenerator(XMLStreamReader reader) throws Exception{
-		return FeedDoc.buildGeneratorGenerator(null,null
-				,getAttributes(reader,null),reader.getElementText());
+		return FeedDoc.buildGenerator(getAttributes(reader,null),reader.getElementText());
 	}
 
 	private List<Contributor> readContributor(XMLStreamReader reader
@@ -551,8 +547,7 @@ public class FeedReader{
 		if(categories == null){
 			categories = new LinkedList<Category>();
 		}
-		categories.add(FeedDoc.buildCategory(null,null,null
-				,getAttributes(reader,null),reader.getElementText()));
+		categories.add(FeedDoc.buildCategory(getAttributes(reader,null),reader.getElementText()));
 		return categories;
 	}
 

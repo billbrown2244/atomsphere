@@ -83,10 +83,7 @@ class AtomEntrySourceAdaptor {
 			Iterator<Category> catItr = categories.iterator();
 			while(catItr.hasNext()){
 				Category category = catItr.next();
-				this.categories.add(new Category(category.getTerm()
-						,category.getScheme()
-						,category.getLabel()
-						,category.getAttributes()
+				this.categories.add(new Category(category.getAttributes()
 						,category.getContent()));
 			}
 		}
@@ -110,13 +107,7 @@ class AtomEntrySourceAdaptor {
 			Iterator<Link> linkItr = links.iterator();
 			while(linkItr.hasNext()){
 				Link link = linkItr.next();
-				this.links.add(new Link(link.getHref()
-						,link.getRel()
-						,link.getType()
-						,link.getHreflang()
-						,link.getTitle()
-						,link.getLength()
-						,link.getAttributes()
+				this.links.add(new Link(link.getAttributes()
 						,link.getContent()));
 			}
 		}
@@ -202,10 +193,7 @@ class AtomEntrySourceAdaptor {
 		 while(catItr.hasNext()){
 			 Category category = catItr.next();
 			 try{
-				 catsCopy.add(new Category(category.getTerm()
-						 ,category.getScheme()
-						 ,category.getLabel()
-						 ,category.getAttributes()
+				 catsCopy.add(new Category(category.getAttributes()
 						 ,category.getContent()));
 			 }catch(Exception e){
 				 //this should never happen because 
@@ -272,13 +260,7 @@ class AtomEntrySourceAdaptor {
 		 while(linkItr.hasNext()){
 			 Link link = linkItr.next();
 			 try{
-				 linksCopy.add(new Link(link.getHref()
-						 ,link.getRel()
-						 ,link.getType()
-						 ,link.getHreflang()
-						 ,link.getTitle()
-						 ,link.getLength()
-						 ,link.getAttributes()
+				 linksCopy.add(new Link(link.getAttributes()
 						 ,link.getContent()));
 			 }catch(Exception e){
 				 //this should never happen because 

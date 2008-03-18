@@ -72,8 +72,8 @@ public class Source {
     		,Icon icon
     		,Logo logo) throws AtomSpecException {
     	this.sourceAdaptor = new AtomEntrySourceAdaptor(id,title,updated,rights,authors,categories,contributors,links,attributes,extensions);
-    	this.generator = (generator == null)?null: new Generator(generator.getUri(),generator.getVersion()
-    			,generator.getAttributes(),generator.getText());
+    	this.generator = (generator == null)?null: new Generator(generator.getAttributes()
+    			,generator.getText());
     	this.subtitle = (subtitle == null)?null: new Subtitle(subtitle.getText(),subtitle.getAttributes());
     	this.icon = (icon == null)?null: new Icon(icon.getAtomUri(),icon.getAttributes());
     	this.logo = (logo == null)?null: new Logo(logo.getAtomUri(),logo.getAttributes());
@@ -84,8 +84,9 @@ public class Source {
      * @return the generator for this element.
      */
     public Generator getGenerator() {
-        return (generator == null)?null: new Generator(generator.getUri(),generator.getVersion()
-    			,generator.getAttributes(),generator.getText());
+        return (generator == null)?null: new Generator(
+        		generator.getAttributes()
+        		,generator.getText());
     }
 
     /**

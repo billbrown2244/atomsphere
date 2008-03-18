@@ -48,20 +48,10 @@ public class Category {
     private final String content;
     
     //use the factory method in the FeedDoc.
-    Category(Attribute term, Attribute scheme
-    		, Attribute label, List<Attribute> attributes
+    Category(List<Attribute> attributes
     		, String content) throws AtomSpecException {
-    	
-    	if(term == null){
-    		throw new AtomSpecException("Category elements MUST have a \"term\" attribute.");
-    	}else{
-    		this.term = new Attribute(term.getName(),term.getValue());
-    	}
-    	
-    	this.scheme = (scheme == null)?null:new Attribute(scheme.getName(),scheme.getValue());
-    	this.label = (label == null)?null:new Attribute(label.getName(),label.getValue());
         
-        if(attributes == null){
+    	if(attributes == null){
         	this.attributes = new LinkedList<Attribute>();
     	}else{
     		this.attributes = new LinkedList<Attribute>();
@@ -71,18 +61,15 @@ public class Category {
     			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
     		}
     	}
+
+        if((this.term = FeedDoc.getAttributeFromGroup(this.attributes,"term")) 
+        		== null){
+    		throw new AtomSpecException("Category elements MUST have a \"term\" attribute.");
+    	}
         
-        if(term != null){
-        	attributes.add(this.term);
-        }
+        this.scheme = FeedDoc.getAttributeFromGroup(this.attributes,"scheme");
         
-        if(scheme != null){
-        	attributes.add(this.scheme);
-        }
-        
-        if(label != null){
-        	attributes.add(this.label);
-        }
+        this.label = FeedDoc.getAttributeFromGroup(this.attributes,"label");
         
         this.content = content;
     }

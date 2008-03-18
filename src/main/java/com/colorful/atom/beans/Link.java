@@ -55,24 +55,10 @@ public class Link {
     private final String content;
     
     //use the factory method in the FeedDoc.
-    Link(Attribute href, Attribute rel, Attribute type
-    		, Attribute hreflang, Attribute title
-    		,Attribute length, List<Attribute> attributes
+    Link(List<Attribute> attributes
     		, String content) throws AtomSpecException {
     	
-    	if(href == null){
-    		throw new AtomSpecException("atom:link elements MUST have an href attribute, whose value MUST be a IRI reference");
-    	}else{
-    		this.href = new Attribute(href.getName(),href.getValue());
-    	}
-    	
-    	this.rel = (rel == null)?null:new Attribute(rel.getName(),rel.getValue());
-    	this.type = (type == null)?null:new Attribute(type.getName(),type.getValue());
-    	this.hreflang = (hreflang == null)?null:new Attribute(hreflang.getName(),hreflang.getValue());
-    	this.title = (rel == title)?null:new Attribute(title.getName(),title.getValue());
-    	this.length = (length == null)?null:new Attribute(length.getName(),length.getValue());
-        
-        if(attributes == null){
+    	if(attributes == null){
         	this.attributes = new LinkedList<Attribute>();
     	}else{
     		this.attributes = new LinkedList<Attribute>();
@@ -83,29 +69,20 @@ public class Link {
     		}
     	}
         
-        if(href != null){
-        	attributes.add(this.href);
-        }
+    	if((this.href = FeedDoc.getAttributeFromGroup(this.attributes,"href")) 
+        		== null){
+    		throw new AtomSpecException("atom:link elements MUST have an href attribute, whose value MUST be a IRI reference");
+    	}
         
-        if(rel != null){
-        	attributes.add(this.rel);
-        }
+    	this.rel = FeedDoc.getAttributeFromGroup(this.attributes,"rel");
         
-        if(type != null){
-        	attributes.add(this.type);
-        }
+    	this.type = FeedDoc.getAttributeFromGroup(this.attributes,"type");
         
-        if(hreflang != null){
-        	attributes.add(this.hreflang);
-        }
+    	this.hreflang = FeedDoc.getAttributeFromGroup(this.attributes,"hreflang");
         
-        if(title != null){
-        	attributes.add(this.title);
-        }
+    	this.title = FeedDoc.getAttributeFromGroup(this.attributes,"title");
         
-        if(length != null){
-        	attributes.add(this.length);
-        }
+    	this.length = FeedDoc.getAttributeFromGroup(this.attributes,"length");
         
         this.content = content;
     }

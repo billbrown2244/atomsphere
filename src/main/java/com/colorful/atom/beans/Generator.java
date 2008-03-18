@@ -45,16 +45,7 @@ public class Generator {
     private final String text;
     
     //use the factory method in the FeedDoc.
-    Generator(Attribute uri,Attribute version, List<Attribute> attributes, String text){
-    	
-    	this.uri = (uri == null)?null:new Attribute(uri.getName(),uri.getValue());
-    	this.version = (version == null)?null:new Attribute(version.getName(),version.getValue());
-    	
-    	if(uri == null && version == null && attributes == null){
-    		this.text = text;
-    		this.attributes = null;
-    		return;
-    	}
+    Generator(List<Attribute> attributes, String text){
         
         if(attributes == null){
         	this.attributes = new LinkedList<Attribute>();
@@ -66,19 +57,15 @@ public class Generator {
     			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
     		}
     	}
+    	
+        this.uri = FeedDoc.getAttributeFromGroup(this.attributes,"uri");
         
-        if(uri != null){
-        	attributes.add(this.uri);
-        }
-        
-        if(version != null){
-        	attributes.add(this.version);
-        }
-        
+        this.version = FeedDoc.getAttributeFromGroup(this.attributes,"version");
+    	
         this.text = text;
     }
 
-    /**
+	/**
      * 
      * @return the category attribute list.
      */
