@@ -40,7 +40,6 @@ import java.util.List;
  *  </pre>
  */
 public class Category {
-
     
     private final List<Attribute> attributes;
     private final Attribute term; //required
@@ -48,14 +47,8 @@ public class Category {
     private final Attribute label;
     private final String content;
     
-    /**
-     * 
-     * @param term identifies the category of the feed.
-     * @param scheme identifies a categorization scheme.
-     * @param label provides a human-readable label for display in end-user applications.
-     * @param attributes additional attributes for this element which may or may not contain any of the first three 
-     */
-    public Category(Attribute term, Attribute scheme
+    //use the factory method in the FeedDoc.
+    Category(Attribute term, Attribute scheme
     		, Attribute label, List<Attribute> attributes
     		, String content) throws AtomSpecException {
     	

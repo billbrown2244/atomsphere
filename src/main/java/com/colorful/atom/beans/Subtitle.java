@@ -34,9 +34,10 @@ import java.util.List;
  */
 public class Subtitle {
     
-private final AtomTextConstruct subtitle;
+	private final AtomTextConstruct subtitle;
 	
-    public Subtitle(String subtitle, List<Attribute> attributes){
+	//use the factory method in the FeedDoc.
+    Subtitle(String subtitle, List<Attribute> attributes){
         this.subtitle = new AtomTextConstruct(subtitle,attributes);
     }
     

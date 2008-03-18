@@ -39,7 +39,8 @@ public class Id {
 
 	private final AtomURIConstruct id;
 
-	public Id(String atomUri, List<Attribute> attributes){
+	//use the factory method in the FeedDoc.
+	Id(String atomUri, List<Attribute> attributes){
 		this.id = new AtomURIConstruct(atomUri,attributes);
 	}
 

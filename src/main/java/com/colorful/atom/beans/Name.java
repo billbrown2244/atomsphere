@@ -34,11 +34,8 @@ public class Name {
 
 	private final AtomPlainText name;
 	
-	/**
-     * 
-     * @param text a human-readable name for the person
-     */
-	public Name(String name){
+	//use the factory method in the FeedDoc.
+	Name(String name){
 		this.name = new AtomPlainText(name);
 	}
 	

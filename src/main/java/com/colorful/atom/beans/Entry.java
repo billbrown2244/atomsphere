@@ -57,7 +57,8 @@ public class Entry {
     private final Source source;
     private final Summary summary;
     
-    public Entry(Id id
+    //use the factory method in the FeedDoc.
+    Entry(Id id
     		,Title title
     		,Updated updated
     		,Rights rights

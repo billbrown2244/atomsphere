@@ -34,11 +34,8 @@ public class URI {
 
 	private final AtomPlainText uri;
 	
-    /**
-     * 
-     * @param text the content of the uri according to Section 7 of [RFC3986]
-     */
-    public URI(String uri){
+    //use the factory method in the FeedDoc.
+    URI(String uri){
         this.uri = new AtomPlainText(uri);
     }
     

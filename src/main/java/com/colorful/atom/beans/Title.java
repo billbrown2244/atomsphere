@@ -34,9 +34,10 @@ import java.util.List;
  */
 public class Title {
     
-private final AtomTextConstruct title;
+	private final AtomTextConstruct title;
 	
-    public Title(String title, List<Attribute> attributes){
+	//use the factory method in the FeedDoc.
+    Title(String title, List<Attribute> attributes){
         this.title = new AtomTextConstruct(title,attributes);
     }
     

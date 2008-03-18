@@ -54,18 +54,8 @@ public class Link {
     private final Attribute length;
     private final String content;
     
-    /**
-     * 
-     * @param href
-     * @param rel
-     * @param type
-     * @param hreflang
-     * @param title
-     * @param length
-     * @param attributes
-     * @param content
-     */
-    public Link(Attribute href, Attribute rel, Attribute type
+    //use the factory method in the FeedDoc.
+    Link(Attribute href, Attribute rel, Attribute type
     		, Attribute hreflang, Attribute title
     		,Attribute length, List<Attribute> attributes
     		, String content) throws AtomSpecException {

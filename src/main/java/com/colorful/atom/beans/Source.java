@@ -56,7 +56,8 @@ public class Source {
     private final Logo logo;    
     private final Subtitle subtitle;
 
-    public Source(Id id
+    //use the factory method in the FeedDoc.
+    Source(Id id
     		,Title title
     		,Updated updated
     		,Rights rights

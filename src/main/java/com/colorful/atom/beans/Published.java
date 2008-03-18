@@ -36,11 +36,8 @@ public class Published {
     
 	private final AtomDateConstruct published;
 	
-    /**
-     * 
-     * @param published the date formatted to [RFC3339]
-     */
-    public Published(Date published){
+	//use the factory method in the FeedDoc.
+    Published(Date published){
         this.published = new AtomDateConstruct(published);
     }
     

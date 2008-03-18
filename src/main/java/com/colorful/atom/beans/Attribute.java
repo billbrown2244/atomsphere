@@ -46,12 +46,8 @@ public class Attribute {
     private final String name;
     private final String value;
     
-    /**
-     * 
-     * @param name the attribute name.
-     * @param value the attribute value.
-     */
-    public Attribute(String name, String value){
+    //use the factory method in the FeedDoc.
+    Attribute(String name, String value){
         this.name = name;
         this.value = value;
     }

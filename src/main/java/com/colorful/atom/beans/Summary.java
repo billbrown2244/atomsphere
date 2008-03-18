@@ -36,7 +36,8 @@ public class Summary {
     
 	private final AtomTextConstruct summary;
 	
-    public Summary(String summary, List<Attribute> attributes){
+	//use the factory method in the FeedDoc.
+    Summary(String summary, List<Attribute> attributes){
         this.summary = new AtomTextConstruct(summary,attributes);
     }
     

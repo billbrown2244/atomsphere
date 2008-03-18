@@ -53,14 +53,8 @@ public class Extension {
     private final List<Attribute> attributes;
     private final String content;
 
-    
-    /**
-     * 
-     * @param elementName the name of the extension element.
-     * @param content the content of the extension element.
-     * @param attributes the attributes for this extension elements (should contain attribute xmlns).
-     */
-    public Extension(String elementName, List<Attribute> attributes, String content){
+    //use the factory method in the FeedDoc.
+    Extension(String elementName, List<Attribute> attributes, String content){
     		
     	this.elementName = elementName;
     	this.content = content;

@@ -42,20 +42,6 @@ import javax.xml.stream.XMLStreamReader;
  */
 public class FeedReader{
 
-	private static SimpleDateFormat simplDateFmt = null;
-
-	static{
-		String timeZoneOffset = null;
-		TimeZone timeZone = TimeZone.getDefault();
-		int hours = (((timeZone.getRawOffset()/1000)/60)/60);
-		if(hours >= 0){
-			timeZoneOffset = TimeZone.getTimeZone("GMT"+"+"+hours).getID().substring(3);
-		}else{
-			timeZoneOffset = TimeZone.getTimeZone("GMT"+"-"+Math.abs(hours)).getID().substring(3);
-		}
-		simplDateFmt = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'"+timeZoneOffset+"\'");
-	}
-
 	/**
 	 * This method transforms an xml stream into a Feed bean
 	 * @param reader the object containing the atom data
@@ -144,13 +130,13 @@ public class FeedReader{
 			}
 		}
 		
-		Feed feed = new Feed(id,title,updated,rights
-        		,authors,categories,contributors,links
-        		,attributes,extensions,generator,subtitle,icon,logo,entries);
+		Feed feed = FeedDoc.buildFeed(id,title,updated,rights,authors
+				,categories,contributors,links,attributes,extensions
+				,generator,subtitle,icon,logo,entries);
 
 		//because the sort extension does not enforce placement of the element
 		//do a check after the feed is built to determine if it needs to be sorted.
-		return feed.checkForAndApplyExtension(new Attribute("xmlns:sort","http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
+		return feed.checkForAndApplyExtension(FeedDoc.buildAttribute("xmlns:sort","http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
 	}
 
 	private List<Attribute> getAttributes(XMLStreamReader reader,List<Attribute> attributes) throws Exception{
@@ -167,7 +153,7 @@ public class FeedReader{
 			if(attributes == null){
 				attributes = new LinkedList<Attribute>();
 			}
-			attributes.add(new Attribute(attrName,reader.getNamespaceURI(i)));
+			attributes.add(FeedDoc.buildAttribute(attrName,reader.getNamespaceURI(i)));
 		}
 		for(int i=0; i < reader.getAttributeCount(); i++){
 			eventSkip++;
@@ -178,9 +164,9 @@ public class FeedReader{
 				attrName = reader.getAttributeName(i).getLocalPart();
 			}
 			if(attributes == null){
-				attributes = new LinkedList();
+				attributes = new LinkedList<Attribute>();
 			}
-			attributes.add(new Attribute(attrName,reader.getAttributeValue(i)));
+			attributes.add(FeedDoc.buildAttribute(attrName,reader.getAttributeValue(i)));
 		}
 
 		return attributes;
@@ -201,7 +187,7 @@ public class FeedReader{
 			elementName = reader.getLocalName();
 		}
 		
-		extensions.add(new Extension(elementName
+		extensions.add(FeedDoc.buildExtension(elementName
 				,getAttributes(reader,null),reader.getElementText()));
 		return extensions;
 	}
@@ -234,33 +220,31 @@ public class FeedReader{
 			case XMLStreamConstants.START_ELEMENT:
 				//call each feed elements read method depending on the name
 				if(reader.getLocalName().equals("id")){
-					entry.setId(readId(reader));
+					id = readId(reader);
 				}else if(reader.getLocalName().equals("author")){
-					entry.addAuthor(readAuthor(reader));
+					authors = readAuthor(reader,authors);
 				}else if(reader.getLocalName().equals("category")){
-					entry.addCategory(readCategory(reader));
+					categories = readCategory(reader,categories);
 				}else if(reader.getLocalName().equals("contributor")){
-					entry.addContributor(readContributor(reader));
+					contributors = readContributor(reader,contributors);
 				}else if(reader.getLocalName().equals("content")){
-					entry.setContent(readContent(reader));
+					content = readContent(reader);
 				}else if(reader.getLocalName().equals("link")){
-					entry.addLink(readLink(reader));
+					links = readLink(reader,links);
 				}else if(reader.getLocalName().equals("published")){
-					entry.setPublished(readPublished(reader));
-				}else if(reader.getLocalName().equals("link")){
-					entry.addLink(readLink(reader));
+					published = readPublished(reader);
 				}else if(reader.getLocalName().equals("rights")){
-					entry.setRights(readRights(reader));
+					rights = readRights(reader);
 				}else if(reader.getLocalName().equals("source")){
-					entry.setSource(readSource(reader));
+					source = readSource(reader);
 				}else if(reader.getLocalName().equals("summary")){
-					entry.setSummary(readSummary(reader));
+					summary = readSummary(reader);
 				}else if(reader.getLocalName().equals("title")){
-					entry.setTitle(readTitle(reader));
+					title = readTitle(reader);
 				}else if(reader.getLocalName().equals("updated")){
-					entry.setUpdated(readUpdated(reader));
+					updated = readUpdated(reader);
 				}else {//extension
-					entry.addExtension(readExtension(reader));
+					extensions = readExtension(reader,extensions);
 				}
 				break;
 
@@ -277,7 +261,7 @@ public class FeedReader{
 			}
 		}
 		
-		entries.put(updated.getText(),new Entry(id,title,updated,rights,content
+		entries.put(updated.getText(),FeedDoc.buildEntry(id,title,updated,rights,content
 				,authors,categories,contributors,links,attributes
 				,extensions,published,summary,source));
 		
@@ -285,21 +269,20 @@ public class FeedReader{
 	}
 
 	private Summary readSummary(XMLStreamReader reader) throws Exception{
-		System.out.println("in summary");
-		Summary summary = new Summary();
-		summary.setAttributes(getAttributes(reader));
+		List<Attribute> attributes = getAttributes(reader,null);
 		//if the content is XHTML, we need to read in the contents of the div.
-		if(containsXHTML(summary.getAttributes())){
-			summary.setText(readXHTML(reader));
+		String summary = null;
+		if(containsXHTML(attributes)){
+			summary = readXHTML(reader);
 		}else{
-			summary.setText(reader.getElementText());
+			summary = reader.getElementText();
 		}
-		return summary;
+		return FeedDoc.buildSummary(summary, attributes);
 	}
 
-	private boolean containsXHTML(List attributes) {
+	private boolean containsXHTML(List<Attribute> attributes) {
 		if(attributes != null){
-			Iterator attrsItr = attributes.iterator();
+			Iterator<Attribute> attrsItr = attributes.iterator();
 			//look for the xhtml type.
 			while(attrsItr.hasNext()){
 				Attribute attribute = (Attribute)attrsItr.next();            
@@ -317,8 +300,23 @@ public class FeedReader{
 
 	private Source readSource(XMLStreamReader reader) throws Exception{
 		boolean breakOut = false;
-		Source source = new Source();
-		source.setAttributes(getAttributes(reader));
+		
+		List<Attribute> attributes = null;
+		List<Author> authors = null;
+		List<Category> categories = null;
+		List<Contributor> contributors = null;
+		List<Link> links = null;
+		List<Extension> extensions = null;
+		Generator generator = null;
+		Icon icon = null;
+		Id id = null;
+		Logo logo = null;
+		Rights rights = null;
+		Subtitle subtitle = null;
+		Title title = null;
+		Updated updated = null;
+		
+		attributes = getAttributes(reader,attributes);
 
 		while(reader.hasNext()){
 			switch (reader.next()){
@@ -326,31 +324,31 @@ public class FeedReader{
 			case XMLStreamConstants.START_ELEMENT:
 				//call each feed elements read method depending on the name
 				if(reader.getLocalName().equals("author")){
-					source.addAuthor(readAuthor(reader));
+					authors = readAuthor(reader,authors);
 				}else if(reader.getLocalName().equals("category")){
-					source.addCategory(readCategory(reader));
+					categories = readCategory(reader,categories);
 				}else if(reader.getLocalName().equals("contributor")){
-					source.addContributor(readContributor(reader));
+					contributors = readContributor(reader,contributors);
 				}else if(reader.getLocalName().equals("generator")){
-					source.setGenerator(readGenerator(reader));
+					generator = readGenerator(reader);
 				}else if(reader.getLocalName().equals("icon")){
-					source.setIcon(readIcon(reader));
+					icon = readIcon(reader);
 				}else if(reader.getLocalName().equals("id")){
-					source.setId(readId(reader));
+					id = readId(reader);
 				}else if(reader.getLocalName().equals("link")){
-					source.addLink(readLink(reader));
+					links = readLink(reader,links);
 				}else if(reader.getLocalName().equals("logo")){
-					source.setLogo(readLogo(reader));
+					logo = readLogo(reader);
 				}else if(reader.getLocalName().equals("rights")){
-					source.setRights(readRights(reader));
+					rights = readRights(reader);
 				}else if(reader.getLocalName().equals("subtitle")){
-					source.setSubtitle(readSubtitle(reader));
+					subtitle = readSubtitle(reader);
 				}else if(reader.getLocalName().equals("title")){
-					source.setTitle(readTitle(reader));
+					title = readTitle(reader);
 				}else if(reader.getLocalName().equals("updated")){
-					source.setUpdated(readUpdated(reader));
+					updated = readUpdated(reader);
 				}else {//extension
-					source.addExtension(readExtension(reader));
+					extensions = readExtension(reader,extensions);
 				}                
 				break;
 
@@ -366,60 +364,68 @@ public class FeedReader{
 				break;
 			}
 		}
-		return source;
+		return FeedDoc.buildSource(id,title,updated,rights
+				,authors,categories,contributors,links,attributes
+				,extensions,generator,subtitle,icon,logo);
 	}
 
+	private SimpleDateFormat getSimpleDateFormat(){
+		String timeZoneOffset = null;
+		TimeZone timeZone = TimeZone.getDefault();
+		int hours = (((timeZone.getRawOffset()/1000)/60)/60);
+		if(hours >= 0){
+			timeZoneOffset = TimeZone.getTimeZone("GMT"+"+"+hours).getID().substring(3);
+		}else{
+			timeZoneOffset = TimeZone.getTimeZone("GMT"+"-"+Math.abs(hours)).getID().substring(3);
+		}
+		return new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'"+timeZoneOffset+"\'");
+	}
+	
 	private Published readPublished(XMLStreamReader reader) throws Exception{
-		Published published = new Published();
 		String dateText = reader.getElementText();
 		try{
-			published.setPublished(simplDateFmt.parse(dateText));        
+			return FeedDoc.buildPublished(getSimpleDateFormat().parse(dateText));        
 		}catch(Exception e){
-			SimpleDateFormat simpleDateFmt2 = new SimpleDateFormat(simplDateFmt.toPattern().substring(0,19));
-			published.setPublished(simpleDateFmt2.parse(dateText.substring(0,19)));
+			SimpleDateFormat simpleDateFmt2 = new SimpleDateFormat(getSimpleDateFormat().toPattern().substring(0,19));
+			return FeedDoc.buildPublished(simpleDateFmt2.parse(dateText.substring(0,19)));
 		}
-		return published;
 	}
 	
 
 	
 	private Content readContent(XMLStreamReader reader) throws Exception{
-		System.out.println("in content");
-		Content content = new Content();
-		content.setAttributes(getAttributes(reader));
+		List<Attribute> attributes = getAttributes(reader,null);
 		//if the content is XHTML, we need to skip the contents of the div.
-		if(containsXHTML(content.getAttributes())){
-			content.setContent(readXHTML(reader));
+		String content = null;
+		if(containsXHTML(attributes)){
+			content = readXHTML(reader);
 		}else{			
-			content.setContent(reader.getElementText());
+			content = reader.getElementText();
 		}
-		return content;
+		return FeedDoc.buildContent(content, attributes);
 	}
 	
 
 	private Updated readUpdated(XMLStreamReader reader) throws Exception{
-		Updated updated = new Updated();
 		String dateText = reader.getElementText();
 		try{
-			updated.setUpdated(simplDateFmt.parse(dateText));        
+			return FeedDoc.buildUpdated(getSimpleDateFormat().parse(dateText));        
 		}catch(Exception e){
-			SimpleDateFormat simpleDateFmt2 = new SimpleDateFormat(simplDateFmt.toPattern().substring(0,19));
-			updated.setUpdated(simpleDateFmt2.parse(dateText.substring(0,19)));
+			SimpleDateFormat simpleDateFmt2 = new SimpleDateFormat(getSimpleDateFormat().toPattern().substring(0,19));
+			return FeedDoc.buildUpdated(simpleDateFmt2.parse(dateText.substring(0,19)));
 		}
-		return updated;
 	}
 
 	private Title readTitle(XMLStreamReader reader) throws Exception{
-		System.out.println("in title");
-		Title title = new Title();
-		title.setAttributes(getAttributes(reader));
+		List<Attribute> attributes = getAttributes(reader,null);
 		//if the content is XHTML, we need to read in the contents of the div.
-		if(containsXHTML(title.getAttributes())){
-			title.setText(readXHTML(reader));
+		String title = null;
+		if(containsXHTML(attributes)){
+			title = readXHTML(reader);
 		}else{
-			title.setText(reader.getElementText());
+			title = reader.getElementText();
 		}
-		return title;
+		return FeedDoc.buildTitle(title, attributes);
 	}
 
 	private String readXHTML(XMLStreamReader reader)
@@ -430,17 +436,18 @@ public class FeedReader{
 			switch (reader.next()){                 
 				case XMLStreamConstants.START_ELEMENT:
 					if(reader.getLocalName().equals("div")){
-						getAttributes(reader);
+						//for now just ignore the attributes 
+						getAttributes(reader,null);
 					}else{
 						if(reader.getPrefix() != null && !reader.getPrefix().equals("")){
 							xhtml.append("<"+reader.getPrefix()+":"+reader.getLocalName());
 						}else{
 							xhtml.append("<"+reader.getLocalName());
 						}
-						List attributes = getAttributes(reader);
+						List<Attribute> attributes = getAttributes(reader,null);
 						//add the attributes
 						if(attributes != null){
-							Iterator attrItr = attributes.iterator();
+							Iterator<Attribute> attrItr = attributes.iterator();
 							while(attrItr.hasNext()){
 								Attribute attr = (Attribute)attrItr.next();
 								xhtml.append(" "+attr.getName()+"="+attr.getValue());
@@ -474,67 +481,56 @@ public class FeedReader{
 	}
 
 	private Subtitle readSubtitle(XMLStreamReader reader) throws Exception{
-		System.out.println("in Subtitle");
-		Subtitle subtitle = new Subtitle();
-		subtitle.setAttributes(getAttributes(reader));
+		List<Attribute> attributes = getAttributes(reader,null);
 		//if the content is XHTML, we need to read in the contents of the div.
-		if(containsXHTML(subtitle.getAttributes())){
-			subtitle.setText(readXHTML(reader));
+		String subtitle = null;
+		if(containsXHTML(attributes)){
+			subtitle = readXHTML(reader);
 		}else{
-			subtitle.setText(reader.getElementText());
+			subtitle = reader.getElementText();
 		}
-		return subtitle;
+		return FeedDoc.buildSubtitle(subtitle, attributes);
 	}
 
 	private Rights readRights(XMLStreamReader reader) throws Exception{
-		System.out.println("in Rights");
-		Rights rights = new Rights();
-		rights.setAttributes(getAttributes(reader));
+		List<Attribute> attributes = getAttributes(reader,null);
 		//if the content is XHTML, we need to read in the contents of the div.
-		if(containsXHTML(rights.getAttributes())){
-			rights.setText(readXHTML(reader));
+		String rights = null;
+		if(containsXHTML(attributes)){
+			rights = readXHTML(reader);
 		}else{
-			rights.setText(reader.getElementText());
+			rights = reader.getElementText();
 		}
-		return rights;
+		return FeedDoc.buildRights(rights, attributes);
 	}
 
 	private Logo readLogo(XMLStreamReader reader) throws Exception{
-		Logo logo = new Logo();
-		logo.setAttributes(getAttributes(reader));
-		logo.setUri(new URI(reader.getElementText()));
-		return logo;
+		List<Attribute> attributes = getAttributes(reader,null);
+		return FeedDoc.buildLogo(reader.getElementText(), attributes);
 	}
 
 	private List<Link> readLink(XMLStreamReader reader, List<Link> links) throws Exception{
 		if(links == null){
 			links = new LinkedList<Link>();
 		}
-		links.add(new Link(null,null,null,null,null,null
+		links.add(FeedDoc.buildLink(null,null,null,null,null,null
 				,getAttributes(reader,null),reader.getElementText()));
 		return links;
 	}
 
 	private Id readId(XMLStreamReader reader) throws Exception{
-		Id id = new Id();
-		id.setAttributes(getAttributes(reader));
-		id.setUri(new URI(reader.getElementText())); 
-		System.out.println("file name = "+id.getUri().getText());
-		return id;
+		List<Attribute> attributes = getAttributes(reader,null);
+		return FeedDoc.buildId(reader.getElementText(), attributes);
 	}
 
 	private Icon readIcon(XMLStreamReader reader) throws Exception{
-		Icon icon = new Icon();
-		icon.setAttributes(getAttributes(reader));
-		icon.setUri(new URI(reader.getElementText()));
-		return icon;
+		List<Attribute> attributes = getAttributes(reader,null);
+		return FeedDoc.buildIcon(reader.getElementText(), attributes);
 	}
 
 	private Generator readGenerator(XMLStreamReader reader) throws Exception{
-		Generator generator = new Generator();
-		generator.setAttributes(getAttributes(reader));
-		generator.setText(reader.getElementText());
-		return generator;
+		return FeedDoc.buildGeneratorGenerator(null,null
+				,getAttributes(reader,null),reader.getElementText());
 	}
 
 	private List<Contributor> readContributor(XMLStreamReader reader
@@ -545,7 +541,7 @@ public class FeedReader{
 		}
 		
 		AtomPersonConstruct person = readAtomPersonConstruct(reader,"contributor");
-		contributors.add(new Contributor(person.getName(),person.getUri()
+		contributors.add(FeedDoc.buildContributor(person.getName(),person.getUri()
 				,person.getEmail(),person.getAttributes(),person.getExtensions()));
 
 		return contributors;
@@ -555,7 +551,7 @@ public class FeedReader{
 		if(categories == null){
 			categories = new LinkedList<Category>();
 		}
-		categories.add(new Category(null,null,null
+		categories.add(FeedDoc.buildCategory(null,null,null
 				,getAttributes(reader,null),reader.getElementText()));
 		return categories;
 	}
@@ -566,7 +562,7 @@ public class FeedReader{
 			authors = new LinkedList<Author>();
 		}
 		AtomPersonConstruct person = readAtomPersonConstruct(reader,"author");
-		authors.add(new Author(person.getName(),person.getUri()
+		authors.add(FeedDoc.buildAuthor(person.getName(),person.getUri()
 				,person.getEmail(),person.getAttributes(),person.getExtensions()));
 		return authors;
 	}
@@ -584,16 +580,16 @@ public class FeedReader{
 			case XMLStreamConstants.START_ELEMENT:
 
 				if(reader.getLocalName().equals("name")){
-					name = new Name(reader.getElementText());
+					name = FeedDoc.buildName(reader.getElementText());
 				}else if(reader.getLocalName().equals("uri")){
-					uri = new URI(reader.getElementText());
+					uri = FeedDoc.buildURI(reader.getElementText());
 				}else if(reader.getLocalName().equals("email")){
-					email = new Email(reader.getElementText());
+					email = FeedDoc.buildEmail(reader.getElementText());
 				}else{
 					if(extensions == null){
 						extensions = new LinkedList<Extension>();
 					}
-					extensions.add(readExtension(reader));
+					extensions = readExtension(reader,extensions);
 				}
 				break;
 
@@ -610,6 +606,6 @@ public class FeedReader{
 			}
 			
 		}
-		return new AtomPersonConstruct(name,uri,email,attributes,extensions);
+		return FeedDoc.buildAtomPersonConstruct(name,uri,email,attributes,extensions);
 	}
 }

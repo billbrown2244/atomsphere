@@ -78,7 +78,8 @@ public class Feed {
 	};
 
 
-	public Feed(Id id
+	//use the factory method in the FeedDoc.
+	Feed(Id id
 			,Title title
 			,Updated updated
 			,Rights rights

@@ -36,7 +36,8 @@ public class Contributor {
 	
 	private final AtomPersonConstruct person;
 	
-	public Contributor(Name name, URI uri, Email email, List<Attribute> attributes
+	//use the factory method in the FeedDoc.
+	Contributor(Name name, URI uri, Email email, List<Attribute> attributes
 			, List<Extension> extensions) throws AtomSpecException{
 		this.person = new AtomPersonConstruct(name,uri,email,attributes,extensions);
 	}

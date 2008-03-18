@@ -36,11 +36,8 @@ public class Email {
 
 	private final AtomPlainText email;
 	
-	/**
-     * 
-     * @param text a human-readable email for the person
-     */
-	public Email(String email){
+	//use the factory method in the FeedDoc.
+	Email(String email){
 		this.email = new AtomPlainText(email);
 	}
 	

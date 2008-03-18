@@ -44,14 +44,8 @@ public class Generator {
     private final Attribute version;
     private final String text;
     
-    /**
-     * 
-     * @param uri the uri of the generator (eg homepage).
-     * @param version the version of the generator.
-     * @param attributes the attributes for this element.
-     * @param text the text content for this element.
-     */
-    public Generator(Attribute uri,Attribute version, List<Attribute> attributes, String text){
+    //use the factory method in the FeedDoc.
+    Generator(Attribute uri,Attribute version, List<Attribute> attributes, String text){
     	
     	this.uri = (uri == null)?null:new Attribute(uri.getName(),uri.getValue());
     	this.version = (version == null)?null:new Attribute(version.getName(),version.getValue());

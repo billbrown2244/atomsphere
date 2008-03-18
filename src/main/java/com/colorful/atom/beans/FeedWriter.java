@@ -54,7 +54,7 @@ public class FeedWriter{
         //open the feed element
         writer.writeStartElement("feed");
         if(feed.getAttributes() != null){
-            Iterator feedAttrs = feed.getAttributes().iterator();
+            Iterator<Attribute> feedAttrs = feed.getAttributes().iterator();
             //write the attributes
             while(feedAttrs.hasNext()){
                 Attribute feedAttr = (Attribute)feedAttrs.next();
@@ -121,7 +121,7 @@ public class FeedWriter{
     	boolean wrapInXhtmlDiv = false;
         writer.writeStartElement("subtitle");
         if(subtitle.getAttributes() != null){
-            Iterator feedAttrs = subtitle.getAttributes().iterator();
+            Iterator<Attribute> feedAttrs = subtitle.getAttributes().iterator();
             //write the attributes
             while(feedAttrs.hasNext()){
                 Attribute feedAttr = (Attribute)feedAttrs.next();
@@ -149,7 +149,7 @@ public class FeedWriter{
     private void writeGenerator(XMLStreamWriter writer,Generator generator) throws Exception{
         writer.writeStartElement("generator");
         if(generator.getAttributes() != null){
-            Iterator feedAttrs = generator.getAttributes().iterator();
+            Iterator<Attribute> feedAttrs = generator.getAttributes().iterator();
             //write the attributes
             while(feedAttrs.hasNext()){
                 Attribute feedAttr = (Attribute)feedAttrs.next();
@@ -163,14 +163,14 @@ public class FeedWriter{
     private void writeID(XMLStreamWriter writer,Id id) throws Exception{
         writer.writeStartElement("id");
         if(id.getAttributes() != null){
-            Iterator feedAttrs = id.getAttributes().iterator();
+            Iterator<Attribute> feedAttrs = id.getAttributes().iterator();
             //write the attributes
             while(feedAttrs.hasNext()){
                 Attribute feedAttr = (Attribute)feedAttrs.next();
                 writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
             }
         }
-        writer.writeCharacters(id.getUri().getText());
+        writer.writeCharacters(id.getAtomUri());
         writer.writeEndElement();
     }
     
@@ -184,7 +184,7 @@ public class FeedWriter{
     	boolean wrapInXhtmlDiv = false;
         writer.writeStartElement("title");
         if(title.getAttributes() != null){
-            Iterator feedAttrs = title.getAttributes().iterator();
+            Iterator<Attribute> feedAttrs = title.getAttributes().iterator();
             //write the attributes
             while(feedAttrs.hasNext()){
                 Attribute feedAttr = (Attribute)feedAttrs.next();
@@ -271,14 +271,14 @@ public class FeedWriter{
     	}
     }
 
-	private void writeAuthors(XMLStreamWriter writer,List authors) throws Exception{
+	private void writeAuthors(XMLStreamWriter writer,List<Author> authors) throws Exception{
         //loop through and print out each author.
-        Iterator authorList = authors.iterator();
+        Iterator<Author> authorList = authors.iterator();
         while(authorList.hasNext()){
-            Author author = (Author)authorList.next();
+            Author author = authorList.next();
             writer.writeStartElement("author");
             if(author.getAttributes() != null){
-                Iterator feedAttrs = author.getAttributes().iterator();
+                Iterator<Attribute> feedAttrs = author.getAttributes().iterator();
                 //write the attributes
                 while(feedAttrs.hasNext()){
                     Attribute feedAttr = (Attribute)feedAttrs.next();
@@ -318,14 +318,14 @@ public class FeedWriter{
         writer.writeEndElement();
     }
     
-    private void writeContributors(XMLStreamWriter writer,List contributors) throws Exception{
+    private void writeContributors(XMLStreamWriter writer,List<Contributor> contributors) throws Exception{
         //loop through and print out each contributor.
-        Iterator contributorList = contributors.iterator();
+        Iterator<Contributor> contributorList = contributors.iterator();
         while(contributorList.hasNext()){
             Contributor contributor = (Contributor)contributorList.next();
             writer.writeStartElement("contributor");
             if(contributor.getAttributes() != null){
-                Iterator feedAttrs = contributor.getAttributes().iterator();
+                Iterator<Attribute> feedAttrs = contributor.getAttributes().iterator();
                 //write the attributes
                 while(feedAttrs.hasNext()){
                     Attribute feedAttr = (Attribute)feedAttrs.next();
@@ -350,7 +350,7 @@ public class FeedWriter{
     	boolean wrapInXhtmlDiv = false;
         writer.writeStartElement("rights");
         if(rights.getAttributes() != null){
-            Iterator feedAttrs = rights.getAttributes().iterator();
+            Iterator<Attribute> feedAttrs = rights.getAttributes().iterator();
             //write the attributes
             while(feedAttrs.hasNext()){
                 Attribute feedAttr = (Attribute)feedAttrs.next();
@@ -377,39 +377,39 @@ public class FeedWriter{
     private void writeLogo(XMLStreamWriter writer, Logo logo) throws Exception{
         writer.writeStartElement("logo");
         if(logo.getAttributes() != null){
-            Iterator feedAttrs = logo.getAttributes().iterator();
+            Iterator<Attribute> feedAttrs = logo.getAttributes().iterator();
             //write the attributes
             while(feedAttrs.hasNext()){
                 Attribute feedAttr = (Attribute)feedAttrs.next();
                 writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
             }
         }
-        writer.writeCharacters(logo.getUri().getText());
+        writer.writeCharacters(logo.getAtomUri());
         writer.writeEndElement();        
     }
     
     private void writeIcon(XMLStreamWriter writer, Icon icon) throws Exception{
         writer.writeStartElement("icon");
         if(icon.getAttributes() != null){
-            Iterator feedAttrs = icon.getAttributes().iterator();
+            Iterator<Attribute> feedAttrs = icon.getAttributes().iterator();
             //write the attributes
             while(feedAttrs.hasNext()){
                 Attribute feedAttr = (Attribute)feedAttrs.next();
                 writer.writeAttribute(feedAttr.getName(),feedAttr.getValue());
             }
         }
-        writer.writeCharacters(icon.getUri().getText());
+        writer.writeCharacters(icon.getAtomUri());
         writer.writeEndElement(); 
     }
     
-    private void writeCategories(XMLStreamWriter writer, List categories) throws Exception{
+    private void writeCategories(XMLStreamWriter writer, List<Category> categories) throws Exception{
         
-        Iterator categoryList = categories.iterator();
+        Iterator<Category> categoryList = categories.iterator();
         while(categoryList.hasNext()){
             Category category = (Category)categoryList.next();
             writer.writeEmptyElement("category");                        
             if(category.getAttributes() != null){
-                Iterator feedAttrs = category.getAttributes().iterator();
+                Iterator<Attribute> feedAttrs = category.getAttributes().iterator();
                 //write the attributes
                 while(feedAttrs.hasNext()){
                     Attribute feedAttr = (Attribute)feedAttrs.next();
@@ -419,14 +419,14 @@ public class FeedWriter{
         }
     }
     
-    private void writeLinks(XMLStreamWriter writer, List links) throws Exception{
+    private void writeLinks(XMLStreamWriter writer, List<Link> links) throws Exception{
         
-        Iterator linksList = links.iterator();
+        Iterator<Link> linksList = links.iterator();
         while(linksList.hasNext()){
             Link link = (Link)linksList.next();
             writer.writeEmptyElement("link");
             if(link.getAttributes() != null){
-                Iterator feedAttrs = link.getAttributes().iterator();
+                Iterator<Attribute> feedAttrs = link.getAttributes().iterator();
                 //write the attributes
                 while(feedAttrs.hasNext()){
                     Attribute feedAttr = (Attribute)feedAttrs.next();
@@ -436,8 +436,8 @@ public class FeedWriter{
         }
     }
     
-    private void writeExtensions(XMLStreamWriter writer,List extensions) throws Exception{
-        Iterator extensionsList = extensions.iterator();
+    private void writeExtensions(XMLStreamWriter writer,List<Extension> extensions) throws Exception{
+        Iterator<Extension> extensionsList = extensions.iterator();
         while(extensionsList.hasNext()){
             Extension extension = (Extension)extensionsList.next();
 
@@ -452,7 +452,7 @@ public class FeedWriter{
             		writer.writeEmptyElement(prefix,localName,"");
             	}
                 if(extension.getAttributes() != null){
-                    Iterator feedAttrs = extension.getAttributes().iterator();
+                    Iterator<Attribute> feedAttrs = extension.getAttributes().iterator();
                     //write the attributes
                     while(feedAttrs.hasNext()){
                         Attribute feedAttr = (Attribute)feedAttrs.next();
@@ -469,7 +469,7 @@ public class FeedWriter{
             		writer.writeStartElement(prefix,localName,"");
             	}
                 if(extension.getAttributes() != null){
-                    Iterator feedAttrs = extension.getAttributes().iterator();
+                    Iterator<Attribute> feedAttrs = extension.getAttributes().iterator();
                     //write the attributes
                     while(feedAttrs.hasNext()){
                         Attribute feedAttr = (Attribute)feedAttrs.next();
@@ -485,15 +485,15 @@ public class FeedWriter{
         }
     }
     
-    protected void writeEntries(XMLStreamWriter writer, Map entries) throws Exception{
+    protected void writeEntries(XMLStreamWriter writer, Map<String,Entry> entries) throws Exception{
 
         //print out the entries.
-        Iterator entryItr = entries.values().iterator();
+        Iterator<Entry> entryItr = entries.values().iterator();
         while(entryItr.hasNext()){
             Entry entry = (Entry)entryItr.next();
             writer.writeStartElement("entry");
             if(entry.getAttributes() != null){
-                Iterator entryAttrs = entry.getAttributes().iterator();
+                Iterator<Attribute> entryAttrs = entry.getAttributes().iterator();
                 //write the attributes
                 while(entryAttrs.hasNext()){
                     Attribute entryAttr = (Attribute)entryAttrs.next();
@@ -555,7 +555,7 @@ public class FeedWriter{
     	boolean wrapInXhtmlDiv = false;
         writer.writeStartElement("summary");
         if(summary.getAttributes() != null){
-            Iterator feedAttrs = summary.getAttributes().iterator();
+            Iterator<Attribute> feedAttrs = summary.getAttributes().iterator();
             //write the attributes
             while(feedAttrs.hasNext()){
                 Attribute feedAttr = (Attribute)feedAttrs.next();
@@ -592,7 +592,7 @@ public class FeedWriter{
         boolean externalLink = false;
         boolean wrapInXhtmlDiv = false;
         if(content.getAttributes() != null){
-            Iterator contentAttrs = content.getAttributes().iterator();
+            Iterator<Attribute> contentAttrs = content.getAttributes().iterator();
 
             
             while(contentAttrs.hasNext()){
@@ -643,7 +643,7 @@ public class FeedWriter{
         //open the source element
         writer.writeStartElement("source");
         if(source.getAttributes() != null){
-            Iterator sourceAttrs = source.getAttributes().iterator();
+            Iterator<Attribute> sourceAttrs = source.getAttributes().iterator();
             //write the attributes
             while(sourceAttrs.hasNext()){
                 Attribute sourceAttr = (Attribute)sourceAttrs.next();

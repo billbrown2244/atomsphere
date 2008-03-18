@@ -21,6 +21,7 @@ Change History:
     2006-11-12 wbrown - added javadoc documentation.
     2007-02-22 wbrown - removed deprecated methods.
     2007-06-20 wbrown - added 2 methods readFeedToString(Feed feed) and readEntryToString(Entry entry)
+    2008-03-18 wbrown - added factory methods for all the sub elements.
  */
 package com.colorful.atom.beans;
 
@@ -31,6 +32,7 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,6 +48,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 /**
  * This class reads and writes atom feeds to and from xml files and beans or xml strings.
+ * It conatins all of the factory methods for building immutable copies of the elements.
  * @author Bill Brown
  *
  */
@@ -135,8 +138,8 @@ public class FeedDoc {
     }
 
     /**
-     * This method reads an atom file from the internet and writes it out to an atom feed string.
-     * @param url the location of the atom file on the internet
+     * This method reads an atom file from the Internet and writes it out to an atom feed string.
+     * @param url the location of the atom file on the Internet
      * @return an atom feed document string.
      */
     public static String readFeedToString(URL url){
@@ -189,7 +192,7 @@ public class FeedDoc {
             XMLStreamWriter writer = new IndentingXMLStreamWriter(outputFactory.createXMLStreamWriter(theString));
             Map<String,Entry> entries = new TreeMap<String,Entry>();
             entries.put(entry.getUpdated().getText(),entry);
-            Feed wrapper = new Feed(entry.getId(),entry.getTitle(),entry.getUpdated(),entry.getRights()
+            Feed wrapper = buildFeed(entry.getId(),entry.getTitle(),entry.getUpdated(),entry.getRights()
             		,null,null,null,null,null,null,null,null,null,null,entries);
             new FeedWriter().writeEntries(writer, wrapper.getEntries());
             writer.flush();
@@ -227,7 +230,7 @@ public class FeedDoc {
 
     /**
      * This method reads an atom file from the Internet into a Feed bean.
-     * @param url the internet location of an atom file.
+     * @param url the Internet location of an atom file.
      * @return the atom Feed bean.
      * @throws Exception if the URL cannot be parsed into a Feed bean.
      */
@@ -249,51 +252,51 @@ public class FeedDoc {
             attributes.add(lang_en);
             
             
-            Generator generator = new Generator(new Attribute("uri","http://www.colorfulsoftware.com/projects/atomsphere"),
-            		new Attribute("version","2.0.0.0"),null,"Atomsphere");
+            Generator generator = buildGeneratorGenerator(buildAttribute("uri","http://www.colorfulsoftware.com/projects/atomsphere"),
+            		buildAttribute("version","2.0.0.0"),null,"Atomsphere");
 
-            Id id = new Id("http://www.colorfulsoftware.com/atom.xml",null);
+            Id id = buildId("http://www.colorfulsoftware.com/atom.xml",null);
 
-            Updated updated = new Updated(Calendar.getInstance().getTime());
+            Updated updated = buildUpdated(Calendar.getInstance().getTime());
 
-            Title title = new Title("test feed",null);
+            Title title = buildTitle("test feed",null);
 
             List<Contributor> contributors = new LinkedList<Contributor>();
-            Contributor contributor = new Contributor(new Name("Mad Dog"),null
-            		,new Email("info@maddog.net"),null,null);
+            Contributor contributor = buildContributor(new Name("Mad Dog"),null
+            		,buildEmail("info@maddog.net"),null,null);
             contributors.add(contributor);
             
-            Rights rights = new Rights("GPL 1.0",null);
+            Rights rights = buildRights("GPL 1.0",null);
 
-            Icon icon = new Icon("http://host/images/icon.png",null);
+            Icon icon = buildIcon("http://host/images/icon.png",null);
 
-            Logo logo = new Logo("http://host/images/logo.png",null);
+            Logo logo = buildLogo("http://host/images/logo.png",null);
 
             List<Category> categories = new LinkedList<Category>();
-            Category category = new Category(new Attribute("term","music")
-            ,new Attribute("scheme","http://mtv.com/genere")
-            ,new Attribute("label","music"),null,null);
+            Category category = buildCategory(new Attribute("term","music")
+            ,buildAttribute("scheme","http://mtv.com/genere")
+            ,buildAttribute("label","music"),null,null);
             categories.add(category);
             
             List<Link> links = new LinkedList<Link>();
-            Link link = new Link(new Attribute("href","http://www.yahoo.com")
-            	,new Attribute("rel","self"),null,new Attribute("hreflang","en-US")
+            Link link = buildLink(buildAttribute("href","http://www.yahoo.com")
+            	,buildAttribute("rel","self"),null,buildAttribute("hreflang","en-US")
             ,null,null,null,null);
             links.add(link);
             
             List<Extension> extensions = new LinkedList<Extension>();
-            Extension extension = new Extension("xhtml:div",null
+            Extension extension = buildExtension("xhtml:div",null
             		,"<span style='color:red;'>hello there</span>");
             extensions.add(extension);
             
             List<Author> authors = new LinkedList<Author>();
-            authors.add(new Author(new Name("Bill Brown"),null,null,null,null));
-            Entry entry = new Entry(
-            new Id("http://www.colorfulsoftware.com/atom.xml#entry1",null)
-            ,new Title("an exapmle atom entry",null)
-            ,new Updated(Calendar.getInstance().getTime())
+            authors.add(buildAuthor(buildName("Bill Brown"),null,null,null,null));
+            Entry entry = buildEntry(
+            		buildId("http://www.colorfulsoftware.com/atom.xml#entry1",null)
+            ,buildTitle("an exapmle atom entry",null)
+            ,buildUpdated(Calendar.getInstance().getTime())
             ,null
-            ,new Content("hello. and welcome the the atomsphere feed builder for atom 1.0 builds.  I hope it is useful for you.",null)
+            ,buildContent("hello. and welcome the the atomsphere feed builder for atom 1.0 builds.  I hope it is useful for you.",null)
             ,authors
             ,null
             ,null
@@ -309,7 +312,7 @@ public class FeedDoc {
             entries.put(entry.getUpdated().getText(),entry);
             
             
-            Feed feed = new Feed(id,title,updated,rights
+            Feed feed = buildFeed(id,title,updated,rights
             		,null,categories,contributors,links
             		,attributes,extensions,generator,null,icon,logo,entries);
             
@@ -322,4 +325,361 @@ public class FeedDoc {
         }
     }
 
+    /**
+     * 
+     * @param id the unique id element (optional)
+     * @param title the title element (optional)
+     * @param updated the updated element (optional)
+     * @param rights the rights element (optional)
+     * @param authors a list of author elements (optional)
+     * @param categories a list of category elements (optional)
+     * @param contributors a list of contributor elements (optional)
+     * @param links a list of link elements (optional)
+     * @param attributes additional attributes (optional)
+     * @param extensions a list of extension elements (optional)
+     * @param generator the generator element (optional)
+     * @param subtitle the subtitle element (optional)
+     * @param icon the icon element (optional)
+     * @param logo the logo element (optional)
+     * @param entries a list of entry elements (optional)
+     * @return an immutable Feed object.
+     * @throws AtomSpecException
+     */
+    public static Feed buildFeed(Id id
+			,Title title
+			,Updated updated
+			,Rights rights
+			,List<Author> authors
+			,List<Category> categories    		
+			,List<Contributor> contributors
+			,List<Link> links
+			,List<Attribute> attributes
+			,List<Extension> extensions
+			,Generator generator
+			,Subtitle subtitle
+			,Icon icon
+			,Logo logo
+			,Map<String,Entry> entries) throws AtomSpecException{
+    	return new Feed(id,title,updated,rights,authors,categories,contributors
+    			,links,attributes,extensions,generator,subtitle,icon,logo,entries);
+    }
+    
+    /**
+     * 
+     * @param name the attribute name.
+     * @param value the attribute value.
+     * @return an immutable Attribute object.
+     */
+    public static Attribute buildAttribute(String name, String value){
+    	return new Attribute(name,value);
+    }
+    
+    /**
+     * 
+     * @param name the name element. (required)
+     * @param uri the uri element.
+     * @param email the email element.
+     * @param attributes additional attributes.
+     * @param extensions a list of extension elements.
+     * @return an immutable Author object.
+     * @throws AtomSpecException
+     */
+    public static Author buildAuthor(Name name, URI uri, Email email
+    		, List<Attribute> attributes
+			, List<Extension> extensions) throws AtomSpecException{
+    	return new Author(name,uri,email,attributes,extensions);
+    }
+    
+    /**
+     * 
+     * @param term the term attribute (required)
+     * @param scheme the scheme attribute.
+     * @param label the label attribute.
+     * @param attributes additional attributes or any or all of the signature attributes.
+     * @param content the undefined element content.
+     * @return an immutable Category object.
+     * @throws AtomSpecException
+     */
+    public static Category buildCategory(Attribute term, Attribute scheme
+    		, Attribute label, List<Attribute> attributes
+    		, String content) throws AtomSpecException {
+    	return new Category(term,scheme,label,attributes,content);
+    }
+    
+    /**
+     * 
+     * @param content the content of this element
+     * @param attributes additional attributes.
+     * @return an immutable Content object.
+     */
+    public static Content buildContent(String content, List<Attribute> attributes){
+    	return new Content(content,attributes);
+    }
+    
+    /**
+     * 
+     * @param name the name element. (required)
+     * @param uri the uri element.
+     * @param email the email element.
+     * @param attributes additional attributes.
+     * @param extensions a list of extension elements.
+     * @return an immutable Contributor object.
+     * @throws AtomSpecException
+     */
+    public static Contributor buildContributor(Name name
+    		, URI uri
+    		, Email email
+    		, List<Attribute> attributes
+			, List<Extension> extensions) throws AtomSpecException{
+    	return new Contributor(name,uri,email,attributes,extensions);
+    }
+    
+    /**
+     * 
+     * @param email a human-readable email for the person
+     * @return an immutable Email object.
+     */
+    public static Email buildEmail(String email){
+    	return new Email(email);
+    }
+    
+    /**
+     * 
+     * @param id the id element (required)
+     * @param title the title element (required)
+     * @param updated the updated element (required)
+     * @param rights the rights element (optional)
+     * @param content the content element (optional)
+     * @param authors a list of author elements (optional)
+     * @param categories a list of category elements (optional)
+     * @param contributors a list of contributor elements (optional)
+     * @param links a list of link elements (optional)
+     * @param attributes additional attributes.(optional)
+     * @param extensions a list of extension elements (optional)
+     * @param published the published element (optional)
+     * @param summary the summary element (optional)
+     * @param source the source element (optional)
+     * @return an immutable Entry object.
+     * @throws AtomSpecException
+     */
+    public static Entry buildEntry(Id id
+    		,Title title
+    		,Updated updated
+    		,Rights rights
+    		,Content content
+    		,List<Author> authors
+    		,List<Category> categories    		
+    		,List<Contributor> contributors
+    		,List<Link> links
+    		,List<Attribute> attributes
+    		,List<Extension> extensions    		
+    		,Published published
+    		,Summary summary
+    		,Source source) throws AtomSpecException {
+    	return new Entry(id,title,updated,rights,content
+    			,authors,categories,contributors,links
+    			,attributes,extensions,published,summary,source);
+    }
+    
+    /**
+     * 
+     * @param elementName the name of the extension element.
+     * @param attributes additional attributes.
+     * @param content the content of the extension element.
+     * @return an immutable Extension object.
+     */
+    public static Extension buildExtension(String elementName
+    		, List<Attribute> attributes, String content){
+    	return new Extension(elementName,attributes,content);
+    }
+
+    /**
+     * 
+     * @param uri the URI reference attribute.
+     * @param version the version attribute.
+     * @param attributes additional attributes.
+     * @param text the text content.
+     * @return an immutable Generator object.
+     */
+    public static Generator buildGeneratorGenerator(Attribute uri
+    		,Attribute version, List<Attribute> attributes, String text){
+    	return new Generator(uri,version,attributes,text);
+    }
+    
+    /**
+     * 
+     * @param atomUri the URI reference.
+     * @param attributes additional attributes.
+     * @return an immutable Icon object.
+     */
+    public static Icon buildIcon(String atomUri, List<Attribute> attributes){
+    	return new Icon(atomUri,attributes);
+    }
+    
+    /**
+     * 
+     * @param atomUri the URI reference.
+     * @param attributes additional attributes.
+     * @return an immutable Id object.
+     */
+    public static Id buildId(String atomUri, List<Attribute> attributes){
+    	return new Id(atomUri,attributes);
+    }
+    
+    /**
+     * 
+     * @param href the href attribute.
+     * @param rel the rel attribute.
+     * @param type the type attribute.
+     * @param hreflang the hreflang attribute.
+     * @param title the title attribute.
+     * @param length the length attribute.
+     * @param attributes additional attributes or any or all of the signature attributes.
+     * @param content the undefined link content.
+     * @return an immutable Link object.
+     * @throws AtomSpecException
+     */
+    public static Link buildLink(Attribute href, Attribute rel, Attribute type
+    		, Attribute hreflang, Attribute title
+    		,Attribute length, List<Attribute> attributes
+    		, String content) throws AtomSpecException {
+    	return new Link(href,rel,type,hreflang
+    			,title,length,attributes,content);
+    }
+    
+    /**
+     * 
+     * @param atomUri the logo uri reference.
+     * @param attributes additional attributes.
+     * @return an immutable Logo object.
+     */
+    public static Logo buildLogo(String atomUri, List<Attribute> attributes){
+    	return new Logo(atomUri,attributes);
+    }
+    
+    /**
+     * 
+     * @param text a human-readable name for the person
+     * @return an immutable Name object.
+     */
+    public static Name buildName(String name){
+    	return new Name(name);
+    }
+    
+    /**
+     * 
+     * @param published the date formatted to [RFC3339]
+     * @return an immutable Published object.
+     */
+    public static Published buildPublished(Date published){
+    	return new Published(published);
+    }
+    
+    /**
+     * 
+     * @param rights the rights text.
+     * @param attributes additional attributes.
+     * @return an immutable Rights object.
+     */
+    public static Rights buildRights(String rights
+    		, List<Attribute> attributes){
+    	return new Rights(rights,attributes);
+    }
+    
+    /**
+     * 
+     * @param id the unique id element (optional)
+     * @param title the title element (optional)
+     * @param updated the updated element (optional)
+     * @param rights the rights element (optional)
+     * @param authors a list of author elements (optional)
+     * @param categories a list of category elements (optional)
+     * @param contributors a list of contributor elements (optional)
+     * @param links a list of link elements (optional)
+     * @param attributes additional attributes (optional)
+     * @param extensions a list of extension elements (optional)
+     * @param generator the generator element (optional)
+     * @param subtitle the subtitle element (optional)
+     * @param icon the icon element (optional)
+     * @param logo the logo element (optional)
+     * @return an immutable Source object.
+     * @throws AtomSpecException
+     */
+    public static Source buildSource(Id id
+    		,Title title
+    		,Updated updated
+    		,Rights rights
+    		,List<Author> authors
+    		,List<Category> categories    		
+    		,List<Contributor> contributors
+    		,List<Link> links
+    		,List<Attribute> attributes
+    		,List<Extension> extensions
+    		,Generator generator
+    		,Subtitle subtitle
+    		,Icon icon
+    		,Logo logo) throws AtomSpecException {
+    	return new Source(id,title,updated,rights,authors
+    			,categories,contributors,links,attributes
+    			,extensions,generator,subtitle,icon,logo);
+    }
+    
+    /**
+     * 
+     * @param subtitle the subtitle text.
+     * @param attributes additional attributes.
+     * @return an immutable Subtitle object.
+     */
+    public static Subtitle buildSubtitle(String subtitle
+    		, List<Attribute> attributes){
+    	return new Subtitle(subtitle,attributes);
+    }
+    
+    /**
+     * 
+     * @param summary the summary text.
+     * @param attributes additional attributes.
+     * @return an immutable Summary object.
+     */
+    public static Summary buildSummary(String summary
+    		, List<Attribute> attributes){
+    	return new Summary(summary,attributes);
+    }
+    
+    /**
+     * 
+     * @param title the title text
+     * @param attributes additional attributes.
+     * @return an immutable Title object.
+     */
+    public static Title buildTitle(String title
+    		, List<Attribute> attributes){
+    	return new Title(title,attributes);
+    }
+    
+    /**
+     * 
+     * @param published the date formatted to [RFC3339]
+     * @return a immutable Updated object.
+     */
+    public static Updated buildUpdated(Date updated){
+    	return new Updated(updated);
+    }
+    
+    /**
+     * 
+     * @param uri the content of the uri according to Section 7 of [RFC3986]
+     * @return and immutable URI object.
+     */
+    public static URI buildURI(String uri){
+    	return new URI(uri);
+    }
+    
+    //used internally by feed reader and writer
+    static AtomPersonConstruct buildAtomPersonConstruct(Name name
+    		, URI uri, Email email
+    		, List<Attribute> attributes
+    		, List<Extension> extensions) throws AtomSpecException {
+    	return new AtomPersonConstruct(name,uri,email,attributes,extensions);
+    }
 }

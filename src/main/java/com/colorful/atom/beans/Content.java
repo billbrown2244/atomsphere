@@ -72,12 +72,8 @@ public class Content {
     private final List<Attribute> attributes;
     private final String content;
     
-    /**
-     * 
-     * @param content the text content of the element
-     * @param attributes the attributes 
-     */
-    public Content(String content, List<Attribute> attributes){
+    //use the factory method in the FeedDoc.
+    Content(String content, List<Attribute> attributes){
     	this.content = content;
     	
     	if(attributes == null){

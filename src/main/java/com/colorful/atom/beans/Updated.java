@@ -34,13 +34,10 @@ import java.util.Date;
  */
 public class Updated {
     
-private final AtomDateConstruct updated;
+	private final AtomDateConstruct updated;
 	
-    /**
-     * 
-     * @param published the date formatted to [RFC3339]
-     */
-    public Updated(Date updated){
+	//use the factory method in the FeedDoc.
+    Updated(Date updated){
         this.updated = new AtomDateConstruct(updated);
     }
     
