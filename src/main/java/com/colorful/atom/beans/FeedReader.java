@@ -474,7 +474,6 @@ public class FeedReader{
 				break;				
 			}
 		}
-		System.out.println("in breakout xhtml = "+xhtml.toString().replaceAll("<br></br>","<br />").replaceAll("<hr></hr>","<hr />"));
 		return xhtml.toString().replaceAll("<br></br>","<br />").replaceAll("<hr></hr>","<hr />");
 	}
 
@@ -503,8 +502,7 @@ public class FeedReader{
 	}
 
 	private Logo readLogo(XMLStreamReader reader) throws Exception{
-		List<Attribute> attributes = getAttributes(reader,null);
-		return FeedDoc.buildLogo(reader.getElementText(), attributes);
+		return FeedDoc.buildLogo(getAttributes(reader,null),reader.getElementText());
 	}
 
 	private List<Link> readLink(XMLStreamReader reader, List<Link> links) throws Exception{
@@ -516,13 +514,11 @@ public class FeedReader{
 	}
 
 	private Id readId(XMLStreamReader reader) throws Exception{
-		List<Attribute> attributes = getAttributes(reader,null);
-		return FeedDoc.buildId(reader.getElementText(), attributes);
+		return FeedDoc.buildId(getAttributes(reader,null),reader.getElementText());
 	}
 
 	private Icon readIcon(XMLStreamReader reader) throws Exception{
-		List<Attribute> attributes = getAttributes(reader,null);
-		return FeedDoc.buildIcon(reader.getElementText(), attributes);
+		return FeedDoc.buildIcon(getAttributes(reader,null),reader.getElementText());
 	}
 
 	private Generator readGenerator(XMLStreamReader reader) throws Exception{

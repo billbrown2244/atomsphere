@@ -39,8 +39,8 @@ public class Icon {
 	private final AtomURIConstruct icon;
 
 	//use the factory method in the FeedDoc.
-	Icon(String atomUri, List<Attribute> attributes){
-		this.icon = new AtomURIConstruct(atomUri,attributes);
+	Icon(List<Attribute> attributes, String atomUri){
+		this.icon = new AtomURIConstruct(attributes,atomUri);
 	}
 
 	/** 

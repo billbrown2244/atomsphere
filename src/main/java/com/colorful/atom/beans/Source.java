@@ -75,8 +75,8 @@ public class Source {
     	this.generator = (generator == null)?null: new Generator(generator.getAttributes()
     			,generator.getText());
     	this.subtitle = (subtitle == null)?null: new Subtitle(subtitle.getText(),subtitle.getAttributes());
-    	this.icon = (icon == null)?null: new Icon(icon.getAtomUri(),icon.getAttributes());
-    	this.logo = (logo == null)?null: new Logo(logo.getAtomUri(),logo.getAttributes());
+    	this.icon = (icon == null)?null: new Icon(icon.getAttributes(),icon.getAtomUri());
+    	this.logo = (logo == null)?null: new Logo(logo.getAttributes(),logo.getAtomUri());
     }
 
     /**
@@ -94,7 +94,7 @@ public class Source {
      * @return the icon for this element.
      */
     public Icon getIcon() {
-        return (icon == null)?null: new Icon(icon.getAtomUri(),icon.getAttributes());
+        return (icon == null)?null: new Icon(icon.getAttributes(),icon.getAtomUri());
     }
 
     /**
@@ -102,7 +102,7 @@ public class Source {
      * @return the logo for this element.
      */
     public Logo getLogo() {
-        return (logo == null)?null: new Logo(logo.getAtomUri(),logo.getAttributes());
+        return (logo == null)?null: new Logo(logo.getAttributes(),logo.getAtomUri());
     }
 
     /**

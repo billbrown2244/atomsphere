@@ -34,10 +34,9 @@ class AtomURIConstruct {
      * 
      * @param atomUri the unique identifier for the document.
      */
-    public AtomURIConstruct(String atomUri, List<Attribute> attributes){
-        this.atomUri = atomUri;
+    public AtomURIConstruct(List<Attribute> attributes,String atomUri){
         
-        if(attributes == null){
+    	if(attributes == null){
     		this.attributes = null;
     	}else{
     		this.attributes = new LinkedList<Attribute>();
@@ -47,6 +46,8 @@ class AtomURIConstruct {
     			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
     		}
     	}
+        
+        this.atomUri = atomUri;
     }
     
     /**

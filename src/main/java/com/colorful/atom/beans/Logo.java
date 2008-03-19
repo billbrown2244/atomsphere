@@ -39,8 +39,8 @@ public class Logo {
 	private final AtomURIConstruct logo;
 
 	//use the factory method in the FeedDoc.
-	Logo(String atomUri, List<Attribute> attributes){
-		this.logo = new AtomURIConstruct(atomUri,attributes);
+	Logo(List<Attribute> attributes, String atomUri){
+		this.logo = new AtomURIConstruct(attributes,atomUri);
 	}
 
 	/** 

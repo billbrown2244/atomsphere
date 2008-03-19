@@ -56,7 +56,7 @@ class AtomEntrySourceAdaptor {
 			,List<Attribute> attributes
 			,List<Extension> extensions
 	) throws AtomSpecException {
-		this.id = (id == null)?null: new Id(id.getAtomUri(),id.getAttributes());
+		this.id = (id == null)?null: new Id(id.getAttributes(),id.getAtomUri());
 		this.title = (title == null)?null: new Title(title.getText(),title.getAttributes());
 		this.updated = (updated == null)?null: new Updated(updated.getDateTime());
 		this.rights = (rights == null)?null: new Rights(rights.getText(),rights.getAttributes());
@@ -277,7 +277,7 @@ class AtomEntrySourceAdaptor {
 	  * @return the unique identifier for this entry.
 	  */
 	 public Id getId() {
-		 return (id == null)?null:new Id(id.getAtomUri(),id.getAttributes());
+		 return (id == null)?null:new Id(id.getAttributes(),id.getAtomUri());
 	 }
 
 	 /**

@@ -423,8 +423,8 @@ public class FeedDoc {
      * @param attributes additional attributes.
      * @return an immutable Icon object.
      */
-    public static Icon buildIcon(String atomUri, List<Attribute> attributes){
-    	return new Icon(atomUri,attributes);
+    public static Icon buildIcon(List<Attribute> attributes, String atomUri){
+    	return new Icon(attributes,atomUri);
     }
     
     /**
@@ -433,8 +433,8 @@ public class FeedDoc {
      * @param attributes additional attributes.
      * @return an immutable Id object.
      */
-    public static Id buildId(String atomUri, List<Attribute> attributes){
-    	return new Id(atomUri,attributes);
+    public static Id buildId(List<Attribute> attributes, String atomUri){
+    	return new Id(attributes,atomUri);
     }
     
     /**
@@ -456,8 +456,8 @@ public class FeedDoc {
      * @param attributes additional attributes.
      * @return an immutable Logo object.
      */
-    public static Logo buildLogo(String atomUri, List<Attribute> attributes){
-    	return new Logo(atomUri,attributes);
+    public static Logo buildLogo(List<Attribute> attributes, String atomUri){
+    	return new Logo(attributes,atomUri);
     }
     
     /**
@@ -612,7 +612,7 @@ public class FeedDoc {
             genAttrs.add(buildAttribute("version","2.0.0.0"));
             Generator generator = buildGenerator(genAttrs,"Atomsphere");
 
-            Id id = buildId("http://www.colorfulsoftware.com/atom.xml",null);
+            Id id = buildId(null,"http://www.colorfulsoftware.com/atom.xml");
 
             Updated updated = buildUpdated(Calendar.getInstance().getTime());
 
@@ -625,9 +625,9 @@ public class FeedDoc {
             
             Rights rights = buildRights("GPL 1.0",null);
 
-            Icon icon = buildIcon("http://host/images/icon.png",null);
+            Icon icon = buildIcon(null,"http://host/images/icon.png");
 
-            Logo logo = buildLogo("http://host/images/logo.png",null);
+            Logo logo = buildLogo(null,"http://host/images/logo.png");
 
             List<Attribute> catAttrs = new LinkedList<Attribute>();
             catAttrs.add(buildAttribute("term","music"));
@@ -663,7 +663,7 @@ public class FeedDoc {
             List<Author> authors = new LinkedList<Author>();
             authors.add(buildAuthor(buildName("Bill Brown"),null,null,null,null));
             Entry entry = buildEntry(
-            		buildId("http://www.colorfulsoftware.com/atom.xml#entry1",null)
+            		buildId(null,"http://www.colorfulsoftware.com/atom.xml#entry1")
             ,buildTitle("an exapmle atom entry",null)
             ,buildUpdated(Calendar.getInstance().getTime())
             ,null
