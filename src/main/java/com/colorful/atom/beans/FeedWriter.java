@@ -48,6 +48,13 @@ public class FeedWriter{
      */
     public void writeFeed(XMLStreamWriter writer, Feed feed,String encoding,String version) throws Exception{
         
+    	//make sure the feed is sorted before it is written out to the file.
+    	//this prevents the client code from having to 
+    	//maintain the sorting during usage
+    	feed = feed.checkForAndApplyExtension(FeedDoc.buildAttribute(
+    			"xmlns:sort"
+    			,"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
+    	
         //write the xml header.
         writer.writeStartDocument(encoding,version);
         

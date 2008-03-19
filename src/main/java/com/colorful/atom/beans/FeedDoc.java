@@ -439,8 +439,7 @@ public class FeedDoc {
     
     /**
      * 
-     * @param attributes the attributes list which must contain "href" /
-     * 		and may contain "rel", "type", "hreflang", "title", "length" or others
+     * @param attributes the attributes list which must contain "href" and may contain "rel", "type", "hreflang", "title", "length" or others
      * @param content the undefined link content.
      * @return an immutable Link object.
      * @throws AtomSpecException
