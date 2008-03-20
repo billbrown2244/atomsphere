@@ -61,9 +61,26 @@ import javax.xml.stream.XMLStreamWriter;
  */
 public class FeedDoc {
 
-    public static final Attribute atomBase = new Attribute("xmlns","http://www.w3.org/2005/Atom");
-    public static final Attribute lang_en = new Attribute("xml:lang","en-US");
-    public static String encoding = "utf-8";
+	/**
+	 * the default atom xml namespace of "http://www.w3.org/2005/Atom" 
+	 */
+    public static final Attribute atomBase = 
+    	new Attribute("xmlns","http://www.w3.org/2005/Atom");
+    
+    /**
+     * the default library language of "en-US" 
+     */
+    public static final Attribute lang_en = 
+    	new Attribute("xml:lang","en-US");
+    
+    /**
+     * the default document encoding of "UTF-8"
+     */
+    public static String encoding = "UTF-8";
+    
+    /**
+     * the default XML version of "1.0"
+     */
     public static String xml_version = "1.0";
     
     /**
