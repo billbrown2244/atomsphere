@@ -22,14 +22,17 @@ Change History:
     2007-02-22 wbrown - removed deprecated methods.
     2007-06-20 wbrown - added 2 methods readFeedToString(Feed feed) and readEntryToString(Entry entry)
     2008-03-18 wbrown - added factory methods for all the sub elements. Added new file write methods 
-    					to decouple dependency on stax-utils. 
+    					to decouple dependency on stax-utils.  Added new input methods to read 
+    					input streams into feeds an strings.
  */
 package com.colorful.atom.beans;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -51,7 +54,7 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 /**
- * This class reads and writes atom feeds to and from xml files and beans or xml strings.
+ * This class reads and writes atom feeds to and from xml files, feed objecs, streams or xml strings.
  * It contains all of the factory methods for building immutable copies of the elements.
  * @author Bill Brown
  *
@@ -88,16 +91,17 @@ public class FeedDoc {
     }
     
     /**
-     * For example: to get an indented output using the stax-utils library 
-     * 	pass in 
-     * 	<code>
-     * 			XmlStreamWriter writer = new IndentingXMLStreamWriter(
-    						XMLOutputFactory.newInstance()
-    						.createXMLStreamWriter(
-    							new FileOutputStream(outputFilePath)
-    							,encoding));
-    			FeedDoc.writeFeedDoc(writer,myFeed,null,null);	
-    	</code>
+     * For example: to get an indented xml output using the stax-utils library 
+     * 	do this: 
+     * 	<pre>
+XmlStreamWriter writer = 
+	new IndentingXMLStreamWriter(
+ 		XMLOutputFactory.newInstance()
+   			.createXMLStreamWriter(
+   				new FileOutputStream(outputFilePath)
+  				,encoding));
+FeedDoc.writeFeedDoc(writer,myFeed,null,null);	
+    	</pre>
      * @param output the target output for the feed.
      * @param feed the atom feed object containing the content of the feed
      * @param encoding the file encoding (default is UTF-8)
@@ -150,13 +154,34 @@ public class FeedDoc {
         }
     }
 
+	/**
+	 * This method reads an input stream and outputs an atom 1.0 xml document string.
+	 * @param inputStream the stream containing the atom xml to be read.
+	 * @return  an atom feed document string.
+	 */
+	public static String readFeedToString(InputStream inputStream){
+		StringBuffer feedXML = new StringBuffer();
+        try{
+            BufferedReader reader = new BufferedReader( new InputStreamReader(inputStream));
+            String line = null;
+            while((line = reader.readLine()) != null){
+                feedXML.append(line);
+            }
+            reader.close();
+        }catch(Exception e){
+            System.err.println("error creating xml string from feed.");
+            e.printStackTrace();
+        }
+        return feedXML.toString();
+	}
+	
     /**
      * This method reads a file from disk and outputs an atom 1.0 xml document string.
      * @param file the atom xml file to be read
      * @return an atom feed document string.
      */
     public static String readFeedToString(File file){
-        StringBuffer feedXML = new StringBuffer();
+    	StringBuffer feedXML = new StringBuffer();
         try{
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line = null;
@@ -168,29 +193,24 @@ public class FeedDoc {
         }catch(Exception e){
             System.err.println("error creating xml string from feed.");
             e.printStackTrace();
+            return null;
         }
         return feedXML.toString();
     }
 
     /**
-     * This method reads an atom file from the Internet and writes it out to an atom feed string.
+     * This method reads an atom file from a URL and writes it out to an atom feed string.
      * @param url the location of the atom file on the Internet
      * @return an atom feed document string.
      */
     public static String readFeedToString(URL url){
-        StringBuffer feedXML = new StringBuffer();
-        try{
-            BufferedReader reader = new BufferedReader( new InputStreamReader(url.openStream()));
-            String line = null;
-            while((line = reader.readLine()) != null){
-                feedXML.append(line);
-            }
-            reader.close();
-        }catch(Exception e){
+    	try{
+    		return readFeedToString(url.openStream());
+    	}catch(Exception e){
             System.err.println("error creating xml string from feed.");
             e.printStackTrace();
+            return null;
         }
-        return feedXML.toString();
     }
 
     /**
@@ -259,19 +279,29 @@ public class FeedDoc {
      */
     public static Feed readFeedToBean(File file) throws Exception{
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        XMLStreamReader reader = inputFactory.createXMLStreamReader(new java.io.FileInputStream(file));
+        XMLStreamReader reader = inputFactory.createXMLStreamReader(new FileInputStream(file));
         return new FeedReader().readFeed(reader);
     }
 
     /**
-     * This method reads an atom file from the Internet into a Feed bean.
-     * @param url the Internet location of an atom file.
+     * This method reads an atom file from a URL into a Feed bean.
+     * @param url the Internet network location of an atom file.
      * @return the atom Feed bean.
      * @throws Exception if the URL cannot be parsed into a Feed bean.
      */
     public static Feed readFeedToBean(URL url) throws Exception{
-        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        XMLStreamReader reader = inputFactory.createXMLStreamReader(url.openStream());
+        return readFeedToBean(url.openStream());
+    }
+    
+    /**
+     * This method reads an atom file from an input stream into a Feed bean.
+     * @param inputStream the input stream containing an atom file.
+     * @return the atom Feed bean.
+     * @throws Exception if the URL cannot be parsed into a Feed bean.
+     */
+    public static Feed readFeedToBean(InputStream inputStream) throws Exception{
+    	XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        XMLStreamReader reader = inputFactory.createXMLStreamReader(inputStream);
         return new FeedReader().readFeed(reader);
     }
 

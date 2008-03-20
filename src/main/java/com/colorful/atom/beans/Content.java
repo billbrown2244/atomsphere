@@ -67,6 +67,11 @@ import java.util.List;
  */
 public class Content {
 	
+	/**
+	 * 
+	 * An enumeration of the different types of supported content.
+	 *
+	 */
 	public enum ContentType {TEXT,HTML,XHTML,OTHER,EXTERNAL}; 
 	
     private final List<Attribute> attributes;
