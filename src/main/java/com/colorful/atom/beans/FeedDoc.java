@@ -46,15 +46,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javanet.staxutils.IndentingXMLStreamWriter;
-
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 /**
- * This class reads and writes atom feeds to and from xml files, feed objecs, streams or xml strings.
+ * This class reads and writes atom feeds to and from xml files, feed objects, streams or xml strings.
  * It contains all of the factory methods for building immutable copies of the elements.
  * @author Bill Brown
  *
@@ -229,6 +227,31 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
             return null;
         }
     }
+    
+    /**
+     * This method reads in a Feed bean and returns the contents as an atom feed string
+     * with indented formatting (requires stax-utils javanet.staxutils.IndentingXMLStreamWriter
+     * for indented printing).  It will fall back to <pre>readFeedToString(Feed)</pre> 
+     * if IndentingXMLStreamWriter is not in the classpath.
+     * @param feed the feed to be converted to an atom string.
+     * @return an atom feed document string.
+     */
+    public static String readFeedToStringPretty(Feed feed){
+    	
+    	StringWriter theString = new StringWriter();
+    	try{
+            XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+            XMLStreamWriter writer = new javanet.staxutils.IndentingXMLStreamWriter(outputFactory.createXMLStreamWriter(theString));
+            new FeedWriter().writeFeed(writer,feed,encoding,xml_version);
+            writer.flush();
+            writer.close();
+        }catch(Exception e){
+            System.err.println("error creating indented xml string from feed trying non indented.");
+            e.printStackTrace();
+            return readFeedToString(feed);
+        }
+        return theString.toString();
+    }
 
     /**
      * This method reads in a Feed bean and returns the contents as an atom feed string.
@@ -240,7 +263,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
     	StringWriter theString = new StringWriter();
     	try{
             XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-            XMLStreamWriter writer = new IndentingXMLStreamWriter(outputFactory.createXMLStreamWriter(theString));
+            XMLStreamWriter writer = outputFactory.createXMLStreamWriter(theString);
             new FeedWriter().writeFeed(writer,feed,encoding,xml_version);
             writer.flush();
             writer.close();
@@ -261,7 +284,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
     	StringWriter theString = new StringWriter();
     	try{
             XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-            XMLStreamWriter writer = new IndentingXMLStreamWriter(outputFactory.createXMLStreamWriter(theString));
+            XMLStreamWriter writer = outputFactory.createXMLStreamWriter(theString);
             Map<String,Entry> entries = new TreeMap<String,Entry>();
             entries.put(entry.getUpdated().getText(),entry);
             Feed wrapper = buildFeed(entry.getId(),entry.getTitle(),entry.getUpdated(),entry.getRights()
@@ -769,7 +792,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
             		,feedAttrs,extensions,generator,null,icon,logo,entries);
             
             //pretty print version.
-            FeedDoc.writeFeedDoc(new IndentingXMLStreamWriter(
+            FeedDoc.writeFeedDoc(new javanet.staxutils.IndentingXMLStreamWriter(
 					XMLOutputFactory.newInstance()
 					.createXMLStreamWriter(
 						new FileOutputStream("out.xml")
