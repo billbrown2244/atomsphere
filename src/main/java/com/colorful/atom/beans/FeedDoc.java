@@ -29,7 +29,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
@@ -59,8 +61,10 @@ public class FeedDoc {
     public static String encoding = "utf-8";
     public static String xml_version = "1.0";
 
-    /**
-     * Writes the atom feed to an xml file.
+    /** 
+     * Writes the atom feed to an xml file. The is the default and uses an 
+     * indenting output stream writer to make the xml more human readable.
+     * use one of the other writeFeedDoc methods to override the output formatting.
      * @param outFile the path and name of the file to write.
      * @param feed the atom feed bean containing the content of the feed
      * @param encoding the file encoding (default is utf-8)
@@ -68,6 +72,26 @@ public class FeedDoc {
      * @throws Exception thrown if the feed cannot be written to the outFile 
      */
     public static void writeFeedDoc(String outFile,Feed feed,String encoding,String version) throws Exception{
+    		new IndentingXMLStreamWriter(XMLOutputFactory.newInstance().createXMLStreamWriter(new java.io.FileOutputStream(outFile),encoding));
+    }
+    
+    /**
+     * 
+     * @param output
+     * @param feed
+     * @param encoding
+     * @param version
+     * @throws Exception
+     */
+    public static void writeFeedDoc(OutputStream output,Feed feed,String encoding,String version) throws Exception{
+    	writeFeedDoc(XMLOutputFactory.newInstance().createXMLStreamWriter(output,encoding),feed,encoding,version);
+    }
+    
+    public static void writeFeedDoc(Writer output,Feed feed,String encoding,String version) throws Exception{
+    	writeFeedDoc(XMLOutputFactory.newInstance().createXMLStreamWriter(output),feed,encoding,version);
+    }
+    
+	public static void writeFeedDoc(XMLStreamWriter output,Feed feed,String encoding,String version) throws Exception{
         //make sure id is present
         if(feed.getId() == null){
             throw new AtomSpecException("atom:feed elements MUST contain exactly one atom:id element.");
@@ -104,11 +128,9 @@ public class FeedDoc {
         }
 
         try{
-            XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-            XMLStreamWriter writer = new IndentingXMLStreamWriter(outputFactory.createXMLStreamWriter(new java.io.FileOutputStream(outFile),encoding));
-            new FeedWriter().writeFeed(writer,feed,encoding,version);
-            writer.flush();
-            writer.close();
+            new FeedWriter().writeFeed(output,feed,encoding,version);
+            output.flush();
+            output.close();
         }catch(Exception e){
             System.err.println("error creating xml file.");
             e.printStackTrace();
