@@ -285,9 +285,7 @@ public class FeedReader{
 			Iterator<Attribute> attrsItr = attributes.iterator();
 			//look for the xhtml type.
 			while(attrsItr.hasNext()){
-				Attribute attribute = (Attribute)attrsItr.next();            
-				System.out.println("attribute.getName()"+attribute.getName());
-				System.out.println("attribute.getValue()"+attribute.getValue());
+				Attribute attribute = (Attribute)attrsItr.next();
 				if(attribute.getName().equals("type") && attribute.getValue().equals("xhtml")){
 					return true;
 				}
@@ -465,6 +463,7 @@ public class FeedReader{
 						}else{
 							xhtml.append("</"+reader.getLocalName()+">");
 						}
+						reader.next();
 					}
 					break;
 				default:
