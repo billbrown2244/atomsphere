@@ -107,8 +107,10 @@ public class Entry {
 					if(attr.getName().equals("type")
 							&& !attr.getValue().startsWith("text/")
 							&& !attr.getValue().endsWith("/xml")
-							&& !attr.getValue().endsWith("\\+xml"))
+							&& !attr.getValue().endsWith("\\+xml")
+							&& summary == null){
 						throw new AtomSpecException("the atom:entry contains content that is encoded in Base64; i.e., the \"type\" attribute of atom:content is a MIME media type [MIMEREG], but is not an XML media type [RFC3023], does not begin with \"text/\", and does not end with \"/xml\" or \"+xml\".");
+					}
 				}
 			}
 
