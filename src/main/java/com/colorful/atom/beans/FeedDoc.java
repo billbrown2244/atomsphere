@@ -21,12 +21,14 @@ Change History:
     2006-11-12 wbrown - added javadoc documentation.
     2007-02-22 wbrown - removed deprecated methods.
     2007-06-20 wbrown - added 2 methods readFeedToString(Feed feed) and readEntryToString(Entry entry)
-    2008-03-18 wbrown - added factory methods for all the sub elements.
+    2008-03-18 wbrown - added factory methods for all the sub elements. Added new file write methods 
+    					to decouple dependency on stax-utils. 
  */
 package com.colorful.atom.beans;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -50,7 +52,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 /**
  * This class reads and writes atom feeds to and from xml files and beans or xml strings.
- * It conatins all of the factory methods for building immutable copies of the elements.
+ * It contains all of the factory methods for building immutable copies of the elements.
  * @author Bill Brown
  *
  */
@@ -60,37 +62,48 @@ public class FeedDoc {
     public static final Attribute lang_en = new Attribute("xml:lang","en-US");
     public static String encoding = "utf-8";
     public static String xml_version = "1.0";
-
-    /** 
-     * Writes the atom feed to an xml file. The is the default and uses an 
-     * indenting output stream writer to make the xml more human readable.
-     * use one of the other writeFeedDoc methods to override the output formatting.
-     * @param outFile the path and name of the file to write.
-     * @param feed the atom feed bean containing the content of the feed
-     * @param encoding the file encoding (default is utf-8)
-     * @param version the xml version (default is 1.0)
-     * @throws Exception thrown if the feed cannot be written to the outFile 
-     */
-    public static void writeFeedDoc(String outFile,Feed feed,String encoding,String version) throws Exception{
-    		new IndentingXMLStreamWriter(XMLOutputFactory.newInstance().createXMLStreamWriter(new java.io.FileOutputStream(outFile),encoding));
-    }
     
     /**
      * 
-     * @param output
-     * @param feed
-     * @param encoding
-     * @param version
-     * @throws Exception
+     * @param output the target output for the feed.
+     * @param feed the atom feed object containing the content of the feed
+     * @param encoding the file encoding (default is UTF-8)
+     * @param version the xml version (default is 1.0)
+     * @throws Exception thrown if the feed cannot be written to the output 
      */
     public static void writeFeedDoc(OutputStream output,Feed feed,String encoding,String version) throws Exception{
     	writeFeedDoc(XMLOutputFactory.newInstance().createXMLStreamWriter(output,encoding),feed,encoding,version);
     }
     
+    /**
+     * 
+     * @param output the target output for the feed.
+     * @param feed the atom feed object containing the content of the feed
+     * @param encoding the file encoding (default is UTF-8)
+     * @param version the xml version (default is 1.0)
+     * @throws Exception thrown if the feed cannot be written to the output 
+     */
     public static void writeFeedDoc(Writer output,Feed feed,String encoding,String version) throws Exception{
     	writeFeedDoc(XMLOutputFactory.newInstance().createXMLStreamWriter(output),feed,encoding,version);
     }
     
+    /**
+     * For example: to get an indented output using the stax-utils library 
+     * 	pass in 
+     * 	<code>
+     * 			XmlStreamWriter writer = new IndentingXMLStreamWriter(
+    						XMLOutputFactory.newInstance()
+    						.createXMLStreamWriter(
+    							new FileOutputStream(outputFilePath)
+    							,encoding));
+    			FeedDoc.writeFeedDoc(writer,myFeed,null,null);	
+    	</code>
+     * @param output the target output for the feed.
+     * @param feed the atom feed object containing the content of the feed
+     * @param encoding the file encoding (default is UTF-8)
+     * @param version the xml version (default is 1.0)
+     * @throws Exception thrown if the feed cannot be written to the output 
+     */
 	public static void writeFeedDoc(XMLStreamWriter output,Feed feed,String encoding,String version) throws Exception{
         //make sure id is present
         if(feed.getId() == null){
@@ -622,7 +635,7 @@ public class FeedDoc {
 	}
     
     /**
-     * Test method.
+     * Example library usage test method.
      * @param args
      */
     public static void main(String[] args){
@@ -685,10 +698,10 @@ public class FeedDoc {
             authors.add(buildAuthor(buildName("Bill Brown"),null,null,null,null));
             Entry entry = buildEntry(
             		buildId(null,"http://www.colorfulsoftware.com/atom.xml#entry1")
-            ,buildTitle("an exapmle atom entry",null)
+            ,buildTitle("an example atom entry",null)
             ,buildUpdated(Calendar.getInstance().getTime())
             ,null
-            ,buildContent("hello. and welcome the the atomsphere feed builder for atom 1.0 builds.  I hope it is useful for you.",null)
+            ,buildContent("Hello World.  Welcome to the atomsphere feed builder for atom 1.0 builds.  I hope it is useful for you.",null)
             ,authors
             ,null
             ,null
@@ -708,10 +721,17 @@ public class FeedDoc {
             		,null,categories,contributors,links
             		,feedAttrs,extensions,generator,null,icon,logo,entries);
             
-            FeedDoc.writeFeedDoc("out.xml",feed,encoding,xml_version);
+            //pretty print version.
+            FeedDoc.writeFeedDoc(new IndentingXMLStreamWriter(
+					XMLOutputFactory.newInstance()
+					.createXMLStreamWriter(
+						new FileOutputStream("out.xml")
+						,encoding)),feed,encoding,xml_version);
 
             Feed feed2 = FeedDoc.readFeedToBean(new File("out.xml"));
-            FeedDoc.writeFeedDoc("out2.xml",feed2,encoding,xml_version);
+            
+            //no spaces version
+            FeedDoc.writeFeedDoc(new FileOutputStream("out2.xml"),feed2,encoding,xml_version);
         }catch(Exception e){
             e.printStackTrace();
         }
