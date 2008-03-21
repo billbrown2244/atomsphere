@@ -27,7 +27,7 @@ package com.colorful.atom.beans;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.SortedMap;
 
 import javax.xml.stream.XMLStreamWriter;
 
@@ -492,7 +492,7 @@ class FeedWriter{
         }
     }
     
-    void writeEntries(XMLStreamWriter writer, Map<String,Entry> entries) throws Exception{
+    void writeEntries(XMLStreamWriter writer, SortedMap<String,Entry> entries) throws Exception{
 
         //print out the entries.
         Iterator<Entry> entryItr = entries.values().iterator();

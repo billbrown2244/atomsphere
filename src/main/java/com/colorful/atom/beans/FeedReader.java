@@ -27,7 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
@@ -64,7 +64,7 @@ class FeedReader{
 		Subtitle subtitle = null;
 		Title title = null;
 		Updated updated = null;
-		Map<String,Entry> entries = null;
+		SortedMap<String,Entry> entries = null;
 		
 		while(reader.hasNext()){
 			switch (reader.next()){
@@ -194,7 +194,7 @@ class FeedReader{
 		return extensions;
 	}
 
-	private Map<String,Entry> readEntry(XMLStreamReader reader, Map<String,Entry> entries) throws Exception{
+	private SortedMap<String,Entry> readEntry(XMLStreamReader reader, SortedMap<String,Entry> entries) throws Exception{
 		if(entries == null){
 			entries = new TreeMap<String,Entry>();
 		}

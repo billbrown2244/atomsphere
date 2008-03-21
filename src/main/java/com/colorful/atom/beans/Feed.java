@@ -31,7 +31,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
@@ -63,7 +63,7 @@ import java.util.TreeMap;
 public class Feed {
 
 	private final Source source;
-	private final Map<String,Entry> entries;
+	private final SortedMap<String,Entry> entries;
 
 	//use the factory method in the FeedDoc.
 	Feed(Id id
@@ -80,7 +80,7 @@ public class Feed {
 			,Subtitle subtitle
 			,Icon icon
 			,Logo logo
-			,Map<String,Entry> entries) throws AtomSpecException {
+			,SortedMap<String,Entry> entries) throws AtomSpecException {
 		this.source = new Source(id,title,updated,rights,authors,categories
 				,contributors,links,attributes,extensions
 				,generator,subtitle,icon,logo);
@@ -88,10 +88,12 @@ public class Feed {
 		if(entries == null){
 			this.entries = null;
 		}else{
-			this.entries = new TreeMap<String,Entry>();
+			
+			this.entries = new TreeMap<String,Entry>(entries.comparator());
 			Iterator<String> entryItr = entries.keySet().iterator();
 			while(entryItr.hasNext()){
-				Entry entry = entries.get(entryItr.next());
+				String entryKey = entryItr.next();
+				Entry entry = entries.get(entryKey);
 
 				//if there is no author element at the feed level
 				//check to make sure the entry has an author element
@@ -101,7 +103,7 @@ public class Feed {
 					}
 				}   			
 
-				this.entries.put(entry.getUpdated().getText(),
+				this.entries.put(entryKey,
 						new Entry(entry.getId()
 								,entry.getTitle(),entry.getUpdated()
 								,entry.getRights(),entry.getContent(),entry.getAuthors()
@@ -115,11 +117,11 @@ public class Feed {
 	}
 
 
-	public Map<String,Entry> getEntries() {
+	public SortedMap<String,Entry> getEntries() {
 		if(entries == null){
 			return null;
 		}
-		Map<String,Entry> entriesCopy = new TreeMap<String,Entry>();
+		SortedMap<String,Entry> entriesCopy = new TreeMap<String,Entry>();
 		Iterator<String> entryItr = entries.keySet().iterator();
 		while(entryItr.hasNext()){
 			Entry entry = entries.get(entryItr.next());
@@ -152,8 +154,8 @@ public class Feed {
 
 		if(getEntries() != null){
 			//sort the entries with the passed in instance as the key
-			Map<String,Entry> resortedEntries = new TreeMap<String,Entry>(comparator);
-			Map<String,Entry> currentEntries = getEntries();
+			SortedMap<String,Entry> resortedEntries = new TreeMap<String,Entry>(comparator);
+			SortedMap<String,Entry> currentEntries = getEntries();
 			Iterator<Entry> entryItr = currentEntries.values().iterator();
 			while(entryItr.hasNext()){
 				Entry entry = (Entry)entryItr.next();

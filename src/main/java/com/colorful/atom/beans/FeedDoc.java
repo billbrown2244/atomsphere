@@ -44,7 +44,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.xml.stream.XMLInputFactory;
@@ -170,7 +170,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
             if(feed.getEntries() == null){
                 throw new AtomSpecException("atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
             }
-            Map<String,Entry> entries = feed.getEntries();
+            SortedMap<String,Entry> entries = feed.getEntries();
             Iterator<String> entryKeys = entries.keySet().iterator();
             while(entryKeys.hasNext()){
                 Entry entry = (Entry)entries.get(entryKeys.next());
@@ -315,7 +315,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
     	try{
             XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
             XMLStreamWriter writer = outputFactory.createXMLStreamWriter(theString);
-            Map<String,Entry> entries = new TreeMap<String,Entry>();
+            SortedMap<String,Entry> entries = new TreeMap<String,Entry>();
             entries.put(entry.getUpdated().getText(),entry);
             Feed wrapper = buildFeed(entry.getId(),entry.getTitle(),entry.getUpdated(),entry.getRights()
             		,null,null,null,null,null,null,null,null,null,null,entries);
@@ -409,7 +409,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 			,Subtitle subtitle
 			,Icon icon
 			,Logo logo
-			,Map<String,Entry> entries) throws AtomSpecException{
+			,SortedMap<String,Entry> entries) throws AtomSpecException{
     	return new Feed(id,title,updated,rights,authors,categories,contributors
     			,links,attributes,extensions,generator,subtitle,icon,logo,entries);
     }
@@ -845,7 +845,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
             ,null
             );
 
-            Map<String,Entry> entries = new TreeMap<String,Entry>();
+            SortedMap<String,Entry> entries = new TreeMap<String,Entry>();
             entries.put(entry.getUpdated().getText(),entry);
             
             
