@@ -463,7 +463,6 @@ public class FeedReader{
 						}else{
 							xhtml.append("</"+reader.getLocalName()+">");
 						}
-						reader.next();
 					}
 					break;
 				default:
