@@ -214,21 +214,16 @@ public class Feed {
 			if(getExtensions() == null){
 				localFeedExtensions.add(localFeedExtension);
 			}else{
-				boolean addExt = true;
-				Iterator<Extension> extensionItr = getExtensions().iterator();
+				boolean addExt = true;				
+				List<Extension> currentExtensions = getExtensions();
+				Iterator<Extension> extensionItr = currentExtensions.iterator();
 				while(extensionItr.hasNext()){
 					Extension extn = (Extension)extensionItr.next();
-					//if we find the extension remove it.
-					if(extn.getElementName().equalsIgnoreCase("sort:asc")
-							|| extn.getElementName().equalsIgnoreCase("sort:desc")){
+					//if we find an existing sort extension, ignore it.
+					//add all others to the return list.
+					if(!extn.getElementName().equalsIgnoreCase("sort:asc")
+							&& !extn.getElementName().equalsIgnoreCase("sort:desc")){
 						localFeedExtensions.add(extn);
-					}
-				}
-				//remove any sort extension we found above
-				if(localFeedExtensions.size() > 0){
-					extensionItr = localFeedExtensions.iterator();
-					while(extensionItr.hasNext()){
-						localFeedExtensions.remove(extensionItr.next());
 					}
 				}
 
