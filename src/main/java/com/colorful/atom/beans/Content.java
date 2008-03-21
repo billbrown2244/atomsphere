@@ -67,14 +67,7 @@ import java.util.List;
  */
 public class Content {
 	
-	/**
-	 * 
-	 * An enumeration of the different types of supported content.
-	 *
-	 */
-	public enum ContentType {TEXT,HTML,XHTML,OTHER,EXTERNAL}; 
-	
-    private final List<Attribute> attributes;
+	private final List<Attribute> attributes;
     private final String content;
     
     //use the factory method in the FeedDoc.
@@ -116,39 +109,5 @@ public class Content {
      */
     public String getContent() {
         return content;
-    }
-
-    /**
-     * Convenience method for getting the content type for this element
-     * @return the content type for this element. One of TEXT,HTML,XHTML,OTHER or EXTERNAL
-     */
-    public ContentType getContentType(){
-    	ContentType contentType = null;
-		Iterator<Attribute> attrItr = attributes.iterator();
-		while(attrItr.hasNext()){
-			Attribute attr = attrItr.next();
-			if(attr.getName().equals("type") && attr.getValue().equals("text")){
-				contentType = ContentType.TEXT;
-				break;
-			}else if(attr.getName().equals("type") && attr.getValue().equals("html")){
-				contentType = ContentType.HTML;
-				break;
-			}else if(attr.getName().equals("type") && attr.getValue().equals("xhtml")){
-				contentType = ContentType.XHTML;
-			}else if(attr.getName().equals("type") && (!attr.getValue().equals("text")
-					&& !attr.getValue().equals("html")
-					&& !attr.getValue().equals("xhtml"))){
-				contentType = ContentType.OTHER;
-				break;
-			}else if(attr.getName().equals("src")){
-				contentType = ContentType.EXTERNAL;
-				break;
-			}
-		}
-		//default.
-		if(contentType == null){
-			contentType = ContentType.TEXT;
-		}
-		return contentType;
     }
 }

@@ -61,6 +61,13 @@ import javax.xml.stream.XMLStreamWriter;
 public class FeedDoc {
 
 	/**
+	 * 
+	 * An enumeration of the different types of supported content.
+	 *
+	 */
+	public static enum ContentType {TEXT,HTML,XHTML,OTHER,EXTERNAL}
+
+	/**
 	 * the default atom xml namespace of "http://www.w3.org/2005/Atom" 
 	 */
     public static final Attribute atomBase = 
@@ -723,6 +730,40 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 			}
     	}
 		return null;
+	}
+    
+	/**
+	 * Convenience method for getting the content type for this element.
+	 * Examines the "type" and "src" attributes if they exist in the list. 
+	 * 
+	 * @return the content type for this element. One of TEXT,HTML,XHTML,OTHER or EXTERNAL
+	 */
+	public static ContentType getContentType(List<Attribute> attriubtes){
+		ContentType contentType = ContentType.TEXT; //default
+		if(attriubtes != null){
+			Iterator<Attribute> attrItr = attriubtes.iterator();
+			while(attrItr.hasNext()){
+				Attribute attr = attrItr.next();
+				if(attr.getName().equals("type") && attr.getValue().equals("text")){
+					contentType = ContentType.TEXT;
+					break;
+				}else if(attr.getName().equals("type") && attr.getValue().equals("html")){
+					contentType = ContentType.HTML;
+					break;
+				}else if(attr.getName().equals("type") && attr.getValue().equals("xhtml")){
+					contentType = ContentType.XHTML;
+				}else if(attr.getName().equals("type") && (!attr.getValue().equals("text")
+						&& !attr.getValue().equals("html")
+						&& !attr.getValue().equals("xhtml"))){
+					contentType = ContentType.OTHER;
+					break;
+				}else if(attr.getName().equals("src")){
+					contentType = ContentType.EXTERNAL;
+					break;
+				}
+			}
+		}
+		return contentType;
 	}
     
     /**
