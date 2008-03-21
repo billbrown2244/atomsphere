@@ -153,7 +153,8 @@ public class Feed {
 		if(getEntries() != null){
 			//sort the entries with the passed in instance as the key
 			Map<String,Entry> resortedEntries = new TreeMap<String,Entry>(comparator);
-			Iterator<Entry> entryItr = this.entries.values().iterator();
+			Map<String,Entry> currentEntries = getEntries();
+			Iterator<Entry> entryItr = currentEntries.values().iterator();
 			while(entryItr.hasNext()){
 				Entry entry = (Entry)entryItr.next();
 				if (sortInstance instanceof Updated){
@@ -167,24 +168,25 @@ public class Feed {
 				}
 			}
 
-			//add the sort extension declaration if it isn't already there.
-			//to the top level feed tag.
+			//rebuild the top level feed attributes to include the sort
+			//if it isn't already there.
 			List<Attribute> localFeedAttrs = new LinkedList<Attribute>();
 			Attribute attrLocal = FeedDoc.buildAttribute("xmlns:sort","http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0");
-			if(getAttributes() != null){
-				boolean addSort = true;
-				Iterator<Attribute> attrItr = getAttributes().iterator();
+			if(getAttributes() == null){
+				localFeedAttrs.add(attrLocal);
+			}else{
+				List<Attribute> currentAttributes = getAttributes();
+				Iterator<Attribute> attrItr = currentAttributes.iterator();
 				while(attrItr.hasNext()){
 					Attribute attr = (Attribute)attrItr.next();
-					if(attr.equals(attrLocal)){
-						addSort = false;
+					if(!attr.getName().equals(attrLocal.getName())
+							&& !attr.getValue().equals(attrLocal.getValue())){
+						localFeedAttrs.add(attr);
 					}
 				}
-				if(addSort){
-					localFeedAttrs.add(attrLocal);
-				}
-			}else{
-				localFeedAttrs.add(attrLocal);
+				
+				//finally add the sort extension attribute declaration
+				localFeedAttrs.add(attrLocal);	
 			}
 
 			//add or replace this extension element. 
@@ -207,14 +209,13 @@ public class Feed {
 			extAttrs.add(sortElement);
 			Extension localFeedExtension = FeedDoc.buildExtension(elementName,extAttrs,null); 
 
-			//if there are already extensions,
+			//rebuild the extensions
 			//we have to look for the sort extension and 
 			//replace any occurrences of it with the one we just created.
 			List<Extension> localFeedExtensions = new LinkedList<Extension>();
 			if(getExtensions() == null){
 				localFeedExtensions.add(localFeedExtension);
-			}else{
-				boolean addExt = true;				
+			}else{			
 				List<Extension> currentExtensions = getExtensions();
 				Iterator<Extension> extensionItr = currentExtensions.iterator();
 				while(extensionItr.hasNext()){
@@ -226,11 +227,8 @@ public class Feed {
 						localFeedExtensions.add(extn);
 					}
 				}
-
 				//finally add the new one.
-				if(addExt){
-					localFeedExtensions.add(localFeedExtension);
-				}
+				localFeedExtensions.add(localFeedExtension);
 			}
 			
 			//this is an immutable sorted copy of the feed.
