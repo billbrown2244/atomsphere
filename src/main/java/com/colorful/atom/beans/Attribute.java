@@ -68,9 +68,7 @@ public class Attribute {
         return value;
     }    
     
-    /**
-     * @Override return true if the name and value of the attributes are equal.
-     */
+    @Override
     public boolean equals(Object obj) {
     	if(obj instanceof Attribute){   		
     		Attribute local = (Attribute)obj;

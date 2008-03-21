@@ -39,6 +39,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -63,13 +64,13 @@ public class FeedDoc {
 	 * the default atom xml namespace of "http://www.w3.org/2005/Atom" 
 	 */
     public static final Attribute atomBase = 
-    	new Attribute("xmlns","http://www.w3.org/2005/Atom");
+    	buildAttribute("xmlns","http://www.w3.org/2005/Atom");
     
     /**
      * the default library language of "en-US" 
      */
     public static final Attribute lang_en = 
-    	new Attribute("xml:lang","en-US");
+    	buildAttribute("xml:lang","en-US");
     
     /**
      * the default document encoding of "UTF-8"
@@ -81,6 +82,27 @@ public class FeedDoc {
      */
     public static String xml_version = "1.0";
     
+	/**
+	 * Comparator for sorting feed entries in ascending order.
+	 */
+	public static final Comparator<String> SORT_ASC = 
+		new Comparator<String>(){        
+		public int compare(String key1, String key2) {
+			return key1.compareTo(key2);
+	
+		}
+	};
+
+	/**
+	 * Comparator for sorting feed entries in descending order 
+	 */
+	public static final Comparator<String> SORT_DESC = 
+		new Comparator<String>(){
+		public int compare(String key1, String key2) {
+			return key2.compareTo(key1);
+		}
+	};
+	
     /**
      * 
      * @param output the target output for the feed.
@@ -169,6 +191,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
         }
     }
 
+	
 	/**
 	 * This method reads an input stream and outputs an atom 1.0 xml document string.
 	 * @param inputStream the stream containing the atom xml to be read.
@@ -512,8 +535,6 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 
     /**
      * 
-     * @param uri the URI reference attribute.
-     * @param version the version attribute.
      * @param attributes the attributes list which can contain "uri" and or "version" or others 
      * @param text the text content.
      * @return an immutable Generator object.
@@ -566,7 +587,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
     
     /**
      * 
-     * @param text a human-readable name for the person
+     * @param name a human-readable name for the person
      * @return an immutable Name object.
      */
     public static Name buildName(String name){
@@ -666,7 +687,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
     
     /**
      * 
-     * @param published the date formatted to [RFC3339]
+     * @param updated the date formatted to [RFC3339]
      * @return a immutable Updated object.
      */
     public static Updated buildUpdated(Date updated){

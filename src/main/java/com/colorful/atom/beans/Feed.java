@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *  2007-06-20 wbrown - adding support for sorting by summary. 
  *  2007-07-10 wbrown - commented out debug code.
  *  2008-03-17 wbrown - made class immutable.
+ *  2008-03-21 wbrown - move comparators to feed doc.
  */
 package com.colorful.atom.beans;
 
@@ -58,25 +59,11 @@ import java.util.TreeMap;
  *          }
  *  </pre>
  *  
- *  The default ordering of the entries is by date updated date descending. 
  */
 public class Feed {
 
 	private final Source source;
 	private final Map<String,Entry> entries;
-
-	public static final Comparator<String> SORT_ASC = new Comparator<String>(){        
-		public int compare(String key1, String key2) {
-			return key1.compareTo(key2);
-
-		}
-	};
-	public static final Comparator<String> SORT_DESC = new Comparator<String>(){
-		public int compare(String key1, String key2) {
-			return key2.compareTo(key1);
-		}
-	};
-
 
 	//use the factory method in the FeedDoc.
 	Feed(Id id
@@ -159,7 +146,7 @@ public class Feed {
 	/**
 	 * This method sorts the entries of the feed.  The default ordering of the entries is by updated descending 
 	 * @param comparator this gives the ordering for the entries.
-	 * @param type and instance of the type to sort by.
+	 * @param sortInstance an instance of the type to sort by.
 	 */
 	public Feed sortEntries(Comparator<String> comparator, Object sortInstance) throws AtomSpecException{
 
@@ -183,7 +170,7 @@ public class Feed {
 			//add the sort extension declaration if it isn't already there.
 			//to the top level feed tag.
 			List<Attribute> localFeedAttrs = new LinkedList<Attribute>();
-			Attribute attrLocal = new Attribute("xmlns:sort","http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0");
+			Attribute attrLocal = FeedDoc.buildAttribute("xmlns:sort","http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0");
 			if(getAttributes() != null){
 				boolean addSort = true;
 				Iterator<Attribute> attrItr = getAttributes().iterator();
@@ -203,22 +190,22 @@ public class Feed {
 			//add or replace this extension element. 
 
 			String elementName = null;
-			if(comparator == Feed.SORT_ASC){
+			if(comparator == FeedDoc.SORT_ASC){
 				elementName = "sort:asc";
 			}else{
 				elementName = "sort:desc";
 			}
 			Attribute sortElement = null;
 			if(sortInstance instanceof Updated){
-				sortElement = new Attribute("type","updated");
+				sortElement = FeedDoc.buildAttribute("type","updated");
 			}else if(sortInstance instanceof Title){
-				sortElement = new Attribute("type","title");
+				sortElement = FeedDoc.buildAttribute("type","title");
 			}else if(sortInstance instanceof Summary){
-				sortElement = new Attribute("type","summary");
+				sortElement = FeedDoc.buildAttribute("type","summary");
 			}
 			List<Attribute> extAttrs = new LinkedList<Attribute>();
 			extAttrs.add(sortElement);
-			Extension localFeedExtension = new Extension(elementName,extAttrs,null); 
+			Extension localFeedExtension = FeedDoc.buildExtension(elementName,extAttrs,null); 
 
 			//if there are already extensions,
 			//we have to look for the sort extension and 
@@ -252,7 +239,7 @@ public class Feed {
 			}
 			
 			//this is an immutable sorted copy of the feed.
-			return new Feed(this.getId(),this.getTitle(),this.getUpdated(),this.getRights()
+			return FeedDoc.buildFeed(this.getId(),this.getTitle(),this.getUpdated(),this.getRights()
 				,this.getAuthors(),this.getCategories(),this.getContributors()
 				,this.getLinks(),localFeedAttrs,localFeedExtensions,this.getGenerator()
 				,this.getSubtitle(),this.getIcon(),this.getLogo(),resortedEntries);
@@ -308,13 +295,13 @@ public class Feed {
 						if(attr.getName().equalsIgnoreCase("type")){
 							String value = attr.getValue();
 							if(value.equals("updated")){
-								return sortEntries(SORT_ASC, new Updated(null)); 
+								return sortEntries(FeedDoc.SORT_ASC, FeedDoc.buildUpdated(null)); 
 							}
 							if(value.equals("title")){
-								return sortEntries(SORT_ASC, new Title(null,null));
+								return sortEntries(FeedDoc.SORT_ASC, FeedDoc.buildTitle(null,null));
 							}
 							if(value.equals("summary")){
-								return sortEntries(SORT_ASC, new Summary(null,null));
+								return sortEntries(FeedDoc.SORT_ASC, FeedDoc.buildSummary(null,null));
 							}
 						}
 					}
@@ -325,13 +312,13 @@ public class Feed {
 						if(attr.getName().equalsIgnoreCase("type")){
 							String value = attr.getValue();
 							if(value.equals("updated")){
-								return sortEntries(SORT_DESC, new Updated(null)); 
+								return sortEntries(FeedDoc.SORT_DESC, FeedDoc.buildUpdated(null)); 
 							}
 							if(value.equals("title")){
-								return sortEntries(SORT_DESC, new Title(null,null));
+								return sortEntries(FeedDoc.SORT_DESC, FeedDoc.buildTitle(null,null));
 							}
 							if(value.equals("summary")){
-								return sortEntries(SORT_DESC, new Summary(null,null));
+								return sortEntries(FeedDoc.SORT_DESC, FeedDoc.buildSummary(null,null));
 							}
 						}
 					}

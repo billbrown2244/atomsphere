@@ -40,7 +40,7 @@ import javax.xml.stream.XMLStreamReader;
  * @author Bill Brown
  *
  */
-public class FeedReader{
+class FeedReader{
 
 	/**
 	 * This method transforms an xml stream into a Feed bean
@@ -48,7 +48,7 @@ public class FeedReader{
 	 * @return the atom Feed bean
 	 * @throws Exception if the stream cannot be parsed.
 	 */
-	public Feed readFeed(XMLStreamReader reader) throws Exception{
+	Feed readFeed(XMLStreamReader reader) throws Exception{
 
 		List<Attribute> attributes = null;
 		List<Author> authors = null;
@@ -136,7 +136,9 @@ public class FeedReader{
 
 		//because the sort extension does not enforce placement of the element
 		//do a check after the feed is built to determine if it needs to be sorted.
-		return feed.checkForAndApplyExtension(FeedDoc.buildAttribute("xmlns:sort","http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
+		return feed.checkForAndApplyExtension(FeedDoc.buildAttribute(
+		"xmlns:sort"
+		,"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
 	}
 
 	private List<Attribute> getAttributes(XMLStreamReader reader,List<Attribute> attributes) throws Exception{

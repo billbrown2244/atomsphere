@@ -36,7 +36,7 @@ import javax.xml.stream.XMLStreamWriter;
  * @author Bill Brown
  *
  */
-public class FeedWriter{
+class FeedWriter{
     
     /**
      * This method writes out the string representation of an atom feed to an xml file or java string.
@@ -46,7 +46,7 @@ public class FeedWriter{
      * @param version xml version
      * @throws Exception if the file cannot be written to disk or if the string cannot be transformed.
      */
-    public void writeFeed(XMLStreamWriter writer, Feed feed,String encoding,String version) throws Exception{
+    void writeFeed(XMLStreamWriter writer, Feed feed,String encoding,String version) throws Exception{
         
     	//make sure the feed is sorted before it is written out to the file.
     	//this prevents the client code from having to 
@@ -492,7 +492,7 @@ public class FeedWriter{
         }
     }
     
-    protected void writeEntries(XMLStreamWriter writer, Map<String,Entry> entries) throws Exception{
+    void writeEntries(XMLStreamWriter writer, Map<String,Entry> entries) throws Exception{
 
         //print out the entries.
         Iterator<Entry> entryItr = entries.values().iterator();
