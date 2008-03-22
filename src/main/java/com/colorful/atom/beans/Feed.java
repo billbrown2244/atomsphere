@@ -121,12 +121,14 @@ public class Feed {
 		if(entries == null){
 			return null;
 		}
-		SortedMap<String,Entry> entriesCopy = new TreeMap<String,Entry>();
+		SortedMap<String,Entry> entriesCopy = 
+			new TreeMap<String,Entry>(entries.comparator());
 		Iterator<String> entryItr = entries.keySet().iterator();
 		while(entryItr.hasNext()){
-			Entry entry = entries.get(entryItr.next());
+			String entryKey = entryItr.next();
+			Entry entry = entries.get(entryKey);
 			try{
-				entriesCopy.put(entry.getUpdated().getText(),
+				entriesCopy.put(entryKey,
 						new Entry(entry.getId()
 								,entry.getTitle(),entry.getUpdated()
 								,entry.getRights(),entry.getContent(),entry.getAuthors()
