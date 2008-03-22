@@ -37,6 +37,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -88,6 +89,13 @@ public class FeedDoc {
      * the default XML version of "1.0"
      */
     public static String xml_version = "1.0";
+    
+    /**
+     * the sort extension attribute.
+     */
+    public static final Attribute sort =
+    	buildAttribute("xmlns:sort"
+		,"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0");
     
 	/**
 	 * Comparator for sorting feed entries in ascending order.
@@ -260,27 +268,38 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
     
     /**
      * This method reads in a Feed bean and returns the contents as an atom feed string
-     * with indented formatting (requires stax-utils javanet.staxutils.IndentingXMLStreamWriter
-     * for indented printing).  It will fall back to <pre>readFeedToString(Feed)</pre> 
-     * if IndentingXMLStreamWriter is not in the classpath.
+     * with formatting specified by the fully qualified XMLStreamWriter class name 
+     * (uses reflection internally). For example you can pass the 
+     * TXW com.sun.xml.txw2.output.IndentingXMLStreamWriter
+     * or the stax-utils javanet.staxutils.IndentingXMLStreamWriter
+     * for indented printing.  It will fall back to <pre>readFeedToString(Feed)</pre> 
+     * if the XMLStreamWriter class cannot be found in the classpath.
      * @param feed the feed to be converted to an atom string.
+     * @param xmlStreamWriter the fully qualified XMLStreamWriter class name.
      * @return an atom feed document string.
      */
-    public static String readFeedToStringPretty(Feed feed){
-    	
+    public static String readFeedToStringCusotm(Feed feed, String xmlStreamWriter){
+
     	StringWriter theString = new StringWriter();
     	try{
-            XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-            XMLStreamWriter writer = new javanet.staxutils.IndentingXMLStreamWriter(outputFactory.createXMLStreamWriter(theString));
-            new FeedWriter().writeFeed(writer,feed,encoding,xml_version);
-            writer.flush();
-            writer.close();
-        }catch(Exception e){
-            System.err.println("error creating indented xml string from feed trying non indented.");
-            e.printStackTrace();
-            return readFeedToString(feed);
-        }
-        return theString.toString();
+    		Class<?> cls = Class.forName(xmlStreamWriter);
+    		Constructor<?> ct = cls.getConstructor(
+    				new Class[]{XMLStreamWriter.class});
+    		Object arglist[] = new Object[]{
+    				XMLOutputFactory.newInstance()
+    				.createXMLStreamWriter(theString)};
+    		XMLStreamWriter writer = (XMLStreamWriter)
+    			ct.newInstance(arglist);
+
+    		new FeedWriter().writeFeed(writer,feed,encoding,xml_version);
+    		writer.flush();
+    		writer.close();
+    	}catch(Exception e){
+    		System.err.println("error creating indented xml string from feed trying non indented.");
+    		e.printStackTrace();
+    		return readFeedToString(feed);
+    	}
+    	return theString.toString();
     }
 
     /**
@@ -718,7 +737,9 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
     	return new AtomPersonConstruct(name,uri,email,attributes,extensions);
     }
     
-    //used to prevent duplicates.
+    //checks for and returns the Attribute from the String attribute (argument)
+    //in the list of attributes (argument) 
+    //used by Category, Generator and Link.
     static Attribute getAttributeFromGroup(List<Attribute> attributes, String attributeName) {    	
     	if(attributes != null){
 	    	Iterator<Attribute> attrItr = attributes.iterator();
@@ -765,7 +786,190 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 		}
 		return contentType;
 	}
+	
+	//This method sorts the entries of the feed.  The default ordering of the entries is by updated descending 
+	private static Feed sortEntries(Feed feed, Comparator<String> comparator, Object sortInstance) throws AtomSpecException{
+
+		if(feed.getEntries() != null){
+			//sort the entries with the passed in instance as the key
+			SortedMap<String,Entry> resortedEntries = new TreeMap<String,Entry>(comparator);
+			SortedMap<String,Entry> currentEntries = feed.getEntries();
+			Iterator<Entry> entryItr = currentEntries.values().iterator();
+			while(entryItr.hasNext()){
+				Entry entry = (Entry)entryItr.next();
+				if (sortInstance instanceof Updated){
+					resortedEntries.put(entry.getUpdated().getText(),entry);
+				}
+				if (sortInstance instanceof Title){
+					resortedEntries.put(entry.getTitle().getText(),entry);
+				}
+				if (sortInstance instanceof Summary){
+					resortedEntries.put(entry.getSummary().getText(),entry);
+				}
+			}
+
+			//rebuild the top level feed attributes to include the sort
+			//if it isn't already there.
+			List<Attribute> localFeedAttrs = new LinkedList<Attribute>();
+			Attribute attrLocal = FeedDoc.buildAttribute("xmlns:sort","http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0");
+			if(feed.getAttributes() == null){
+				localFeedAttrs.add(attrLocal);
+			}else{
+				List<Attribute> currentAttributes = feed.getAttributes();
+				Iterator<Attribute> attrItr = currentAttributes.iterator();
+				while(attrItr.hasNext()){
+					Attribute attr = (Attribute)attrItr.next();
+					if(!attr.getName().equals(attrLocal.getName())
+							&& !attr.getValue().equals(attrLocal.getValue())){
+						localFeedAttrs.add(attr);
+					}
+				}
+				
+				//finally add the sort extension attribute declaration
+				localFeedAttrs.add(attrLocal);	
+			}
+
+			//add or replace this extension element. 
+
+			String elementName = null;
+			if(comparator == FeedDoc.SORT_ASC){
+				elementName = "sort:asc";
+			}else{
+				elementName = "sort:desc";
+			}
+			Attribute sortElement = null;
+			if(sortInstance instanceof Updated){
+				sortElement = FeedDoc.buildAttribute("type","updated");
+			}else if(sortInstance instanceof Title){
+				sortElement = FeedDoc.buildAttribute("type","title");
+			}else if(sortInstance instanceof Summary){
+				sortElement = FeedDoc.buildAttribute("type","summary");
+			}
+			List<Attribute> extAttrs = new LinkedList<Attribute>();
+			extAttrs.add(sortElement);
+			Extension localFeedExtension = FeedDoc.buildExtension(elementName,extAttrs,null); 
+
+			//rebuild the extensions
+			//we have to look for the sort extension and 
+			//replace any occurrences of it with the one we just created.
+			List<Extension> localFeedExtensions = new LinkedList<Extension>();
+			if(feed.getExtensions() == null){
+				localFeedExtensions.add(localFeedExtension);
+			}else{			
+				List<Extension> currentExtensions = feed.getExtensions();
+				Iterator<Extension> extensionItr = currentExtensions.iterator();
+				while(extensionItr.hasNext()){
+					Extension extn = (Extension)extensionItr.next();
+					//if we find an existing sort extension, ignore it.
+					//add all others to the return list.
+					if(!extn.getElementName().equalsIgnoreCase("sort:asc")
+							&& !extn.getElementName().equalsIgnoreCase("sort:desc")){
+						localFeedExtensions.add(extn);
+					}
+				}
+				//finally add the new one.
+				localFeedExtensions.add(localFeedExtension);
+			}
+			
+			//this is an immutable sorted copy of the feed.
+			return FeedDoc.buildFeed(feed.getId()
+					,feed.getTitle()
+					,feed.getUpdated()
+					,feed.getRights()
+				,feed.getAuthors(),feed.getCategories(),feed.getContributors()
+				,feed.getLinks(),localFeedAttrs,localFeedExtensions,feed.getGenerator()
+				,feed.getSubtitle(),feed.getIcon(),feed.getLogo(),resortedEntries);
+		}
+		//return the feed in the original order.
+		return feed;
+	}
     
+
+
+	
+	/**
+	 * Checks the xmlns (namespace) argument and applies the extension 
+	 * to the feed argument if it is recognized by the atomsphere library.
+	 * @param feed the feed to have the extension applied to it.
+	 * @param xmlns the namespace of the extension 
+	 * @return the feed with the extension applied to it.
+	 */
+	public static Feed checkForAndApplyExtension(Feed feed, Attribute xmlns) {
+
+		//if there aren't any attributes for the feed and thus no xmlns:sort attr
+		//return the defaults.
+		if(feed.getAttributes() == null){
+			return feed;
+		}
+
+		//check for the first supported extension
+		//currently only sort is implemented.
+		Iterator<Attribute> attrs = feed.getAttributes().iterator();
+		while(attrs.hasNext()){
+			Attribute attr = (Attribute)attrs.next();
+			if(attr.getName().equals(xmlns.getName()) 
+					&& attr.getValue().equals(xmlns.getValue())){
+				try{
+					return applySort(feed);
+				}catch(Exception e){
+					//this should never happen because 
+					//we check for errors on initial creation
+					//but if it does, print the stack trace
+					e.printStackTrace();
+				}
+			}
+		}
+		return feed;
+	}
+
+	//check for and apply the first sort extension.
+	private static Feed applySort(Feed feed) throws AtomSpecException{
+		//only do the work if there are extensions.
+		if(feed.getExtensions() != null){
+			//look for the first extension element if the namespace exists.
+			Iterator<Extension> extItr = feed.getExtensions().iterator();
+			Iterator<Attribute> attrs;
+			while(extItr.hasNext()){
+				Extension ext = (Extension)extItr.next();
+				if(ext.getElementName().equals("sort:asc")){
+					attrs = ext.getAttributes().iterator();
+					while(attrs.hasNext()){
+						Attribute attr = (Attribute)attrs.next();
+						if(attr.getName().equalsIgnoreCase("type")){
+							String value = attr.getValue();
+							if(value.equals("updated")){
+								return sortEntries(feed,FeedDoc.SORT_ASC, FeedDoc.buildUpdated(null)); 
+							}
+							if(value.equals("title")){
+								return sortEntries(feed,FeedDoc.SORT_ASC, FeedDoc.buildTitle(null,null));
+							}
+							if(value.equals("summary")){
+								return sortEntries(feed,FeedDoc.SORT_ASC, FeedDoc.buildSummary(null,null));
+							}
+						}
+					}
+				}else if(ext.getElementName().equals("sort:desc")){
+					attrs = ext.getAttributes().iterator();
+					while(attrs.hasNext()){
+						Attribute attr = (Attribute)attrs.next();
+						if(attr.getName().equalsIgnoreCase("type")){
+							String value = attr.getValue();
+							if(value.equals("updated")){
+								return sortEntries(feed,FeedDoc.SORT_DESC, FeedDoc.buildUpdated(null)); 
+							}
+							if(value.equals("title")){
+								return sortEntries(feed,FeedDoc.SORT_DESC, FeedDoc.buildTitle(null,null));
+							}
+							if(value.equals("summary")){
+								return sortEntries(feed,FeedDoc.SORT_DESC, FeedDoc.buildSummary(null,null));
+							}
+						}
+					}
+				}
+			}
+		}
+		return feed;
+	}
     /**
      * Example library usage test method.
      * @param args
@@ -852,6 +1056,18 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
             Feed feed = buildFeed(id,title,updated,rights
             		,null,categories,contributors,links
             		,feedAttrs,extensions,generator,null,icon,logo,entries);
+            
+            System.out.println("com.sun.xml.txw2.output.IndentingXMLStreamWriter");
+            System.out.println(FeedDoc.readFeedToStringCusotm(feed,
+            		"com.sun.xml.txw2.output.IndentingXMLStreamWriter"));
+            
+            System.out.println("javanet.staxutils.IndentingXMLStreamWriter");
+            System.out.println(FeedDoc.readFeedToStringCusotm(feed,
+    		"javanet.staxutils.IndentingXMLStreamWriter"));
+            
+            System.out.println("bunk");
+            System.out.println(FeedDoc.readFeedToStringCusotm(feed,
+    		"bunk"));
             
             //pretty print version.
             FeedDoc.writeFeedDoc(new javanet.staxutils.IndentingXMLStreamWriter(

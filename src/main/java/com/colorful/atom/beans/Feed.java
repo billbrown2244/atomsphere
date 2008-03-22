@@ -27,9 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom.beans;
 
-import java.util.Comparator;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -116,7 +114,6 @@ public class Feed {
 		}
 	}
 
-
 	public SortedMap<String,Entry> getEntries() {
 		if(entries == null){
 			return null;
@@ -145,184 +142,6 @@ public class Feed {
 			}
 		}
 		return entriesCopy;
-	}
-
-	/**
-	 * This method sorts the entries of the feed.  The default ordering of the entries is by updated descending 
-	 * @param comparator this gives the ordering for the entries.
-	 * @param sortInstance an instance of the type to sort by.
-	 */
-	public Feed sortEntries(Comparator<String> comparator, Object sortInstance) throws AtomSpecException{
-
-		if(getEntries() != null){
-			//sort the entries with the passed in instance as the key
-			SortedMap<String,Entry> resortedEntries = new TreeMap<String,Entry>(comparator);
-			SortedMap<String,Entry> currentEntries = getEntries();
-			Iterator<Entry> entryItr = currentEntries.values().iterator();
-			while(entryItr.hasNext()){
-				Entry entry = (Entry)entryItr.next();
-				if (sortInstance instanceof Updated){
-					resortedEntries.put(entry.getUpdated().getText(),entry);
-				}
-				if (sortInstance instanceof Title){
-					resortedEntries.put(entry.getTitle().getText(),entry);
-				}
-				if (sortInstance instanceof Summary){
-					resortedEntries.put(entry.getSummary().getText(),entry);
-				}
-			}
-
-			//rebuild the top level feed attributes to include the sort
-			//if it isn't already there.
-			List<Attribute> localFeedAttrs = new LinkedList<Attribute>();
-			Attribute attrLocal = FeedDoc.buildAttribute("xmlns:sort","http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0");
-			if(getAttributes() == null){
-				localFeedAttrs.add(attrLocal);
-			}else{
-				List<Attribute> currentAttributes = getAttributes();
-				Iterator<Attribute> attrItr = currentAttributes.iterator();
-				while(attrItr.hasNext()){
-					Attribute attr = (Attribute)attrItr.next();
-					if(!attr.getName().equals(attrLocal.getName())
-							&& !attr.getValue().equals(attrLocal.getValue())){
-						localFeedAttrs.add(attr);
-					}
-				}
-				
-				//finally add the sort extension attribute declaration
-				localFeedAttrs.add(attrLocal);	
-			}
-
-			//add or replace this extension element. 
-
-			String elementName = null;
-			if(comparator == FeedDoc.SORT_ASC){
-				elementName = "sort:asc";
-			}else{
-				elementName = "sort:desc";
-			}
-			Attribute sortElement = null;
-			if(sortInstance instanceof Updated){
-				sortElement = FeedDoc.buildAttribute("type","updated");
-			}else if(sortInstance instanceof Title){
-				sortElement = FeedDoc.buildAttribute("type","title");
-			}else if(sortInstance instanceof Summary){
-				sortElement = FeedDoc.buildAttribute("type","summary");
-			}
-			List<Attribute> extAttrs = new LinkedList<Attribute>();
-			extAttrs.add(sortElement);
-			Extension localFeedExtension = FeedDoc.buildExtension(elementName,extAttrs,null); 
-
-			//rebuild the extensions
-			//we have to look for the sort extension and 
-			//replace any occurrences of it with the one we just created.
-			List<Extension> localFeedExtensions = new LinkedList<Extension>();
-			if(getExtensions() == null){
-				localFeedExtensions.add(localFeedExtension);
-			}else{			
-				List<Extension> currentExtensions = getExtensions();
-				Iterator<Extension> extensionItr = currentExtensions.iterator();
-				while(extensionItr.hasNext()){
-					Extension extn = (Extension)extensionItr.next();
-					//if we find an existing sort extension, ignore it.
-					//add all others to the return list.
-					if(!extn.getElementName().equalsIgnoreCase("sort:asc")
-							&& !extn.getElementName().equalsIgnoreCase("sort:desc")){
-						localFeedExtensions.add(extn);
-					}
-				}
-				//finally add the new one.
-				localFeedExtensions.add(localFeedExtension);
-			}
-			
-			//this is an immutable sorted copy of the feed.
-			return FeedDoc.buildFeed(this.getId(),this.getTitle(),this.getUpdated(),this.getRights()
-				,this.getAuthors(),this.getCategories(),this.getContributors()
-				,this.getLinks(),localFeedAttrs,localFeedExtensions,this.getGenerator()
-				,this.getSubtitle(),this.getIcon(),this.getLogo(),resortedEntries);
-		}
-		//return the feed unsorted.
-		return this;
-	}
-
-	/**
-	 * Checks the namespace argument and applies the extension if it is recognized by the atomsphere library.
-	 * @param xmlns the structuredExtension element's.
-	 */
-	protected Feed checkForAndApplyExtension(Attribute xmlns) {
-
-		//if there aren't any attributes for the feed and thus no xmlns:sort attr
-		//return the defaults.
-		if(getAttributes() == null){
-			return this;
-		}
-
-		//check for the first supported extension
-		//currently only sort is implemented.
-		Iterator<Attribute> attrs = getAttributes().iterator();
-		while(attrs.hasNext()){
-			Attribute attr = (Attribute)attrs.next();
-			if(attr.equals(xmlns)){
-				try{
-					return applySort();
-				}catch(Exception e){
-					//this should never happen because 
-					//we check for errors on initial creation
-					//but if it does, print the stack trace
-					e.printStackTrace();
-				}
-			}
-		}
-		return this;
-	}
-
-	//check for and apply the first sort extension.
-	private Feed applySort() throws AtomSpecException{
-		//only do the work if there are extensions.
-		if(getExtensions() != null){
-			//look for the first extension element if the namespace exists.
-			Iterator<Extension> extItr = getExtensions().iterator();
-			Iterator<Attribute> attrs;
-			while(extItr.hasNext()){
-				Extension ext = (Extension)extItr.next();
-				if(ext.getElementName().equals("sort:asc")){
-					attrs = ext.getAttributes().iterator();
-					while(attrs.hasNext()){
-						Attribute attr = (Attribute)attrs.next();
-						if(attr.getName().equalsIgnoreCase("type")){
-							String value = attr.getValue();
-							if(value.equals("updated")){
-								return sortEntries(FeedDoc.SORT_ASC, FeedDoc.buildUpdated(null)); 
-							}
-							if(value.equals("title")){
-								return sortEntries(FeedDoc.SORT_ASC, FeedDoc.buildTitle(null,null));
-							}
-							if(value.equals("summary")){
-								return sortEntries(FeedDoc.SORT_ASC, FeedDoc.buildSummary(null,null));
-							}
-						}
-					}
-				}else if(ext.getElementName().equals("sort:desc")){
-					attrs = ext.getAttributes().iterator();
-					while(attrs.hasNext()){
-						Attribute attr = (Attribute)attrs.next();
-						if(attr.getName().equalsIgnoreCase("type")){
-							String value = attr.getValue();
-							if(value.equals("updated")){
-								return sortEntries(FeedDoc.SORT_DESC, FeedDoc.buildUpdated(null)); 
-							}
-							if(value.equals("title")){
-								return sortEntries(FeedDoc.SORT_DESC, FeedDoc.buildTitle(null,null));
-							}
-							if(value.equals("summary")){
-								return sortEntries(FeedDoc.SORT_DESC, FeedDoc.buildSummary(null,null));
-							}
-						}
-					}
-				}
-			}
-		}
-		return this;
 	}
 	
 	/**
