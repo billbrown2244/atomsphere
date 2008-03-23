@@ -69,13 +69,15 @@ public class FeedDoc {
 	public static enum ContentType {TEXT,HTML,XHTML,OTHER,EXTERNAL}
 
 	/**
-	 * the default atom xml namespace of "http://www.w3.org/2005/Atom" 
+	 * the default atom xml namespace attribute 
+	 * of "http://www.w3.org/2005/Atom" 
 	 */
     public static final Attribute atomBase = 
     	buildAttribute("xmlns","http://www.w3.org/2005/Atom");
     
     /**
-     * the default library language of "en-US" 
+     * the default library language attribute 
+     * of "en-US" 
      */
     public static final Attribute lang_en = 
     	buildAttribute("xml:lang","en-US");
@@ -91,7 +93,10 @@ public class FeedDoc {
     public static String xml_version = "1.0";
     
     /**
-     * the sort extension attribute.
+     * the atomsphere sort extension attribute.
+     * See the <a href="http://www.colorfulsoftware.com/projects/atomsphere">
+     * Project Page</a>
+     * for more details
      */
     public static final Attribute sort =
     	buildAttribute("xmlns:sort"
@@ -787,8 +792,17 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 		return contentType;
 	}
 	
-	//This method sorts the entries of the feed.  The default ordering of the entries is by updated descending 
-	private static Feed sortEntries(Feed feed, Comparator<String> comparator, Object sortInstance) throws AtomSpecException{
+	/**
+	 * This method sorts the entries of the feed.
+	 * The Updated, Title and Summary are currently the only 
+	 * elementInstance types supported.
+	 * @param feed the feed whose entries are to be sorted
+	 * @param comparator used to determine sort order
+	 * @param elementInstance serves as the key element for the entries collection 
+	 * @return the sorted feed.
+	 * @throws AtomSpecException
+	 */
+	public static Feed sortEntries(Feed feed, Comparator<String> comparator, Object elementInstance) throws AtomSpecException{
 
 		if(feed.getEntries() != null){
 			//sort the entries with the passed in instance as the key
@@ -797,13 +811,13 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 			Iterator<Entry> entryItr = currentEntries.values().iterator();
 			while(entryItr.hasNext()){
 				Entry entry = (Entry)entryItr.next();
-				if (sortInstance instanceof Updated){
+				if (elementInstance instanceof Updated){
 					resortedEntries.put(entry.getUpdated().getText(),entry);
 				}
-				if (sortInstance instanceof Title){
+				if (elementInstance instanceof Title){
 					resortedEntries.put(entry.getTitle().getText(),entry);
 				}
-				if (sortInstance instanceof Summary){
+				if (elementInstance instanceof Summary){
 					resortedEntries.put(entry.getSummary().getText(),entry);
 				}
 			}
@@ -819,8 +833,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 				Iterator<Attribute> attrItr = currentAttributes.iterator();
 				while(attrItr.hasNext()){
 					Attribute attr = (Attribute)attrItr.next();
-					if(!attr.getName().equals(attrLocal.getName())
-							&& !attr.getValue().equals(attrLocal.getValue())){
+					if(!attr.equals(attrLocal)){
 						localFeedAttrs.add(attr);
 					}
 				}
@@ -838,11 +851,11 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 				elementName = "sort:desc";
 			}
 			Attribute sortElement = null;
-			if(sortInstance instanceof Updated){
+			if(elementInstance instanceof Updated){
 				sortElement = FeedDoc.buildAttribute("type","updated");
-			}else if(sortInstance instanceof Title){
+			}else if(elementInstance instanceof Title){
 				sortElement = FeedDoc.buildAttribute("type","title");
-			}else if(sortInstance instanceof Summary){
+			}else if(elementInstance instanceof Summary){
 				sortElement = FeedDoc.buildAttribute("type","summary");
 			}
 			List<Attribute> extAttrs = new LinkedList<Attribute>();
@@ -887,14 +900,10 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 
 
 	
-	/**
-	 * Checks the xmlns (namespace) argument and applies the extension 
-	 * to the feed argument if it is recognized by the atomsphere library.
-	 * @param feed the feed to have the extension applied to it.
-	 * @param xmlns the namespace of the extension 
-	 * @return the feed with the extension applied to it.
-	 */
-	public static Feed checkForAndApplyExtension(Feed feed, Attribute xmlns) {
+	// Checks the xmlns (namespace) argument and applies the extension 
+	//to the feed argument if it is recognized by the atomsphere library.
+	//used by FeedReader and FeedWriter
+	static Feed checkForAndApplyExtension(Feed feed, Attribute xmlns) {
 
 		//if there aren't any attributes for the feed and thus no xmlns:sort attr
 		//return the defaults.
@@ -907,8 +916,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 		Iterator<Attribute> attrs = feed.getAttributes().iterator();
 		while(attrs.hasNext()){
 			Attribute attr = (Attribute)attrs.next();
-			if(attr.getName().equals(xmlns.getName()) 
-					&& attr.getValue().equals(xmlns.getValue())){
+			if(attr.equals(xmlns)){
 				try{
 					return applySort(feed);
 				}catch(Exception e){
