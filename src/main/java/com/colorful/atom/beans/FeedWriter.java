@@ -220,12 +220,13 @@ class FeedWriter{
 			if(text.indexOf('<') == -1){
 				writer.writeCharacters(text);
 			}else{
-				//write up until the first element
+				//write up until the opening of the next element
 				writer.writeCharacters(text.substring(0,text.indexOf('<')));
 				text = text.substring(text.indexOf('<')+1);
-
+				
 				//get the opening element content 
-				String startElement = text.substring(0,text.indexOf('>'));
+				String startElement = text.substring(0,text.indexOf('>')).trim();
+				
 				//check for empty element
 				if(startElement.indexOf('/') == startElement.length()-1){
 					//check for attributes
@@ -240,7 +241,7 @@ class FeedWriter{
 						}
 					}else{
 						//if the name has a prefix, just write it as part of the local name.
-						writer.writeEmptyElement(startElement.trim());
+						writer.writeEmptyElement(startElement);
 					}
 					//search for the next element 
 					writeXHTML(writer,text.substring(text.indexOf('>')+1));
@@ -257,10 +258,11 @@ class FeedWriter{
 						}
 					}else{
 						//if the name has a prefix, just write it as part of the local name.
-						writer.writeStartElement(startElement.trim());
+						writer.writeStartElement(startElement);
 					}
-					//write the characters up until the begining of the end element.
-					text = text.substring(startElement.length()+1);
+					//write the characters up until the beginning of the end element.
+					text = text.substring(text.indexOf('>')+1);
+					
 					if(attributes.length > 1){
 						writer.writeCharacters(text.substring(0,text.indexOf("</"+attributes[0])));
 						text = text.substring(text.indexOf("</"+attributes[0])+("</"+attributes[0]+">").length());
@@ -276,6 +278,7 @@ class FeedWriter{
 				}
 			}
 		}catch(Exception e){
+			e.printStackTrace();
 			throw new Exception("Content is not valid XHTML",e);
 		}
 	}
