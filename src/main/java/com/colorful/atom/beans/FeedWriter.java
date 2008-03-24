@@ -234,7 +234,9 @@ class FeedWriter{
 						//if the name has a prefix, just write it as part of the local name.
 						writer.writeEmptyElement(attributes[0]);
 						for(int i=1; i < attributes.length; i++){
-							writer.writeAttribute(attributes[i].split("\\=")[0], attributes[i].split("\\=")[1]);
+							if(attributes[i].indexOf("=") != -1){
+								writer.writeAttribute(attributes[i].split("\\=")[0], attributes[i].split("\\=")[1]);
+							}
 						}
 					}else{
 						//if the name has a prefix, just write it as part of the local name.
@@ -249,7 +251,9 @@ class FeedWriter{
 						//if the name has a prefix, just write it as part of the local name.
 						writer.writeStartElement(attributes[0]);
 						for(int i=1; i < attributes.length; i++){
-							writer.writeAttribute(attributes[i].split("\\=")[0], attributes[i].split("\\=")[1]);
+							if(attributes[i].indexOf("=") != -1){
+								writer.writeAttribute(attributes[i].split("\\=")[0], attributes[i].split("\\=")[1]);
+							}
 						}
 					}else{
 						//if the name has a prefix, just write it as part of the local name.

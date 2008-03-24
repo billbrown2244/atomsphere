@@ -283,7 +283,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @param xmlStreamWriter the fully qualified XMLStreamWriter class name.
      * @return an atom feed document string.
      */
-    public static String readFeedToStringCusotm(Feed feed, String xmlStreamWriter){
+    public static String readFeedToString(Feed feed, String xmlStreamWriter){
 
     	StringWriter theString = new StringWriter();
     	try{
@@ -1066,15 +1066,15 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
             		,feedAttrs,extensions,generator,null,icon,logo,entries);
             
             System.out.println("com.sun.xml.txw2.output.IndentingXMLStreamWriter");
-            System.out.println(FeedDoc.readFeedToStringCusotm(feed,
+            System.out.println(FeedDoc.readFeedToString(feed,
             		"com.sun.xml.txw2.output.IndentingXMLStreamWriter"));
             
             System.out.println("javanet.staxutils.IndentingXMLStreamWriter");
-            System.out.println(FeedDoc.readFeedToStringCusotm(feed,
+            System.out.println(FeedDoc.readFeedToString(feed,
     		"javanet.staxutils.IndentingXMLStreamWriter"));
             
             System.out.println("bunk");
-            System.out.println(FeedDoc.readFeedToStringCusotm(feed,
+            System.out.println(FeedDoc.readFeedToString(feed,
     		"bunk"));
             
             //pretty print version.
