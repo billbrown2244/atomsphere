@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en-US">
+  <id>http://colorfulsoftware.localhost/projects/atomsphere/atom.xml</id>
+  <updated>2007-03-08T20:52:40.70-06:00</updated>
+  <generator uri="http://www.colorfulsoftware.com/projects/atomsphere" version="1.0.2.0">Atomsphere</generator>
+  <title>Atomsphere</title>
+  <subtitle>a java atom feed library</subtitle>
+  <author>
+    <name>Bill Brown</name>
+    <uri>http://www.colorfulsoftware.com</uri>
+    <email>info@colorfulsoftware.com</email>
+  </author>
+  <link href="http://www.colorfulsoftware.com/projects/atomsphere/atom.xml" rel="self" type="application/atom+xml" />
+  <rights>Copyright 2007</rights>
+  <entry>
+    <id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#Examples</id>
+    <updated>2007-03-02T12:59:10.517-06:00</updated>
+    <title>Examples</title>
+    <published>2007-02-26T13:01:43.57-06:00</published>
+    <summary>Basic examples</summary>
+    <content type="html">&lt;br />Read an atom xml file into a Feed bean&lt;br />		    &lt;code>		    Feed feed = FeedDoc.readFeedToBean(new File(fullPath));		    &lt;/code>&lt;br />&amp;nbsp;&lt;br />		    		    Read an atom URL into a Feed bean&lt;br />		    &lt;code>		    Feed feed = FeedDoc.readFeedToBean(new URL("http://www.colorfulsoftware.com/atom.xml"));		    &lt;/code>&lt;br />&amp;nbsp;&lt;br />		    		    Read an atom xml file into an xml atom string&lt;br />		    &lt;code>		    String atomXML = FeedDoc.readFeedToString(new File(fullPath));		    &lt;/code>&lt;br />&amp;nbsp;&lt;br />		    		    Write a feed bean into an xml file&lt;br />		    &lt;code>		    FeedDoc.writeFeedDoc(fullPath,feed,FeedDoc.encoding,FeedDoc.xml_version);		    &lt;/code>&lt;br />&amp;nbsp;&lt;br />		    		    Add the custom feed tag to a jsp page.&lt;br />		    		    &lt;code>		    &amp;lt;%@taglib uri="/WEB-INF/atomsphereTags.tld" prefix="atom" %&amp;gt;&lt;/code>&lt;br />...&lt;br />&lt;code>&amp;lt;atom:atomFeed &lt;/code>&lt;br />&lt;code>     clazz="myFeed"&lt;/code>&lt;br />&lt;code>    url="http://www.colorfulsoftware.com/atom.xml"&lt;/code>&lt;br />&lt;code>feedSummary="true"&lt;/code>&lt;br />&lt;code>entryUpdated="true"&lt;/code>&lt;br />&lt;code>entryUpdatedFormat="yyyy-MM-dd" /&amp;gt;&lt;/code>&lt;br />&amp;nbsp;&lt;br /></content>
+  </entry>
+  <entry>
+    <id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#Documentation</id>
+    <updated>2007-03-02T12:59:45.475-06:00</updated>
+    <title>Documentation</title>
+    <published>2007-02-26T13:00:00.478-06:00</published>
+    <summary>Starting Documentation</summary>
+    <content type="html">&lt;h4>Installation (atomsphere library)&lt;/h4>        		&lt;ul>        		&lt;li>Add the jsr173, sjsxp, stax-utils and atomsphere jars to the classpath (WEB-INF/lib for webapps).&lt;/li>         		&lt;/ul>        		        		&lt;h4>Installation (atomsphere-taglib)&lt;/h4>        		&lt;ul>        		&lt;li>Add the atomsphere jar to the classpath (WEB-INF/lib for webapps).&lt;/li>&lt;li>Add the atomsphereTags.tld tag descriptor to the top of the jsp page (See example below). &lt;/li>        		&lt;li>Add any required attributes and optional attributes to the custom tag (See example below).&lt;/li>        		&lt;li>View the atomsphereTags.tld for a description of the attributes and what they do.&lt;/li>&lt;/ul>								        		&lt;h4>Installation (atomsphere-weblib)&lt;/h4>        		&lt;ul>&lt;li>Add the atomsphere and atomsphere-weblib jars to the classpath (WEB-INF/lib for webapps).&lt;/li>&lt;li>Copy the web-fragrment.xml (embeded in the jar file) to your application's web.xml file.&lt;/li>&lt;/ul>								&lt;h4>Installation (atomsphere-webapp)&lt;/h4>        		&lt;ul>				&lt;li>Deploy the war file to any J2EE servlet container.&lt;/li>				&lt;/ul></content>
+  </entry>
+  <entry>
+    <id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#Requirements</id>
+    <updated>2007-03-02T12:59:54.274-06:00</updated>
+    <title>Requirements</title>
+    <published>2007-02-26T12:58:53.197-06:00</published>
+    <summary>Requirements for using the libraries</summary>
+    <content type="html">&lt;br />the project is usable with jdk 1.4.2 and above&lt;br />        		        	&amp;nbsp;&lt;br />        	needed for using the library&lt;br />        	&lt;ul>        	&lt;li>&lt;a href="https://sjsxp.dev.java.net/">jsr173&lt;/a> (STAX api jar) - see the &lt;a href="http://jcp.org/aboutJava/communityprocess/final/jsr173/index.html">API&lt;/a>.&lt;/li>        	&lt;li>&lt;a href="https://sjsxp.dev.java.net/">sjsxp&lt;/a> (STAX implementation) - others implementations may work but have not been tested.&lt;/li>        	&lt;li>&lt;a href="https://stax-utils.dev.java.net/">stax-utils&lt;/a> (for pretty printing)&lt;/li>        	&lt;/ul>        	needed for using the atomsphere-taglib&lt;br />        	&lt;ul>         	&lt;li>the atomsphere library&lt;/li>       	        	&lt;li>Any J2EE Servlet Container&lt;/li>        	&lt;/ul>        	needed for using the atomsphere-weblib&lt;br />        	&lt;ul>           	&lt;li>the atomsphere library&lt;/li>      	        	&lt;li>Any J2EE Servlet Container&lt;/li>        	&lt;/ul>        	needed for using the example atomsphere-webapp&lt;br />        	&lt;ul>        	&lt;li>Any J2EE Servlet Container&lt;/li>&lt;/ul></content>
+  </entry>
+  <entry>
+    <id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#About</id>
+    <updated>2007-03-02T13:00:00.699-06:00</updated>
+    <title>About</title>
+    <published>2007-02-26T12:34:01.330-06:00</published>
+    <summary>About the project</summary>
+    <content type="html">&lt;ul>        	&lt;li>&lt;span class="boldText">Atomsphere&lt;/span> is a java library that allows you to create and modify atom 1.0 feeds.&lt;/li>        	&lt;li>It is distributed under the GNU GPL license and can be used in any manner complient with the license.&lt;/li>        	&lt;li>It is also packaged as a servlet-lib for use in web applications.&lt;/li>        	&lt;li>It is also packaged as a custom tag library to display feeds on a webapage.&lt;/li>        	&lt;li>It also comes with an example webapp which demonstrates some example uses of the library.&lt;/li>        	&lt;li>It is written to be tied as closely as possible to the current atom specification found &lt;a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">here&lt;/a>.&lt;/li>         	&lt;/ul></content>
+  </entry>
+</feed>

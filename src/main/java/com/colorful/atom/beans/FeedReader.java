@@ -139,7 +139,7 @@ class FeedReader{
 		return FeedDoc.checkForAndApplyExtension(feed,FeedDoc.sort);
 	}
 
-	private List<Attribute> getAttributes(XMLStreamReader reader,List<Attribute> attributes) throws Exception{
+	List<Attribute> getAttributes(XMLStreamReader reader,List<Attribute> attributes) throws Exception{
 		if(attributes == null){
 			attributes = new LinkedList<Attribute>();
 		}
@@ -172,7 +172,7 @@ class FeedReader{
 		return attributes;
 	}
 
-	private List<Extension> readExtension(XMLStreamReader reader
+	List<Extension> readExtension(XMLStreamReader reader
 			,List<Extension> extensions) throws Exception{
 		
 		if(extensions == null){
@@ -192,7 +192,7 @@ class FeedReader{
 		return extensions;
 	}
 
-	private SortedMap<String,Entry> readEntry(XMLStreamReader reader, SortedMap<String,Entry> entries) throws Exception{
+	SortedMap<String,Entry> readEntry(XMLStreamReader reader, SortedMap<String,Entry> entries) throws Exception{
 		if(entries == null){
 			entries = new TreeMap<String,Entry>();
 		}
@@ -268,7 +268,7 @@ class FeedReader{
 		return entries;
 	}
 
-	private Summary readSummary(XMLStreamReader reader) throws Exception{
+	Summary readSummary(XMLStreamReader reader) throws Exception{
 		List<Attribute> attributes = getAttributes(reader,null);
 		//if the content is XHTML, we need to read in the contents of the div.
 		String summary = null;
@@ -280,7 +280,7 @@ class FeedReader{
 		return FeedDoc.buildSummary(summary, attributes);
 	}
 
-	private boolean containsXHTML(List<Attribute> attributes) {
+	boolean containsXHTML(List<Attribute> attributes) {
 		if(attributes != null){
 			Iterator<Attribute> attrsItr = attributes.iterator();
 			//look for the xhtml type.
@@ -294,7 +294,7 @@ class FeedReader{
 		return false;
 	}
 
-	private Source readSource(XMLStreamReader reader) throws Exception{
+	Source readSource(XMLStreamReader reader) throws Exception{
 		boolean breakOut = false;
 		
 		List<Attribute> attributes = null;
@@ -365,7 +365,7 @@ class FeedReader{
 				,extensions,generator,subtitle,icon,logo);
 	}
 
-	private SimpleDateFormat getSimpleDateFormat(){
+	SimpleDateFormat getSimpleDateFormat(){
 		String timeZoneOffset = null;
 		TimeZone timeZone = TimeZone.getDefault();
 		int hours = (((timeZone.getRawOffset()/1000)/60)/60);
@@ -377,7 +377,7 @@ class FeedReader{
 		return new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'"+timeZoneOffset+"\'");
 	}
 	
-	private Published readPublished(XMLStreamReader reader) throws Exception{
+	Published readPublished(XMLStreamReader reader) throws Exception{
 		String dateText = reader.getElementText();
 		try{
 			return FeedDoc.buildPublished(getSimpleDateFormat().parse(dateText));        
@@ -389,7 +389,7 @@ class FeedReader{
 	
 
 	
-	private Content readContent(XMLStreamReader reader) throws Exception{
+	Content readContent(XMLStreamReader reader) throws Exception{
 		List<Attribute> attributes = getAttributes(reader,null);
 		//if the content is XHTML, we need to skip the contents of the div.
 		String content = null;
@@ -402,7 +402,7 @@ class FeedReader{
 	}
 	
 
-	private Updated readUpdated(XMLStreamReader reader) throws Exception{
+	Updated readUpdated(XMLStreamReader reader) throws Exception{
 		String dateText = reader.getElementText();
 		try{
 			return FeedDoc.buildUpdated(getSimpleDateFormat().parse(dateText));        
@@ -412,7 +412,7 @@ class FeedReader{
 		}
 	}
 
-	private Title readTitle(XMLStreamReader reader) throws Exception{
+	Title readTitle(XMLStreamReader reader) throws Exception{
 		List<Attribute> attributes = getAttributes(reader,null);
 		//if the content is XHTML, we need to read in the contents of the div.
 		String title = null;
@@ -424,7 +424,7 @@ class FeedReader{
 		return FeedDoc.buildTitle(title, attributes);
 	}
 
-	private String readXHTML(XMLStreamReader reader)
+	String readXHTML(XMLStreamReader reader)
 			throws XMLStreamException, Exception {
 		StringBuffer xhtml = new StringBuffer();
 		while(reader.hasNext()){
@@ -475,7 +475,7 @@ class FeedReader{
 		return xhtml.toString().replaceAll("<br></br>","<br />").replaceAll("<hr></hr>","<hr />");
 	}
 
-	private Subtitle readSubtitle(XMLStreamReader reader) throws Exception{
+	Subtitle readSubtitle(XMLStreamReader reader) throws Exception{
 		List<Attribute> attributes = getAttributes(reader,null);
 		//if the content is XHTML, we need to read in the contents of the div.
 		String subtitle = null;
@@ -487,7 +487,7 @@ class FeedReader{
 		return FeedDoc.buildSubtitle(subtitle, attributes);
 	}
 
-	private Rights readRights(XMLStreamReader reader) throws Exception{
+	Rights readRights(XMLStreamReader reader) throws Exception{
 		List<Attribute> attributes = getAttributes(reader,null);
 		//if the content is XHTML, we need to read in the contents of the div.
 		String rights = null;
@@ -499,11 +499,11 @@ class FeedReader{
 		return FeedDoc.buildRights(rights, attributes);
 	}
 
-	private Logo readLogo(XMLStreamReader reader) throws Exception{
+	Logo readLogo(XMLStreamReader reader) throws Exception{
 		return FeedDoc.buildLogo(getAttributes(reader,null),reader.getElementText());
 	}
 
-	private List<Link> readLink(XMLStreamReader reader, List<Link> links) throws Exception{
+	List<Link> readLink(XMLStreamReader reader, List<Link> links) throws Exception{
 		if(links == null){
 			links = new LinkedList<Link>();
 		}
@@ -511,19 +511,19 @@ class FeedReader{
 		return links;
 	}
 
-	private Id readId(XMLStreamReader reader) throws Exception{
+	Id readId(XMLStreamReader reader) throws Exception{
 		return FeedDoc.buildId(getAttributes(reader,null),reader.getElementText());
 	}
 
-	private Icon readIcon(XMLStreamReader reader) throws Exception{
+	Icon readIcon(XMLStreamReader reader) throws Exception{
 		return FeedDoc.buildIcon(getAttributes(reader,null),reader.getElementText());
 	}
 
-	private Generator readGenerator(XMLStreamReader reader) throws Exception{
+	Generator readGenerator(XMLStreamReader reader) throws Exception{
 		return FeedDoc.buildGenerator(getAttributes(reader,null),reader.getElementText());
 	}
 
-	private List<Contributor> readContributor(XMLStreamReader reader
+	List<Contributor> readContributor(XMLStreamReader reader
 			, List<Contributor> contributors) throws Exception{
 		
 		if(contributors == null){
@@ -537,7 +537,7 @@ class FeedReader{
 		return contributors;
 	}
 
-	private List<Category> readCategory(XMLStreamReader reader, List<Category> categories) throws Exception{
+	List<Category> readCategory(XMLStreamReader reader, List<Category> categories) throws Exception{
 		if(categories == null){
 			categories = new LinkedList<Category>();
 		}
@@ -545,7 +545,7 @@ class FeedReader{
 		return categories;
 	}
 
-	private List<Author> readAuthor(XMLStreamReader reader
+	List<Author> readAuthor(XMLStreamReader reader
 			, List<Author> authors) throws Exception{
 		if(authors == null){
 			authors = new LinkedList<Author>();
@@ -556,7 +556,7 @@ class FeedReader{
 		return authors;
 	}
 
-	private AtomPersonConstruct readAtomPersonConstruct
+	AtomPersonConstruct readAtomPersonConstruct
 	(XMLStreamReader reader,String personType) throws Exception{
 		boolean breakOut = false;
 		final List<Attribute> attributes = getAttributes(reader,null);
