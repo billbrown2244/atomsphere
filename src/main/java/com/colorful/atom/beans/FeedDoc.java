@@ -30,7 +30,6 @@ package com.colorful.atom.beans;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -39,7 +38,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.net.URL;
-import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
@@ -54,7 +52,7 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 /**
- * This class reads and writes atom feeds to and from xml files, feed objects, streams or xml strings.
+ * This class reads and writes atom feeds to and from xml files, feed objects or xml strings.
  * It contains all of the factory methods for building immutable copies of the elements.
  * @author Bill Brown
  *
@@ -148,8 +146,10 @@ public class FeedDoc {
     }
     
     /**
-     * For example: to get an indented xml output using the stax-utils library 
-     * 	do this: 
+     * For example: to pass the 
+     * TXW com.sun.xml.txw2.output.IndentingXMLStreamWriter
+     * or the stax-utils javanet.staxutils.IndentingXMLStreamWriter
+     * for indented printing do this: 
      * 	<pre>
 XmlStreamWriter writer = 
 	new IndentingXMLStreamWriter(
@@ -206,8 +206,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
             output.flush();
             output.close();
         }catch(Exception e){
-            System.err.println("error creating xml file.");
-            e.printStackTrace();
+           throw new Exception("error creating xml file.",e);
         }
     }
 
@@ -217,7 +216,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 	 * @param inputStream the stream containing the atom xml to be read.
 	 * @return  an atom feed document string.
 	 */
-	public static String readFeedToString(InputStream inputStream){
+	public static String readFeedToString(InputStream inputStream) throws Exception {
 		StringBuffer feedXML = new StringBuffer();
         try{
             BufferedReader reader = new BufferedReader( new InputStreamReader(inputStream));
@@ -227,8 +226,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
             }
             reader.close();
         }catch(Exception e){
-            System.err.println("error creating xml string from feed.");
-            e.printStackTrace();
+            throw new Exception("error creating xml string from feed.",e);
         }
         return feedXML.toString();
 	}
@@ -238,7 +236,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @param file the atom xml file to be read
      * @return an atom feed document string.
      */
-    public static String readFeedToString(File file){
+    public static String readFeedToString(File file) throws Exception {
     	StringBuffer feedXML = new StringBuffer();
         try{
             BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -249,9 +247,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
             reader.close();
 
         }catch(Exception e){
-            System.err.println("error creating xml string from feed.");
-            e.printStackTrace();
-            return null;
+            throw new Exception("error creating xml string from feed.",e);
         }
         return feedXML.toString();
     }
@@ -261,13 +257,11 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @param url the location of the atom file on the Internet
      * @return an atom feed document string.
      */
-    public static String readFeedToString(URL url){
+    public static String readFeedToString(URL url) throws Exception {
     	try{
     		return readFeedToString(url.openStream());
     	}catch(Exception e){
-            System.err.println("error creating xml string from feed.");
-            e.printStackTrace();
-            return null;
+            throw new Exception("error creating xml string from feed.",e);
         }
     }
     
@@ -283,7 +277,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @param xmlStreamWriter the fully qualified XMLStreamWriter class name.
      * @return an atom feed document string.
      */
-    public static String readFeedToString(Feed feed, String xmlStreamWriter){
+    public static String readFeedToString(Feed feed, String xmlStreamWriter) throws Exception {
 
     	StringWriter theString = new StringWriter();
     	try{
@@ -300,8 +294,6 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
     		writer.flush();
     		writer.close();
     	}catch(Exception e){
-    		System.err.println("error creating indented xml string from feed trying non indented.");
-    		e.printStackTrace();
     		return readFeedToString(feed);
     	}
     	return theString.toString();
@@ -312,7 +304,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @param feed the feed to be converted to an atom string.
      * @return an atom feed document string.
      */
-    public static String readFeedToString(Feed feed){
+    public static String readFeedToString(Feed feed) throws Exception {
     	
     	StringWriter theString = new StringWriter();
     	try{
@@ -322,8 +314,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
             writer.flush();
             writer.close();
         }catch(Exception e){
-            System.err.println("error creating xml file.");
-            e.printStackTrace();
+            throw new Exception("error creating xml file.",e);
         }
         return theString.toString();
     }
@@ -347,8 +338,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
             writer.flush();
             writer.close();
         }catch(Exception e){
-            System.err.println("error creating xml file.");
-            e.printStackTrace();
+           	throw new Exception("error creating xml file.",e);
         }
         return theString.toString();
     }
@@ -903,7 +893,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 	// Checks the xmlns (namespace) argument and applies the extension 
 	//to the feed argument if it is recognized by the atomsphere library.
 	//used by FeedReader and FeedWriter
-	static Feed checkForAndApplyExtension(Feed feed, Attribute xmlns) {
+	static Feed checkForAndApplyExtension(Feed feed, Attribute xmlns) throws Exception {
 
 		//if there aren't any attributes for the feed and thus no xmlns:sort attr
 		//return the defaults.
@@ -917,14 +907,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 		while(attrs.hasNext()){
 			Attribute attr = (Attribute)attrs.next();
 			if(attr.equals(xmlns)){
-				try{
-					return applySort(feed);
-				}catch(Exception e){
-					//this should never happen because 
-					//we check for errors on initial creation
-					//but if it does, print the stack trace
-					e.printStackTrace();
-				}
+				return applySort(feed);
 			}
 		}
 		return feed;
@@ -978,118 +961,5 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 		}
 		return feed;
 	}
-    /**
-     * Example library usage test method.
-     * @param args
-     */
-    public static void main(String[] args){
-        try{
-            
-            List<Attribute> genAttrs = new LinkedList<Attribute>();
-            genAttrs.add(buildAttribute("uri","http://www.colorfulsoftware.com/projects/atomsphere"));
-            genAttrs.add(buildAttribute("version","2.0.0.0"));
-            Generator generator = buildGenerator(genAttrs,"Atomsphere");
 
-            Id id = buildId(null,"http://www.colorfulsoftware.com/atom.xml");
-
-            Updated updated = buildUpdated(Calendar.getInstance().getTime());
-
-            Title title = buildTitle("test feed",null);
-
-            List<Contributor> contributors = new LinkedList<Contributor>();
-            Contributor contributor = buildContributor(new Name("Mad Dog"),null
-            		,buildEmail("info@maddog.net"),null,null);
-            contributors.add(contributor);
-            
-            Rights rights = buildRights("GPL 1.0",null);
-
-            Icon icon = buildIcon(null,"http://host/images/icon.png");
-
-            Logo logo = buildLogo(null,"http://host/images/logo.png");
-
-            List<Attribute> catAttrs = new LinkedList<Attribute>();
-            catAttrs.add(buildAttribute("term","music"));
-            catAttrs.add(buildAttribute("scheme","http://mtv.com/genere"));
-            catAttrs.add(buildAttribute("label","music"));
-            List<Category> categories = new LinkedList<Category>();
-            Category category = buildCategory(catAttrs,null);
-            categories.add(category);
-            
-            List<Attribute> linkAttrs = new LinkedList<Attribute>();
-            linkAttrs.add(buildAttribute("href","http://www.yahoo.com"));
-            linkAttrs.add(buildAttribute("rel","self"));
-            linkAttrs.add(buildAttribute("hreflang","en-US"));
-            List<Link> links = new LinkedList<Link>();
-            Link link = buildLink(linkAttrs,null);
-            links.add(link);
-            
-            Attribute extAttr = buildAttribute("xmlns:xhtml","http://www.w3.org/1999/xhtml");
-            List<Attribute> extAttrs = new LinkedList<Attribute>();
-            extAttrs.add(extAttr);
-            
-            //the base feed attributes.
-            List<Attribute> feedAttrs = new LinkedList<Attribute>();
-            feedAttrs.add(atomBase);
-            feedAttrs.add(lang_en);
-            feedAttrs.addAll(extAttrs);
-            
-            List<Extension> extensions = new LinkedList<Extension>();
-            Extension extension = buildExtension("xhtml:div",null
-            		,"<span style='color:red;'>hello there</span>");
-            extensions.add(extension);
-            
-            List<Author> authors = new LinkedList<Author>();
-            authors.add(buildAuthor(buildName("Bill Brown"),null,null,null,null));
-            Entry entry = buildEntry(
-            		buildId(null,"http://www.colorfulsoftware.com/atom.xml#entry1")
-            ,buildTitle("an example atom entry",null)
-            ,buildUpdated(Calendar.getInstance().getTime())
-            ,null
-            ,buildContent("Hello World.  Welcome to the atomsphere feed builder for atom 1.0 builds.  I hope it is useful for you.",null)
-            ,authors
-            ,null
-            ,null
-            ,null
-            ,null
-            ,null
-            ,null
-            ,null
-            ,null
-            );
-
-            SortedMap<String,Entry> entries = new TreeMap<String,Entry>();
-            entries.put(entry.getUpdated().getText(),entry);
-            
-            
-            Feed feed = buildFeed(id,title,updated,rights
-            		,null,categories,contributors,links
-            		,feedAttrs,extensions,generator,null,icon,logo,entries);
-            
-            System.out.println("com.sun.xml.txw2.output.IndentingXMLStreamWriter");
-            System.out.println(FeedDoc.readFeedToString(feed,
-            		"com.sun.xml.txw2.output.IndentingXMLStreamWriter"));
-            
-            System.out.println("javanet.staxutils.IndentingXMLStreamWriter");
-            System.out.println(FeedDoc.readFeedToString(feed,
-    		"javanet.staxutils.IndentingXMLStreamWriter"));
-            
-            System.out.println("bunk");
-            System.out.println(FeedDoc.readFeedToString(feed,
-    		"bunk"));
-            
-            //pretty print version.
-            FeedDoc.writeFeedDoc(new javanet.staxutils.IndentingXMLStreamWriter(
-					XMLOutputFactory.newInstance()
-					.createXMLStreamWriter(
-						new FileOutputStream("out.xml")
-						,encoding)),feed,encoding,xml_version);
-
-            Feed feed2 = FeedDoc.readFeedToBean(new File("out.xml"));
-            
-            //no spaces version
-            FeedDoc.writeFeedDoc(new FileOutputStream("out2.xml"),feed2,encoding,xml_version);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
 }
