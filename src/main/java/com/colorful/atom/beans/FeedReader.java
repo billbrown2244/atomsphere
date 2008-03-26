@@ -24,9 +24,12 @@ package com.colorful.atom.beans;
 
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
@@ -370,7 +373,8 @@ class FeedReader{
 	SimpleDateFormat getSimpleDateFormat(){
 		String timeZoneOffset = null;
 		TimeZone timeZone = TimeZone.getDefault();
-		System.out.println("timezone = "+timeZone.toString());
+		//System.out.println("calnedar timezone = "+Calendar.getInstance().getTimeZone().toString());
+		//System.out.println("timezone = "+timeZone.toString());
 		int hours = (((timeZone.getRawOffset()/1000)/60)/60);
 		System.out.println("hours = "+hours);
 		if(hours >= 0){

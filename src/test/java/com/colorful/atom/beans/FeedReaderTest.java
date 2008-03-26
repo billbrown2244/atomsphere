@@ -6,6 +6,7 @@ import java.beans.XMLDecoder;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.StringReader;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -70,6 +71,11 @@ public class FeedReaderTest {
 	@Test
 	public void testReadFeed() {
 		System.out.println("in testRead Feed.");
+		Enumeration<?> props = System.getProperties().propertyNames();
+		String val = null;
+		for (;props.hasMoreElements();) {
+	        System.out.println((val = (String)props.nextElement())+ " = " + System.getProperty(val));		
+		}
 		try{
 			Feed feed = feedReader.readFeed(reader);
 			System.out.println("number of entries = "+feed.getEntries().size());
