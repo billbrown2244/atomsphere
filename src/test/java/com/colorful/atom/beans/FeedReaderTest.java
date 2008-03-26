@@ -58,6 +58,7 @@ public class FeedReaderTest {
 		while(feeds.hasNext()){
 			//there should only be 1 element.
 			reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(feeds.next()));
+			System.out.println(reader.getClass());
 		}
 		reader2 = XMLInputFactory.newInstance().createXMLStreamReader(new FileInputStream("src/test/resources/flat.xml"));
 		reader3 = XMLInputFactory.newInstance().createXMLStreamReader(new FileInputStream("src/test/resources/dump.xml"));
