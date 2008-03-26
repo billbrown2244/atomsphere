@@ -24,12 +24,9 @@ package com.colorful.atom.beans;
 
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
@@ -146,6 +143,12 @@ class FeedReader{
 		if(attributes == null){
 			attributes = new LinkedList<Attribute>();
 		}
+		
+		//skip the start document section if we are passed a document fragment.
+		if(reader.getEventType() == XMLStreamConstants.START_DOCUMENT){
+			reader.next();
+		}
+		
 		int eventSkip = 0;
 		for(int i=0; i < reader.getNamespaceCount(); i++){
 			eventSkip++;
@@ -196,7 +199,7 @@ class FeedReader{
 	}
 
 	SortedMap<String,Entry> readEntry(XMLStreamReader reader, SortedMap<String,Entry> entries) throws Exception{
-		System.out.println("in read entry");
+		
 		if(entries == null){
 			entries = new TreeMap<String,Entry>();
 		}
@@ -222,6 +225,7 @@ class FeedReader{
 		while(reader.hasNext()){
 			switch (reader.next()){
 			case XMLStreamConstants.START_ELEMENT:
+				
 				//call each feed elements read method depending on the name
 				if(reader.getLocalName().equals("id")){
 					id = readId(reader);
@@ -253,7 +257,6 @@ class FeedReader{
 				break;
 
 			case XMLStreamConstants.END_ELEMENT:
-				System.out.println("reached end entry.");
 				if(reader.getLocalName().equals("entry")){
 					breakOut = true;
 				}else{
@@ -373,16 +376,12 @@ class FeedReader{
 	SimpleDateFormat getSimpleDateFormat(){
 		String timeZoneOffset = null;
 		TimeZone timeZone = TimeZone.getDefault();
-		//System.out.println("calnedar timezone = "+Calendar.getInstance().getTimeZone().toString());
-		//System.out.println("timezone = "+timeZone.toString());
 		int hours = (((timeZone.getRawOffset()/1000)/60)/60);
-		System.out.println("hours = "+hours);
 		if(hours >= 0){
 			timeZoneOffset = TimeZone.getTimeZone("GMT"+"+"+hours).getID().substring(3);
 		}else{
 			timeZoneOffset = TimeZone.getTimeZone("GMT"+"-"+Math.abs(hours)).getID().substring(3);
 		}
-		System.out.println("simple date format = "+"yyyy-MM-dd\'T\'HH:mm:ss.SS\'"+timeZoneOffset+"\'");
 		return new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'"+timeZoneOffset+"\'");
 	}
 	
@@ -413,18 +412,12 @@ class FeedReader{
 
 	Updated readUpdated(XMLStreamReader reader) throws Exception{
 		String dateText = reader.getElementText();
-		Updated updated = null;
-		System.out.println("date Text before = "+dateText);
 		try{
-			//return FeedDoc.buildUpdated(getSimpleDateFormat().parse(dateText));    
-			updated = FeedDoc.buildUpdated(getSimpleDateFormat().parse(dateText));
+			return FeedDoc.buildUpdated(getSimpleDateFormat().parse(dateText));   
 		}catch(Exception e){
 			SimpleDateFormat simpleDateFmt2 = new SimpleDateFormat(getSimpleDateFormat().toPattern().substring(0,19));
-			//return FeedDoc.buildUpdated(simpleDateFmt2.parse(dateText.substring(0,19)));
-			updated = FeedDoc.buildUpdated(simpleDateFmt2.parse(dateText.substring(0,19)));
+			return FeedDoc.buildUpdated(simpleDateFmt2.parse(dateText.substring(0,19)));
 		}
-		System.out.println("date Text after = "+updated.getText());
-		return updated;
 	}
 
 	Title readTitle(XMLStreamReader reader) throws Exception{
@@ -457,7 +450,7 @@ class FeedReader{
 						}
 						List<Attribute> attributes = getAttributes(reader,null);
 						//add the attributes
-						if(attributes != null){
+						if(attributes != null && attributes.size() > 0){
 							Iterator<Attribute> attrItr = attributes.iterator();
 							while(attrItr.hasNext()){
 								Attribute attr = (Attribute)attrItr.next();
@@ -484,6 +477,8 @@ class FeedReader{
 					xhtml.append(reader.getText());					
 			}
 			if(breakOut){
+				//clear past the end enclosing div.
+				reader.next();
 				break;				
 			}
 		}

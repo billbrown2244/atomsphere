@@ -101,15 +101,18 @@ public class Entry {
 					Attribute attr = (Attribute)attrsItr.next();
 					//check for src attribute
 					if(attr.getName().equals("src") && summary == null){
-						throw new AtomSpecException("atom:entry elements MUST contain an atom:summary element in either of the following cases: the atom:entry contains an atom:content that has a \"src\" attribute (and is thus empty).");
+						throw new AtomSpecException("atom:entry elements MUST contain an atom:summary element if the atom:entry contains an atom:content that has a \"src\" attribute (and is thus empty).");
 					}
-					//check for valid xml mime type.
+					//check for non text or html or xhtml or xml mime types.
 					if(attr.getName().equals("type")
+							&& !attr.getValue().equals("text")
+							&& !attr.getValue().equals("html")
+							&& !attr.getValue().equals("xhtml")
 							&& !attr.getValue().startsWith("text/")
 							&& !attr.getValue().endsWith("/xml")
 							&& !attr.getValue().endsWith("\\+xml")
 							&& summary == null){
-						throw new AtomSpecException("the atom:entry contains content that is encoded in Base64; i.e., the \"type\" attribute of atom:content is a MIME media type [MIMEREG], but is not an XML media type [RFC3023], does not begin with \"text/\", and does not end with \"/xml\" or \"+xml\".");
+						throw new AtomSpecException("atom:entry elements MUST contain an atom:summary element if the atom:entry contains content that is encoded in Base64; i.e., the \"type\" attribute of atom:content is a MIME media type [MIMEREG], but is not an XML media type [RFC3023], does not begin with \"text/\", and does not end with \"/xml\" or \"+xml\".");
 					}
 				}
 			}

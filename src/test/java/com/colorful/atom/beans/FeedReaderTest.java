@@ -6,9 +6,9 @@ import java.beans.XMLDecoder;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.StringReader;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.SortedMap;
 
 
 import javax.xml.stream.XMLInputFactory;
@@ -48,6 +48,64 @@ public class FeedReaderTest {
 		+"<updated>2007-03-02T12:59:10.517-06:00</updated>    <title>Examples</title>    <published>2007-02-26T13:01:43.57-06:00</published>    "
 		+"<summary>Basic examples</summary>    <content type=\"html\">&lt;br /&gt;Read an atom xml file into a Feed bean&lt;br /&gt;              &lt;code&gt;                    Feed feed = FeedDoc.readFeedToBean(new File(fullPath));                   &lt;/code&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;                                   Read an atom URL into a Feed bean&lt;br /&gt;             &lt;code&gt;                    Feed feed = FeedDoc.readFeedToBean(new URL(\"http://www.colorfulsoftware.com/atom.xml\"));                  &lt;/code&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;                                   Read an atom xml file into an xml atom string&lt;br /&gt;                 &lt;code&gt;                    String atomXML = FeedDoc.readFeedToString(new File(fullPath));                    &lt;/code&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;                                   Write a feed bean into an xml file&lt;br /&gt;                    &lt;code&gt;                    FeedDoc.writeFeedDoc(fullPath,feed,FeedDoc.encoding,FeedDoc.xml_version);                 &lt;/code&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;                                   Add the custom feed tag to a jsp page.&lt;br /&gt;                                &lt;code&gt;  &amp;lt;%@taglib uri=\"/WEB-INF/atomsphereTags.tld\" prefix=\"atom\" %&amp;gt;&lt;/code&gt;&lt;br /&gt;...&lt;br /&gt;&lt;code&gt;&amp;lt;atom:atomFeed &lt;/code&gt;&lt;br /&gt;&lt;code&gt;     clazz=\"myFeed\"&lt;/code&gt;&lt;br /&gt;&lt;code&gt;    url=\"http://www.colorfulsoftware.com/atom.xml\"&lt;/code&gt;&lt;br /&gt;&lt;code&gt;feedSummary=\"true\"&lt;/code&gt;&lt;br /&gt;&lt;code&gt;entryUpdated=\"true\"&lt;/code&gt;&lt;br /&gt;&lt;code&gt;entryUpdatedFormat=\"yyyy-MM-dd\" /&amp;gt;&lt;/code&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;</content> </entry></feed>";
 	
+	private String title1 = 
+		"<title type=\"xhtml\" xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">"
+		+"<xhtml:div>"
+		+"Less: <xhtml:em> &lt; </xhtml:em>"
+		+"</xhtml:div>"
+		+"</title>";
+	
+	private String summary1 = 
+		"<summary type=\"xhtml\">"
+		+"<div xmlns=\"http://www.w3.org/1999/xhtml\">"
+	    +  "This is <b>XHTML</b> content."
+	    +"</div>"
+	    +"</summary>";
+	
+	private String summary2 = 
+		"<summary type=\"xhtml\">"
+		+"<xhtml:div xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">"
+	    +"This is <xhtml:b>XHTML</xhtml:b> content."
+	    +"</xhtml:div>"
+	    +"</summary>";
+	
+	private String summary3 =
+		"<entry xmlns:xh=\"http://some.xh.specific.uri/xh\">    <id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#Requirements</id>    "
+		+"<updated>2007-03-02T12:59:54.274-06:00</updated>    <title>Requirements</title>    <published>2007-02-26T12:58:53.197-06:00</published>    "
+		//prefix is bound at entry
+		+"<summary type=\"xhtml\">"
+		+"<xh:div>"
+		+"This is <xh:b>XHTML</xh:b> content."
+		+"</xh:div>"
+		+"</summary>"
+		+"</entry>";
+	
+	private String content1 = 
+		"<content type=\"xhtml\">"
+		+"<div xmlns=\"http://www.w3.org/1999/xhtml\">"
+		+"This is <b>XHTML</b> content."
+		+"</div>"
+		+"</content>";
+
+	private String content2 = 
+		"<content type=\"xhtml\">"
+		+"<xhtml:div xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">"
+		+"This is <xhtml:b>XHTML</xhtml:b> content."
+		+"</xhtml:div>"
+		+"</content>"; 
+	
+	private String content3 = 
+		"<entry xmlns:xh=\"http://some.xh.specific.uri/xh\">    <id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#Requirements</id>    "
+		+"<updated>2007-03-02T12:59:54.274-06:00</updated>    <title>Requirements</title>    <published>2007-02-26T12:58:53.197-06:00</published>    "
+		//prefix is bound at entry
+		+"<content type=\"xhtml\">"
+		+"<xh:div>"
+		+"This is <xh:b>XHTML</xh:b> content."
+		+"</xh:div>"
+		+"</content>"
+		+"</entry>";
+	
+	
 	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() throws Exception {
@@ -70,24 +128,19 @@ public class FeedReaderTest {
 
 	@Test
 	public void testReadFeed() {
-		System.out.println("in testRead Feed.");
-		Enumeration<?> props = System.getProperties().propertyNames();
-		String val = null;
-		for (;props.hasMoreElements();) {
-	        System.out.println((val = (String)props.nextElement())+ " = " + System.getProperty(val));		
-		}
+		
 		try{
 			Feed feed = feedReader.readFeed(reader);
-			System.out.println("number of entries = "+feed.getEntries().size());
+			assertTrue(feed.getEntries().size() == 4);
 			
 			feed = feedReader.readFeed(reader2);
-			System.out.println("number of entries2 = "+feed.getEntries().size());
+			assertTrue(feed.getEntries().size() == 4);
 			
 			feed = feedReader.readFeed(reader3);
-			System.out.println("number of entries3 = "+feed.getEntries().size());
+			assertTrue(feed.getEntries().size() == 4);
 			
 			feed = FeedDoc.readFeedToBean(xmlString);
-			System.out.println("number of entries4 = "+feed.getEntries().size());
+			assertTrue(feed.getEntries().size() == 4);
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -112,7 +165,46 @@ public class FeedReaderTest {
 
 	@Test
 	public void testReadSummary() {
-		//fail("Not yet implemented");
+		try{
+			reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(summary1));
+			Summary summary = feedReader.readSummary(reader);
+			assertTrue(summary.getText().equals("This is <b>XHTML</b> content."));
+			assertTrue(summary.getAttributes() != null);
+			assertTrue(summary.getAttributes().size() == 1);
+			assertTrue(summary.getAttributes().get(0).getName().equals("type"));
+			assertTrue(summary.getAttributes().get(0).getValue().equals("xhtml"));
+			
+			reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(summary2));
+			summary = feedReader.readSummary(reader);
+			assertTrue(summary.getText().equals("This is <xhtml:b>XHTML</xhtml:b> content."));
+			assertTrue(summary.getAttributes() != null);
+			assertTrue(summary.getAttributes().size() == 1);
+			assertTrue(summary.getAttributes().get(0).getName().equals("type"));
+			assertTrue(summary.getAttributes().get(0).getValue().equals("xhtml"));
+			
+			reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(summary3));
+			SortedMap<String,Entry> entries = feedReader.readEntry(reader, null);
+			assertTrue(entries != null);
+			assertTrue(entries.size() == 1);
+			
+			Entry entry = entries.values().iterator().next();
+			assertTrue(entry.getAttributes() != null);
+			assertTrue(entry.getAttributes().size() == 1);
+			assertTrue(entry.getAttributes().get(0).getName().equals("xmlns:xh"));
+			assertTrue(entry.getAttributes().get(0).getValue().equals("http://some.xh.specific.uri/xh"));
+			
+			summary = entry.getSummary();
+			assertTrue(summary != null);
+			assertTrue(summary.getText().equals("This is <xh:b>XHTML</xh:b> content."));
+			assertTrue(summary.getAttributes() != null);
+			assertTrue(summary.getAttributes().size() == 1);
+			assertTrue(summary.getAttributes().get(0).getName().equals("type"));
+			assertTrue(summary.getAttributes().get(0).getValue().equals("xhtml"));
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			fail("could not read title fragment.");
+		}
 	}
 
 	@Test
@@ -137,7 +229,46 @@ public class FeedReaderTest {
 
 	@Test
 	public void testReadContent() {
-		//fail("Not yet implemented");
+		try{
+			reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(content1));
+			Content content = feedReader.readContent(reader);
+			assertTrue(content.getContent().equals("This is <b>XHTML</b> content."));
+			assertTrue(content.getAttributes() != null);
+			assertTrue(content.getAttributes().size() == 1);
+			assertTrue(content.getAttributes().get(0).getName().equals("type"));
+			assertTrue(content.getAttributes().get(0).getValue().equals("xhtml"));
+			
+			reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(content2));
+			content = feedReader.readContent(reader);
+			assertTrue(content.getContent().equals("This is <xhtml:b>XHTML</xhtml:b> content."));
+			assertTrue(content.getAttributes() != null);
+			assertTrue(content.getAttributes().size() == 1);
+			assertTrue(content.getAttributes().get(0).getName().equals("type"));
+			assertTrue(content.getAttributes().get(0).getValue().equals("xhtml"));
+			
+			reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(content3));
+			SortedMap<String,Entry> entries = feedReader.readEntry(reader, null);
+			assertTrue(entries != null);
+			assertTrue(entries.size() == 1);
+			
+			Entry entry = entries.values().iterator().next();
+			assertTrue(entry.getAttributes() != null);
+			assertTrue(entry.getAttributes().size() == 1);
+			assertTrue(entry.getAttributes().get(0).getName().equals("xmlns:xh"));
+			assertTrue(entry.getAttributes().get(0).getValue().equals("http://some.xh.specific.uri/xh"));
+			
+			content = entry.getContent();
+			assertTrue(content != null);
+			assertTrue(content.getContent().equals("This is <xh:b>XHTML</xh:b> content."));
+			assertTrue(content.getAttributes() != null);
+			assertTrue(content.getAttributes().size() == 1);
+			assertTrue(content.getAttributes().get(0).getName().equals("type"));
+			assertTrue(content.getAttributes().get(0).getValue().equals("xhtml"));
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			fail("could not read title fragment.");
+		}
 	}
 
 	@Test
@@ -147,7 +278,22 @@ public class FeedReaderTest {
 
 	@Test
 	public void testReadTitle() {
-		//fail("Not yet implemented");
+		try{
+			reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(title1));
+			Title title = feedReader.readTitle(reader);
+			assertTrue(title.getText().equals("Less: <xhtml:em> < </xhtml:em>"));
+			assertTrue(title.getAttributes() != null);
+			assertTrue(title.getAttributes().size() == 2);
+			assertTrue(title.getAttributes().get(1).getName().equals("type"));
+			assertTrue(title.getAttributes().get(1).getValue().equals("xhtml"));
+			assertTrue(title.getAttributes().get(0).getName().equals("xmlns:xhtml"));
+			assertTrue(title.getAttributes().get(0).getValue().equals("http://www.w3.org/1999/xhtml"));
+			
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			fail("could not read title fragment.");
+		}
 	}
 
 	@Test
