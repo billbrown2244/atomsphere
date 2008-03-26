@@ -193,6 +193,7 @@ class FeedReader{
 	}
 
 	SortedMap<String,Entry> readEntry(XMLStreamReader reader, SortedMap<String,Entry> entries) throws Exception{
+		System.out.println("in read entry");
 		if(entries == null){
 			entries = new TreeMap<String,Entry>();
 		}
@@ -249,6 +250,7 @@ class FeedReader{
 				break;
 
 			case XMLStreamConstants.END_ELEMENT:
+				System.out.println("reached end entry.");
 				if(reader.getLocalName().equals("entry")){
 					breakOut = true;
 				}else{
@@ -368,12 +370,15 @@ class FeedReader{
 	SimpleDateFormat getSimpleDateFormat(){
 		String timeZoneOffset = null;
 		TimeZone timeZone = TimeZone.getDefault();
+		System.out.println("timezone = "+timeZone.toString());
 		int hours = (((timeZone.getRawOffset()/1000)/60)/60);
+		System.out.println("hours = "+hours);
 		if(hours >= 0){
 			timeZoneOffset = TimeZone.getTimeZone("GMT"+"+"+hours).getID().substring(3);
 		}else{
 			timeZoneOffset = TimeZone.getTimeZone("GMT"+"-"+Math.abs(hours)).getID().substring(3);
 		}
+		System.out.println("simple date format = "+"yyyy-MM-dd\'T\'HH:mm:ss.SS\'"+timeZoneOffset+"\'");
 		return new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'"+timeZoneOffset+"\'");
 	}
 	
@@ -404,12 +409,18 @@ class FeedReader{
 
 	Updated readUpdated(XMLStreamReader reader) throws Exception{
 		String dateText = reader.getElementText();
+		Updated updated = null;
+		System.out.println("date Text before = "+dateText);
 		try{
-			return FeedDoc.buildUpdated(getSimpleDateFormat().parse(dateText));        
+			//return FeedDoc.buildUpdated(getSimpleDateFormat().parse(dateText));    
+			updated = FeedDoc.buildUpdated(getSimpleDateFormat().parse(dateText));
 		}catch(Exception e){
 			SimpleDateFormat simpleDateFmt2 = new SimpleDateFormat(getSimpleDateFormat().toPattern().substring(0,19));
-			return FeedDoc.buildUpdated(simpleDateFmt2.parse(dateText.substring(0,19)));
+			//return FeedDoc.buildUpdated(simpleDateFmt2.parse(dateText.substring(0,19)));
+			updated = FeedDoc.buildUpdated(simpleDateFmt2.parse(dateText.substring(0,19)));
 		}
+		System.out.println("date Text after = "+updated.getText());
+		return updated;
 	}
 
 	Title readTitle(XMLStreamReader reader) throws Exception{
