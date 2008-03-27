@@ -215,6 +215,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 	 * This method reads an input stream and outputs an atom 1.0 xml document string.
 	 * @param inputStream the stream containing the atom xml to be read.
 	 * @return  an atom feed document string.
+	 * @throws Exception thrown if the feed cannot be returned as a String 
 	 */
 	public static String readFeedToString(InputStream inputStream) throws Exception {
 		StringBuffer feedXML = new StringBuffer();
@@ -235,6 +236,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * This method reads a file from disk and outputs an atom 1.0 xml document string.
      * @param file the atom xml file to be read
      * @return an atom feed document string.
+     * @throws Exception thrown if the feed cannot be returned as a String
      */
     public static String readFeedToString(File file) throws Exception {
     	StringBuffer feedXML = new StringBuffer();
@@ -256,6 +258,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * This method reads an atom file from a URL and writes it out to an atom feed string.
      * @param url the location of the atom file on the Internet
      * @return an atom feed document string.
+     * @throws Exception thrown if the feed cannot be returned as a String 
      */
     public static String readFeedToString(URL url) throws Exception {
     	try{
@@ -276,6 +279,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @param feed the feed to be converted to an atom string.
      * @param xmlStreamWriter the fully qualified XMLStreamWriter class name.
      * @return an atom feed document string.
+     * @throws Exception thrown if the feed cannot be returned as a String 
      */
     public static String readFeedToString(Feed feed, String xmlStreamWriter) throws Exception {
 
@@ -303,6 +307,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * This method reads in a Feed bean and returns the contents as an atom feed string.
      * @param feed the feed to be converted to an atom string.
      * @return an atom feed document string.
+     * @throws Exception thrown if the feed cannot be returned as a String 
      */
     public static String readFeedToString(Feed feed) throws Exception {
     	
@@ -323,6 +328,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * This method reads in an atom Entry bean and returns the contents as an atom feed string containing the entry.
      * @param entry the entry to be converted to an atom string.
      * @return an atom entry element string containing the entry passed in.
+     * @throws Exception thrown if the feed cannot be returned as a String 
      */
     public static String readEntryToString(Entry entry) throws Exception{
     	
@@ -407,7 +413,8 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @param logo the logo element (optional)
      * @param entries a list of entry elements (optional)
      * @return an immutable Feed object.
-     * @throws AtomSpecException
+     * @throws AtomSpecException if the data violates the 
+     * <a href="http://atomenabled.org/developers/syndication/atom-format-spec.php">specification</a>. 
      */
     public static Feed buildFeed(Id id
 			,Title title
@@ -446,7 +453,8 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @param attributes additional attributes.
      * @param extensions a list of extension elements.
      * @return an immutable Author object.
-     * @throws AtomSpecException
+     * @throws AtomSpecException if the data violates the 
+     * <a href="http://atomenabled.org/developers/syndication/atom-format-spec.php">specification</a>. 
      */
     public static Author buildAuthor(Name name, URI uri, Email email
     		, List<Attribute> attributes
@@ -456,11 +464,12 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
     
     /**
      * 
-     * @param attributes the attributes list which must contain "term" /
-     * 		and may contain "scheme", "label" or others
+     * @param attributes the attributes list which must contain "term" 
+     * and may contain "scheme", "label" or others
      * @param content the undefined element content.
      * @return an immutable Category object.
-     * @throws AtomSpecException
+     * @throws AtomSpecException if the data violates the 
+     * <a href="http://atomenabled.org/developers/syndication/atom-format-spec.php">specification</a>. 
      */
     public static Category buildCategory(List<Attribute> attributes
     		, String content) throws AtomSpecException {
@@ -485,7 +494,8 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @param attributes additional attributes.
      * @param extensions a list of extension elements.
      * @return an immutable Contributor object.
-     * @throws AtomSpecException
+     * @throws AtomSpecException if the data violates the 
+     * <a href="http://atomenabled.org/developers/syndication/atom-format-spec.php">specification</a>. 
      */
     public static Contributor buildContributor(Name name
     		, URI uri
@@ -521,7 +531,8 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @param summary the summary element (optional)
      * @param source the source element (optional)
      * @return an immutable Entry object.
-     * @throws AtomSpecException
+     * @throws AtomSpecException if the data violates the 
+     * <a href="http://atomenabled.org/developers/syndication/atom-format-spec.php">specification</a>. 
      */
     public static Entry buildEntry(Id id
     		,Title title
@@ -589,7 +600,8 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @param attributes the attributes list which must contain "href" and may contain "rel", "type", "hreflang", "title", "length" or others
      * @param content the undefined link content.
      * @return an immutable Link object.
-     * @throws AtomSpecException
+     * @throws AtomSpecException if the data violates the 
+     * <a href="http://atomenabled.org/developers/syndication/atom-format-spec.php">specification</a>. 
      */
     public static Link buildLink(List<Attribute> attributes
     		, String content) throws AtomSpecException {
@@ -652,7 +664,8 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @param icon the icon element (optional)
      * @param logo the logo element (optional)
      * @return an immutable Source object.
-     * @throws AtomSpecException
+     * @throws AtomSpecException if the data violates the 
+     * <a href="http://atomenabled.org/developers/syndication/atom-format-spec.php">specification</a>. 
      */
     public static Source buildSource(Id id
     		,Title title
@@ -789,8 +802,9 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 	 * @param feed the feed whose entries are to be sorted
 	 * @param comparator used to determine sort order
 	 * @param elementInstance serves as the key element for the entries collection 
-	 * @return the sorted feed.
-	 * @throws AtomSpecException
+	 * @return the sorted feed. 
+	 * @throws AtomSpecException if the data violates the 
+	 * <a href="http://atomenabled.org/developers/syndication/atom-format-spec.php">specification</a>. 
 	 */
 	public static Feed sortEntries(Feed feed, Comparator<String> comparator, Object elementInstance) throws AtomSpecException{
 
