@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
+ *  2008-04-08 wbrown - added exception for unsupported attribute.
  */
 package com.colorful.atom;
 
@@ -65,6 +66,19 @@ public class Link {
     		Iterator<Attribute> attrItr = attributes.iterator();
     		while(attrItr.hasNext()){
     			Attribute attr = attrItr.next();
+    			//check for unsupported attribute.
+    			if(!attr.getName().equals("xml:base")
+    			&& !attr.getName().equals("xml:lang")
+    			&& !attr.getName().startsWith("local:")
+    			&& !attr.getName().equals("href")
+    			&& !attr.getName().equals("rel")
+    			&& !attr.getName().equals("type")
+    			&& !attr.getName().equals("hreflang")
+    			&& !attr.getName().equals("title")
+    			&& !attr.getName().equals("length")
+    			){
+    				throw new AtomSpecException("Unsuppported attribute "+attr.getName()+" in the atom:link element.");
+    			}
     			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
     		}
     	}
