@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2008-03-17 wbrown - added to share elements between entry and source.
+ *  2008-04-09 wbrown - wrapped checked exceptions.
  */
 package com.colorful.atom;
 
@@ -277,7 +278,12 @@ class AtomEntrySourceAdaptor {
 	  * @return the unique identifier for this entry.
 	  */
 	 public Id getId() {
-		 return (id == null)?null:new Id(id.getAttributes(),id.getAtomUri());
+		 try{
+			 return (id == null)?null:new Id(id.getAttributes(),id.getAtomUri());
+		 }catch(Exception e){
+			 //we should never get here.
+			 return null;
+		 }
 	 }
 
 	 /**

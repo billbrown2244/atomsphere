@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2008-03-16 wbrown - Introduced to share between Id, Icon and Logo.
+ *  2008-04-09 wbrown - added checked exception for non atomCommonAttribute.
  */
 package com.colorful.atom;
 
@@ -34,7 +35,7 @@ class AtomURIConstruct {
      * 
      * @param atomUri the unique identifier for the document.
      */
-    public AtomURIConstruct(List<Attribute> attributes,String atomUri){
+    public AtomURIConstruct(List<Attribute> attributes,String atomUri) throws AtomSpecException{
         
     	if(attributes == null){
     		this.attributes = null;
@@ -43,6 +44,17 @@ class AtomURIConstruct {
     		Iterator<Attribute> attrItr = attributes.iterator();
     		while(attrItr.hasNext()){
     			Attribute attr = attrItr.next();
+    			//check for unsupported attribute.
+    			if(!attr.getName().equals("xml:base")
+    			&& !attr.getName().equals("xml:lang")
+    			&& !attr.getName().startsWith("local:")){
+    				throw new AtomSpecException("Unsuppported attribute "
+    						+attr.getName()
+    						+" that is not "
+    						+"of the form "
+    						+"xml:base=\"...\" "
+    						+"or xml:lang=\"...\" or local:*=\"...\"");
+    			}
     			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
     		}
     	}

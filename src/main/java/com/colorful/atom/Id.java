@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
  *  2008-03-16 wbrown - made class immutable.
+ *  2008-04-09 wbrown - added throws clause to constructor.
  */
 package com.colorful.atom;
 
@@ -40,7 +41,8 @@ public class Id {
 	private final AtomURIConstruct id;
 
 	//use the factory method in the FeedDoc.
-	Id(List<Attribute> attributes, String atomUri){
+	Id(List<Attribute> attributes, String atomUri)
+		throws AtomSpecException {
 		this.id = new AtomURIConstruct(attributes,atomUri);
 	}
 

@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
  *  2008-03-17 wbrown - made class immutable.
+ *  2008-04-09 wbrown - wrapped checked exceptions.
  */
 package com.colorful.atom;
 
@@ -94,7 +95,12 @@ public class Source {
      * @return the icon for this element.
      */
     public Icon getIcon() {
-        return (icon == null)?null: new Icon(icon.getAttributes(),icon.getAtomUri());
+    	try{
+    		return (icon == null)?null: new Icon(icon.getAttributes(),icon.getAtomUri());
+    	}catch(Exception e){
+    		//we should never get here.
+    		return null;
+    	}
     }
 
     /**
@@ -102,7 +108,12 @@ public class Source {
      * @return the logo for this element.
      */
     public Logo getLogo() {
-        return (logo == null)?null: new Logo(logo.getAttributes(),logo.getAtomUri());
+    	try{
+    		return (logo == null)?null: new Logo(logo.getAttributes(),logo.getAtomUri());
+    	}catch(Exception e){
+    		//we should never get here.
+    		return null;
+    	}
     }
 
     /**

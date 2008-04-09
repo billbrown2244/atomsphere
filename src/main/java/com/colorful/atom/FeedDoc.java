@@ -24,6 +24,8 @@ Change History:
     2008-03-18 wbrown - added factory methods for all the sub elements. Added new file write methods 
     					to decouple dependency on stax-utils.  Added new input methods to read 
     					input streams into feeds an strings.
+    2008-04-08 wbrown - added atomshpereVersion (generator) constant for writing out feeds.  Added more
+    					thorws AtomsphereSpecExceptions for attributes that are not atomCommonAttribute
  */
 package com.colorful.atom;
 
@@ -72,7 +74,7 @@ public class FeedDoc {
 	 */
     public static final Attribute atomBase = 
     	buildAttribute("xmlns","http://www.w3.org/2005/Atom");
-    
+
     /**
      * the default library language attribute 
      * of "en-US" 
@@ -89,6 +91,15 @@ public class FeedDoc {
      * the default XML version of "1.0"
      */
     public static String xml_version = "1.0";
+    
+    private static List<Attribute> attributes;
+    static{
+    	attributes = new LinkedList<Attribute>();
+    	attributes.add(FeedDoc.buildAttribute("uri", "http://www.colorfulsoftware.com/projects/atomsphere/"));
+    	attributes.add(FeedDoc.buildAttribute("version", "2.0.0.0"));
+    }
+    
+    public static Generator atomSphereVersion = FeedDoc.buildGenerator(attributes,"Atomsphere");
     
     /**
      * the atomsphere sort extension attribute.
@@ -581,7 +592,8 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @param attributes additional attributes.
      * @return an immutable Icon object.
      */
-    public static Icon buildIcon(List<Attribute> attributes, String atomUri){
+    public static Icon buildIcon(List<Attribute> attributes, String atomUri)
+    	throws AtomSpecException {
     	return new Icon(attributes,atomUri);
     }
     
@@ -591,7 +603,8 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @param attributes additional attributes.
      * @return an immutable Id object.
      */
-    public static Id buildId(List<Attribute> attributes, String atomUri){
+    public static Id buildId(List<Attribute> attributes, String atomUri)
+    	throws AtomSpecException {
     	return new Id(attributes,atomUri);
     }
     
@@ -614,7 +627,8 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @param attributes additional attributes.
      * @return an immutable Logo object.
      */
-    public static Logo buildLogo(List<Attribute> attributes, String atomUri){
+    public static Logo buildLogo(List<Attribute> attributes, String atomUri) 
+    	throws AtomSpecException{
     	return new Logo(attributes,atomUri);
     }
     

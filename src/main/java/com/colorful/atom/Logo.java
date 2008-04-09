@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
+ *  2008-04-09 wbrown - added throws clause to constructor.
  */
 package com.colorful.atom;
 
@@ -39,7 +40,7 @@ public class Logo {
 	private final AtomURIConstruct logo;
 
 	//use the factory method in the FeedDoc.
-	Logo(List<Attribute> attributes, String atomUri){
+	Logo(List<Attribute> attributes, String atomUri) throws AtomSpecException {		
 		this.logo = new AtomURIConstruct(attributes,atomUri);
 	}
 

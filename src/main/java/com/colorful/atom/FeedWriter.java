@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *                      added support for writing empty extension elements.
  *  2007-06-20 wbrown - change the scope of writing entries to protected so that the FeedDoc.readEntryToString(Entry entry)  will work.
  *  2008-03-11 wbrown - fix bug for atomXHTMLTextConstruct to wrap contents in xhtml:div element.
+ *  2008-04-09 wbrown - add the atomsphere generator tag to the output. 
  */
 package com.colorful.atom;
 
@@ -53,6 +54,27 @@ class FeedWriter{
 		//maintain the sorting during usage
 		feed = FeedDoc.checkForAndApplyExtension(feed,FeedDoc.sort);
 
+		//if the feed does not contain the atomsphere generator
+		//add it now.
+		if(feed.getGenerator() == null || feed.getGenerator().getText().equals("Atomsphere")){
+			feed = FeedDoc.buildFeed(
+					feed.getId()
+					, feed.getTitle()
+					, feed.getUpdated()
+					, feed.getRights()
+					, feed.getAuthors()
+					, feed.getCategories()
+					, feed.getContributors()
+					, feed.getLinks()
+					, feed.getAttributes()
+					, feed.getExtensions()
+					, FeedDoc.atomSphereVersion
+					, feed.getSubtitle()
+					, feed.getIcon()
+					, feed.getLogo()
+					, feed.getEntries());
+		}
+		
 		//write the xml header.
 		writer.writeStartDocument(encoding,version);
 
