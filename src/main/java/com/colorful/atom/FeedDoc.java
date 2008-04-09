@@ -98,7 +98,10 @@ public class FeedDoc {
     	attributes.add(FeedDoc.buildAttribute("uri", "http://www.colorfulsoftware.com/projects/atomsphere/"));
     	attributes.add(FeedDoc.buildAttribute("version", "2.0.0.0"));
     }
-    
+    /**
+     * the Atomsphere version in the form of generator element. 
+     * this element is output for all feeds that are written by Atomsphere.
+     */
     public static Generator atomSphereVersion = FeedDoc.buildGenerator(attributes,"Atomsphere");
     
     /**
