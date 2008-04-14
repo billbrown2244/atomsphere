@@ -120,13 +120,15 @@ public class Entry {
 			this.content = new Content(content.getContent(),content.getAttributes());
 		}
 
-		this.published = (published == null)?null: new Published(published.getDateTime());
+		this.published = (published == null)?null: 
+			new Published(published.getDateTime(),published.getAttributes());
 		this.source = (source == null)?null: new Source(source.getId(),source.getTitle()
 				,source.getUpdated(),source.getRights(),source.getAuthors()
 				,source.getCategories(),source.getContributors(),source.getLinks()
 				,source.getAttributes(),source.getExtensions(),source.getGenerator()
 				,source.getSubtitle(),source.getIcon(),source.getLogo());
-		this.summary = (summary == null)?null: new Summary(summary.getText(),summary.getAttributes());
+		this.summary = (summary == null)?null: 
+			new Summary(summary.getText(),summary.getAttributes());
 	}
 
 	/**
@@ -143,7 +145,14 @@ public class Entry {
 	 * @return the published date for this entry.
 	 */
 	public Published getPublished() {
-		return (published == null)?null:new Published(published.getDateTime());
+		try{
+			return (published == null)?null:
+				new Published(published.getDateTime()
+						,published.getAttributes());
+		}catch(Exception e){
+    		//we should never get here.
+    		return null;
+    	}
 	}
 
 	/**
@@ -171,7 +180,13 @@ public class Entry {
 	 * @return the summary for this element.
 	 */
 	public Summary getSummary() {
-		return (summary == null)?null: new Summary(summary.getText(),summary.getAttributes());
+		try{
+			return (summary == null)?null: 
+				new Summary(summary.getText(),summary.getAttributes());
+		}catch(Exception e){
+    		//we should never get here.
+    		return null;
+    	}
 	}
 
 	/**

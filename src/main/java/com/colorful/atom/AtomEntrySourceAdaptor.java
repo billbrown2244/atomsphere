@@ -59,7 +59,7 @@ class AtomEntrySourceAdaptor {
 	) throws AtomSpecException {
 		this.id = (id == null)?null: new Id(id.getAttributes(),id.getAtomUri());
 		this.title = (title == null)?null: new Title(title.getText(),title.getAttributes());
-		this.updated = (updated == null)?null: new Updated(updated.getDateTime());
+		this.updated = (updated == null)?null: new Updated(updated.getDateTime(),updated.getAttributes());
 		this.rights = (rights == null)?null: new Rights(rights.getText(),rights.getAttributes());
 
 		if(authors == null){
@@ -291,7 +291,12 @@ class AtomEntrySourceAdaptor {
 	  * @return the associated rights for this entry.
 	  */
 	 public Rights getRights() {
-		 return (rights == null)?null:new Rights(rights.getText(),rights.getAttributes());
+		 try{
+			 return (rights == null)?null:new Rights(rights.getText(),rights.getAttributes());
+		 }catch(Exception e){
+			 //we should never get here.
+			 return null;
+		 }
 	 }
 
 	 /**
@@ -299,7 +304,12 @@ class AtomEntrySourceAdaptor {
 	  * @return the title for this element.
 	  */
 	 public Title getTitle() {
-		 return (title == null)?null: new Title(title.getText(),title.getAttributes());
+		 try{
+			 return (title == null)?null: new Title(title.getText(),title.getAttributes());
+		 }catch(Exception e){
+			 //we should never get here.
+			 return null;
+	    }
 	 }
 
 	 /**
@@ -307,6 +317,11 @@ class AtomEntrySourceAdaptor {
 	  * @return the updated date for this element.
 	  */
 	 public Updated getUpdated() {
-		 return (updated == null)?null:new Updated(updated.getDateTime());
+		 try{
+			 return (updated == null)?null:new Updated(updated.getDateTime(),updated.getAttributes());
+		 }catch(Exception e){
+			 //we should never get here.
+			 return null;
+		 }
 	 }
 }

@@ -37,7 +37,8 @@ public class Title {
 	private final AtomTextConstruct title;
 	
 	//use the factory method in the FeedDoc.
-    Title(String title, List<Attribute> attributes){
+    Title(String title
+    		, List<Attribute> attributes) throws AtomSpecException {
         this.title = new AtomTextConstruct(title,attributes);
     }
     

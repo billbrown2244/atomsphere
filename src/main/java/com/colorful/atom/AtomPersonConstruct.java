@@ -78,6 +78,15 @@ class AtomPersonConstruct {
     		Iterator<Attribute> attrItr = attributes.iterator();
     		while(attrItr.hasNext()){
     			Attribute attr = attrItr.next();
+    			//check for unsupported attribute.
+    			if(!FeedDoc.isUndefinedAttribute(attr)){
+    				throw new AtomSpecException("Unsuppported attribute "
+    						+attr.getName()
+    						+" that is not "
+    						+"of the form "
+    						+"xml:base=\"...\" "
+    						+"or xml:lang=\"...\" or local:*=\"...\" for this Atom Person Construct.");
+    			}
     			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
     		}
     	}

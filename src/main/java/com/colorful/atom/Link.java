@@ -68,9 +68,7 @@ public class Link {
     		while(attrItr.hasNext()){
     			Attribute attr = attrItr.next();
     			//check for unsupported attribute.
-    			if(!attr.getName().equals("xml:base")
-    			&& !attr.getName().equals("xml:lang")
-    			&& !attr.getName().startsWith("local:")
+    			if(!FeedDoc.isUndefinedAttribute(attr)
     			&& !attr.getName().equals("href")
     			&& !attr.getName().equals("rel")
     			&& !attr.getName().equals("type")

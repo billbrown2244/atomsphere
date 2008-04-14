@@ -37,7 +37,8 @@ public class Summary {
 	private final AtomTextConstruct summary;
 	
 	//use the factory method in the FeedDoc.
-    Summary(String summary, List<Attribute> attributes){
+    Summary(String summary
+    		, List<Attribute> attributes) throws AtomSpecException {
         this.summary = new AtomTextConstruct(summary,attributes);
     }
     

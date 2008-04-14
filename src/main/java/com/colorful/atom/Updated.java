@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package com.colorful.atom;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * This class represents an Atom 1.0 updated element.
@@ -37,8 +38,8 @@ public class Updated {
 	private final AtomDateConstruct updated;
 	
 	//use the factory method in the FeedDoc.
-    Updated(Date updated){
-        this.updated = new AtomDateConstruct(updated);
+    Updated(Date updated, List<Attribute> attributes) throws AtomSpecException{
+        this.updated = new AtomDateConstruct(updated,attributes);
     }
     
     /**
@@ -56,5 +57,13 @@ public class Updated {
      */
     public String getText(){
     	return updated.getText();
+    }
+    
+    /**
+     * 
+     * @return the attributes for this element.
+     */
+    public List<Attribute> getAttributes(){
+    	return updated.getAttributes();
     }
 }

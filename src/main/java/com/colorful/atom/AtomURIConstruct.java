@@ -45,9 +45,7 @@ class AtomURIConstruct {
     		while(attrItr.hasNext()){
     			Attribute attr = attrItr.next();
     			//check for unsupported attribute.
-    			if(!attr.getName().equals("xml:base")
-    			&& !attr.getName().equals("xml:lang")
-    			&& !attr.getName().startsWith("local:")){
+    			if(!FeedDoc.isUndefinedAttribute(attr)){
     				throw new AtomSpecException("Unsuppported attribute "
     						+attr.getName()
     						+" that is not "

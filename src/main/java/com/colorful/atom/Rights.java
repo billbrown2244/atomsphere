@@ -37,7 +37,8 @@ public class Rights {
 	private final AtomTextConstruct rights;
 	
 	//use the factory method in the FeedDoc.
-	Rights(String rights, List<Attribute> attributes){
+	Rights(String rights
+			, List<Attribute> attributes) throws AtomSpecException {
         this.rights = new AtomTextConstruct(rights,attributes);
     }
     

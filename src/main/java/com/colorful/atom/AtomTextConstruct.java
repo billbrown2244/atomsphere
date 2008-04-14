@@ -57,7 +57,8 @@ class AtomTextConstruct {
      * @param attributes the attributes of the element.
      * 		the attributes should contain a "type" attribute specifying either text,html, or xhtml.
      */
-    public AtomTextConstruct(String text, List<Attribute> attributes){
+    public AtomTextConstruct(String text
+    		, List<Attribute> attributes) throws AtomSpecException{
     	
     	this.text = text;
     	    	
@@ -68,6 +69,16 @@ class AtomTextConstruct {
     		Iterator<Attribute> attrItr = attributes.iterator();
     		while(attrItr.hasNext()){
     			Attribute attr = attrItr.next();
+    			//check for unsupported attribute.
+    			if(!attr.getName().equals("type")
+    					&& !FeedDoc.isUndefinedAttribute(attr)){
+    				throw new AtomSpecException("Unsuppported attribute "
+    						+attr.getName()
+    						+" that is not "
+    						+"of the form "
+    						+"xml:base=\"...\" "
+    						+"or xml:lang=\"...\" or local:*=\"...\" for this Atom Text Construct.");
+    			}
     			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
     		}
     	}

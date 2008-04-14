@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package com.colorful.atom;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * This class represents an Atom 1.0 published element.
@@ -37,8 +38,9 @@ public class Published {
 	private final AtomDateConstruct published;
 	
 	//use the factory method in the FeedDoc.
-    Published(Date published){
-        this.published = new AtomDateConstruct(published);
+    Published(Date published
+    		, List<Attribute> attributes) throws AtomSpecException{
+        this.published = new AtomDateConstruct(published,attributes);
     }
     
     /**
@@ -56,5 +58,13 @@ public class Published {
      */
     public String getText(){
     	return published.getText();
+    }
+    
+    /**
+     * 
+     * @return the attributes for this element.
+     */
+    public List<Attribute> getAttributes(){
+    	return published.getAttributes();
     }
 }

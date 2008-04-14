@@ -386,12 +386,14 @@ class FeedReader{
 	}
 	
 	Published readPublished(XMLStreamReader reader) throws Exception{
+		List<Attribute> attributes = getAttributes(reader,null);
 		String dateText = reader.getElementText();
 		try{
-			return FeedDoc.buildPublished(getSimpleDateFormat().parse(dateText));        
+			return FeedDoc.buildPublished(getSimpleDateFormat().parse(dateText),attributes);        
 		}catch(Exception e){
 			SimpleDateFormat simpleDateFmt2 = new SimpleDateFormat(getSimpleDateFormat().toPattern().substring(0,19));
-			return FeedDoc.buildPublished(simpleDateFmt2.parse(dateText.substring(0,19)));
+			return FeedDoc.buildPublished(
+					simpleDateFmt2.parse(dateText.substring(0,19)),attributes);
 		}
 	}
 	
@@ -411,12 +413,14 @@ class FeedReader{
 	
 
 	Updated readUpdated(XMLStreamReader reader) throws Exception{
+		List<Attribute> attributes = getAttributes(reader,null);
 		String dateText = reader.getElementText();
 		try{
-			return FeedDoc.buildUpdated(getSimpleDateFormat().parse(dateText));   
+			return FeedDoc.buildUpdated(getSimpleDateFormat().parse(dateText),attributes);   
 		}catch(Exception e){
 			SimpleDateFormat simpleDateFmt2 = new SimpleDateFormat(getSimpleDateFormat().toPattern().substring(0,19));
-			return FeedDoc.buildUpdated(simpleDateFmt2.parse(dateText.substring(0,19)));
+			return FeedDoc.buildUpdated(
+					simpleDateFmt2.parse(dateText.substring(0,19)),attributes);
 		}
 	}
 

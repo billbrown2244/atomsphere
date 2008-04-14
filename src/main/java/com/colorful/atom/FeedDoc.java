@@ -631,7 +631,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @return an immutable Logo object.
      */
     public static Logo buildLogo(List<Attribute> attributes, String atomUri) 
-    	throws AtomSpecException{
+    	throws AtomSpecException {
     	return new Logo(attributes,atomUri);
     }
     
@@ -649,8 +649,10 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @param published the date formatted to [RFC3339]
      * @return an immutable Published object.
      */
-    public static Published buildPublished(Date published){
-    	return new Published(published);
+    public static Published buildPublished(Date published
+    		,List<Attribute> attributes)
+    	throws AtomSpecException{
+    	return new Published(published,attributes);
     }
     
     /**
@@ -660,7 +662,8 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @return an immutable Rights object.
      */
     public static Rights buildRights(String rights
-    		, List<Attribute> attributes){
+    		, List<Attribute> attributes)
+    	throws AtomSpecException {
     	return new Rights(rights,attributes);
     }
     
@@ -710,7 +713,8 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @return an immutable Subtitle object.
      */
     public static Subtitle buildSubtitle(String subtitle
-    		, List<Attribute> attributes){
+    		, List<Attribute> attributes)
+    	throws AtomSpecException {
     	return new Subtitle(subtitle,attributes);
     }
     
@@ -721,7 +725,8 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @return an immutable Summary object.
      */
     public static Summary buildSummary(String summary
-    		, List<Attribute> attributes){
+    		, List<Attribute> attributes)
+    	throws AtomSpecException {
     	return new Summary(summary,attributes);
     }
     
@@ -732,7 +737,8 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @return an immutable Title object.
      */
     public static Title buildTitle(String title
-    		, List<Attribute> attributes){
+    		, List<Attribute> attributes)
+    	throws AtomSpecException {
     	return new Title(title,attributes);
     }
     
@@ -741,8 +747,9 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @param updated the date formatted to [RFC3339]
      * @return a immutable Updated object.
      */
-    public static Updated buildUpdated(Date updated){
-    	return new Updated(updated);
+    public static Updated buildUpdated(Date updated
+    		, List<Attribute> attributes) throws AtomSpecException {
+    	return new Updated(updated,attributes);
     }
     
     /**
@@ -960,7 +967,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 						if(attr.getName().equalsIgnoreCase("type")){
 							String value = attr.getValue();
 							if(value.equals("updated")){
-								return sortEntries(feed,FeedDoc.SORT_ASC, FeedDoc.buildUpdated(null)); 
+								return sortEntries(feed,FeedDoc.SORT_ASC, FeedDoc.buildUpdated(null,null)); 
 							}
 							if(value.equals("title")){
 								return sortEntries(feed,FeedDoc.SORT_ASC, FeedDoc.buildTitle(null,null));
@@ -977,7 +984,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 						if(attr.getName().equalsIgnoreCase("type")){
 							String value = attr.getValue();
 							if(value.equals("updated")){
-								return sortEntries(feed,FeedDoc.SORT_DESC, FeedDoc.buildUpdated(null)); 
+								return sortEntries(feed,FeedDoc.SORT_DESC, FeedDoc.buildUpdated(null,null)); 
 							}
 							if(value.equals("title")){
 								return sortEntries(feed,FeedDoc.SORT_DESC, FeedDoc.buildTitle(null,null));
@@ -991,6 +998,14 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 			}
 		}
 		return feed;
+	}
+
+	//internal method to check for an 
+	static boolean isUndefinedAttribute(Attribute attr) {
+		String name = attr.getName();
+		return name.equals("xml:base")
+		|| name.equals("xml:lang")
+		|| name.startsWith("xmlns:");
 	}
 
 }

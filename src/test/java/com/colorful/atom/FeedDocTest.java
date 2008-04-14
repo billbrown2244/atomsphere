@@ -61,7 +61,7 @@ public class FeedDocTest {
 		try{
 			Id id = FeedDoc.buildId(null,"http://www.colorfulsoftware.com/atom.xml");
 
-			Updated updated = FeedDoc.buildUpdated(Calendar.getInstance().getTime());
+			Updated updated = FeedDoc.buildUpdated(Calendar.getInstance().getTime(),null);
 
 			Title title = FeedDoc.buildTitle("test feed",null);
 			
@@ -215,7 +215,7 @@ public class FeedDocTest {
 					"http://www.colorfulsoftware.com/atom.xml");
 
 			Updated updated = FeedDoc.buildUpdated(Calendar.getInstance()
-					.getTime());
+					.getTime(),null);
 
 			Title title = FeedDoc.buildTitle("test feed", null);
 
@@ -275,7 +275,7 @@ public class FeedDocTest {
 											"http://www.colorfulsoftware.com/atom.xml#entry1"),
 							FeedDoc.buildTitle("an example atom entry", null),
 							FeedDoc.buildUpdated(Calendar.getInstance()
-									.getTime()),
+									.getTime(),null),
 							null,
 							FeedDoc
 									.buildContent(

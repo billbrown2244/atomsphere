@@ -121,7 +121,12 @@ public class Source {
      * @return the subtitle for this element.
      */
     public Subtitle getSubtitle() {
-        return (subtitle == null)?null: new Subtitle(subtitle.getText(),subtitle.getAttributes());
+    	try{
+    		return (subtitle == null)?null: new Subtitle(subtitle.getText(),subtitle.getAttributes());
+    	}catch(Exception e){
+    		//we should never get here.
+    		return null;
+    	}
     }
     
     

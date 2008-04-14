@@ -23,17 +23,43 @@ package com.colorful.atom;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.TimeZone;
 
 class AtomDateConstruct {
 
+	private final List<Attribute> attributes ;
 	private final Date dateTime;
     
     /**
      * 
      * @param updated the date formatted to [RFC3339]
      */
-    public AtomDateConstruct(Date dateTime){
+    public AtomDateConstruct(Date dateTime
+    		, List<Attribute> attributes) throws AtomSpecException{
+    	
+    	if(attributes == null){
+    		this.attributes = null;
+    	}else{
+    		this.attributes = new LinkedList<Attribute>();
+    		Iterator<Attribute> attrItr = attributes.iterator();
+    		while(attrItr.hasNext()){
+    			Attribute attr = attrItr.next();
+    			//check for unsupported attribute.
+    			if(!FeedDoc.isUndefinedAttribute(attr)){
+    				throw new AtomSpecException("Unsuppported attribute "
+    						+attr.getName()
+    						+" that is not "
+    						+"of the form "
+    						+"xml:base=\"...\" "
+    						+"or xml:lang=\"...\" or local:*=\"...\" for this Atom Date Construct.");
+    			}
+    			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
+    		}
+    	}
+    	
     	if(dateTime == null){
     		this.dateTime = null;
     	}else{
@@ -68,5 +94,22 @@ class AtomDateConstruct {
             timeZoneOffset = TimeZone.getTimeZone("GMT"+"-"+Math.abs(hours)).getID().substring(3);
         }
         return new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'"+timeZoneOffset+"\'").format(dateTime);
+    }
+    
+    /**
+     * 
+     * @return the attributes for this element.
+     */
+    public List<Attribute> getAttributes() {
+    	if(attributes == null){
+    		return null;
+    	}
+    	List<Attribute> attrsCopy = new LinkedList<Attribute>();
+		Iterator<Attribute> attrItr = this.attributes.iterator();
+		while(attrItr.hasNext()){
+			Attribute attr = attrItr.next();
+			attrsCopy.add(new Attribute(attr.getName(),attr.getValue()));
+		}
+        return attrsCopy;
     }
 }

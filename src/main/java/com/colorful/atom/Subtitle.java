@@ -37,7 +37,8 @@ public class Subtitle {
 	private final AtomTextConstruct subtitle;
 	
 	//use the factory method in the FeedDoc.
-    Subtitle(String subtitle, List<Attribute> attributes){
+    Subtitle(String subtitle
+    		, List<Attribute> attributes) throws AtomSpecException {
         this.subtitle = new AtomTextConstruct(subtitle,attributes);
     }
     
