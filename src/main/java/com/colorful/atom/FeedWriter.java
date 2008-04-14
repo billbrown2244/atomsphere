@@ -68,7 +68,7 @@ class FeedWriter{
 					, feed.getLinks()
 					, feed.getAttributes()
 					, feed.getExtensions()
-					, FeedDoc.atomSphereVersion
+					, FeedDoc.atomsphereVersion
 					, feed.getSubtitle()
 					, feed.getIcon()
 					, feed.getLogo()
