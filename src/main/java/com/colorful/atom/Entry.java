@@ -136,8 +136,14 @@ public class Entry {
 	 * @return the content for this entry.
 	 */
 	public Content getContent() {
-		return (content == null)?null:new Content(content.getContent()
-				,content.getAttributes());
+		try{
+			return (content == null)?null:new Content(
+					content.getContent()
+					,content.getAttributes());
+		}catch(Exception e){
+    		//we should never get here.
+    		return null;
+    	}
 	}
 
 	/**

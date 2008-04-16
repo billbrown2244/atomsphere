@@ -71,7 +71,8 @@ public class Content {
     private final String content;
     
     //use the factory method in the FeedDoc.
-    Content(String content, List<Attribute> attributes){
+    Content(String content, List<Attribute> attributes) 
+    throws AtomSpecException{
     	this.content = content;
     	
     	if(attributes == null){
@@ -81,6 +82,16 @@ public class Content {
     		Iterator<Attribute> attrItr = attributes.iterator();
     		while(attrItr.hasNext()){
     			Attribute attr = attrItr.next();
+    			//check for unsupported attribute.
+    			if(!FeedDoc.isAtomCommonAttribute(attr)
+    					&& !FeedDoc.isUndefinedAttribute(attr)
+    					&& !attr.getName().equals("type")
+    					&& !attr.getName().equals("src")
+    			){
+    				throw new AtomSpecException("Unsuppported attribute "
+    						+attr.getName()
+    						+" in this content element ");
+    			}
     			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
     		}
     	}

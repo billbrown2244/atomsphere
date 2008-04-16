@@ -45,7 +45,8 @@ public class Generator {
     private final String text;
     
     //use the factory method in the FeedDoc.
-    Generator(List<Attribute> attributes, String text){
+    Generator(List<Attribute> attributes, String text) 
+    throws AtomSpecException{
         
         if(attributes == null){
         	this.attributes = new LinkedList<Attribute>();
@@ -54,6 +55,16 @@ public class Generator {
     		Iterator<Attribute> attrItr = attributes.iterator();
     		while(attrItr.hasNext()){
     			Attribute attr = attrItr.next();
+    			//check for unsupported attribute.
+    			if(!FeedDoc.isAtomCommonAttribute(attr)
+    					&& !FeedDoc.isUndefinedAttribute(attr)
+    					&& !attr.getName().equals("uri")
+    					&& !attr.getName().equals("version")
+    			){
+    				throw new AtomSpecException("Unsuppported attribute "
+    						+attr.getName()
+    						+" in the atom:generator element");
+    			}
     			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
     		}
     	}

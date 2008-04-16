@@ -73,17 +73,14 @@ public class LinkTest {
 			link = FeedDoc.buildLink(attributes,null);
 			assertTrue(link != null);
 			
-			attributes.add(FeedDoc.buildAttribute("junkAttr","junk"));
+			attributes.add(FeedDoc.buildAttribute("src","http://www.colorfulsoftware.com"));
 			link = FeedDoc.buildLink(attributes,null);
 			fail("should not get here");
 			
 		}catch(Exception e){
 			assertTrue(e instanceof AtomSpecException);
-			assertEquals(e.getMessage(),"Unsuppported attribute junkAttr" 
-					+" in the atom:link element that is not "
-					+"of the form "
-					+"xml:base=\"...\" "
-					+"or xml:lang=\"...\" or local:*=\"...\"");
+			assertEquals(e.getMessage(),"Unsuppported attribute src" 
+					+" for this link element.");
 		}
 	}
 

@@ -48,13 +48,11 @@ class AtomDateConstruct {
     		while(attrItr.hasNext()){
     			Attribute attr = attrItr.next();
     			//check for unsupported attribute.
-    			if(!FeedDoc.isUndefinedAttribute(attr)){
+    			if(!FeedDoc.isAtomCommonAttribute(attr)
+    					&& !FeedDoc.isUndefinedAttribute(attr)){
     				throw new AtomSpecException("Unsuppported attribute "
     						+attr.getName()
-    						+" that is not "
-    						+"of the form "
-    						+"xml:base=\"...\" "
-    						+"or xml:lang=\"...\" or local:*=\"...\" for this Atom Date Construct.");
+    						+" for this Atom Date Construct.");
     			}
     			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
     		}

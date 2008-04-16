@@ -55,17 +55,14 @@ public class IdTest {
 			id = FeedDoc.buildId(attributes, "http://www.colorfulsoftware.com/");
 			assertTrue(id != null);
 			
-			attributes.add(FeedDoc.buildAttribute("junkAttr","junk"));
+			attributes.add(FeedDoc.buildAttribute("href","http://www.colorfulsoftware.com"));
 			id = FeedDoc.buildId(attributes, "http://www.colorfulsoftware.com/");
 			fail("should not get here");
 			
 		}catch(Exception e){
 			assertTrue(e instanceof AtomSpecException);
 			assertEquals(e.getMessage(),"Unsuppported attribute "
-					+"junkAttr that is not "
-					+"of the form "
-					+"xml:base=\"...\" "
-					+"or xml:lang=\"...\" or local:*=\"...\"");
+					+"href for this element.");
 		}
 	}
 

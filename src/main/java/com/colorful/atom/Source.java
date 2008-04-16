@@ -85,9 +85,14 @@ public class Source {
      * @return the generator for this element.
      */
     public Generator getGenerator() {
-        return (generator == null)?null: new Generator(
-        		generator.getAttributes()
-        		,generator.getText());
+    	try{
+    		return (generator == null)?null: new Generator(
+    				generator.getAttributes()
+    				,generator.getText());
+    	}catch(Exception e){
+    		//we should never get here.
+    		return null;
+    	}
     }
 
     /**
@@ -96,7 +101,8 @@ public class Source {
      */
     public Icon getIcon() {
     	try{
-    		return (icon == null)?null: new Icon(icon.getAttributes(),icon.getAtomUri());
+    		return (icon == null)?null: new Icon(icon.getAttributes()
+    				,icon.getAtomUri());
     	}catch(Exception e){
     		//we should never get here.
     		return null;
@@ -109,7 +115,8 @@ public class Source {
      */
     public Logo getLogo() {
     	try{
-    		return (logo == null)?null: new Logo(logo.getAttributes(),logo.getAtomUri());
+    		return (logo == null)?null: new Logo(logo.getAttributes()
+    				,logo.getAtomUri());
     	}catch(Exception e){
     		//we should never get here.
     		return null;
@@ -122,7 +129,8 @@ public class Source {
      */
     public Subtitle getSubtitle() {
     	try{
-    		return (subtitle == null)?null: new Subtitle(subtitle.getText(),subtitle.getAttributes());
+    		return (subtitle == null)?null: new Subtitle(subtitle.getText()
+    				,subtitle.getAttributes());
     	}catch(Exception e){
     		//we should never get here.
     		return null;

@@ -58,6 +58,17 @@ public class Category {
     		Iterator<Attribute> attrItr = attributes.iterator();
     		while(attrItr.hasNext()){
     			Attribute attr = attrItr.next();
+    			//check for unsupported attribute.
+    			if(!FeedDoc.isAtomCommonAttribute(attr)
+    					&& !FeedDoc.isUndefinedAttribute(attr)
+    					&& !attr.getName().equals("term")
+    					&& !attr.getName().equals("scheme")
+    					&& !attr.getName().equals("label")
+    			){
+    				throw new AtomSpecException("Unsuppported attribute "
+    						+attr.getName()
+    						+" in the atom:category element");
+    			}
     			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
     		}
     	}

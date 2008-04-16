@@ -70,14 +70,12 @@ class AtomTextConstruct {
     		while(attrItr.hasNext()){
     			Attribute attr = attrItr.next();
     			//check for unsupported attribute.
-    			if(!attr.getName().equals("type")
-    					&& !FeedDoc.isUndefinedAttribute(attr)){
+    			if(!FeedDoc.isAtomCommonAttribute(attr)
+    					&& !FeedDoc.isUndefinedAttribute(attr)
+    					&& !attr.getName().equals("type")){
     				throw new AtomSpecException("Unsuppported attribute "
     						+attr.getName()
-    						+" that is not "
-    						+"of the form "
-    						+"xml:base=\"...\" "
-    						+"or xml:lang=\"...\" or local:*=\"...\" for this Atom Text Construct.");
+    						+" for this Atom Text Construct.");
     			}
     			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
     		}

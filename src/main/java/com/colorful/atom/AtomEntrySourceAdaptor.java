@@ -120,6 +120,13 @@ class AtomEntrySourceAdaptor {
 			Iterator<Attribute> attrItr = attributes.iterator();
 			while(attrItr.hasNext()){
 				Attribute attr = attrItr.next();
+				//check for unsupported attribute.
+    			if(!FeedDoc.isAtomCommonAttribute(attr)
+    					&& !FeedDoc.isUndefinedAttribute(attr)){
+    				throw new AtomSpecException("Unsuppported attribute "
+    						+attr.getName()
+    						+" for this element.");
+    			}
 				this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
 			}
 		}

@@ -65,7 +65,7 @@ public class FeedDocTest {
 
 			Title title = FeedDoc.buildTitle("test feed",null);
 			
-			Generator generator = FeedDoc.atomsphereVersion;
+			Generator generator = FeedDoc.getAtomsphereVersion();
 			
 			List<Author> authors = new LinkedList<Author>();
 			authors.add(FeedDoc.buildAuthor(FeedDoc.buildName("Bill Brown"),null,null,null,null));
@@ -237,11 +237,8 @@ public class FeedDocTest {
 	@Test
 	public void testBuildFeed() {
 		try {
-			List<Attribute> genAttrs = new LinkedList<Attribute>();
-			genAttrs.add(FeedDoc.buildAttribute("uri",
-					"http://www.colorfulsoftware.com/projects/atomsphere"));
-			genAttrs.add(FeedDoc.buildAttribute("version", "2.0.0.0"));
-			Generator generator = FeedDoc.atomsphereVersion;
+			
+			Generator generator = FeedDoc.getAtomsphereVersion();
 
 			Id id = FeedDoc.buildId(null,
 					"http://www.colorfulsoftware.com/atom.xml");

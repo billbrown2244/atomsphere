@@ -68,7 +68,8 @@ public class Link {
     		while(attrItr.hasNext()){
     			Attribute attr = attrItr.next();
     			//check for unsupported attribute.
-    			if(!FeedDoc.isUndefinedAttribute(attr)
+    			if(!FeedDoc.isAtomCommonAttribute(attr)
+    			&& !FeedDoc.isUndefinedAttribute(attr)
     			&& !attr.getName().equals("href")
     			&& !attr.getName().equals("rel")
     			&& !attr.getName().equals("type")
@@ -78,10 +79,7 @@ public class Link {
     			){
     				throw new AtomSpecException("Unsuppported attribute "
     						+attr.getName()
-    						+" in the atom:link element that is not "
-    						+"of the form "
-    						+"xml:base=\"...\" "
-    						+"or xml:lang=\"...\" or local:*=\"...\"");
+    						+" for this link element.");
     			}
     			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
     		}
