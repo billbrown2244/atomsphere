@@ -26,6 +26,7 @@ Change History:
     					input streams into feeds an strings.
     2008-04-08 wbrown - added atomshpereVersion (generator) constant for writing out feeds.  Added more
     					thorws AtomsphereSpecExceptions for attributes that are not atomCommonAttribute
+    2008-04-15 wbrown - fixed entry element to String entry document
  */
 package com.colorful.atom;
 
@@ -339,9 +340,9 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
     }
     
     /**
-     * This method reads in an atom Entry bean and returns the contents as an atom Entry document string containing the entry.
+     * This method reads in an atom Entry element and returns the contents as an atom Entry document String containing the entry.
      * @param entry the entry to be converted to an atom entry document string.
-     * @return an atom entry document element string containing the entry passed in.
+     * @return an atom entry document string containing the entry argument passed in.
      * @throws Exception thrown if the feed cannot be returned as a String 
      */
     public static String readEntryToString(Entry entry) throws Exception{
@@ -354,6 +355,9 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
             
             //add atom base and lang to the entry if they are not there.
             List<Attribute> attributes = entry.getAttributes();
+            if(attributes == null){
+            	attributes = new LinkedList<Attribute>();
+            }
             if(getAttributeFromGroup(attributes,atomBase.getName()) == null){
             	attributes.add(atomBase);
             }

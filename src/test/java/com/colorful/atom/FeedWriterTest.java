@@ -24,6 +24,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -137,6 +138,7 @@ public class FeedWriterTest {
 
 	@After
 	public void tearDown() throws Exception {
+		new File("out.xml").deleteOnExit();
 	}
 
 	@Test

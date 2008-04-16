@@ -92,6 +92,8 @@ public class FeedDocTest {
 
 	@After
 	public void tearDown() throws Exception {
+		new File("out.xml").deleteOnExit();
+		new File("out2.xml").deleteOnExit();
 	}
 
 	@Test
@@ -179,7 +181,37 @@ public class FeedDocTest {
 
 	@Test
 	public void testReadEntryToString() {
-		// fail("Not yet implemented");
+		try{
+		Calendar theDate = Calendar.getInstance();
+		theDate.clear();
+		theDate.set(2008,0,1);
+		String expected = "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">";
+		expected += "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>";
+		expected += "<updated>2008-01-01T00:00:00.00-06:00</updated>";
+		expected += "<title>test entry</title>";
+		expected += "</entry>";
+		Entry entry = FeedDoc.buildEntry(
+				FeedDoc.buildId(null,"http://www.colorfulsoftware.com/projects/atomsphere/")
+				, FeedDoc.buildTitle("test entry",null)
+				, FeedDoc.buildUpdated(theDate.getTime(),null)
+				, null
+				, null
+				, null
+				, null
+				, null
+				, null
+				, null
+				, null
+				, null
+				, null
+				, null);
+		String entryStr = FeedDoc.readEntryToString(entry);
+		assertTrue(entryStr != null);
+		assertEquals(entryStr,expected);
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue(e instanceof AtomSpecException);
+		}
 	}
 
 	@Test
