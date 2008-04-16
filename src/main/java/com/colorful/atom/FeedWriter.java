@@ -49,35 +49,6 @@ class FeedWriter{
 	 */
 	void writeFeed(XMLStreamWriter writer, Feed feed,String encoding,String version) throws Exception{
 
-		//make sure the feed is sorted before it is written out to the file.
-		//this prevents the client code from having to 
-		//maintain the sorting during usage
-		feed = FeedDoc.checkForAndApplyExtension(feed,FeedDoc.sort);
-
-		//if the feed does not contain the atomsphere generator
-		//add it now.
-		if(feed.getGenerator() == null || feed.getGenerator().getText().equals("Atomsphere")){
-			feed = FeedDoc.buildFeed(
-					feed.getId()
-					, feed.getTitle()
-					, feed.getUpdated()
-					, feed.getRights()
-					, feed.getAuthors()
-					, feed.getCategories()
-					, feed.getContributors()
-					, feed.getLinks()
-					, feed.getAttributes()
-					, feed.getExtensions()
-					, FeedDoc.getAtomsphereVersion()
-					, feed.getSubtitle()
-					, feed.getIcon()
-					, feed.getLogo()
-					, feed.getEntries());
-		}
-		
-		//write the xml header.
-		writer.writeStartDocument(encoding,version);
-
 		//open the feed element
 		writer.writeStartElement("feed");
 		if(feed.getAttributes() != null){

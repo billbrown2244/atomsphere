@@ -83,6 +83,25 @@ public class Feed {
 				,contributors,links,attributes,extensions
 				,generator,subtitle,icon,logo);
 
+		//make sure id is present
+        if(source.getId() == null){
+            throw new AtomSpecException("atom:feed elements MUST contain exactly one atom:id element.");
+        }
+        //make sure title is present
+        if(source.getTitle() == null){
+            throw new AtomSpecException("atom:feed elements MUST contain exactly one atom:title element.");
+        }
+        //make sure updated is present
+        if(source.getUpdated() == null){
+            throw new AtomSpecException("atom:feed elements MUST contain exactly one atom:updated element.");
+        }
+        //check for the author requirement
+        if(source.getAuthors() == null){
+            if(this.entries == null){
+                throw new AtomSpecException("atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
+            }
+        }
+		
 		if(entries == null){
 			this.entries = null;
 		}else{
@@ -95,7 +114,7 @@ public class Feed {
 
 				//if there is no author element at the feed level
 				//check to make sure the entry has an author element
-				if (authors == null){
+				if (source.getAuthors() == null){
 					if(entry.getAuthors() == null){
 						throw new AtomSpecException("atom:entry elements MUST contain one or more atom:author elements, unless the atom:entry contains an atom:source element that contains an atom:author element or, in an Atom Feed Document, the atom:feed element contains an atom:author element itself.");
 					}

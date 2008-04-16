@@ -142,7 +142,7 @@ public class FeedDoc {
 	
     /**
      * 
-     * @param output the target output for the feed.
+     * @param output the target output for the feed document.
      * @param feed the atom feed object containing the content of the feed
      * @param encoding the file encoding (default is UTF-8)
      * @param version the xml version (default is 1.0)
@@ -154,7 +154,19 @@ public class FeedDoc {
     
     /**
      * 
-     * @param output the target output for the feed.
+     * @param output the target output for the entry document.
+     * @param entry the atom entry object containing the content.
+     * @param encoding the file encoding (default is UTF-8)
+     * @param version the xml version (default is 1.0)
+     * @throws Exception thrown if the atom document cannot be written to the output 
+     */
+    public static void writeEntryDoc(OutputStream output,Entry entry,String encoding,String version) throws Exception{
+    	writeEntryDoc(XMLOutputFactory.newInstance().createXMLStreamWriter(output,encoding),entry,encoding,version);
+    }
+    
+    /**
+     * 
+     * @param output the target output for the document.
      * @param feed the atom feed object containing the content of the feed
      * @param encoding the file encoding (default is UTF-8)
      * @param version the xml version (default is 1.0)
@@ -162,6 +174,18 @@ public class FeedDoc {
      */
     public static void writeFeedDoc(Writer output,Feed feed,String encoding,String version) throws Exception{
     	writeFeedDoc(XMLOutputFactory.newInstance().createXMLStreamWriter(output),feed,encoding,version);
+    }
+    
+    /**
+     * 
+     * @param output the target output for the entry document.
+     * @param entry the atom entry object containing the content.
+     * @param encoding the file encoding (default is UTF-8)
+     * @param version the xml version (default is 1.0)
+     * @throws Exception thrown if the atom document cannot be written to the output 
+     */
+    public static void writeEntryDoc(Writer output,Entry entry,String encoding,String version) throws Exception{
+    	writeEntryDoc(XMLOutputFactory.newInstance().createXMLStreamWriter(output),entry,encoding,version);
     }
     
     /**
@@ -185,43 +209,49 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
      * @throws Exception thrown if the feed cannot be written to the output 
      */
 	public static void writeFeedDoc(XMLStreamWriter output,Feed feed,String encoding,String version) throws Exception{
-        //make sure id is present
-        if(feed.getId() == null){
-            throw new AtomSpecException("atom:feed elements MUST contain exactly one atom:id element.");
-        }
-        //make sure title is present
-        if(feed.getTitle() == null){
-            throw new AtomSpecException("atom:feed elements MUST contain exactly one atom:title element.");
-        }
-        //make sure updated is present
-        if(feed.getUpdated() == null){
-            throw new AtomSpecException("atom:feed elements MUST contain exactly one atom:updated element.");
-        }
-        //check for the author requirement
-        if(feed.getAuthors() == null){
-            if(feed.getEntries() == null){
-                throw new AtomSpecException("atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
+       
+		try{
+			//make sure the feed is sorted before it is written out to the file.
+			//this prevents the client code from having to 
+			//maintain the sorting during usage
+			feed = FeedDoc.checkForAndApplyExtension(feed,FeedDoc.sort);
+
+			//if the feed does not contain the atomsphere generator
+			//add it now.
+			if(feed.getGenerator() == null || feed.getGenerator().getText().equals("Atomsphere")){
+				feed = FeedDoc.buildFeed(
+						feed.getId()
+						, feed.getTitle()
+						, feed.getUpdated()
+						, feed.getRights()
+						, feed.getAuthors()
+						, feed.getCategories()
+						, feed.getContributors()
+						, feed.getLinks()
+						, feed.getAttributes()
+						, feed.getExtensions()
+						, FeedDoc.getAtomsphereVersion()
+						, feed.getSubtitle()
+						, feed.getIcon()
+						, feed.getLogo()
+						, feed.getEntries());
+			}
+			
+			//add atom base and lang to the entry if they are not there.
+            List<Attribute> attributes = feed.getAttributes();
+            if(attributes == null){
+            	attributes = new LinkedList<Attribute>();
             }
-            SortedMap<String,Entry> entries = feed.getEntries();
-            Iterator<String> entryKeys = entries.keySet().iterator();
-            while(entryKeys.hasNext()){
-                Entry entry = (Entry)entries.get(entryKeys.next());
-                if(entry.getAuthors() == null){
-                    if(entry.getSource() == null){
-                        throw new AtomSpecException("atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
-                    }
-                    Source source = entry.getSource();
-                    if(source.getAuthors() == null){
-                        throw new AtomSpecException("atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
-                    }
-
-                }
+            if(getAttributeFromGroup(attributes,atomBase.getName()) == null){
+            	attributes.add(atomBase);
             }
-
-        }
-
-        try{
-            new FeedWriter().writeFeed(output,feed,encoding,version);
+            if(getAttributeFromGroup(attributes,lang_en.getName()) == null){
+            	attributes.add(lang_en);
+            }
+			
+			//write the xml header.
+			output.writeStartDocument(encoding,version);
+			new FeedWriter().writeFeed(output,feed,encoding,version);
             output.flush();
             output.close();
         }catch(Exception e){
@@ -229,14 +259,51 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
         }
     }
 
+	/**
+	 * Writes and entry element to a document.
+	 * @param output the target output for the entry document.
+     * @param entry the atom entry object containing the content of the entry
+     * @param encoding the file encoding (default is UTF-8)
+     * @param version the xml version (default is 1.0)
+     * @throws Exception thrown if the feed cannot be written to the output 
+     * @see writeFeedDoc(XMLStreamWriter output,Feed feed,String encoding,String version)
+	 */
+	public static void writeEntryDoc(XMLStreamWriter output,Entry entry,String encoding,String version) throws Exception{
+		try{
+			
+			SortedMap<String,Entry> entries = new TreeMap<String,Entry>();
+            
+            //add atom base and lang to the entry if they are not there.
+            List<Attribute> attributes = entry.getAttributes();
+            if(attributes == null){
+            	attributes = new LinkedList<Attribute>();
+            }
+            if(getAttributeFromGroup(attributes,atomBase.getName()) == null){
+            	attributes.add(atomBase);
+            }
+            if(getAttributeFromGroup(attributes,lang_en.getName()) == null){
+            	attributes.add(lang_en);
+            }
+
+            //write the xml header.
+    		output.writeStartDocument(encoding,version);
+    		
+    		//write the entries.
+            new FeedWriter().writeEntries(output,entries);
+            output.flush();
+            output.close();
+        }catch(Exception e){
+           throw new Exception("error creating xml file.",e);
+        }
+	}
 	
 	/**
 	 * This method reads an input stream and outputs an atom 1.0 xml document string.
 	 * @param inputStream the stream containing the atom xml to be read.
-	 * @return  an atom feed document string.
+	 * @return  an atom feed or entry document string.
 	 * @throws Exception thrown if the feed cannot be returned as a String 
 	 */
-	public static String readFeedToString(InputStream inputStream) throws Exception {
+	public static String readAtomDocToString(InputStream inputStream) throws Exception {
 		StringBuffer feedXML = new StringBuffer();
         try{
             BufferedReader reader = new BufferedReader( new InputStreamReader(inputStream));
@@ -254,10 +321,10 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
     /**
      * This method reads a file from disk and outputs an atom 1.0 xml document string.
      * @param file the atom xml file to be read
-     * @return an atom feed document string.
+     * @return an atom feed or entry document string.
      * @throws Exception thrown if the feed cannot be returned as a String
      */
-    public static String readFeedToString(File file) throws Exception {
+    public static String readAtomDocToString(File file) throws Exception {
     	StringBuffer feedXML = new StringBuffer();
         try{
             BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -274,28 +341,28 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
     }
 
     /**
-     * This method reads an atom file from a URL and writes it out to an atom feed string.
+     * This method reads an atom file from a URL and writes it out to an atom document string.
      * @param url the location of the atom file on the Internet
-     * @return an atom feed document string.
+     * @return an atom feed or entry document string.
      * @throws Exception thrown if the feed cannot be returned as a String 
      */
-    public static String readFeedToString(URL url) throws Exception {
+    public static String readAtomDocToString(URL url) throws Exception {
     	try{
-    		return readFeedToString(url.openStream());
+    		return readAtomDocToString(url.openStream());
     	}catch(Exception e){
             throw new Exception("error creating xml string from feed.",e);
         }
     }
     
     /**
-     * This method reads in a Feed bean and returns the contents as an atom feed string
+     * This method reads in a Feed element and returns the contents as an atom feed string
      * with formatting specified by the fully qualified XMLStreamWriter class name 
      * (uses reflection internally). For example you can pass the 
      * TXW com.sun.xml.txw2.output.IndentingXMLStreamWriter
      * or the stax-utils javanet.staxutils.IndentingXMLStreamWriter
      * for indented printing.  It will fall back to <pre>readFeedToString(Feed)</pre> 
      * if the XMLStreamWriter class cannot be found in the classpath.
-     * @param feed the feed to be converted to an atom string.
+     * @param feed the feed to be converted to an atom document string.
      * @param xmlStreamWriter the fully qualified XMLStreamWriter class name.
      * @return an atom feed document string.
      * @throws Exception thrown if the feed cannot be returned as a String 
@@ -318,6 +385,66 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
     		writer.close();
     	}catch(Exception e){
     		return readFeedToString(feed);
+    	}
+    	return theString.toString();
+    }
+    
+    /**
+     * This method reads in an Entry element and returns the contents 
+     * as an atom feed document string
+     * @param entry the entry to be converted to an atom document string.
+     * @param xmlStreamWriter the XMLStreamWriter to use
+     * @return the atom entry document string.
+     * @throws Exception if the entry cannot be returned as a String
+     * @see readFeedToString(Feed feed, String xmlStreamWriter)
+     */
+    public static String readEntryToString(Entry entry, String xmlStreamWriter) throws Exception {
+
+    	StringWriter theString = new StringWriter();
+    	try{
+    		Class<?> cls = Class.forName(xmlStreamWriter);
+    		Constructor<?> ct = cls.getConstructor(
+    				new Class[]{XMLStreamWriter.class});
+    		Object arglist[] = new Object[]{
+    				XMLOutputFactory.newInstance()
+    				.createXMLStreamWriter(theString)};
+    		XMLStreamWriter writer = (XMLStreamWriter)
+    			ct.newInstance(arglist);
+
+    		
+    		//add atom base and lang to the entry if they are not there.
+            List<Attribute> attributes = entry.getAttributes();
+            if(attributes == null){
+            	attributes = new LinkedList<Attribute>();
+            }
+            if(getAttributeFromGroup(attributes,atomBase.getName()) == null){
+            	attributes.add(atomBase);
+            }
+            if(getAttributeFromGroup(attributes,lang_en.getName()) == null){
+            	attributes.add(lang_en);
+            }
+            SortedMap<String,Entry> entries = new TreeMap<String,Entry>();
+            entries.put(entry.getUpdated().getText(),buildEntry(
+            		entry.getId()
+            		, entry.getTitle()
+            		, entry.getUpdated()
+            		, entry.getRights()
+            		, entry.getContent()
+            		, entry.getAuthors()
+            		, entry.getCategories()
+            		, entry.getContributors()
+            		, entry.getLinks()
+            		, attributes
+            		, entry.getExtensions()
+            		, entry.getPublished()
+            		, entry.getSummary()
+            		, entry.getSource()));
+            
+    		new FeedWriter().writeEntries(writer,entries);
+    		writer.flush();
+    		writer.close();
+    	}catch(Exception e){
+    		return readEntryToString(entry);
     	}
     	return theString.toString();
     }
@@ -394,49 +521,107 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
     }
     
     /**
-     * This method reads an xml string into a Feed bean.
-     * @param xmlString the xml string to be transformed into a Feed bean.
-     * @return the atom Feed bean
-     * @throws Exception if the string cannot be parsed into a Feed bean.
+     * This method reads an xml string into a Feed element.
+     * @param xmlString the xml string to be transformed into a Feed element.
+     * @return the atom Feed element
+     * @throws Exception if the string cannot be parsed into a Feed element.
      */
     public static Feed readFeedToBean(String xmlString) throws Exception{
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader reader = inputFactory.createXMLStreamReader(new java.io.StringReader(xmlString));
         return new FeedReader().readFeed(reader);
     }
+    
+    /**
+     * This method reads an xml string into a Entry element.
+     * @param xmlString the xml string to be transformed into a Entry element.
+     * @return the atom Entry element
+     * @throws Exception if the string cannot be parsed into a Entry element.
+     */
+    public static Entry readEntryToBean(String xmlString) throws Exception{
+        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        XMLStreamReader reader = inputFactory.createXMLStreamReader(new java.io.StringReader(xmlString));
+        SortedMap<String,Entry> entries = new FeedReader().readEntry(reader,null);
+        if(entries == null || entries.size() > 1){
+        	throw new AtomSpecException("invalid number of entries for this entry document.");
+        }
+        return entries.values().iterator().next();
+    }
 
     /**
-     * This method reads an xml File object into a Feed bean.
+     * This method reads an xml File object into a Feed element.
      * @param file the file object representing an atom file.
-     * @return the atom Feed bean.
-     * @throws Exception if the file cannot be parsed into a Feed bean.
+     * @return the atom Feed element.
+     * @throws Exception if the file cannot be parsed into a Feed element.
      */
     public static Feed readFeedToBean(File file) throws Exception{
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader reader = inputFactory.createXMLStreamReader(new FileInputStream(file));
         return new FeedReader().readFeed(reader);
     }
+    
+    /**
+     * This method reads an xml File object into an Entry element.
+     * @param file the file object representing an atom file.
+     * @return the atom Entry element.
+     * @throws Exception if the file cannot be parsed into an Entry element.
+     */
+    public static Entry readEntryToBean(File file) throws Exception{
+        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        XMLStreamReader reader = inputFactory.createXMLStreamReader(new FileInputStream(file));
+        SortedMap<String,Entry> entries = new FeedReader().readEntry(reader,null);
+        if(entries == null || entries.size() > 1){
+        	throw new AtomSpecException("invalid number of entries for this entry document.");
+        }
+        return entries.values().iterator().next();
+    }
 
     /**
-     * This method reads an atom file from a URL into a Feed bean.
+     * This method reads an atom file from a URL into a Feed element.
      * @param url the Internet network location of an atom file.
-     * @return the atom Feed bean.
-     * @throws Exception if the URL cannot be parsed into a Feed bean.
+     * @return the atom Feed element.
+     * @throws Exception if the URL cannot be parsed into a Feed element.
      */
     public static Feed readFeedToBean(URL url) throws Exception{
         return readFeedToBean(url.openStream());
     }
     
     /**
-     * This method reads an atom file from an input stream into a Feed bean.
+     * This method reads an atom file from a URL into a Entry element.
+     * @param url the Internet network location of an atom file.
+     * @return the atom Entry element.
+     * @throws Exception if the URL cannot be parsed into a Entry element.
+     */
+    public static Entry readEntryToBean(URL url) throws Exception{
+        return readEntryToBean(url.openStream());
+    }
+    
+    /**
+     * This method reads an atom file from an input stream into a Feed element.
      * @param inputStream the input stream containing an atom file.
-     * @return the atom Feed bean.
-     * @throws Exception if the URL cannot be parsed into a Feed bean.
+     * @return the atom Feed element.
+     * @throws Exception if the URL cannot be parsed into a Feed element.
      */
     public static Feed readFeedToBean(InputStream inputStream) throws Exception{
     	XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         XMLStreamReader reader = inputFactory.createXMLStreamReader(inputStream);
         return new FeedReader().readFeed(reader);
+    }
+    
+    /**
+     * This method reads an atom file from an input stream into a Entry element.
+     * @param inputStream the input stream containing an atom file.
+     * @return the atom Entry element.
+     * @throws Exception if the URL cannot be parsed into a Feed element.
+     */
+    public static Entry readEntryToBean(InputStream inputStream) throws Exception{
+    	XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        XMLStreamReader reader = inputFactory.createXMLStreamReader(inputStream);
+        SortedMap<String,Entry> entries = new FeedReader().readEntry(reader,null);
+        if(entries == null || entries.size() > 1){
+        	throw new AtomSpecException("invalid number of entries for this entry document.");
+        }
+        return entries.values().iterator().next();
     }
 
     /**
