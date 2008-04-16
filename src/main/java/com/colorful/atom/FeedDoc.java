@@ -339,9 +339,9 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
     }
     
     /**
-     * This method reads in an atom Entry bean and returns the contents as an atom feed string containing the entry.
-     * @param entry the entry to be converted to an atom string.
-     * @return an atom entry element string containing the entry passed in.
+     * This method reads in an atom Entry bean and returns the contents as an atom Entry document string containing the entry.
+     * @param entry the entry to be converted to an atom entry document string.
+     * @return an atom entry document element string containing the entry passed in.
      * @throws Exception thrown if the feed cannot be returned as a String 
      */
     public static String readEntryToString(Entry entry) throws Exception{
@@ -351,10 +351,32 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
             XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
             XMLStreamWriter writer = outputFactory.createXMLStreamWriter(theString);
             SortedMap<String,Entry> entries = new TreeMap<String,Entry>();
-            entries.put(entry.getUpdated().getText(),entry);
-            Feed wrapper = buildFeed(entry.getId(),entry.getTitle(),entry.getUpdated(),entry.getRights()
-            		,null,null,null,null,null,null,null,null,null,null,entries);
-            new FeedWriter().writeEntries(writer, wrapper.getEntries());
+            
+            //add atom base and lang to the entry if they are not there.
+            List<Attribute> attributes = entry.getAttributes();
+            if(getAttributeFromGroup(attributes,atomBase.getName()) == null){
+            	attributes.add(atomBase);
+            }
+            if(getAttributeFromGroup(attributes,lang_en.getName()) == null){
+            	attributes.add(lang_en);
+            }
+            
+            entries.put(entry.getUpdated().getText(),buildEntry(
+            		entry.getId()
+            		, entry.getTitle()
+            		, entry.getUpdated()
+            		, entry.getRights()
+            		, entry.getContent()
+            		, entry.getAuthors()
+            		, entry.getCategories()
+            		, entry.getContributors()
+            		, entry.getLinks()
+            		, attributes
+            		, entry.getExtensions()
+            		, entry.getPublished()
+            		, entry.getSummary()
+            		, entry.getSource()));
+            new FeedWriter().writeEntries(writer, entries);
             writer.flush();
             writer.close();
         }catch(Exception e){

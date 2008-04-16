@@ -38,7 +38,7 @@ public class IdTest {
 	public void setUp() throws Exception {
 		xmlBase = FeedDoc.buildAttribute("xml:base", "http://www.colorfulsoftware.com/projects/atomsphere/");
 		xmlLang = FeedDoc.lang_en;
-		local = FeedDoc.buildAttribute("local:abcAttribute","theValue");
+		local = FeedDoc.buildAttribute("xmlns:abcAttribute","theValue");
 	}
 
 	@After

@@ -44,7 +44,7 @@ public class LinkTest {
 	public void setUp() throws Exception {
 		xmlBase = FeedDoc.buildAttribute("xml:base", "http://www.colorfulsoftware.com/projects/atomsphere/");
 		xmlLang = FeedDoc.lang_en;
-		local = FeedDoc.buildAttribute("local:abcAttribute","theValue");
+		local = FeedDoc.buildAttribute("xmlns:abcAttribute","theValue");
 		href = FeedDoc.buildAttribute("href","http://www.colorfulsoftware.com/");
 		rel = FeedDoc.buildAttribute("rel","alternate");
 		type = FeedDoc.buildAttribute("type","text/html");
