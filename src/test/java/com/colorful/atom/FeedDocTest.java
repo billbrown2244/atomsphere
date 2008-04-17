@@ -315,12 +315,13 @@ public class FeedDocTest {
 			SortedMap<String, Entry> entries = new TreeMap<String, Entry>();
 			entries.put(entry.getUpdated().getText(), entry);
 
-			Feed feed = FeedDoc.buildFeed(id, title, updated, rights, null,
+			Feed feed = FeedDoc.buildFeed(id, title, updated, rights, authors,
 					categories, contributors, links, feedAttrs, extensions,
 					generator, null, icon, logo, entries);
 
 			assertNotNull(feed);
 		} catch (Exception e) {
+			e.printStackTrace();
 			fail("Issue building feed doc.");
 		}
 	}
