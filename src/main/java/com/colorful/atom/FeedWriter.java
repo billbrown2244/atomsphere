@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *  2007-06-20 wbrown - change the scope of writing entries to protected so that the FeedDoc.readEntryToString(Entry entry)  will work.
  *  2008-03-11 wbrown - fix bug for atomXHTMLTextConstruct to wrap contents in xhtml:div element.
  *  2008-04-09 wbrown - add the atomsphere generator tag to the output. 
+ *  2008-04-17 wbrown - move document encoding back to FeedDoc.
  */
 package com.colorful.atom;
 
@@ -39,15 +40,8 @@ import javax.xml.stream.XMLStreamWriter;
  */
 class FeedWriter{
 
-	/**
-	 * This method writes out the string representation of an atom feed to an xml file or java string.
-	 * @param writer transforms the object to a string
-	 * @param feed contains the data
-	 * @param encoding file encoding
-	 * @param version xml version
-	 * @throws Exception if the file cannot be written to disk or if the string cannot be transformed.
-	 */
-	void writeFeed(XMLStreamWriter writer, Feed feed,String encoding,String version) throws Exception{
+	//uded internally by FeedDoc to write feed to output streams.
+	void writeFeed(XMLStreamWriter writer, Feed feed) throws Exception{
 
 		//open the feed element
 		writer.writeStartElement("feed");

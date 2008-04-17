@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 /* Change History:
  *  2006-11-14 wbrown - added javadoc documentation.
  *  2008-03-11 wbrown - fix bug for atomXHTMLTextConstruct to wrap contents in xhtml:div element.
+ *  2008-04-17 wbrown - add check for start document in readEntry
  */
 package com.colorful.atom;
 
@@ -224,6 +225,12 @@ class FeedReader{
 		
 		while(reader.hasNext()){
 			switch (reader.next()){
+			
+			case XMLStreamConstants.START_DOCUMENT:
+				FeedDoc.encoding = reader.getEncoding();
+				FeedDoc.xml_version = reader.getVersion();
+				break;
+			
 			case XMLStreamConstants.START_ELEMENT:
 				
 				//call each feed elements read method depending on the name

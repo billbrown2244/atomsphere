@@ -56,6 +56,14 @@ public class FeedDocTest {
 
 	private Feed feed1;
 
+	private String expectedEntry1 = 
+		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+		+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+		+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
+		+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+		+ "<title>test entry</title>"
+		+ "</entry>";
+	
 	@Before
 	public void setUp() throws Exception {
 		try{
@@ -99,8 +107,11 @@ public class FeedDocTest {
 	@Test
 	public void testWriteFeedDocOutputStreamFeedStringString() {
 		try {
-			FeedDoc.writeFeedDoc(new FileOutputStream("out2.xml"), feed1,
-					FeedDoc.encoding, FeedDoc.xml_version);
+			FeedDoc.writeFeedDoc(
+					new FileOutputStream("out2.xml")
+					,feed1
+					,FeedDoc.encoding
+					,FeedDoc.xml_version);
 			Feed feed = FeedDoc.readFeedToBean(new File("out2.xml"));
 			assertNotNull(feed);
 		} catch (Exception e) {
@@ -185,11 +196,6 @@ public class FeedDocTest {
 		Calendar theDate = Calendar.getInstance();
 		theDate.clear();
 		theDate.set(2008,0,1);
-		String expected = "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">";
-		expected += "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>";
-		expected += "<updated>2008-01-01T00:00:00.00-06:00</updated>";
-		expected += "<title>test entry</title>";
-		expected += "</entry>";
 		Entry entry = FeedDoc.buildEntry(
 				FeedDoc.buildId(null,"http://www.colorfulsoftware.com/projects/atomsphere/")
 				, FeedDoc.buildTitle("test entry",null)
@@ -207,7 +213,7 @@ public class FeedDocTest {
 				, null);
 		String entryStr = FeedDoc.readEntryToString(entry);
 		assertTrue(entryStr != null);
-		assertEquals(entryStr,expected);
+		assertEquals(entryStr,expectedEntry1);
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);
