@@ -984,13 +984,13 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 			Iterator<Entry> entryItr = currentEntries.values().iterator();
 			while(entryItr.hasNext()){
 				Entry entry = (Entry)entryItr.next();
-				if (elementClass.getCanonicalName().equals("Updated")){
+				if (elementClass.getSimpleName().equals("Updated")){
 					resortedEntries.put(entry.getUpdated().getText(),entry);
 				}
-				if (elementClass.getCanonicalName().equals("Title")){
+				if (elementClass.getSimpleName().equals("Title")){
 					resortedEntries.put(entry.getTitle().getText(),entry);
 				}
-				if (elementClass.getCanonicalName().equals("Summary")){
+				if (elementClass.getSimpleName().equals("Summary")){
 					resortedEntries.put(entry.getSummary().getText(),entry);
 				}
 			}
@@ -1024,11 +1024,11 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 				elementName = "sort:desc";
 			}
 			Attribute sortElement = null;
-			if(elementClass.getCanonicalName().equals("Updated")){
+			if(elementClass.getSimpleName().equals("Updated")){
 				sortElement = FeedDoc.buildAttribute("type","updated");
-			}else if(elementClass.getCanonicalName().equals("Title")){
+			}else if(elementClass.getSimpleName().equals("Title")){
 				sortElement = FeedDoc.buildAttribute("type","title");
-			}else if(elementClass.getCanonicalName().equals("Summary")){
+			}else if(elementClass.getSimpleName().equals("Summary")){
 				sortElement = FeedDoc.buildAttribute("type","summary");
 			}
 			List<Attribute> extAttrs = new LinkedList<Attribute>();
