@@ -970,12 +970,12 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 	 * elementInstance types supported.
 	 * @param feed the feed whose entries are to be sorted
 	 * @param comparator used to determine sort order
-	 * @param elementInstance serves as the key element for the entries collection 
+	 * @param elementClass serves as the key element for the entries collection 
 	 * @return the sorted feed. 
 	 * @throws AtomSpecException if the data violates the 
 	 * <a href="http://atomenabled.org/developers/syndication/atom-format-spec.php">specification</a>. 
 	 */
-	public static Feed sortEntries(Feed feed, Comparator<String> comparator, Object elementInstance) throws AtomSpecException{
+	public static Feed sortEntries(Feed feed, Comparator<String> comparator, Class<?> elementClass) throws AtomSpecException{
 
 		if(feed.getEntries() != null){
 			//sort the entries with the passed in instance as the key
@@ -984,13 +984,13 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 			Iterator<Entry> entryItr = currentEntries.values().iterator();
 			while(entryItr.hasNext()){
 				Entry entry = (Entry)entryItr.next();
-				if (elementInstance instanceof Updated){
+				if (elementClass.getCanonicalName().equals("Updated")){
 					resortedEntries.put(entry.getUpdated().getText(),entry);
 				}
-				if (elementInstance instanceof Title){
+				if (elementClass.getCanonicalName().equals("Title")){
 					resortedEntries.put(entry.getTitle().getText(),entry);
 				}
-				if (elementInstance instanceof Summary){
+				if (elementClass.getCanonicalName().equals("Summary")){
 					resortedEntries.put(entry.getSummary().getText(),entry);
 				}
 			}
@@ -1024,11 +1024,11 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 				elementName = "sort:desc";
 			}
 			Attribute sortElement = null;
-			if(elementInstance instanceof Updated){
+			if(elementClass.getCanonicalName().equals("Updated")){
 				sortElement = FeedDoc.buildAttribute("type","updated");
-			}else if(elementInstance instanceof Title){
+			}else if(elementClass.getCanonicalName().equals("Title")){
 				sortElement = FeedDoc.buildAttribute("type","title");
-			}else if(elementInstance instanceof Summary){
+			}else if(elementClass.getCanonicalName().equals("Summary")){
 				sortElement = FeedDoc.buildAttribute("type","summary");
 			}
 			List<Attribute> extAttrs = new LinkedList<Attribute>();
@@ -1112,13 +1112,13 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 						if(attr.getName().equalsIgnoreCase("type")){
 							String value = attr.getValue();
 							if(value.equals("updated")){
-								return sortEntries(feed,FeedDoc.SORT_ASC, FeedDoc.buildUpdated(null,null)); 
+								return sortEntries(feed,FeedDoc.SORT_ASC,Updated.class); 
 							}
 							if(value.equals("title")){
-								return sortEntries(feed,FeedDoc.SORT_ASC, FeedDoc.buildTitle(null,null));
+								return sortEntries(feed,FeedDoc.SORT_ASC,Title.class);
 							}
 							if(value.equals("summary")){
-								return sortEntries(feed,FeedDoc.SORT_ASC, FeedDoc.buildSummary(null,null));
+								return sortEntries(feed,FeedDoc.SORT_ASC,Summary.class);
 							}
 						}
 					}
@@ -1129,13 +1129,13 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 						if(attr.getName().equalsIgnoreCase("type")){
 							String value = attr.getValue();
 							if(value.equals("updated")){
-								return sortEntries(feed,FeedDoc.SORT_DESC, FeedDoc.buildUpdated(null,null)); 
+								return sortEntries(feed,FeedDoc.SORT_DESC,Updated.class); 
 							}
 							if(value.equals("title")){
-								return sortEntries(feed,FeedDoc.SORT_DESC, FeedDoc.buildTitle(null,null));
+								return sortEntries(feed,FeedDoc.SORT_DESC,Title.class);
 							}
 							if(value.equals("summary")){
-								return sortEntries(feed,FeedDoc.SORT_DESC, FeedDoc.buildSummary(null,null));
+								return sortEntries(feed,FeedDoc.SORT_DESC,Summary.class);
 							}
 						}
 					}
