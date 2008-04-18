@@ -890,7 +890,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 				,feed.getCategories()
 				,feed.getContributors()
 				,feed.getLinks()
-				,feed.getAttributes()
+				,attributes
 				,feed.getExtensions()
 				,FeedDoc.getAtomsphereVersion()
 				,feed.getSubtitle()
