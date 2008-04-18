@@ -225,36 +225,9 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 	public static void writeFeedDoc(XMLStreamWriter output,Feed feed,String encoding,String version) throws Exception{
        
 		try{
-			//make sure the feed is sorted before it is written out to the file.
-			//this prevents the client code from having to 
-			//maintain the sorting during usage
-			feed = FeedDoc.checkForAndApplyExtension(feed,FeedDoc.sort);
-
-			//if the feed does not contain the atomsphere generator
-			//add it now.
-			if(feed.getGenerator() == null || feed.getGenerator().getText().equals("Atomsphere")){
-				feed = FeedDoc.buildFeed(
-						feed.getId()
-						, feed.getTitle()
-						, feed.getUpdated()
-						, feed.getRights()
-						, feed.getAuthors()
-						, feed.getCategories()
-						, feed.getContributors()
-						, feed.getLinks()
-						, feed.getAttributes()
-						, feed.getExtensions()
-						, FeedDoc.getAtomsphereVersion()
-						, feed.getSubtitle()
-						, feed.getIcon()
-						, feed.getLogo()
-						, feed.getEntries());
-			}
-			
 			writeFeedOutput(feed,output,encoding,version);
-			
         }catch(Exception e){
-           throw new Exception("error creating xml file.",e);
+           throw new Exception("error creating the feed document.",e);
         }
     }
 
@@ -386,7 +359,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 			throws AtomSpecException, Exception, XMLStreamException {
 		SortedMap<String,Entry> entries = new TreeMap<String,Entry>();
 		
-		//add atom base and lang to the entry if they are not there.
+		//add atom base and language to the entry if they are not there.
 		List<Attribute> attributes = entry.getAttributes();
 		if(attributes == null){
 			attributes = new LinkedList<Attribute>();
@@ -398,6 +371,7 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 			attributes.add(lang_en);
 		}
 		
+		//rebuild the entry with the added attributes.
 		entries.put(entry.getUpdated().getText(),buildEntry(
 				entry.getId()
 				, entry.getTitle()
@@ -887,7 +861,13 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 			,String encoding
 			, String version)
 			throws XMLStreamException, Exception {
-		//add atom base and xml_lang to the entry if they are not there.
+		
+		//make sure the feed is sorted before it is written out to the file.
+		//this prevents the client code from having to 
+		//maintain the sorting during usage
+		feed = FeedDoc.checkForAndApplyExtension(feed,FeedDoc.sort);
+
+		//add atom base and xml_language to the entry if they are not there.
 		List<Attribute> attributes = feed.getAttributes();
 		if(attributes == null){
 			attributes = new LinkedList<Attribute>();
@@ -898,6 +878,26 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 		if(getAttributeFromGroup(attributes,lang_en.getName()) == null){
 			attributes.add(lang_en);
 		}
+		
+		//rebuild the feed with the updated attributes 
+		//and atomsphere generator element
+		feed = FeedDoc.buildFeed(
+				feed.getId()
+				,feed.getTitle()
+				,feed.getUpdated()
+				,feed.getRights()
+				,feed.getAuthors()
+				,feed.getCategories()
+				,feed.getContributors()
+				,feed.getLinks()
+				,feed.getAttributes()
+				,feed.getExtensions()
+				,FeedDoc.getAtomsphereVersion()
+				,feed.getSubtitle()
+				,feed.getIcon()
+				,feed.getLogo()
+				,feed.getEntries());
+
 		
 		//write the xml header.
 		writer.writeStartDocument(encoding,version);
