@@ -51,6 +51,7 @@ import com.colorful.atom.Name;
 import com.colorful.atom.Rights;
 import com.colorful.atom.Title;
 import com.colorful.atom.Updated;
+import com.colorful.atom.FeedDoc.ContentType;
 
 public class FeedDocTest {
 
@@ -493,7 +494,22 @@ public class FeedDocTest {
 
 	@Test
 	public void testGetContentType() {
-		// fail("Not yet implemented");
+		List<Attribute> attrs = new LinkedList<Attribute>();
+		attrs.add(FeedDoc.buildAttribute("src","http://www.colorfulsoftware.com/images/logo.gif"));
+		attrs.add(FeedDoc.buildAttribute("type", "image/gif"));
+		assertEquals(FeedDoc.getContentType(attrs),ContentType.EXTERNAL);
+		attrs = new LinkedList<Attribute>();
+		attrs.add(FeedDoc.buildAttribute("type", "image/gif"));
+		assertEquals(FeedDoc.getContentType(attrs),ContentType.OTHER);
+		attrs = new LinkedList<Attribute>();
+		attrs.add(FeedDoc.buildAttribute("type", "text"));
+		assertEquals(FeedDoc.getContentType(attrs),ContentType.TEXT);
+		attrs = new LinkedList<Attribute>();
+		attrs.add(FeedDoc.buildAttribute("type", "html"));
+		assertEquals(FeedDoc.getContentType(attrs),ContentType.HTML);
+		attrs = new LinkedList<Attribute>();
+		attrs.add(FeedDoc.buildAttribute("type", "xhtml"));
+		assertEquals(FeedDoc.getContentType(attrs),ContentType.XHTML);
 	}
 
 	@Test

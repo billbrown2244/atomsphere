@@ -28,6 +28,7 @@ Change History:
     					thorws AtomsphereSpecExceptions for attributes that are not atomCommonAttribute
     2008-04-15 wbrown - fixed entry element to String entry document
     2008-04-17 wbrown - added better support for reading and writing Entry documents.
+    2008-06-03 wbrown - fixed bug with getContentType()
  */
 package com.colorful.atom;
 
@@ -942,6 +943,14 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 			Iterator<Attribute> attrItr = attriubtes.iterator();
 			while(attrItr.hasNext()){
 				Attribute attr = attrItr.next();
+				if(attr.getName().equals("src")){
+					return ContentType.EXTERNAL;
+				}
+			}
+			
+			attrItr = attriubtes.iterator();
+			while(attrItr.hasNext()){
+				Attribute attr = attrItr.next();
 				if(attr.getName().equals("type") && attr.getValue().equals("text")){
 					contentType = ContentType.TEXT;
 					break;
@@ -954,9 +963,6 @@ FeedDoc.writeFeedDoc(writer,myFeed,null,null);
 						&& !attr.getValue().equals("html")
 						&& !attr.getValue().equals("xhtml"))){
 					contentType = ContentType.OTHER;
-					break;
-				}else if(attr.getName().equals("src")){
-					contentType = ContentType.EXTERNAL;
 					break;
 				}
 			}
