@@ -22,28 +22,38 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
+
 /**
  * This class represents an Atom 1.0 name element.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *	<pre>
+ * 
+ *         <pre>
  *      atom:name { text }
- *	</pre>
+ * </pre>
  */
-public class Name {
+public class Name implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4036528312427650254L;
 	private final AtomPlainText name;
-	
-	//use the factory method in the FeedDoc.
-	Name(String name){
+
+	// use the factory method in the FeedDoc.
+	Name(String name) {
 		this.name = new AtomPlainText(name);
 	}
-	
+
 	/**
-     * 
-     * @return the name text.
-     */
-	public String getText(){
+	 * 
+	 * @return the name text.
+	 */
+	public String getText() {
 		return name.getText();
 	}
 

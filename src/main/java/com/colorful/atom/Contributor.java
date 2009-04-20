@@ -22,43 +22,53 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * This class represents an Atom 1.0 Contributor element.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *  <pre>
+ * 
+ *         <pre>
  *      atomContributor = element atom:contributor { atomPersonConstruct }
- *  </pre>
+ * </pre>
  */
-public class Contributor {
-	
+public class Contributor implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -57255552816934722L;
 	private final AtomPersonConstruct person;
-	
-	//use the factory method in the FeedDoc.
-	Contributor(Name name, URI uri, Email email, List<Attribute> attributes
-			, List<Extension> extensions) throws AtomSpecException{
-		this.person = new AtomPersonConstruct(name,uri,email,attributes,extensions);
+
+	// use the factory method in the FeedDoc.
+	Contributor(Name name, URI uri, Email email, List<Attribute> attributes,
+			List<Extension> extensions) throws AtomSpecException {
+		this.person = new AtomPersonConstruct(name, uri, email, attributes,
+				extensions);
 	}
-	
-	public Name getName(){
+
+	public Name getName() {
 		return person.getName();
 	}
-	
-	public URI getUri(){
+
+	public URI getUri() {
 		return person.getUri();
 	}
-	
-	public Email getEmail(){
+
+	public Email getEmail() {
 		return person.getEmail();
 	}
-	
-	public List<Attribute> getAttributes(){
+
+	public List<Attribute> getAttributes() {
 		return person.getAttributes();
 	}
-	
-	public List<Extension> getExtensions(){
+
+	public List<Extension> getExtensions() {
 		return person.getExtensions();
 	}
 }

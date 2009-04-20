@@ -22,33 +22,42 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * This class represents an Atom 1.0 logo element.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *	<pre>
+ * 
+ *         <pre>
  *      atomLogo = element atom:logo {
  *          atomCommonAttributes,
  * 		    (atomUri)
- *	        }
- *	</pre>
+ *         }
+ * </pre>
  */
-public class Logo {
+public class Logo implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -726698144318106924L;
 	private final AtomURIConstruct logo;
 
-	//use the factory method in the FeedDoc.
-	Logo(List<Attribute> attributes, String atomUri) throws AtomSpecException {		
-		this.logo = new AtomURIConstruct(attributes,atomUri);
+	// use the factory method in the FeedDoc.
+	Logo(List<Attribute> attributes, String atomUri) throws AtomSpecException {
+		this.logo = new AtomURIConstruct(attributes, atomUri);
 	}
 
-	/** 
+	/**
 	 * 
 	 * @return the unique identifier for this document.
 	 */
-	public String getAtomUri(){
+	public String getAtomUri() {
 		return logo.getAtomUri();
 	}
 
@@ -56,7 +65,7 @@ public class Logo {
 	 * 
 	 * @return the attributes for this element.
 	 */
-	public List<Attribute> getAttributes(){
+	public List<Attribute> getAttributes() {
 		return logo.getAttributes();
 	}
 }

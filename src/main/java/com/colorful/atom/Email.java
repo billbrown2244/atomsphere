@@ -22,30 +22,40 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
+
 /**
  * This class represents an Atom 1.0 Contributor element.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *  <pre>
- *      "atom:email" element's content conveys an e-mail address associated with the person. 
+ * 
+ *         <pre>
+ *      &quot;atom:email&quot; element's content conveys an e-mail address associated with the person. 
  *      Person constructs MAY contain an atom:email element, but MUST NOT contain more than one. 
- *      Its content MUST conform to the "addr-spec" production in [RFC2822].
- *  </pre>
+ *      Its content MUST conform to the &quot;addr-spec&quot; production in [RFC2822].
+ * </pre>
  */
-public class Email {
+public class Email implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4534267548039292775L;
 	private final AtomPlainText email;
-	
-	//use the factory method in the FeedDoc.
-	Email(String email){
+
+	// use the factory method in the FeedDoc.
+	Email(String email) {
 		this.email = new AtomPlainText(email);
 	}
-	
+
 	/**
-     * 
-     * @return the email text.
-     */
-	public String getText(){
+	 * 
+	 * @return the email text.
+	 */
+	public String getText() {
 		return email.getText();
 	}
 }

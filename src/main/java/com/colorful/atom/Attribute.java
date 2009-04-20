@@ -23,60 +23,68 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
+
 /**
  * This class represents an Atom 1.0 attribute.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *  <pre>
+ * 
+ *         <pre>
  *      atomCommonAttributes =
  *          attribute xml:base { atomUri }?,
  *          attribute xml:lang { atomLanguageTag }?,
  *          undefinedAttribute*
- *  </pre>
+ * </pre>
  */
-public class Attribute {
-    
-    /*
-     * atomCommonAttributes =
-   attribute xml:base { atomUri }?,
-   attribute xml:lang { atomLanguageTag }?,
-   undefinedAttribute*
-     */
-    
-    private final String name;
-    private final String value;
-    
-    //use the factory method in the FeedDoc.
-    Attribute(String name, String value){
-        this.name = name;
-        this.value = value;
-    }
-    
-    /**
-     * 
-     * @return the name of this attribute
-     */
-    public String getName() {
-        return name;
-    }
+public class Attribute implements Serializable {
 
-    /**
-     * 
-     * @return the value of this attribute
-     */
-    public String getValue() {
-        return value;
-    }    
-    
-    @Override
-    public boolean equals(Object obj) {
-    	if(obj instanceof Attribute){   		
-    		Attribute local = (Attribute)obj;
-    		if(local.name != null && local.value != null){
-    			return local.name.equals(this.name)
-    				&& local.value.equals(this.value);
-    		}
-    	}
-    	return false;
-    }
+	/*
+	 * atomCommonAttributes = attribute xml:base { atomUri }?, attribute
+	 * xml:lang { atomLanguageTag }?, undefinedAttribute*
+	 */
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5289914532308394264L;
+	private final String name;
+	private final String value;
+
+	// use the factory method in the FeedDoc.
+	Attribute(String name, String value) {
+		this.name = name;
+		this.value = value;
+	}
+
+	/**
+	 * 
+	 * @return the name of this attribute
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * 
+	 * @return the value of this attribute
+	 */
+	public String getValue() {
+		return value;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Attribute) {
+			Attribute local = (Attribute) obj;
+			if (local.name != null && local.value != null) {
+				return local.name.equals(this.name)
+						&& local.value.equals(this.value);
+			}
+		}
+		return false;
+	}
 }

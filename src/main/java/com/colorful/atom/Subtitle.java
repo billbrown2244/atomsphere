@@ -22,39 +22,48 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * This class represents an Atom 1.0 subtitle element.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *	<pre>
- *		atomSubsubtitle = element atom:subsubtitle { atomTextConstruct }
- *	</pre>
+ * 
+ *         <pre>
+ * 	atomSubsubtitle = element atom:subsubtitle { atomTextConstruct }
+ * </pre>
  */
-public class Subtitle {
-    
+public class Subtitle implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1899291850703846655L;
 	private final AtomTextConstruct subtitle;
-	
-	//use the factory method in the FeedDoc.
-    Subtitle(String subtitle
-    		, List<Attribute> attributes) throws AtomSpecException {
-        this.subtitle = new AtomTextConstruct(subtitle,attributes);
-    }
-    
-    /**
-     * 
-     * @return the text content for this element.
-     */
-    public String getText(){
-    	return subtitle.getText();
-    }
-    
-    /**
-     * 
-     * @return the attributes for this element.
-     */
-    public List<Attribute> getAttributes(){
-    	return subtitle.getAttributes();
-    }
+
+	// use the factory method in the FeedDoc.
+	Subtitle(String subtitle, List<Attribute> attributes)
+			throws AtomSpecException {
+		this.subtitle = new AtomTextConstruct(subtitle, attributes);
+	}
+
+	/**
+	 * 
+	 * @return the text content for this element.
+	 */
+	public String getText() {
+		return subtitle.getText();
+	}
+
+	/**
+	 * 
+	 * @return the attributes for this element.
+	 */
+	public List<Attribute> getAttributes() {
+		return subtitle.getAttributes();
+	}
 }

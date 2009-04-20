@@ -21,100 +21,110 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * This class represents an Atom 1.0 generator element.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *  <pre>
+ * 
+ *         <pre>
  *      atomGenerator = element atom:generator {
  *          atomCommonAttributes,
  *          attribute uri { atomUri }?,
  *          attribute version { text }?,
  *          text
  *          }
- *  </pre>
+ * </pre>
  */
-public class Generator {
-    private final List<Attribute> attributes;
-    private final Attribute uri;
-    private final Attribute version;
-    private final String text;
-    
-    //use the factory method in the FeedDoc.
-    Generator(List<Attribute> attributes, String text) 
-    throws AtomSpecException{
-        
-        if(attributes == null){
-        	this.attributes = new LinkedList<Attribute>();
-    	}else{
-    		this.attributes = new LinkedList<Attribute>();
-    		Iterator<Attribute> attrItr = attributes.iterator();
-    		while(attrItr.hasNext()){
-    			Attribute attr = attrItr.next();
-    			//check for unsupported attribute.
-    			if(!FeedDoc.isAtomCommonAttribute(attr)
-    					&& !FeedDoc.isUndefinedAttribute(attr)
-    					&& !attr.getName().equals("uri")
-    					&& !attr.getName().equals("version")
-    			){
-    				throw new AtomSpecException("Unsuppported attribute "
-    						+attr.getName()
-    						+" in the atom:generator element");
-    			}
-    			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
-    		}
-    	}
-    	
-        this.uri = FeedDoc.getAttributeFromGroup(this.attributes,"uri");
-        
-        this.version = FeedDoc.getAttributeFromGroup(this.attributes,"version");
-    	
-        this.text = text;
-    }
+public class Generator implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6555330269825432901L;
+	private final List<Attribute> attributes;
+	private final Attribute uri;
+	private final Attribute version;
+	private final String text;
+
+	// use the factory method in the FeedDoc.
+	Generator(List<Attribute> attributes, String text) throws AtomSpecException {
+
+		if (attributes == null) {
+			this.attributes = new LinkedList<Attribute>();
+		} else {
+			this.attributes = new LinkedList<Attribute>();
+			Iterator<Attribute> attrItr = attributes.iterator();
+			while (attrItr.hasNext()) {
+				Attribute attr = attrItr.next();
+				// check for unsupported attribute.
+				if (!FeedDoc.isAtomCommonAttribute(attr)
+						&& !FeedDoc.isUndefinedAttribute(attr)
+						&& !attr.getName().equals("uri")
+						&& !attr.getName().equals("version")) {
+					throw new AtomSpecException("Unsuppported attribute "
+							+ attr.getName() + " in the atom:generator element");
+				}
+				this.attributes.add(new Attribute(attr.getName(), attr
+						.getValue()));
+			}
+		}
+
+		this.uri = FeedDoc.getAttributeFromGroup(this.attributes, "uri");
+
+		this.version = FeedDoc
+				.getAttributeFromGroup(this.attributes, "version");
+
+		this.text = text;
+	}
 
 	/**
-     * 
-     * @return the category attribute list.
-     */
-    public List<Attribute> getAttributes() {
-    	if(attributes == null){
-    		return null;
-    	}
-    	List<Attribute> attrsCopy = new LinkedList<Attribute>();
-		Iterator<Attribute> attrItr = this.attributes.iterator();
-		while(attrItr.hasNext()){
-			Attribute attr = attrItr.next();
-			attrsCopy.add(new Attribute(attr.getName(),attr.getValue()));
+	 * 
+	 * @return the category attribute list.
+	 */
+	public List<Attribute> getAttributes() {
+		if (attributes == null) {
+			return null;
 		}
-        return attrsCopy;
-    }
-    
-    /**
-     * 
-     * @return the label attribute
-     */
-    public Attribute getUri() {
-    	return (uri == null)?null:new Attribute(uri.getName(),uri.getValue());
-    }
+		List<Attribute> attrsCopy = new LinkedList<Attribute>();
+		Iterator<Attribute> attrItr = this.attributes.iterator();
+		while (attrItr.hasNext()) {
+			Attribute attr = attrItr.next();
+			attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+		}
+		return attrsCopy;
+	}
 
-    /**
-     * 
-     * @return the scheme attribute
-     */
-    public Attribute getVersion() {
-    	return (version == null)?null:new Attribute(version.getName(),version.getValue());
-    }
+	/**
+	 * 
+	 * @return the label attribute
+	 */
+	public Attribute getUri() {
+		return (uri == null) ? null : new Attribute(uri.getName(), uri
+				.getValue());
+	}
 
-    /**
-     * 
-     * @return the text content for this element.
-     */
-    public String getText() {
-        return text;
-    }
+	/**
+	 * 
+	 * @return the scheme attribute
+	 */
+	public Attribute getVersion() {
+		return (version == null) ? null : new Attribute(version.getName(),
+				version.getValue());
+	}
+
+	/**
+	 * 
+	 * @return the text content for this element.
+	 */
+	public String getText() {
+		return text;
+	}
 
 }

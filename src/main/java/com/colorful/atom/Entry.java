@@ -22,113 +22,125 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
 /**
  * This class represents an Atom 1.0 entry element.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *  <pre>
+ * 
+ *         <pre>
  *      atomEntry =
  *          element atom:entry {
  *          atomCommonAttributes,
  *          (atomAuthor*
- *          & atomCategory*
- *          & atomContent?
- *          & atomContributor*
- *          & atomId
- *          & atomLink*
- *          & atomPublished?
- *          & atomRights?
- *          & atomSource?
- *          & atomSummary?
- *          & atomTitle
- *          & atomUpdated
- *          & extensionElement*)
+ *          &amp; atomCategory*
+ *          &amp; atomContent?
+ *          &amp; atomContributor*
+ *          &amp; atomId
+ *          &amp; atomLink*
+ *          &amp; atomPublished?
+ *          &amp; atomRights?
+ *          &amp; atomSource?
+ *          &amp; atomSummary?
+ *          &amp; atomTitle
+ *          &amp; atomUpdated
+ *          &amp; extensionElement*)
  *          }
  * </pre>
  */
-public class Entry {
+public class Entry implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5291388675692200218L;
 	private final AtomEntrySourceAdaptor entryAdaptor;
-	private final Content content;         
+	private final Content content;
 	private final Published published;
 	private final Source source;
 	private final Summary summary;
 
-	//use the factory method in the FeedDoc.
-	Entry(Id id
-			,Title title
-			,Updated updated
-			,Rights rights
-			,Content content
-			,List<Author> authors
-			,List<Category> categories    		
-			,List<Contributor> contributors
-			,List<Link> links
-			,List<Attribute> attributes
-			,List<Extension> extensions    		
-			,Published published
-			,Summary summary
-			,Source source) throws AtomSpecException {
+	// use the factory method in the FeedDoc.
+	Entry(Id id, Title title, Updated updated, Rights rights, Content content,
+			List<Author> authors, List<Category> categories,
+			List<Contributor> contributors, List<Link> links,
+			List<Attribute> attributes, List<Extension> extensions,
+			Published published, Summary summary, Source source)
+			throws AtomSpecException {
 
-		this.entryAdaptor = new AtomEntrySourceAdaptor(id,title,updated,rights,authors,categories,contributors,links,attributes,extensions);
+		this.entryAdaptor = new AtomEntrySourceAdaptor(id, title, updated,
+				rights, authors, categories, contributors, links, attributes,
+				extensions);
 
-		//check for functional requirements here because 
-		//they are all optional for a Source element.
+		// check for functional requirements here because
+		// they are all optional for a Source element.
 
-		//make sure id is present
-		if(id == null){
-			throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:id element.");
+		// make sure id is present
+		if (id == null) {
+			throw new AtomSpecException(
+					"atom:entry elements MUST contain exactly one atom:id element.");
 		}
-		//make sure title is present
-		if(title == null){
-			throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:title element.");
+		// make sure title is present
+		if (title == null) {
+			throw new AtomSpecException(
+					"atom:entry elements MUST contain exactly one atom:title element.");
 		}
-		//make sure updated is present
-		if(updated == null){
-			throw new AtomSpecException("atom:entry elements MUST contain exactly one atom:updated element.");
+		// make sure updated is present
+		if (updated == null) {
+			throw new AtomSpecException(
+					"atom:entry elements MUST contain exactly one atom:updated element.");
 		}
 
-		if(content == null){
+		if (content == null) {
 			this.content = null;
-		}else{
+		} else {
 
-			if(content.getAttributes() != null){
-				Iterator<Attribute> attrsItr = content.getAttributes().iterator();
-				while(attrsItr.hasNext()){
-					Attribute attr = (Attribute)attrsItr.next();
-					//check for src attribute
-					if(attr.getName().equals("src") && summary == null){
-						throw new AtomSpecException("atom:entry elements MUST contain an atom:summary element if the atom:entry contains an atom:content that has a \"src\" attribute (and is thus empty).");
+			if (content.getAttributes() != null) {
+				Iterator<Attribute> attrsItr = content.getAttributes()
+						.iterator();
+				while (attrsItr.hasNext()) {
+					Attribute attr = (Attribute) attrsItr.next();
+					// check for src attribute
+					if (attr.getName().equals("src") && summary == null) {
+						throw new AtomSpecException(
+								"atom:entry elements MUST contain an atom:summary element if the atom:entry contains an atom:content that has a \"src\" attribute (and is thus empty).");
 					}
-					//check for non text or html or xhtml or xml mime types.
-					if(attr.getName().equals("type")
+					// check for non text or html or xhtml or xml mime types.
+					if (attr.getName().equals("type")
 							&& !attr.getValue().equals("text")
 							&& !attr.getValue().equals("html")
 							&& !attr.getValue().equals("xhtml")
 							&& !attr.getValue().startsWith("text/")
 							&& !attr.getValue().endsWith("/xml")
 							&& !attr.getValue().endsWith("\\+xml")
-							&& summary == null){
-						throw new AtomSpecException("atom:entry elements MUST contain an atom:summary element if the atom:entry contains content that is encoded in Base64; i.e., the \"type\" attribute of atom:content is a MIME media type [MIMEREG], but is not an XML media type [RFC3023], does not begin with \"text/\", and does not end with \"/xml\" or \"+xml\".");
+							&& summary == null) {
+						throw new AtomSpecException(
+								"atom:entry elements MUST contain an atom:summary element if the atom:entry contains content that is encoded in Base64; i.e., the \"type\" attribute of atom:content is a MIME media type [MIMEREG], but is not an XML media type [RFC3023], does not begin with \"text/\", and does not end with \"/xml\" or \"+xml\".");
 					}
 				}
 			}
 
-			this.content = new Content(content.getContent(),content.getAttributes());
+			this.content = new Content(content.getContent(), content
+					.getAttributes());
 		}
 
-		this.published = (published == null)?null: 
-			new Published(published.getDateTime(),published.getAttributes());
-		this.source = (source == null)?null: new Source(source.getId(),source.getTitle()
-				,source.getUpdated(),source.getRights(),source.getAuthors()
-				,source.getCategories(),source.getContributors(),source.getLinks()
-				,source.getAttributes(),source.getExtensions(),source.getGenerator()
-				,source.getSubtitle(),source.getIcon(),source.getLogo());
-		this.summary = (summary == null)?null: 
-			new Summary(summary.getText(),summary.getAttributes());
+		this.published = (published == null) ? null : new Published(published
+				.getDateTime(), published.getAttributes());
+		this.source = (source == null) ? null : new Source(source.getId(),
+				source.getTitle(), source.getUpdated(), source.getRights(),
+				source.getAuthors(), source.getCategories(), source
+						.getContributors(), source.getLinks(), source
+						.getAttributes(), source.getExtensions(), source
+						.getGenerator(), source.getSubtitle(),
+				source.getIcon(), source.getLogo());
+		this.summary = (summary == null) ? null : new Summary(
+				summary.getText(), summary.getAttributes());
 	}
 
 	/**
@@ -136,14 +148,13 @@ public class Entry {
 	 * @return the content for this entry.
 	 */
 	public Content getContent() {
-		try{
-			return (content == null)?null:new Content(
-					content.getContent()
-					,content.getAttributes());
-		}catch(Exception e){
-    		//we should never get here.
-    		return null;
-    	}
+		try {
+			return (content == null) ? null : new Content(content.getContent(),
+					content.getAttributes());
+		} catch (Exception e) {
+			// we should never get here.
+			return null;
+		}
 	}
 
 	/**
@@ -151,14 +162,13 @@ public class Entry {
 	 * @return the published date for this entry.
 	 */
 	public Published getPublished() {
-		try{
-			return (published == null)?null:
-				new Published(published.getDateTime()
-						,published.getAttributes());
-		}catch(Exception e){
-    		//we should never get here.
-    		return null;
-    	}
+		try {
+			return (published == null) ? null : new Published(published
+					.getDateTime(), published.getAttributes());
+		} catch (Exception e) {
+			// we should never get here.
+			return null;
+		}
 	}
 
 	/**
@@ -166,16 +176,18 @@ public class Entry {
 	 * @return the source for this element.
 	 */
 	public Source getSource() {
-		try{
-			return (source == null)?null: new Source(source.getId(),source.getTitle()
-					,source.getUpdated(),source.getRights(),source.getAuthors()
-					,source.getCategories(),source.getContributors(),source.getLinks()
-					,source.getAttributes(),source.getExtensions(),source.getGenerator()
-					,source.getSubtitle(),source.getIcon(),source.getLogo());
-		}catch(Exception e){
-			//this should never happen because 
-			//we check for errors on initial creation
-			//but if it does, print the stack trace
+		try {
+			return (source == null) ? null : new Source(source.getId(), source
+					.getTitle(), source.getUpdated(), source.getRights(),
+					source.getAuthors(), source.getCategories(), source
+							.getContributors(), source.getLinks(), source
+							.getAttributes(), source.getExtensions(), source
+							.getGenerator(), source.getSubtitle(), source
+							.getIcon(), source.getLogo());
+		} catch (Exception e) {
+			// this should never happen because
+			// we check for errors on initial creation
+			// but if it does, print the stack trace
 			e.printStackTrace();
 			return null;
 		}
@@ -186,20 +198,20 @@ public class Entry {
 	 * @return the summary for this element.
 	 */
 	public Summary getSummary() {
-		try{
-			return (summary == null)?null: 
-				new Summary(summary.getText(),summary.getAttributes());
-		}catch(Exception e){
-    		//we should never get here.
-    		return null;
-    	}
+		try {
+			return (summary == null) ? null : new Summary(summary.getText(),
+					summary.getAttributes());
+		} catch (Exception e) {
+			// we should never get here.
+			return null;
+		}
 	}
 
 	/**
 	 * 
 	 * @return the unique identifier for this entry.
 	 */
-	public Id getId(){
+	public Id getId() {
 		return entryAdaptor.getId();
 	}
 
@@ -207,7 +219,7 @@ public class Entry {
 	 * 
 	 * @return the title for this element.
 	 */
-	public Title getTitle(){
+	public Title getTitle() {
 		return entryAdaptor.getTitle();
 	}
 
@@ -215,7 +227,7 @@ public class Entry {
 	 * 
 	 * @return the updated date for this element.
 	 */
-	public Updated getUpdated(){
+	public Updated getUpdated() {
 		return entryAdaptor.getUpdated();
 	}
 
@@ -223,7 +235,7 @@ public class Entry {
 	 * 
 	 * @return the associated rights for this entry.
 	 */
-	public Rights getRights(){
+	public Rights getRights() {
 		return entryAdaptor.getRights();
 	}
 
@@ -231,7 +243,7 @@ public class Entry {
 	 * 
 	 * @return the authors for this entry.
 	 */
-	public List<Author> getAuthors(){
+	public List<Author> getAuthors() {
 		return entryAdaptor.getAuthors();
 	}
 
@@ -239,7 +251,7 @@ public class Entry {
 	 * 
 	 * @return the categories for this element.
 	 */
-	public List<Category> getCategories(){
+	public List<Category> getCategories() {
 		return entryAdaptor.getCategories();
 	}
 
@@ -247,7 +259,7 @@ public class Entry {
 	 * 
 	 * @return the contributors for this entry.
 	 */
-	public List<Contributor> getContributors(){
+	public List<Contributor> getContributors() {
 		return entryAdaptor.getContributors();
 	}
 
@@ -255,7 +267,7 @@ public class Entry {
 	 * 
 	 * @return the links for this entry.
 	 */
-	public List<Link> getLinks(){
+	public List<Link> getLinks() {
 		return entryAdaptor.getLinks();
 	}
 
@@ -263,7 +275,7 @@ public class Entry {
 	 * 
 	 * @return the category attribute list.
 	 */
-	public List<Attribute> getAttributes(){
+	public List<Attribute> getAttributes() {
 		return entryAdaptor.getAttributes();
 	}
 
@@ -271,7 +283,7 @@ public class Entry {
 	 * 
 	 * @return the extensions for this entry.
 	 */
-	public List<Extension> getExtensions(){
+	public List<Extension> getExtensions() {
 		return entryAdaptor.getExtensions();
 	}
 }

@@ -21,36 +21,41 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * This class represents an Atom 1.0 content element.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *  <pre>
+ * 
+ *         <pre>
  *      atomInlineTextContent =
  *          element atom:content {
  *          atomCommonAttributes,
- *          attribute type { "text" | "html" }?,
+ *          attribute type { &quot;text&quot; | &quot;html&quot; }?,
  *          (text)*
  *          }
- *
+ * 
  *      atomInlineXHTMLContent =
  *          element atom:content {
  *          atomCommonAttributes,
- *          attribute type { "xhtml" },
+ *          attribute type { &quot;xhtml&quot; },
  *          xhtmlDiv
  *          }
-
+ * 
  *      atomInlineOtherContent =
  *          element atom:content {
  *          atomCommonAttributes,
  *          attribute type { atomMediaType }?,
  *          (text|anyElement)*
  *          }
- *
+ * 
  *      atomOutOfLineContent =
  *          element atom:content {
  *          atomCommonAttributes,
@@ -63,62 +68,65 @@ import java.util.List;
  *          | atomInlineXHTMLContent
  *          | atomInlineOtherContent
  *          | atomOutOfLineContent
- *  </pre>
+ * </pre>
  */
-public class Content {
-	
-	private final List<Attribute> attributes;
-    private final String content;
-    
-    //use the factory method in the FeedDoc.
-    Content(String content, List<Attribute> attributes) 
-    throws AtomSpecException{
-    	this.content = content;
-    	
-    	if(attributes == null){
-    		this.attributes = null;
-    	}else{
-    		this.attributes = new LinkedList<Attribute>();
-    		Iterator<Attribute> attrItr = attributes.iterator();
-    		while(attrItr.hasNext()){
-    			Attribute attr = attrItr.next();
-    			//check for unsupported attribute.
-    			if(!FeedDoc.isAtomCommonAttribute(attr)
-    					&& !FeedDoc.isUndefinedAttribute(attr)
-    					&& !attr.getName().equals("type")
-    					&& !attr.getName().equals("src")
-    			){
-    				throw new AtomSpecException("Unsuppported attribute "
-    						+attr.getName()
-    						+" in this content element ");
-    			}
-    			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
-    		}
-    	}
-    }
-    
-    /**
-     * 
-     * @return the attributes for this element.
-     */
-    public List<Attribute> getAttributes() {
-    	if(attributes == null){
-    		return null;
-    	}
-    	List<Attribute> attrsCopy = new LinkedList<Attribute>();
-		Iterator<Attribute> attrItr = this.attributes.iterator();
-		while(attrItr.hasNext()){
-			Attribute attr = attrItr.next();
-			attrsCopy.add(new Attribute(attr.getName(),attr.getValue()));
-		}
-        return attrsCopy;
-    }
+public class Content implements Serializable {
 
-    /**
-     * 
-     * @return the content for this element.
-     */
-    public String getContent() {
-        return content;
-    }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6990178735588333050L;
+	private final List<Attribute> attributes;
+	private final String content;
+
+	// use the factory method in the FeedDoc.
+	Content(String content, List<Attribute> attributes)
+			throws AtomSpecException {
+		this.content = content;
+
+		if (attributes == null) {
+			this.attributes = null;
+		} else {
+			this.attributes = new LinkedList<Attribute>();
+			Iterator<Attribute> attrItr = attributes.iterator();
+			while (attrItr.hasNext()) {
+				Attribute attr = attrItr.next();
+				// check for unsupported attribute.
+				if (!FeedDoc.isAtomCommonAttribute(attr)
+						&& !FeedDoc.isUndefinedAttribute(attr)
+						&& !attr.getName().equals("type")
+						&& !attr.getName().equals("src")) {
+					throw new AtomSpecException("Unsuppported attribute "
+							+ attr.getName() + " in this content element ");
+				}
+				this.attributes.add(new Attribute(attr.getName(), attr
+						.getValue()));
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @return the attributes for this element.
+	 */
+	public List<Attribute> getAttributes() {
+		if (attributes == null) {
+			return null;
+		}
+		List<Attribute> attrsCopy = new LinkedList<Attribute>();
+		Iterator<Attribute> attrItr = this.attributes.iterator();
+		while (attrItr.hasNext()) {
+			Attribute attr = attrItr.next();
+			attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+		}
+		return attrsCopy;
+	}
+
+	/**
+	 * 
+	 * @return the content for this element.
+	 */
+	public String getContent() {
+		return content;
+	}
 }

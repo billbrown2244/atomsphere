@@ -21,89 +21,98 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * This class represents an Atom 1.0 text construct.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *  <pre> 
+ * 
+ *         <pre>
  *      atomPlainTextConstruct =
  *          atomCommonAttributes,
- *          attribute type { "text" | "html" }?,
+ *          attribute type { &quot;text&quot; | &quot;html&quot; }?,
  *          text
- *
+ * 
  *      atomXHTMLTextConstruct =
  *          atomCommonAttributes,
- *          attribute type { "xhtml" },
+ *          attribute type { &quot;xhtml&quot; },
  *          xhtmlDiv
- *
+ * 
  *      atomTextConstruct = atomPlainTextConstruct | atomXHTMLTextConstruct
- *  </pre>
- *  
+ * </pre>
+ * 
  */
-class AtomTextConstruct {
-    /*
-     * 
-     */
-    private final List<Attribute> attributes ;
-    private final String text;
-    
-    /**
-     * 
-     * @param text the text content of the element
-     * @param attributes the attributes of the element.
-     * 		the attributes should contain a "type" attribute specifying either text,html, or xhtml.
-     */
-    public AtomTextConstruct(String text
-    		, List<Attribute> attributes) throws AtomSpecException{
-    	
-    	this.text = text;
-    	    	
-    	if(attributes == null){
-    		this.attributes = null;
-    	}else{
-    		this.attributes = new LinkedList<Attribute>();
-    		Iterator<Attribute> attrItr = attributes.iterator();
-    		while(attrItr.hasNext()){
-    			Attribute attr = attrItr.next();
-    			//check for unsupported attribute.
-    			if(!FeedDoc.isAtomCommonAttribute(attr)
-    					&& !FeedDoc.isUndefinedAttribute(attr)
-    					&& !attr.getName().equals("type")){
-    				throw new AtomSpecException("Unsuppported attribute "
-    						+attr.getName()
-    						+" for this Atom Text Construct.");
-    			}
-    			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
-    		}
-    	}
-    }
+class AtomTextConstruct implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5347393958118559606L;
 
-    /**
-     * 
-     * @return the attributes for this element.
-     */
-    public List<Attribute> getAttributes() {
-    	if(attributes == null){
-    		return null;
-    	}
-    	List<Attribute> attrsCopy = new LinkedList<Attribute>();
-		Iterator<Attribute> attrItr = this.attributes.iterator();
-		while(attrItr.hasNext()){
-			Attribute attr = attrItr.next();
-			attrsCopy.add(new Attribute(attr.getName(),attr.getValue()));
+	private final List<Attribute> attributes;
+	private final String text;
+
+	/**
+	 * 
+	 * @param text
+	 *            the text content of the element
+	 * @param attributes
+	 *            the attributes of the element. the attributes should contain a
+	 *            "type" attribute specifying either text,html, or xhtml.
+	 */
+	public AtomTextConstruct(String text, List<Attribute> attributes)
+			throws AtomSpecException {
+
+		this.text = text;
+
+		if (attributes == null) {
+			this.attributes = null;
+		} else {
+			this.attributes = new LinkedList<Attribute>();
+			Iterator<Attribute> attrItr = attributes.iterator();
+			while (attrItr.hasNext()) {
+				Attribute attr = attrItr.next();
+				// check for unsupported attribute.
+				if (!FeedDoc.isAtomCommonAttribute(attr)
+						&& !FeedDoc.isUndefinedAttribute(attr)
+						&& !attr.getName().equals("type")) {
+					throw new AtomSpecException("Unsuppported attribute "
+							+ attr.getName() + " for this Atom Text Construct.");
+				}
+				this.attributes.add(new Attribute(attr.getName(), attr
+						.getValue()));
+			}
 		}
-        return attrsCopy;
-    }
-    
-    /**
-     * 
-     * @return the text content for this element.
-     */
-    public String getText() {
-        return text;
-    }
+	}
+
+	/**
+	 * 
+	 * @return the attributes for this element.
+	 */
+	public List<Attribute> getAttributes() {
+		if (attributes == null) {
+			return null;
+		}
+		List<Attribute> attrsCopy = new LinkedList<Attribute>();
+		Iterator<Attribute> attrItr = this.attributes.iterator();
+		while (attrItr.hasNext()) {
+			Attribute attr = attrItr.next();
+			attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+		}
+		return attrsCopy;
+	}
+
+	/**
+	 * 
+	 * @return the text content for this element.
+	 */
+	public String getText() {
+		return text;
+	}
 }

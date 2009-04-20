@@ -22,39 +22,47 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * This class represents an Atom 1.0 rights element.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *	<pre>
- *		atomRights = element atom:rights { atomTextConstruct }
- *	</pre>
+ * 
+ *         <pre>
+ * 	atomRights = element atom:rights { atomTextConstruct }
+ * </pre>
  */
-public class Rights {
+public class Rights implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6917308035123622641L;
 	private final AtomTextConstruct rights;
-	
-	//use the factory method in the FeedDoc.
-	Rights(String rights
-			, List<Attribute> attributes) throws AtomSpecException {
-        this.rights = new AtomTextConstruct(rights,attributes);
-    }
-    
-    /**
-     * 
-     * @return the text content for this element.
-     */
-    public String getText(){
-    	return rights.getText();
-    }
-    
-    /**
-     * 
-     * @return the attributes for this element.
-     */
-    public List<Attribute> getAttributes(){
-    	return rights.getAttributes();
-    }
+
+	// use the factory method in the FeedDoc.
+	Rights(String rights, List<Attribute> attributes) throws AtomSpecException {
+		this.rights = new AtomTextConstruct(rights, attributes);
+	}
+
+	/**
+	 * 
+	 * @return the text content for this element.
+	 */
+	public String getText() {
+		return rights.getText();
+	}
+
+	/**
+	 * 
+	 * @return the attributes for this element.
+	 */
+	public List<Attribute> getAttributes() {
+		return rights.getAttributes();
+	}
 }

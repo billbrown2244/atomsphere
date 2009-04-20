@@ -41,836 +41,731 @@ import javax.xml.stream.XMLStreamWriter;
 
 /**
  * Used by the FeedDoc to write a Feed bean to a xml file or java String.
+ * 
  * @author Bill Brown
- *
+ * 
  */
-class FeedWriter{
+class FeedWriter {
 
-	//uded internally by FeedDoc to write feed to output streams.
-	void writeFeed(XMLStreamWriter writer, Feed feed) throws Exception{
+	// uded internally by FeedDoc to write feed to output streams.
+	void writeFeed(XMLStreamWriter writer, Feed feed) throws Exception {
 
-		//open the feed element
+		// open the feed element
 		writer.writeStartElement("feed");
-		if(feed.getAttributes() != null){
-			Iterator<Attribute> feedAttrs = 
-				feed.getAttributes().iterator();
-			//write the attributes
-			while(feedAttrs.hasNext()){
-				Attribute feedAttr = 
-					(Attribute)feedAttrs.next();
-				writer.writeAttribute(
-						feedAttr.getName(),feedAttr.getValue());
+		if (feed.getAttributes() != null) {
+			Iterator<Attribute> feedAttrs = feed.getAttributes().iterator();
+			// write the attributes
+			while (feedAttrs.hasNext()) {
+				Attribute feedAttr = (Attribute) feedAttrs.next();
+				writer.writeAttribute(feedAttr.getName(), feedAttr.getValue());
 			}
 		}
-		//write the id (REQUIRED)
-		writeID(writer,feed.getId());
-		//write the updated date (REQUIRED)
-		writeUpdated(writer,feed.getUpdated());
-		//write the generator (should be required but isn't)
-		if(feed.getGenerator() != null){
-			writeGenerator(writer,feed.getGenerator());
+		// write the id (REQUIRED)
+		writeID(writer, feed.getId());
+		// write the updated date (REQUIRED)
+		writeUpdated(writer, feed.getUpdated());
+		// write the generator (should be required but isn't)
+		if (feed.getGenerator() != null) {
+			writeGenerator(writer, feed.getGenerator());
 		}
-		//write the title (REQUIRED)
-		writeTitle(writer,feed.getTitle());
+		// write the title (REQUIRED)
+		writeTitle(writer, feed.getTitle());
 
-		//write the subtitle
-		if(feed.getSubtitle() != null){
-			writeSubtitle(writer,feed.getSubtitle());
+		// write the subtitle
+		if (feed.getSubtitle() != null) {
+			writeSubtitle(writer, feed.getSubtitle());
 		}
 
-		//write the author
-		if(feed.getAuthors() != null){
-			writeAuthors(writer,feed.getAuthors());
+		// write the author
+		if (feed.getAuthors() != null) {
+			writeAuthors(writer, feed.getAuthors());
 		}
-		//write the contributors
-		if(feed.getContributors() != null){
-			writeContributors(writer,feed.getContributors());
+		// write the contributors
+		if (feed.getContributors() != null) {
+			writeContributors(writer, feed.getContributors());
 		}
-		//write the links
-		if(feed.getLinks() != null){
-			writeLinks(writer,feed.getLinks());
+		// write the links
+		if (feed.getLinks() != null) {
+			writeLinks(writer, feed.getLinks());
 		}
-		//write the categories
-		if(feed.getCategories() != null){
-			writeCategories(writer,feed.getCategories());
+		// write the categories
+		if (feed.getCategories() != null) {
+			writeCategories(writer, feed.getCategories());
 		}
-		//write the icon
-		if(feed.getIcon() != null){
-			writeIcon(writer,feed.getIcon());
+		// write the icon
+		if (feed.getIcon() != null) {
+			writeIcon(writer, feed.getIcon());
 		}
-		//write the logo
-		if(feed.getLogo() != null){
-			writeLogo(writer,feed.getLogo());
+		// write the logo
+		if (feed.getLogo() != null) {
+			writeLogo(writer, feed.getLogo());
 		}
-		//write the rights
-		if(feed.getRights() != null){
-			writeRights(writer,feed.getRights());
+		// write the rights
+		if (feed.getRights() != null) {
+			writeRights(writer, feed.getRights());
 		}
-		//write the extensions
-		if(feed.getExtensions() != null){
-			writeExtensions(writer,feed.getExtensions());
+		// write the extensions
+		if (feed.getExtensions() != null) {
+			writeExtensions(writer, feed.getExtensions());
 		}
-		//write the entries
-		if(feed.getEntries() != null){
-			writeEntries(writer,feed.getEntries());
+		// write the entries
+		if (feed.getEntries() != null) {
+			writeEntries(writer, feed.getEntries());
 		}
 
 		writer.writeEndElement();
 	}
 
-	void writeSubtitle(XMLStreamWriter writer, Subtitle subtitle) 
-	throws Exception{
+	void writeSubtitle(XMLStreamWriter writer, Subtitle subtitle)
+			throws Exception {
 		boolean wrapInXhtmlDiv = false;
 		writer.writeStartElement("subtitle");
-		if(subtitle.getAttributes() != null){
-			Iterator<Attribute> feedAttrs = 
-				subtitle.getAttributes().iterator();
-			//write the attributes
-			while(feedAttrs.hasNext()){
-				Attribute feedAttr = (
-						Attribute)feedAttrs.next();
-				writer.writeAttribute(
-						feedAttr.getName(),feedAttr.getValue());
+		if (subtitle.getAttributes() != null) {
+			Iterator<Attribute> feedAttrs = subtitle.getAttributes().iterator();
+			// write the attributes
+			while (feedAttrs.hasNext()) {
+				Attribute feedAttr = (Attribute) feedAttrs.next();
+				writer.writeAttribute(feedAttr.getName(), feedAttr.getValue());
 
-				//check to see if we need to 
-				//wrap the text in a an <xhtml:div> tag.
-				if(feedAttr.getName().equals("type") 
-						&& feedAttr.getValue().equals("xhtml")){
+				// check to see if we need to
+				// wrap the text in a an <xhtml:div> tag.
+				if (feedAttr.getName().equals("type")
+						&& feedAttr.getValue().equals("xhtml")) {
 					wrapInXhtmlDiv = true;
 				}
 			}
 		}
 
-		if(wrapInXhtmlDiv){
+		if (wrapInXhtmlDiv) {
 			writer.writeStartElement("div");
-			writer.writeAttribute(
-					"xmlns"
-					,"http://www.w3.org/1999/xhtml");
-			writeXHTML(writer,subtitle.getText());
+			writer.writeAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+			writeXHTML(writer, subtitle.getText());
 			writer.writeEndElement();
-		}else{
+		} else {
 			writer.writeCharacters(subtitle.getText());
 		}
 
 		writer.writeEndElement();
 	}
 
-	void writeGenerator(XMLStreamWriter writer,Generator generator) 
-	throws Exception{
+	void writeGenerator(XMLStreamWriter writer, Generator generator)
+			throws Exception {
 		writer.writeStartElement("generator");
-		if(generator.getAttributes() != null){
-			Iterator<Attribute> feedAttrs = 
-				generator.getAttributes().iterator();
-			//write the attributes
-			while(feedAttrs.hasNext()){
-				Attribute feedAttr = 
-					(Attribute)feedAttrs.next();
-				writer.writeAttribute(
-						feedAttr.getName()
-						,feedAttr.getValue());
+		if (generator.getAttributes() != null) {
+			Iterator<Attribute> feedAttrs = generator.getAttributes()
+					.iterator();
+			// write the attributes
+			while (feedAttrs.hasNext()) {
+				Attribute feedAttr = (Attribute) feedAttrs.next();
+				writer.writeAttribute(feedAttr.getName(), feedAttr.getValue());
 			}
 			writer.writeCharacters(generator.getText());
 		}
 		writer.writeEndElement();
 	}
 
-	void writeID(XMLStreamWriter writer,Id id) throws Exception{
+	void writeID(XMLStreamWriter writer, Id id) throws Exception {
 		writer.writeStartElement("id");
-		if(id.getAttributes() != null){
-			Iterator<Attribute> feedAttrs = 
-				id.getAttributes().iterator();
-			//write the attributes
-			while(feedAttrs.hasNext()){
-				Attribute feedAttr = 
-					(Attribute)feedAttrs.next();
-				writer.writeAttribute(
-						feedAttr.getName()
-						,feedAttr.getValue());
+		if (id.getAttributes() != null) {
+			Iterator<Attribute> feedAttrs = id.getAttributes().iterator();
+			// write the attributes
+			while (feedAttrs.hasNext()) {
+				Attribute feedAttr = (Attribute) feedAttrs.next();
+				writer.writeAttribute(feedAttr.getName(), feedAttr.getValue());
 			}
 		}
 		writer.writeCharacters(id.getAtomUri());
 		writer.writeEndElement();
 	}
 
-	void writeUpdated(XMLStreamWriter writer,Updated updated) 
-	throws Exception{
+	void writeUpdated(XMLStreamWriter writer, Updated updated) throws Exception {
 		writer.writeStartElement("updated");
 		writer.writeCharacters(updated.getText());
 		writer.writeEndElement();
 	}
 
-	void writeTitle(XMLStreamWriter writer,Title title) 
-	throws Exception{
+	void writeTitle(XMLStreamWriter writer, Title title) throws Exception {
 		boolean wrapInXhtmlDiv = false;
 		writer.writeStartElement("title");
-		if(title.getAttributes() != null){
-			Iterator<Attribute> feedAttrs = 
-				title.getAttributes().iterator();
-			//write the attributes
-			while(feedAttrs.hasNext()){
-				Attribute feedAttr = 
-					(Attribute)feedAttrs.next();
-				writer.writeAttribute(
-						feedAttr.getName()
-						,feedAttr.getValue());
+		if (title.getAttributes() != null) {
+			Iterator<Attribute> feedAttrs = title.getAttributes().iterator();
+			// write the attributes
+			while (feedAttrs.hasNext()) {
+				Attribute feedAttr = (Attribute) feedAttrs.next();
+				writer.writeAttribute(feedAttr.getName(), feedAttr.getValue());
 
-				//check to see if we need to wrap the 
-				//text in a an <xhtml:div> tag.
-				if(feedAttr.getName().equals("type") 
-						&& feedAttr.getValue().equals("xhtml")){
+				// check to see if we need to wrap the
+				// text in a an <xhtml:div> tag.
+				if (feedAttr.getName().equals("type")
+						&& feedAttr.getValue().equals("xhtml")) {
 					wrapInXhtmlDiv = true;
 				}
 			}
 		}
 
-		if(wrapInXhtmlDiv){
+		if (wrapInXhtmlDiv) {
 			writer.writeStartElement("div");
-			writer.writeAttribute(
-					"xmlns"
-					,"http://www.w3.org/1999/xhtml");
-			writeXHTML(writer,title.getText());
+			writer.writeAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+			writeXHTML(writer, title.getText());
 			writer.writeEndElement();
-		}else{
+		} else {
 			writer.writeCharacters(title.getText());
 		}
 
 		writer.writeEndElement();
 	}
 
-	void writeXHTML(XMLStreamWriter writer, String text) 
-	throws Exception{
-		try{
+	void writeXHTML(XMLStreamWriter writer, String text) throws Exception {
+		try {
 
-			if(text.indexOf('<') == -1){
+			if (text.indexOf('<') == -1) {
 				writer.writeCharacters(text);
-			}else{
-				//write up until the 
-				//opening of the next element
-				writer.writeCharacters(
-						text.substring(0,text.indexOf('<')));
-				text = text.substring(text.indexOf('<')+1);
-				
-				//get the opening element content 
-				String startElement = 
-					text.substring(0,text.indexOf('>')).trim();
-				
-				//check for empty element
-				if(startElement.indexOf('/') == startElement.length()-1){
-					//check for attributes
+			} else {
+				// write up until the
+				// opening of the next element
+				writer.writeCharacters(text.substring(0, text.indexOf('<')));
+				text = text.substring(text.indexOf('<') + 1);
+
+				// get the opening element content
+				String startElement = text.substring(0, text.indexOf('>'))
+						.trim();
+
+				// check for empty element
+				if (startElement.indexOf('/') == startElement.length() - 1) {
+					// check for attributes
 					String[] attributes = startElement.split(" ");
-					if(attributes.length > 1){
-						//if the name has a prefix, just 
-						//write it as part of the local name.
+					if (attributes.length > 1) {
+						// if the name has a prefix, just
+						// write it as part of the local name.
 						writer.writeEmptyElement(attributes[0]);
-						for(int i=1; i < attributes.length; i++){
-							if(attributes[i].indexOf("=") != -1){
-								//we nee to put everything 
+						for (int i = 1; i < attributes.length; i++) {
+							if (attributes[i].indexOf("=") != -1) {
+								// we nee to put everything
 								// to the right of the first '=' sign
 								// in the value part because we could have
 								// a query string with multiple '=' signs.
-								String attrName = 
-									attributes[i].substring(
-											0
-											,attributes[i]
-											            .indexOf('='));
-								String attrValue = 
-									attributes[i].substring(
-											attributes[i].indexOf('=')+1);
-								writer.writeAttribute(attrName,attrValue);
+								String attrName = attributes[i].substring(0,
+										attributes[i].indexOf('='));
+								String attrValue = attributes[i]
+										.substring(attributes[i].indexOf('=') + 1);
+								writer.writeAttribute(attrName, attrValue);
 							}
 						}
-					}else{
-						//if the name has a prefix, just 
-						//write it as part of the local name.
+					} else {
+						// if the name has a prefix, just
+						// write it as part of the local name.
 						writer.writeEmptyElement(startElement);
 					}
-					//search for the next element 
-					writeXHTML(writer,text.substring(text.indexOf('>')+1));
-				}else{//this is regular start element
-					//check for attributes
+					// search for the next element
+					writeXHTML(writer, text.substring(text.indexOf('>') + 1));
+				} else {// this is regular start element
+					// check for attributes
 					String[] attributes = startElement.split(" ");
-					if(attributes.length > 1){
-						//if the name has a prefix, 
-						//just write it as part of the local name.
+					if (attributes.length > 1) {
+						// if the name has a prefix,
+						// just write it as part of the local name.
 						writer.writeStartElement(attributes[0]);
-						for(int i=1; i < attributes.length; i++){
-							if(attributes[i].indexOf("=") != -1){
-								String attrName = 
-									attributes[i].substring(
-											0,attributes[i].indexOf('='));
-								String attrValue = 
-									attributes[i].substring(
-											attributes[i].indexOf('=')+1);
-								writer.writeAttribute(attrName,attrValue);
+						for (int i = 1; i < attributes.length; i++) {
+							if (attributes[i].indexOf("=") != -1) {
+								String attrName = attributes[i].substring(0,
+										attributes[i].indexOf('='));
+								String attrValue = attributes[i]
+										.substring(attributes[i].indexOf('=') + 1);
+								writer.writeAttribute(attrName, attrValue);
 							}
 						}
-					}else{
-						//if the name has a prefix, 
-						//just write it as part of the local name.
+					} else {
+						// if the name has a prefix,
+						// just write it as part of the local name.
 						writer.writeStartElement(startElement);
 					}
-					//write the characters up until 
-					//the beginning of the end element.
-					text = text.substring(text.indexOf('>')+1);
-					
-					if(attributes.length > 1){
-						writer.writeCharacters(
-								text.substring(
-										0
-										,text.indexOf("</"+attributes[0])));
-						text = 
-							text.substring(
-									text.indexOf(
-											"</"+attributes[0])
-											+("</"+attributes[0]+">")
-											.length());
-					}else{
-						writer.writeCharacters(
-								text.substring(
-										0,text.indexOf(
-												"</"+startElement)));
-						text = 
-							text.substring(
-									text.indexOf(
-											"</"+startElement)
-											+("</"+startElement+">")
-											.length());
+					// write the characters up until
+					// the beginning of the end element.
+					text = text.substring(text.indexOf('>') + 1);
+
+					if (attributes.length > 1) {
+						writer.writeCharacters(text.substring(0, text
+								.indexOf("</" + attributes[0])));
+						text = text.substring(text
+								.indexOf("</" + attributes[0])
+								+ ("</" + attributes[0] + ">").length());
+					} else {
+						writer.writeCharacters(text.substring(0, text
+								.indexOf("</" + startElement)));
+						text = text.substring(text.indexOf("</" + startElement)
+								+ ("</" + startElement + ">").length());
 					}
 
-					//write the end element
+					// write the end element
 					writer.writeEndElement();
 
-					writeXHTML(writer,text);
+					writeXHTML(writer, text);
 				}
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
-			throw new Exception("Content is not valid XHTML",e);
+			throw new Exception("Content is not valid XHTML", e);
 		}
 	}
 
-	void writeAuthors(XMLStreamWriter writer,List<Author> authors) 
-	throws Exception{
-		//loop through and print out each author.
+	void writeAuthors(XMLStreamWriter writer, List<Author> authors)
+			throws Exception {
+		// loop through and print out each author.
 		Iterator<Author> authorList = authors.iterator();
-		while(authorList.hasNext()){
+		while (authorList.hasNext()) {
 			Author author = authorList.next();
 			writer.writeStartElement("author");
-			if(author.getAttributes() != null){
-				Iterator<Attribute> feedAttrs = 
-					author.getAttributes().iterator();
-				//write the attributes
-				while(feedAttrs.hasNext()){
-					Attribute feedAttr = 
-						(Attribute)feedAttrs.next();
-					writer.writeAttribute(
-							feedAttr.getName()
-							,feedAttr.getValue());
+			if (author.getAttributes() != null) {
+				Iterator<Attribute> feedAttrs = author.getAttributes()
+						.iterator();
+				// write the attributes
+				while (feedAttrs.hasNext()) {
+					Attribute feedAttr = (Attribute) feedAttrs.next();
+					writer.writeAttribute(feedAttr.getName(), feedAttr
+							.getValue());
 				}
 			}
-			writeName(writer,author.getName());
-			if(author.getUri() != null){
-				writeUri(writer,author.getUri());
+			writeName(writer, author.getName());
+			if (author.getUri() != null) {
+				writeUri(writer, author.getUri());
 			}
-			if(author.getEmail() != null){
-				writeEmail(writer,author.getEmail());
+			if (author.getEmail() != null) {
+				writeEmail(writer, author.getEmail());
 			}
-			if(author.getExtensions() != null){
-				writeExtensions(writer,author.getExtensions());
+			if (author.getExtensions() != null) {
+				writeExtensions(writer, author.getExtensions());
 			}
 			writer.writeEndElement();
 		}
 
 	}
 
-	void writeName(XMLStreamWriter writer,Name name) 
-	throws Exception{
+	void writeName(XMLStreamWriter writer, Name name) throws Exception {
 		writer.writeStartElement("name");
 		writer.writeCharacters(name.getText());
 		writer.writeEndElement();
 	}
 
-	void writeUri(XMLStreamWriter writer,URI uri) 
-	throws Exception{
+	void writeUri(XMLStreamWriter writer, URI uri) throws Exception {
 		writer.writeStartElement("uri");
 		writer.writeCharacters(uri.getText());
 		writer.writeEndElement();
 	}
 
-	void writeEmail(XMLStreamWriter writer,Email email) 
-	throws Exception{
+	void writeEmail(XMLStreamWriter writer, Email email) throws Exception {
 		writer.writeStartElement("email");
 		writer.writeCharacters(email.getText());
 		writer.writeEndElement();
 	}
 
-	void writeContributors(XMLStreamWriter writer
-			,List<Contributor> contributors) 
-	throws Exception{
-		//loop through and print out each contributor.
-		Iterator<Contributor> contributorList = 
-			contributors.iterator();
-		while(contributorList.hasNext()){
-			Contributor contributor = 
-				(Contributor)contributorList.next();
+	void writeContributors(XMLStreamWriter writer,
+			List<Contributor> contributors) throws Exception {
+		// loop through and print out each contributor.
+		Iterator<Contributor> contributorList = contributors.iterator();
+		while (contributorList.hasNext()) {
+			Contributor contributor = (Contributor) contributorList.next();
 			writer.writeStartElement("contributor");
-			if(contributor.getAttributes() != null){
-				Iterator<Attribute> feedAttrs = 
-					contributor.getAttributes().iterator();
-				//write the attributes
-				while(feedAttrs.hasNext()){
-					Attribute feedAttr = 
-						(Attribute)feedAttrs.next();
-					writer.writeAttribute(
-							feedAttr.getName()
-							,feedAttr.getValue());
+			if (contributor.getAttributes() != null) {
+				Iterator<Attribute> feedAttrs = contributor.getAttributes()
+						.iterator();
+				// write the attributes
+				while (feedAttrs.hasNext()) {
+					Attribute feedAttr = (Attribute) feedAttrs.next();
+					writer.writeAttribute(feedAttr.getName(), feedAttr
+							.getValue());
 				}
 			}
-			writeName(writer,contributor.getName());
-			if(contributor.getUri() != null){
-				writeUri(writer,contributor.getUri());
+			writeName(writer, contributor.getName());
+			if (contributor.getUri() != null) {
+				writeUri(writer, contributor.getUri());
 			}
-			if(contributor.getEmail() != null){
-				writeEmail(writer,contributor.getEmail());
+			if (contributor.getEmail() != null) {
+				writeEmail(writer, contributor.getEmail());
 			}
-			if(contributor.getExtensions() != null){
-				writeExtensions(writer,contributor.getExtensions());
+			if (contributor.getExtensions() != null) {
+				writeExtensions(writer, contributor.getExtensions());
 			}
 			writer.writeEndElement();
 		}
 	}
 
-	void writeRights(XMLStreamWriter writer, Rights rights) 
-	throws Exception{
+	void writeRights(XMLStreamWriter writer, Rights rights) throws Exception {
 		boolean wrapInXhtmlDiv = false;
 		writer.writeStartElement("rights");
-		if(rights.getAttributes() != null){
-			Iterator<Attribute> feedAttrs = 
-				rights.getAttributes().iterator();
-			//write the attributes
-			while(feedAttrs.hasNext()){
-				Attribute feedAttr = (Attribute)feedAttrs.next();
-				writer.writeAttribute(
-						feedAttr.getName()
-						,feedAttr.getValue());
+		if (rights.getAttributes() != null) {
+			Iterator<Attribute> feedAttrs = rights.getAttributes().iterator();
+			// write the attributes
+			while (feedAttrs.hasNext()) {
+				Attribute feedAttr = (Attribute) feedAttrs.next();
+				writer.writeAttribute(feedAttr.getName(), feedAttr.getValue());
 
-				//check to see if we need to 
-				//wrap the text in a an <xhtml:div> tag.
-				if(feedAttr.getName().equals("type") 
-						&& feedAttr.getValue().equals("xhtml")){
+				// check to see if we need to
+				// wrap the text in a an <xhtml:div> tag.
+				if (feedAttr.getName().equals("type")
+						&& feedAttr.getValue().equals("xhtml")) {
 					wrapInXhtmlDiv = true;
 				}
 			}
 		}
-		if(wrapInXhtmlDiv){
+		if (wrapInXhtmlDiv) {
 			writer.writeStartElement("div");
-			writer.writeAttribute(
-					"xmlns"
-					,"http://www.w3.org/1999/xhtml");
-			writeXHTML(writer,rights.getText());
+			writer.writeAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+			writeXHTML(writer, rights.getText());
 			writer.writeEndElement();
-		}else{
+		} else {
 			writer.writeCharacters(rights.getText());
 		}
 		writer.writeEndElement();
 
 	}
 
-	void writeLogo(XMLStreamWriter writer, Logo logo) 
-	throws Exception{
+	void writeLogo(XMLStreamWriter writer, Logo logo) throws Exception {
 		writer.writeStartElement("logo");
-		if(logo.getAttributes() != null){
-			Iterator<Attribute> feedAttrs = 
-				logo.getAttributes().iterator();
-			//write the attributes
-			while(feedAttrs.hasNext()){
-				Attribute feedAttr = 
-					(Attribute)feedAttrs.next();
-				writer.writeAttribute(
-						feedAttr.getName()
-						,feedAttr.getValue());
+		if (logo.getAttributes() != null) {
+			Iterator<Attribute> feedAttrs = logo.getAttributes().iterator();
+			// write the attributes
+			while (feedAttrs.hasNext()) {
+				Attribute feedAttr = (Attribute) feedAttrs.next();
+				writer.writeAttribute(feedAttr.getName(), feedAttr.getValue());
 			}
 		}
 		writer.writeCharacters(logo.getAtomUri());
-		writer.writeEndElement();        
+		writer.writeEndElement();
 	}
 
-	void writeIcon(XMLStreamWriter writer, Icon icon) 
-	throws Exception{
+	void writeIcon(XMLStreamWriter writer, Icon icon) throws Exception {
 		writer.writeStartElement("icon");
-		if(icon.getAttributes() != null){
-			Iterator<Attribute> feedAttrs = 
-				icon.getAttributes().iterator();
-			//write the attributes
-			while(feedAttrs.hasNext()){
-				Attribute feedAttr = 
-					(Attribute)feedAttrs.next();
-				writer.writeAttribute(
-						feedAttr.getName()
-						,feedAttr.getValue());
+		if (icon.getAttributes() != null) {
+			Iterator<Attribute> feedAttrs = icon.getAttributes().iterator();
+			// write the attributes
+			while (feedAttrs.hasNext()) {
+				Attribute feedAttr = (Attribute) feedAttrs.next();
+				writer.writeAttribute(feedAttr.getName(), feedAttr.getValue());
 			}
 		}
 		writer.writeCharacters(icon.getAtomUri());
-		writer.writeEndElement(); 
+		writer.writeEndElement();
 	}
 
-	void writeCategories(XMLStreamWriter writer
-			, List<Category> categories) 
-	throws Exception{
+	void writeCategories(XMLStreamWriter writer, List<Category> categories)
+			throws Exception {
 
 		Iterator<Category> categoryList = categories.iterator();
-		while(categoryList.hasNext()){
-			Category category = (Category)categoryList.next();
-			writer.writeEmptyElement("category");                        
-			if(category.getAttributes() != null){
-				Iterator<Attribute> feedAttrs = 
-					category.getAttributes().iterator();
-				//write the attributes
-				while(feedAttrs.hasNext()){
-					Attribute feedAttr = 
-						(Attribute)feedAttrs.next();
-					writer.writeAttribute(
-							feedAttr.getName()
-							,feedAttr.getValue());
+		while (categoryList.hasNext()) {
+			Category category = (Category) categoryList.next();
+			writer.writeEmptyElement("category");
+			if (category.getAttributes() != null) {
+				Iterator<Attribute> feedAttrs = category.getAttributes()
+						.iterator();
+				// write the attributes
+				while (feedAttrs.hasNext()) {
+					Attribute feedAttr = (Attribute) feedAttrs.next();
+					writer.writeAttribute(feedAttr.getName(), feedAttr
+							.getValue());
 				}
 			}
 		}
 	}
 
-	void writeLinks(XMLStreamWriter writer, List<Link> links) 
-	throws Exception{
+	void writeLinks(XMLStreamWriter writer, List<Link> links) throws Exception {
 
 		Iterator<Link> linksList = links.iterator();
-		while(linksList.hasNext()){
-			Link link = (Link)linksList.next();
+		while (linksList.hasNext()) {
+			Link link = (Link) linksList.next();
 			writer.writeEmptyElement("link");
-			if(link.getAttributes() != null){
-				Iterator<Attribute> feedAttrs = 
-					link.getAttributes().iterator();
-				//write the attributes
-				while(feedAttrs.hasNext()){
-					Attribute feedAttr = 
-						(Attribute)feedAttrs.next();
-					writer.writeAttribute(
-							feedAttr.getName()
-							,feedAttr.getValue());
+			if (link.getAttributes() != null) {
+				Iterator<Attribute> feedAttrs = link.getAttributes().iterator();
+				// write the attributes
+				while (feedAttrs.hasNext()) {
+					Attribute feedAttr = (Attribute) feedAttrs.next();
+					writer.writeAttribute(feedAttr.getName(), feedAttr
+							.getValue());
 				}
 			}
 		}
 	}
 
-	void writeExtensions(XMLStreamWriter writer
-			,List<Extension> extensions) 
-	throws Exception{
+	void writeExtensions(XMLStreamWriter writer, List<Extension> extensions)
+			throws Exception {
 		Iterator<Extension> extensionsList = extensions.iterator();
-		while(extensionsList.hasNext()){
-			Extension extension = (Extension)extensionsList.next();
+		while (extensionsList.hasNext()) {
+			Extension extension = (Extension) extensionsList.next();
 
-			//if there is no content, then 
-			//write an empty extension element.
-			if(extension.getContent() == null){
+			// if there is no content, then
+			// write an empty extension element.
+			if (extension.getContent() == null) {
 				String elementName = extension.getElementName();
-				if(elementName.indexOf(":") == -1){
+				if (elementName.indexOf(":") == -1) {
 					writer.writeEmptyElement(elementName);
-				}else{
-					String prefix = 
-						elementName.substring(
-								0
-								,elementName.indexOf(":"));
-					String localName = 
-						elementName.substring(
-								elementName.indexOf(":")+1);
-					writer.writeEmptyElement(prefix,localName,"");
+				} else {
+					String prefix = elementName.substring(0, elementName
+							.indexOf(":"));
+					String localName = elementName.substring(elementName
+							.indexOf(":") + 1);
+					writer.writeEmptyElement(prefix, localName, "");
 				}
-				if(extension.getAttributes() != null){
-					Iterator<Attribute> feedAttrs = 
-						extension.getAttributes().iterator();
-					//write the attributes
-					while(feedAttrs.hasNext()){
-						Attribute feedAttr = 
-							(Attribute)feedAttrs.next();
-						writer.writeAttribute(
-								feedAttr.getName()
-								,feedAttr.getValue());
+				if (extension.getAttributes() != null) {
+					Iterator<Attribute> feedAttrs = extension.getAttributes()
+							.iterator();
+					// write the attributes
+					while (feedAttrs.hasNext()) {
+						Attribute feedAttr = (Attribute) feedAttrs.next();
+						writer.writeAttribute(feedAttr.getName(), feedAttr
+								.getValue());
 					}
 				}
-			}else{
+			} else {
 				String elementName = extension.getElementName();
-				if(elementName.indexOf(":") == -1){
+				if (elementName.indexOf(":") == -1) {
 					writer.writeStartElement(elementName);
-				}else{
-					String prefix = 
-						elementName.substring(
-								0,elementName.indexOf(":"));
-					String localName = 
-						elementName.substring(
-								elementName.indexOf(":")+1);
-					writer.writeStartElement(prefix,localName,"");
+				} else {
+					String prefix = elementName.substring(0, elementName
+							.indexOf(":"));
+					String localName = elementName.substring(elementName
+							.indexOf(":") + 1);
+					writer.writeStartElement(prefix, localName, "");
 				}
-				if(extension.getAttributes() != null){
-					Iterator<Attribute> feedAttrs = 
-						extension.getAttributes().iterator();
-					//write the attributes
-					while(feedAttrs.hasNext()){
-						Attribute feedAttr = 
-							(Attribute)feedAttrs.next();
-						writer.writeAttribute(
-								feedAttr.getName()
-								,feedAttr.getValue());
+				if (extension.getAttributes() != null) {
+					Iterator<Attribute> feedAttrs = extension.getAttributes()
+							.iterator();
+					// write the attributes
+					while (feedAttrs.hasNext()) {
+						Attribute feedAttr = (Attribute) feedAttrs.next();
+						writer.writeAttribute(feedAttr.getName(), feedAttr
+								.getValue());
 					}
 				}
-				//add the content.
+				// add the content.
 				writer.writeCharacters(extension.getContent());
 
-				//close the element.
+				// close the element.
 				writer.writeEndElement();
 			}
 		}
 	}
 
-	void writeEntries(XMLStreamWriter writer
-			,SortedMap<String,Entry> entries) 
-	throws Exception{
+	void writeEntries(XMLStreamWriter writer, SortedMap<String, Entry> entries)
+			throws Exception {
 
-		//print out the entries.
-		Iterator<Entry> entryItr = 
-			entries.values().iterator();
-		while(entryItr.hasNext()){
-			Entry entry = (Entry)entryItr.next();
+		// print out the entries.
+		Iterator<Entry> entryItr = entries.values().iterator();
+		while (entryItr.hasNext()) {
+			Entry entry = (Entry) entryItr.next();
 			writer.writeStartElement("entry");
-			if(entry.getAttributes() != null){
-				Iterator<Attribute> entryAttrs = 
-					entry.getAttributes().iterator();
-				//write the attributes
-				while(entryAttrs.hasNext()){
-					Attribute entryAttr = 
-						(Attribute)entryAttrs.next();
-					writer.writeAttribute(
-							entryAttr.getName()
-							,entryAttr.getValue());
+			if (entry.getAttributes() != null) {
+				Iterator<Attribute> entryAttrs = entry.getAttributes()
+						.iterator();
+				// write the attributes
+				while (entryAttrs.hasNext()) {
+					Attribute entryAttr = (Attribute) entryAttrs.next();
+					writer.writeAttribute(entryAttr.getName(), entryAttr
+							.getValue());
 				}
 			}
-			//write the id
-			writeID(writer,entry.getId());
-			//write the updated date
-			writeUpdated(writer,entry.getUpdated());
-			//write the title
-			writeTitle(writer,entry.getTitle());
-			//write the source
-			if(entry.getSource() != null){
-				writeSource(writer,entry.getSource());
+			// write the id
+			writeID(writer, entry.getId());
+			// write the updated date
+			writeUpdated(writer, entry.getUpdated());
+			// write the title
+			writeTitle(writer, entry.getTitle());
+			// write the source
+			if (entry.getSource() != null) {
+				writeSource(writer, entry.getSource());
 			}
-			//write the author
-			if(entry.getAuthors() != null){
-				writeAuthors(writer,entry.getAuthors());
+			// write the author
+			if (entry.getAuthors() != null) {
+				writeAuthors(writer, entry.getAuthors());
 			}
-			//write the contributors
-			if(entry.getContributors() != null){
-				writeContributors(writer,entry.getContributors());
+			// write the contributors
+			if (entry.getContributors() != null) {
+				writeContributors(writer, entry.getContributors());
 			}
-			//write the links
-			if(entry.getLinks() != null){
-				writeLinks(writer,entry.getLinks());
+			// write the links
+			if (entry.getLinks() != null) {
+				writeLinks(writer, entry.getLinks());
 			}
-			//write the categories
-			if(entry.getCategories() != null){
-				writeCategories(writer,entry.getCategories());
+			// write the categories
+			if (entry.getCategories() != null) {
+				writeCategories(writer, entry.getCategories());
 			}
-			//write the published date
-			if(entry.getPublished() != null){
-				writePublished(writer,entry.getPublished());
+			// write the published date
+			if (entry.getPublished() != null) {
+				writePublished(writer, entry.getPublished());
 			}
-			//write the rights
-			if(entry.getRights() != null){
-				writeRights(writer,entry.getRights());
+			// write the rights
+			if (entry.getRights() != null) {
+				writeRights(writer, entry.getRights());
 			}
-			//write the extensions
-			if(entry.getExtensions() != null){
-				writeExtensions(writer,entry.getExtensions());
+			// write the extensions
+			if (entry.getExtensions() != null) {
+				writeExtensions(writer, entry.getExtensions());
 			}
-			//write the summary
-			if(entry.getSummary() != null){
-				writeSummary(writer,entry.getSummary());
+			// write the summary
+			if (entry.getSummary() != null) {
+				writeSummary(writer, entry.getSummary());
 			}
-			//write the content
-			if(entry.getContent() != null){
-				writeContent(writer,entry.getContent());
+			// write the content
+			if (entry.getContent() != null) {
+				writeContent(writer, entry.getContent());
 			}
 
 			writer.writeEndElement();
 		}
 	}
 
-	void writeSummary(XMLStreamWriter writer, Summary summary) 
-	throws Exception{
+	void writeSummary(XMLStreamWriter writer, Summary summary) throws Exception {
 		boolean wrapInXhtmlDiv = false;
 		writer.writeStartElement("summary");
-		if(summary.getAttributes() != null){
-			Iterator<Attribute> feedAttrs = 
-				summary.getAttributes().iterator();
-			//write the attributes
-			while(feedAttrs.hasNext()){
-				Attribute feedAttr = 
-					(Attribute)feedAttrs.next();
-				writer.writeAttribute(
-						feedAttr.getName()
-						,feedAttr.getValue());
+		if (summary.getAttributes() != null) {
+			Iterator<Attribute> feedAttrs = summary.getAttributes().iterator();
+			// write the attributes
+			while (feedAttrs.hasNext()) {
+				Attribute feedAttr = (Attribute) feedAttrs.next();
+				writer.writeAttribute(feedAttr.getName(), feedAttr.getValue());
 
-				//check to see if we need to 
-				//wrap the text in a an <xhtml:div> tag.
-				if(feedAttr.getName().equals("type") 
-						&& feedAttr.getValue().equals("xhtml")){
+				// check to see if we need to
+				// wrap the text in a an <xhtml:div> tag.
+				if (feedAttr.getName().equals("type")
+						&& feedAttr.getValue().equals("xhtml")) {
 					wrapInXhtmlDiv = true;
 				}
 			}
 		}
 
-		if(wrapInXhtmlDiv){
+		if (wrapInXhtmlDiv) {
 			writer.writeStartElement("div");
-			writer.writeAttribute(
-					"xmlns"
-					,"http://www.w3.org/1999/xhtml");
-			writeXHTML(writer,summary.getText());
+			writer.writeAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+			writeXHTML(writer, summary.getText());
 			writer.writeEndElement();
-		}else{
+		} else {
 			writer.writeCharacters(summary.getText());
 		}
 
 		writer.writeEndElement();
 	}
 
-	void writePublished(XMLStreamWriter writer
-			, Published published) 
-	throws Exception{
+	void writePublished(XMLStreamWriter writer, Published published)
+			throws Exception {
 		writer.writeStartElement("published");
 		writer.writeCharacters(published.getText());
 		writer.writeEndElement();
 	}
 
-	void writeContent(XMLStreamWriter writer, Content content) 
-	throws Exception{
-		//look for the src attribute to 
-		//see if we need to build an empty tag.
+	void writeContent(XMLStreamWriter writer, Content content) throws Exception {
+		// look for the src attribute to
+		// see if we need to build an empty tag.
 		boolean externalLink = false;
 		boolean wrapInXhtmlDiv = false;
-		if(content.getAttributes() != null){
-			Iterator<Attribute> contentAttrs = 
-				content.getAttributes().iterator();
+		if (content.getAttributes() != null) {
+			Iterator<Attribute> contentAttrs = content.getAttributes()
+					.iterator();
 
-
-			while(contentAttrs.hasNext()){
-				Attribute contentAttr = 
-					(Attribute)contentAttrs.next();
-				if(contentAttr.getName().equals("src")){
+			while (contentAttrs.hasNext()) {
+				Attribute contentAttr = (Attribute) contentAttrs.next();
+				if (contentAttr.getName().equals("src")) {
 					externalLink = true;
 					writer.writeEmptyElement("content");
 					break;
 				}
 
 			}
-			if(!externalLink){
+			if (!externalLink) {
 				writer.writeStartElement("content");
 			}
 
-			//write the attributes
+			// write the attributes
 			contentAttrs = content.getAttributes().iterator();
-			while(contentAttrs.hasNext()){
-				Attribute contentAttr = (Attribute)contentAttrs.next();
-				writer.writeAttribute(
-						contentAttr.getName(),contentAttr.getValue());
+			while (contentAttrs.hasNext()) {
+				Attribute contentAttr = (Attribute) contentAttrs.next();
+				writer.writeAttribute(contentAttr.getName(), contentAttr
+						.getValue());
 
-				//check to see if we need to 
-				//wrap the text in a an <xhtml:div> tag.
-				if(contentAttr.getName().equals("type") 
-						&& contentAttr.getValue().equals("xhtml")){
+				// check to see if we need to
+				// wrap the text in a an <xhtml:div> tag.
+				if (contentAttr.getName().equals("type")
+						&& contentAttr.getValue().equals("xhtml")) {
 					wrapInXhtmlDiv = true;
 				}
 			}
 
-		}else{//there are not attributes so assume default 'text';
+		} else {// there are not attributes so assume default 'text';
 			writer.writeStartElement("content");
 		}
-		if(content.getContent() != null){
-			if(wrapInXhtmlDiv){
+		if (content.getContent() != null) {
+			if (wrapInXhtmlDiv) {
 				writer.writeStartElement("div");
-				writer.writeAttribute(
-						"xmlns"
-						,"http://www.w3.org/1999/xhtml");
-				writeXHTML(writer,content.getContent());
+				writer.writeAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+				writeXHTML(writer, content.getContent());
 				writer.writeEndElement();
-			}else{
+			} else {
 				writer.writeCharacters(content.getContent());
-			} 
+			}
 		}
-		if(!externalLink){
+		if (!externalLink) {
 			writer.writeEndElement();
 		}
 	}
 
-	void writeSource(XMLStreamWriter writer, Source source) 
-	throws Exception{
+	void writeSource(XMLStreamWriter writer, Source source) throws Exception {
 
-		//open the source element
+		// open the source element
 		writer.writeStartElement("source");
-		if(source.getAttributes() != null){
-			Iterator<Attribute> sourceAttrs = 
-				source.getAttributes().iterator();
-			//write the attributes
-			while(sourceAttrs.hasNext()){
-				Attribute sourceAttr = 
-					(Attribute)sourceAttrs.next();
-				writer.writeAttribute(
-						sourceAttr.getName()
-						,sourceAttr.getValue());
+		if (source.getAttributes() != null) {
+			Iterator<Attribute> sourceAttrs = source.getAttributes().iterator();
+			// write the attributes
+			while (sourceAttrs.hasNext()) {
+				Attribute sourceAttr = (Attribute) sourceAttrs.next();
+				writer.writeAttribute(sourceAttr.getName(), sourceAttr
+						.getValue());
 			}
 		}
-		//write the id
-		if(source.getId() != null){
-			writeID(writer,source.getId());
+		// write the id
+		if (source.getId() != null) {
+			writeID(writer, source.getId());
 		}
-		//write the updated date
-		if(source.getUpdated() != null){
-			writeUpdated(writer,source.getUpdated());
+		// write the updated date
+		if (source.getUpdated() != null) {
+			writeUpdated(writer, source.getUpdated());
 		}
-		//write the generator
-		if(source.getGenerator() != null){
-			writeGenerator(writer,source.getGenerator());
+		// write the generator
+		if (source.getGenerator() != null) {
+			writeGenerator(writer, source.getGenerator());
 		}
-		//write the title
-		if(source.getTitle() != null){
-			writeTitle(writer,source.getTitle());
+		// write the title
+		if (source.getTitle() != null) {
+			writeTitle(writer, source.getTitle());
 		}
-		//write the author
-		if(source.getAuthors() != null){
-			writeAuthors(writer,source.getAuthors());
+		// write the author
+		if (source.getAuthors() != null) {
+			writeAuthors(writer, source.getAuthors());
 		}
-		//write the contributors
-		if(source.getContributors() != null){
-			writeContributors(writer,source.getContributors());
+		// write the contributors
+		if (source.getContributors() != null) {
+			writeContributors(writer, source.getContributors());
 		}
-		//write the links
-		if(source.getLinks() != null){
-			writeLinks(writer,source.getLinks());
+		// write the links
+		if (source.getLinks() != null) {
+			writeLinks(writer, source.getLinks());
 		}
-		//write the categories
-		if(source.getCategories() != null){
-			writeCategories(writer,source.getCategories());
+		// write the categories
+		if (source.getCategories() != null) {
+			writeCategories(writer, source.getCategories());
 		}
-		//write the icon
-		if(source.getIcon() != null){
-			writeIcon(writer,source.getIcon());
+		// write the icon
+		if (source.getIcon() != null) {
+			writeIcon(writer, source.getIcon());
 		}
-		//write the logo
-		if(source.getLogo() != null){
-			writeLogo(writer,source.getLogo());
+		// write the logo
+		if (source.getLogo() != null) {
+			writeLogo(writer, source.getLogo());
 		}
-		//write the rights
-		if(source.getRights() != null){
-			writeRights(writer,source.getRights());
+		// write the rights
+		if (source.getRights() != null) {
+			writeRights(writer, source.getRights());
 		}
-		//write the extensions
-		if(source.getExtensions() != null){
-			writeExtensions(writer,source.getExtensions());
+		// write the extensions
+		if (source.getExtensions() != null) {
+			writeExtensions(writer, source.getExtensions());
 		}
 
 		writer.writeEndElement();

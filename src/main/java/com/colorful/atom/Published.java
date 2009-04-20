@@ -22,49 +22,58 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * This class represents an Atom 1.0 published element.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *	<pre>
- *		atomPublished = element atom:published { atomDateConstruct}
- *	</pre>
+ * 
+ *         <pre>
+ * 	atomPublished = element atom:published { atomDateConstruct}
+ * </pre>
  */
-public class Published {
-    
+public class Published implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6787924946511618248L;
 	private final AtomDateConstruct published;
-	
-	//use the factory method in the FeedDoc.
-    Published(Date published
-    		, List<Attribute> attributes) throws AtomSpecException{
-        this.published = new AtomDateConstruct(published,attributes);
-    }
-    
-    /**
-     * 
-     * @return the date timestamp for this element.
-     */
-    public Date getDateTime(){
-    	return published.getDateTime();
-    }
-    
-    /**
-     * 
-     * @return the string formated version of the time
-     * 	for example 2006-04-28T12:50:43.337-05:00
-     */
-    public String getText(){
-    	return published.getText();
-    }
-    
-    /**
-     * 
-     * @return the attributes for this element.
-     */
-    public List<Attribute> getAttributes(){
-    	return published.getAttributes();
-    }
+
+	// use the factory method in the FeedDoc.
+	Published(Date published, List<Attribute> attributes)
+			throws AtomSpecException {
+		this.published = new AtomDateConstruct(published, attributes);
+	}
+
+	/**
+	 * 
+	 * @return the date timestamp for this element.
+	 */
+	public Date getDateTime() {
+		return published.getDateTime();
+	}
+
+	/**
+	 * 
+	 * @return the string formated version of the time for example
+	 *         2006-04-28T12:50:43.337-05:00
+	 */
+	public String getText() {
+		return published.getText();
+	}
+
+	/**
+	 * 
+	 * @return the attributes for this element.
+	 */
+	public List<Attribute> getAttributes() {
+		return published.getAttributes();
+	}
 }

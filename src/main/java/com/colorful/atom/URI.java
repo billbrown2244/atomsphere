@@ -22,28 +22,38 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
+
 /**
  * This class represents an Atom 1.0 uri element.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *  <pre>
+ * 
+ *         <pre>
  *      the content of the uri according to Section 7 of [RFC3986]
- *  </pre>
+ * </pre>
  */
-public class URI {
+public class URI implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3212774124149440834L;
 	private final AtomPlainText uri;
-	
-    //use the factory method in the FeedDoc.
-    URI(String uri){
-        this.uri = new AtomPlainText(uri);
-    }
-    
-    /**
-     * 
-     * @return the uri text.
-     */
-    public String getText(){
+
+	// use the factory method in the FeedDoc.
+	URI(String uri) {
+		this.uri = new AtomPlainText(uri);
+	}
+
+	/**
+	 * 
+	 * @return the uri text.
+	 */
+	public String getText() {
 		return uri.getText();
 	}
 }

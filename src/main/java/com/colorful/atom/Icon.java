@@ -22,34 +22,42 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * This class represents an Atom 1.0 icon element.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *  <pre>
+ * 
+ *         <pre>
  *      atomIcon = element atom:icon {
  *          atomCommonAttributes,
  *          (atomUri)
  *          }
- *  </pre>
+ * </pre>
  */
-public class Icon {
+public class Icon implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5842043454182097449L;
 	private final AtomURIConstruct icon;
 
-	//use the factory method in the FeedDoc.
-	Icon(List<Attribute> attributes, String atomUri)
-		throws AtomSpecException {
-		this.icon = new AtomURIConstruct(attributes,atomUri);
+	// use the factory method in the FeedDoc.
+	Icon(List<Attribute> attributes, String atomUri) throws AtomSpecException {
+		this.icon = new AtomURIConstruct(attributes, atomUri);
 	}
 
-	/** 
+	/**
 	 * 
 	 * @return the unique identifier for this document.
 	 */
-	public String getAtomUri(){
+	public String getAtomUri() {
 		return icon.getAtomUri();
 	}
 
@@ -57,7 +65,7 @@ public class Icon {
 	 * 
 	 * @return the attributes for this element.
 	 */
-	public List<Attribute> getAttributes(){
+	public List<Attribute> getAttributes() {
 		return icon.getAttributes();
 	}
 }

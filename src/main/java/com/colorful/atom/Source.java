@@ -23,198 +23,202 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * This class represents an Atom 1.0 source element.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *	<pre>
- *		atomSource =
+ * 
+ *         <pre>
+ * 	atomSource =
  *          element atom:source {
  *          atomCommonAttributes,
  *          (atomAuthor*
- *          & atomCategory*
- *          & atomContributor*
- *          & atomGenerator?
- *          & atomIcon?
- *          & atomId?
- *          & atomLink*
- *          & atomLogo?
- *          & atomRights?
- *          & atomSubtitle?
- *          & atomTitle?
- *          & atomUpdated?
- *          & extensionElement*)
+ *          &amp; atomCategory*
+ *          &amp; atomContributor*
+ *          &amp; atomGenerator?
+ *          &amp; atomIcon?
+ *          &amp; atomId?
+ *          &amp; atomLink*
+ *          &amp; atomLogo?
+ *          &amp; atomRights?
+ *          &amp; atomSubtitle?
+ *          &amp; atomTitle?
+ *          &amp; atomUpdated?
+ *          &amp; extensionElement*)
  *          }
- *	</pre>
+ * </pre>
  */
-public class Source {
+public class Source implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4239639733689483651L;
 	private final AtomEntrySourceAdaptor sourceAdaptor;
 	private final Generator generator;
-    private final Icon icon;    
-    private final Logo logo;    
-    private final Subtitle subtitle;
+	private final Icon icon;
+	private final Logo logo;
+	private final Subtitle subtitle;
 
-    //use the factory method in the FeedDoc.
-    Source(Id id
-    		,Title title
-    		,Updated updated
-    		,Rights rights
-    		,List<Author> authors
-    		,List<Category> categories    		
-    		,List<Contributor> contributors
-    		,List<Link> links
-    		,List<Attribute> attributes
-    		,List<Extension> extensions
-    		,Generator generator
-    		,Subtitle subtitle
-    		,Icon icon
-    		,Logo logo) throws AtomSpecException {
-    	this.sourceAdaptor = new AtomEntrySourceAdaptor(id,title,updated,rights,authors,categories,contributors,links,attributes,extensions);
-    	this.generator = (generator == null)?null: new Generator(generator.getAttributes()
-    			,generator.getText());
-    	this.subtitle = (subtitle == null)?null: new Subtitle(subtitle.getText(),subtitle.getAttributes());
-    	this.icon = (icon == null)?null: new Icon(icon.getAttributes(),icon.getAtomUri());
-    	this.logo = (logo == null)?null: new Logo(logo.getAttributes(),logo.getAtomUri());
-    }
+	// use the factory method in the FeedDoc.
+	Source(Id id, Title title, Updated updated, Rights rights,
+			List<Author> authors, List<Category> categories,
+			List<Contributor> contributors, List<Link> links,
+			List<Attribute> attributes, List<Extension> extensions,
+			Generator generator, Subtitle subtitle, Icon icon, Logo logo)
+			throws AtomSpecException {
+		this.sourceAdaptor = new AtomEntrySourceAdaptor(id, title, updated,
+				rights, authors, categories, contributors, links, attributes,
+				extensions);
+		this.generator = (generator == null) ? null : new Generator(generator
+				.getAttributes(), generator.getText());
+		this.subtitle = (subtitle == null) ? null : new Subtitle(subtitle
+				.getText(), subtitle.getAttributes());
+		this.icon = (icon == null) ? null : new Icon(icon.getAttributes(), icon
+				.getAtomUri());
+		this.logo = (logo == null) ? null : new Logo(logo.getAttributes(), logo
+				.getAtomUri());
+	}
 
-    /**
-     * 
-     * @return the generator for this element.
-     */
-    public Generator getGenerator() {
-    	try{
-    		return (generator == null)?null: new Generator(
-    				generator.getAttributes()
-    				,generator.getText());
-    	}catch(Exception e){
-    		//we should never get here.
-    		return null;
-    	}
-    }
+	/**
+	 * 
+	 * @return the generator for this element.
+	 */
+	public Generator getGenerator() {
+		try {
+			return (generator == null) ? null : new Generator(generator
+					.getAttributes(), generator.getText());
+		} catch (Exception e) {
+			// we should never get here.
+			return null;
+		}
+	}
 
-    /**
-     * 
-     * @return the icon for this element.
-     */
-    public Icon getIcon() {
-    	try{
-    		return (icon == null)?null: new Icon(icon.getAttributes()
-    				,icon.getAtomUri());
-    	}catch(Exception e){
-    		//we should never get here.
-    		return null;
-    	}
-    }
+	/**
+	 * 
+	 * @return the icon for this element.
+	 */
+	public Icon getIcon() {
+		try {
+			return (icon == null) ? null : new Icon(icon.getAttributes(), icon
+					.getAtomUri());
+		} catch (Exception e) {
+			// we should never get here.
+			return null;
+		}
+	}
 
-    /**
-     * 
-     * @return the logo for this element.
-     */
-    public Logo getLogo() {
-    	try{
-    		return (logo == null)?null: new Logo(logo.getAttributes()
-    				,logo.getAtomUri());
-    	}catch(Exception e){
-    		//we should never get here.
-    		return null;
-    	}
-    }
+	/**
+	 * 
+	 * @return the logo for this element.
+	 */
+	public Logo getLogo() {
+		try {
+			return (logo == null) ? null : new Logo(logo.getAttributes(), logo
+					.getAtomUri());
+		} catch (Exception e) {
+			// we should never get here.
+			return null;
+		}
+	}
 
-    /**
-     * 
-     * @return the subtitle for this element.
-     */
-    public Subtitle getSubtitle() {
-    	try{
-    		return (subtitle == null)?null: new Subtitle(subtitle.getText()
-    				,subtitle.getAttributes());
-    	}catch(Exception e){
-    		//we should never get here.
-    		return null;
-    	}
-    }
-    
-    
-    /**
-	  * 
-	  * @return the unique identifier for this entry.
-	  */
-    public Id getId(){
-    	return sourceAdaptor.getId();
-    }
-    
-    /**
-	  * 
-	  * @return the title for this element.
-	  */
-    public Title getTitle(){
-    	return sourceAdaptor.getTitle();
-    }
-    
-    /**
-	  * 
-	  * @return the updated date for this element.
-	  */
-    public Updated getUpdated(){
-    	return sourceAdaptor.getUpdated();
-    }
-    
-    /**
-	  * 
-	  * @return the associated rights for this entry.
-	  */
-    public Rights getRights(){
-    	return sourceAdaptor.getRights();
-    }
-    
-    /**
-	  * 
-	  * @return the authors for this entry.
-	  */
-    public List<Author> getAuthors(){
-    	return sourceAdaptor.getAuthors();
-    }
-    
-    /**
-	  * 
-	  * @return the categories for this element.
-	  */
-    public List<Category> getCategories(){
-    	return sourceAdaptor.getCategories();
-    }
-    
-    /**
-	  * 
-	  * @return the contributors for this entry.
-	  */
-    public List<Contributor> getContributors(){
-    	return sourceAdaptor.getContributors();
-    }
-    
-    /**
-	  * 
-	  * @return the links for this entry.
-	  */
-    public List<Link> getLinks(){
-    	return sourceAdaptor.getLinks();
-    }
-    
-    /**
+	/**
+	 * 
+	 * @return the subtitle for this element.
+	 */
+	public Subtitle getSubtitle() {
+		try {
+			return (subtitle == null) ? null : new Subtitle(subtitle.getText(),
+					subtitle.getAttributes());
+		} catch (Exception e) {
+			// we should never get here.
+			return null;
+		}
+	}
+
+	/**
+	 * 
+	 * @return the unique identifier for this entry.
+	 */
+	public Id getId() {
+		return sourceAdaptor.getId();
+	}
+
+	/**
+	 * 
+	 * @return the title for this element.
+	 */
+	public Title getTitle() {
+		return sourceAdaptor.getTitle();
+	}
+
+	/**
+	 * 
+	 * @return the updated date for this element.
+	 */
+	public Updated getUpdated() {
+		return sourceAdaptor.getUpdated();
+	}
+
+	/**
+	 * 
+	 * @return the associated rights for this entry.
+	 */
+	public Rights getRights() {
+		return sourceAdaptor.getRights();
+	}
+
+	/**
+	 * 
+	 * @return the authors for this entry.
+	 */
+	public List<Author> getAuthors() {
+		return sourceAdaptor.getAuthors();
+	}
+
+	/**
+	 * 
+	 * @return the categories for this element.
+	 */
+	public List<Category> getCategories() {
+		return sourceAdaptor.getCategories();
+	}
+
+	/**
+	 * 
+	 * @return the contributors for this entry.
+	 */
+	public List<Contributor> getContributors() {
+		return sourceAdaptor.getContributors();
+	}
+
+	/**
+	 * 
+	 * @return the links for this entry.
+	 */
+	public List<Link> getLinks() {
+		return sourceAdaptor.getLinks();
+	}
+
+	/**
 	 * 
 	 * @return the category attribute list.
 	 */
-    public List<Attribute> getAttributes(){
-    	return sourceAdaptor.getAttributes();
-    }
-    
-    /**
-	  * 
-	  * @return the extensions for this entry.
-	  */
-    public List<Extension> getExtensions(){
-    	return sourceAdaptor.getExtensions();
-    }
+	public List<Attribute> getAttributes() {
+		return sourceAdaptor.getAttributes();
+	}
+
+	/**
+	 * 
+	 * @return the extensions for this entry.
+	 */
+	public List<Extension> getExtensions() {
+		return sourceAdaptor.getExtensions();
+	}
 }

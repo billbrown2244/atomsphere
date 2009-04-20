@@ -23,34 +23,42 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * This class represents an Atom 1.0 id element.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *	<pre>
- *	     atomId = element atom:id {
+ * 
+ *         <pre>
+ *      atomId = element atom:id {
  * 		   atomCommonAttributes,
  * 		   (atomUri)
- *	     }
- *	</pre>
+ *      }
+ * </pre>
  */
-public class Id {
+public class Id implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1551131397328572231L;
 	private final AtomURIConstruct id;
 
-	//use the factory method in the FeedDoc.
-	Id(List<Attribute> attributes, String atomUri)
-		throws AtomSpecException {
-		this.id = new AtomURIConstruct(attributes,atomUri);
+	// use the factory method in the FeedDoc.
+	Id(List<Attribute> attributes, String atomUri) throws AtomSpecException {
+		this.id = new AtomURIConstruct(attributes, atomUri);
 	}
 
-	/** 
+	/**
 	 * 
 	 * @return the unique identifier for this document.
 	 */
-	public String getAtomUri(){
+	public String getAtomUri() {
 		return id.getAtomUri();
 	}
 
@@ -58,7 +66,7 @@ public class Id {
 	 * 
 	 * @return the attributes for this element.
 	 */
-	public List<Attribute> getAttributes(){
+	public List<Attribute> getAttributes() {
 		return id.getAttributes();
 	}
 }

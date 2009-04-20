@@ -22,39 +22,47 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * This class represents an Atom 1.0 title element.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *	<pre>
- *		atomTitle = element atom:title { atomTextConstruct }
- *	</pre>
+ * 
+ *         <pre>
+ * 	atomTitle = element atom:title { atomTextConstruct }
+ * </pre>
  */
-public class Title {
-    
+public class Title implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 823649575536535174L;
 	private final AtomTextConstruct title;
-	
-	//use the factory method in the FeedDoc.
-    Title(String title
-    		, List<Attribute> attributes) throws AtomSpecException {
-        this.title = new AtomTextConstruct(title,attributes);
-    }
-    
-    /**
-     * 
-     * @return the text content for this element.
-     */
-    public String getText(){
-    	return title.getText();
-    }
-    
-    /**
-     * 
-     * @return the attributes for this element.
-     */
-    public List<Attribute> getAttributes(){
-    	return title.getAttributes();
-    }
+
+	// use the factory method in the FeedDoc.
+	Title(String title, List<Attribute> attributes) throws AtomSpecException {
+		this.title = new AtomTextConstruct(title, attributes);
+	}
+
+	/**
+	 * 
+	 * @return the text content for this element.
+	 */
+	public String getText() {
+		return title.getText();
+	}
+
+	/**
+	 * 
+	 * @return the attributes for this element.
+	 */
+	public List<Attribute> getAttributes() {
+		return title.getAttributes();
+	}
 }

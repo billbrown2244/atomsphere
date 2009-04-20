@@ -23,15 +23,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * This class represents an Atom 1.0 link element.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- * <pre>
+ * 
+ *         <pre>
  * 	    atomLink =
  *          element atom:link {
  *          atomCommonAttributes,
@@ -45,134 +50,146 @@ import java.util.List;
  *         }
  * </pre>
  */
-public class Link {
-    
-    private final List<Attribute> attributes;
-    private final Attribute href;
-    private final Attribute rel;
-    private final Attribute type;
-    private final Attribute hreflang;
-    private final Attribute title;
-    private final Attribute length;
-    private final String content;
-    
-    //use the factory method in the FeedDoc.
-    Link(List<Attribute> attributes
-    		, String content) throws AtomSpecException {
-    	
-    	if(attributes == null){
-        	this.attributes = new LinkedList<Attribute>();
-    	}else{
-    		this.attributes = new LinkedList<Attribute>();
-    		Iterator<Attribute> attrItr = attributes.iterator();
-    		while(attrItr.hasNext()){
-    			Attribute attr = attrItr.next();
-    			//check for unsupported attribute.
-    			if(!FeedDoc.isAtomCommonAttribute(attr)
-    			&& !FeedDoc.isUndefinedAttribute(attr)
-    			&& !attr.getName().equals("href")
-    			&& !attr.getName().equals("rel")
-    			&& !attr.getName().equals("type")
-    			&& !attr.getName().equals("hreflang")
-    			&& !attr.getName().equals("title")
-    			&& !attr.getName().equals("length")
-    			){
-    				throw new AtomSpecException("Unsuppported attribute "
-    						+attr.getName()
-    						+" for this link element.");
-    			}
-    			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
-    		}
-    	}
-        
-    	if((this.href = FeedDoc.getAttributeFromGroup(this.attributes,"href")) 
-        		== null){
-    		throw new AtomSpecException("atom:link elements MUST have an href attribute, whose value MUST be a IRI reference");
-    	}
-        
-    	this.rel = FeedDoc.getAttributeFromGroup(this.attributes,"rel");
-        
-    	this.type = FeedDoc.getAttributeFromGroup(this.attributes,"type");
-        
-    	this.hreflang = FeedDoc.getAttributeFromGroup(this.attributes,"hreflang");
-        
-    	this.title = FeedDoc.getAttributeFromGroup(this.attributes,"title");
-        
-    	this.length = FeedDoc.getAttributeFromGroup(this.attributes,"length");
-        
-        this.content = content;
-    }
+public class Link implements Serializable {
 
-    /**
-     * 
-     * @return the category attribute list.
-     */
-    public List<Attribute> getAttributes() {
-    	if(attributes == null){
-    		return null;
-    	}
-    	List<Attribute> attrsCopy = new LinkedList<Attribute>();
-		Iterator<Attribute> attrItr = this.attributes.iterator();
-		while(attrItr.hasNext()){
-			Attribute attr = attrItr.next();
-			attrsCopy.add(new Attribute(attr.getName(),attr.getValue()));
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7730515433344653457L;
+	private final List<Attribute> attributes;
+	private final Attribute href;
+	private final Attribute rel;
+	private final Attribute type;
+	private final Attribute hreflang;
+	private final Attribute title;
+	private final Attribute length;
+	private final String content;
+
+	// use the factory method in the FeedDoc.
+	Link(List<Attribute> attributes, String content) throws AtomSpecException {
+
+		if (attributes == null) {
+			this.attributes = new LinkedList<Attribute>();
+		} else {
+			this.attributes = new LinkedList<Attribute>();
+			Iterator<Attribute> attrItr = attributes.iterator();
+			while (attrItr.hasNext()) {
+				Attribute attr = attrItr.next();
+				// check for unsupported attribute.
+				if (!FeedDoc.isAtomCommonAttribute(attr)
+						&& !FeedDoc.isUndefinedAttribute(attr)
+						&& !attr.getName().equals("href")
+						&& !attr.getName().equals("rel")
+						&& !attr.getName().equals("type")
+						&& !attr.getName().equals("hreflang")
+						&& !attr.getName().equals("title")
+						&& !attr.getName().equals("length")) {
+					throw new AtomSpecException("Unsuppported attribute "
+							+ attr.getName() + " for this link element.");
+				}
+				this.attributes.add(new Attribute(attr.getName(), attr
+						.getValue()));
+			}
 		}
-        return attrsCopy;
-    }
 
-    /**
-     * 
-     * @return the href contains the link's IRI
-     */
-    public Attribute getHref() {
-    	return (href == null)?null:new Attribute(href.getName(),href.getValue());
-    }
+		if ((this.href = FeedDoc.getAttributeFromGroup(this.attributes, "href")) == null) {
+			throw new AtomSpecException(
+					"atom:link elements MUST have an href attribute, whose value MUST be a IRI reference");
+		}
 
-    /**
-     * 
-     * @return the hreflang describes the language of the resource pointed to by the href attribute.
-     */
-    public Attribute getHreflang() {
-    	return (hreflang == null)?null:new Attribute(hreflang.getName(),hreflang.getValue());
-     }
+		this.rel = FeedDoc.getAttributeFromGroup(this.attributes, "rel");
 
-    /**
-     * 
-     * @return the length indicates an advisory length of the linked content in octets.
-     */
-    public Attribute getLength() {
-    	return (length == null)?null:new Attribute(length.getName(),length.getValue());
-    }
+		this.type = FeedDoc.getAttributeFromGroup(this.attributes, "type");
 
-    /**
-     * 
-     * @return the rel which matches either the "isegment-nz-nc" or the "IRI" production in [RFC3987]
-     */
-    public Attribute getRel() {
-    	return (rel == null)?null:new Attribute(rel.getName(),rel.getValue());
-    }
+		this.hreflang = FeedDoc.getAttributeFromGroup(this.attributes,
+				"hreflang");
 
-    /**
-     * 
-     * @return the title conveys human-readable information about the link.
-     */
-    public Attribute getTitle() {
-    	return (title == null)?null:new Attribute(title.getName(),title.getValue());
-    }
+		this.title = FeedDoc.getAttributeFromGroup(this.attributes, "title");
 
-    /**
-     * 
-     * @return the type which is an advisory media type
-     */
-    public Attribute getType() {
-    	return (type == null)?null:new Attribute(type.getName(),type.getValue());
-    }
+		this.length = FeedDoc.getAttributeFromGroup(this.attributes, "length");
 
-    /**
-     * 
-     * @return undefined text content or undefined element.
-     */
-    public String getContent() {
-    	return content;
-    }
+		this.content = content;
+	}
+
+	/**
+	 * 
+	 * @return the category attribute list.
+	 */
+	public List<Attribute> getAttributes() {
+		if (attributes == null) {
+			return null;
+		}
+		List<Attribute> attrsCopy = new LinkedList<Attribute>();
+		Iterator<Attribute> attrItr = this.attributes.iterator();
+		while (attrItr.hasNext()) {
+			Attribute attr = attrItr.next();
+			attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+		}
+		return attrsCopy;
+	}
+
+	/**
+	 * 
+	 * @return the href contains the link's IRI
+	 */
+	public Attribute getHref() {
+		return (href == null) ? null : new Attribute(href.getName(), href
+				.getValue());
+	}
+
+	/**
+	 * 
+	 * @return the hreflang describes the language of the resource pointed to by
+	 *         the href attribute.
+	 */
+	public Attribute getHreflang() {
+		return (hreflang == null) ? null : new Attribute(hreflang.getName(),
+				hreflang.getValue());
+	}
+
+	/**
+	 * 
+	 * @return the length indicates an advisory length of the linked content in
+	 *         octets.
+	 */
+	public Attribute getLength() {
+		return (length == null) ? null : new Attribute(length.getName(), length
+				.getValue());
+	}
+
+	/**
+	 * 
+	 * @return the rel which matches either the "isegment-nz-nc" or the "IRI"
+	 *         production in [RFC3987]
+	 */
+	public Attribute getRel() {
+		return (rel == null) ? null : new Attribute(rel.getName(), rel
+				.getValue());
+	}
+
+	/**
+	 * 
+	 * @return the title conveys human-readable information about the link.
+	 */
+	public Attribute getTitle() {
+		return (title == null) ? null : new Attribute(title.getName(), title
+				.getValue());
+	}
+
+	/**
+	 * 
+	 * @return the type which is an advisory media type
+	 */
+	public Attribute getType() {
+		return (type == null) ? null : new Attribute(type.getName(), type
+				.getValue());
+	}
+
+	/**
+	 * 
+	 * @return undefined text content or undefined element.
+	 */
+	public String getContent() {
+		return content;
+	}
 }

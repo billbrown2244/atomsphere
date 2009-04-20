@@ -27,6 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.SortedMap;
@@ -34,245 +35,244 @@ import java.util.TreeMap;
 
 /**
  * This class represents an Atom 1.0 feed element.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *  <pre>
+ * 
+ *         <pre>
  *      atomFeed =
  *          element atom:feed {
  *          atomCommonAttributes,
  *          (atomAuthor*
- *          & atomCategory*
- *          & atomContributor*
- *          & atomGenerator?
- *          & atomIcon?
- *          & atomId
- *          & atomLink*
- *          & atomLogo?
- *          & atomRights?
- *          & atomSubtitle?
- *          & atomTitle
- *          & atomUpdated
- *          & extensionElement*),
+ *          &amp; atomCategory*
+ *          &amp; atomContributor*
+ *          &amp; atomGenerator?
+ *          &amp; atomIcon?
+ *          &amp; atomId
+ *          &amp; atomLink*
+ *          &amp; atomLogo?
+ *          &amp; atomRights?
+ *          &amp; atomSubtitle?
+ *          &amp; atomTitle
+ *          &amp; atomUpdated
+ *          &amp; extensionElement*),
  *          atomEntry*
  *          }
- *  </pre>
- *  
+ * </pre>
+ * 
  */
-public class Feed {
+public class Feed implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8576480736811385690L;
 	private final Source source;
-	private final SortedMap<String,Entry> entries;
+	private final SortedMap<String, Entry> entries;
 
-	//use the factory method in the FeedDoc.
-	Feed(Id id
-			,Title title
-			,Updated updated
-			,Rights rights
-			,List<Author> authors
-			,List<Category> categories    		
-			,List<Contributor> contributors
-			,List<Link> links
-			,List<Attribute> attributes
-			,List<Extension> extensions
-			,Generator generator
-			,Subtitle subtitle
-			,Icon icon
-			,Logo logo
-			,SortedMap<String,Entry> entries) throws AtomSpecException {
-		this.source = new Source(id,title,updated,rights,authors,categories
-				,contributors,links,attributes,extensions
-				,generator,subtitle,icon,logo);
+	// use the factory method in the FeedDoc.
+	Feed(Id id, Title title, Updated updated, Rights rights,
+			List<Author> authors, List<Category> categories,
+			List<Contributor> contributors, List<Link> links,
+			List<Attribute> attributes, List<Extension> extensions,
+			Generator generator, Subtitle subtitle, Icon icon, Logo logo,
+			SortedMap<String, Entry> entries) throws AtomSpecException {
+		this.source = new Source(id, title, updated, rights, authors,
+				categories, contributors, links, attributes, extensions,
+				generator, subtitle, icon, logo);
 
-		//make sure id is present
-        if(source.getId() == null){
-            throw new AtomSpecException("atom:feed elements MUST contain exactly one atom:id element.");
-        }
-        //make sure title is present
-        if(source.getTitle() == null){
-            throw new AtomSpecException("atom:feed elements MUST contain exactly one atom:title element.");
-        }
-        //make sure updated is present
-        if(source.getUpdated() == null){
-            throw new AtomSpecException("atom:feed elements MUST contain exactly one atom:updated element.");
-        }
-        //check for the author requirement
-        if(source.getAuthors() == null){
-            if(this.entries == null){
-                throw new AtomSpecException("atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
-            }
-        }
-		
-		if(entries == null){
+		// make sure id is present
+		if (source.getId() == null) {
+			throw new AtomSpecException(
+					"atom:feed elements MUST contain exactly one atom:id element.");
+		}
+		// make sure title is present
+		if (source.getTitle() == null) {
+			throw new AtomSpecException(
+					"atom:feed elements MUST contain exactly one atom:title element.");
+		}
+		// make sure updated is present
+		if (source.getUpdated() == null) {
+			throw new AtomSpecException(
+					"atom:feed elements MUST contain exactly one atom:updated element.");
+		}
+		// check for the author requirement
+		if (source.getAuthors() == null) {
+			if (this.entries == null) {
+				throw new AtomSpecException(
+						"atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
+			}
+		}
+
+		if (entries == null) {
 			this.entries = null;
-		}else{
-			
-			this.entries = new TreeMap<String,Entry>(entries.comparator());
+		} else {
+
+			this.entries = new TreeMap<String, Entry>(entries.comparator());
 			Iterator<String> entryItr = entries.keySet().iterator();
-			while(entryItr.hasNext()){
+			while (entryItr.hasNext()) {
 				String entryKey = entryItr.next();
 				Entry entry = entries.get(entryKey);
 
-				//if there is no author element at the feed level
-				//check to make sure the entry has an author element
-				if (source.getAuthors() == null){
-					if(entry.getAuthors() == null){
-						throw new AtomSpecException("atom:entry elements MUST contain one or more atom:author elements, unless the atom:entry contains an atom:source element that contains an atom:author element or, in an Atom Feed Document, the atom:feed element contains an atom:author element itself.");
+				// if there is no author element at the feed level
+				// check to make sure the entry has an author element
+				if (source.getAuthors() == null) {
+					if (entry.getAuthors() == null) {
+						throw new AtomSpecException(
+								"atom:entry elements MUST contain one or more atom:author elements, unless the atom:entry contains an atom:source element that contains an atom:author element or, in an Atom Feed Document, the atom:feed element contains an atom:author element itself.");
 					}
-				}   			
+				}
 
-				this.entries.put(entryKey,
-						new Entry(entry.getId()
-								,entry.getTitle(),entry.getUpdated()
-								,entry.getRights(),entry.getContent(),entry.getAuthors()
-								,entry.getCategories(),entry.getContributors()
-								,entry.getLinks(),entry.getAttributes()
-								,entry.getExtensions(),entry.getPublished()
-								,entry.getSummary(),entry.getSource()
-						));
+				this.entries.put(entryKey, new Entry(entry.getId(), entry
+						.getTitle(), entry.getUpdated(), entry.getRights(),
+						entry.getContent(), entry.getAuthors(), entry
+								.getCategories(), entry.getContributors(),
+						entry.getLinks(), entry.getAttributes(), entry
+								.getExtensions(), entry.getPublished(), entry
+								.getSummary(), entry.getSource()));
 			}
 		}
 	}
 
-	public SortedMap<String,Entry> getEntries() {
-		if(entries == null){
+	public SortedMap<String, Entry> getEntries() {
+		if (entries == null) {
 			return null;
 		}
-		SortedMap<String,Entry> entriesCopy = 
-			new TreeMap<String,Entry>(entries.comparator());
+		SortedMap<String, Entry> entriesCopy = new TreeMap<String, Entry>(
+				entries.comparator());
 		Iterator<String> entryItr = entries.keySet().iterator();
-		while(entryItr.hasNext()){
+		while (entryItr.hasNext()) {
 			String entryKey = entryItr.next();
 			Entry entry = entries.get(entryKey);
-			try{
-				entriesCopy.put(entryKey,
-						new Entry(entry.getId()
-								,entry.getTitle(),entry.getUpdated()
-								,entry.getRights(),entry.getContent(),entry.getAuthors()
-								,entry.getCategories(),entry.getContributors()
-								,entry.getLinks(),entry.getAttributes()
-								,entry.getExtensions(),entry.getPublished()
-								,entry.getSummary(),entry.getSource()
-						));
-			}catch(Exception e){
-				//this should never happen because 
-				//we check for errors on initial creation
-				//but if it does, print the stack trace
+			try {
+				entriesCopy.put(entryKey, new Entry(entry.getId(), entry
+						.getTitle(), entry.getUpdated(), entry.getRights(),
+						entry.getContent(), entry.getAuthors(), entry
+								.getCategories(), entry.getContributors(),
+						entry.getLinks(), entry.getAttributes(), entry
+								.getExtensions(), entry.getPublished(), entry
+								.getSummary(), entry.getSource()));
+			} catch (Exception e) {
+				// this should never happen because
+				// we check for errors on initial creation
+				// but if it does, print the stack trace
 				e.printStackTrace();
 			}
 		}
 		return entriesCopy;
 	}
-	
+
 	/**
-     * 
-     * @return the generator for this element.
-     */
-    public Generator getGenerator() {
-        return source.getGenerator();
-    }
+	 * 
+	 * @return the generator for this element.
+	 */
+	public Generator getGenerator() {
+		return source.getGenerator();
+	}
 
-    /**
-     * 
-     * @return the icon for this element.
-     */
-    public Icon getIcon() {
-        return source.getIcon();
-    }
+	/**
+	 * 
+	 * @return the icon for this element.
+	 */
+	public Icon getIcon() {
+		return source.getIcon();
+	}
 
-    /**
-     * 
-     * @return the logo for this element.
-     */
-    public Logo getLogo() {
-        return source.getLogo();
-    }
+	/**
+	 * 
+	 * @return the logo for this element.
+	 */
+	public Logo getLogo() {
+		return source.getLogo();
+	}
 
-    /**
-     * 
-     * @return the subtitle for this element.
-     */
-    public Subtitle getSubtitle() {
-        return source.getSubtitle();
-    }
-    
-    
-    /**
-	  * 
-	  * @return the unique identifier for this entry.
-	  */
-    public Id getId(){
-    	return source.getId();
-    }
-    
-    /**
-	  * 
-	  * @return the title for this element.
-	  */
-    public Title getTitle(){
-    	return source.getTitle();
-    }
-    
-    /**
-	  * 
-	  * @return the updated date for this element.
-	  */
-    public Updated getUpdated(){
-    	return source.getUpdated();
-    }
-    
-    /**
-	  * 
-	  * @return the associated rights for this entry.
-	  */
-    public Rights getRights(){
-    	return source.getRights();
-    }
-    
-    /**
-	  * 
-	  * @return the authors for this entry.
-	  */
-    public List<Author> getAuthors(){
-    	return source.getAuthors();
-    }
-    
-    /**
-	  * 
-	  * @return the categories for this element.
-	  */
-    public List<Category> getCategories(){
-    	return source.getCategories();
-    }
-    
-    /**
-	  * 
-	  * @return the contributors for this entry.
-	  */
-    public List<Contributor> getContributors(){
-    	return source.getContributors();
-    }
-    
-    /**
-	  * 
-	  * @return the links for this entry.
-	  */
-    public List<Link> getLinks(){
-    	return source.getLinks();
-    }
-    
-    /**
+	/**
+	 * 
+	 * @return the subtitle for this element.
+	 */
+	public Subtitle getSubtitle() {
+		return source.getSubtitle();
+	}
+
+	/**
+	 * 
+	 * @return the unique identifier for this entry.
+	 */
+	public Id getId() {
+		return source.getId();
+	}
+
+	/**
+	 * 
+	 * @return the title for this element.
+	 */
+	public Title getTitle() {
+		return source.getTitle();
+	}
+
+	/**
+	 * 
+	 * @return the updated date for this element.
+	 */
+	public Updated getUpdated() {
+		return source.getUpdated();
+	}
+
+	/**
+	 * 
+	 * @return the associated rights for this entry.
+	 */
+	public Rights getRights() {
+		return source.getRights();
+	}
+
+	/**
+	 * 
+	 * @return the authors for this entry.
+	 */
+	public List<Author> getAuthors() {
+		return source.getAuthors();
+	}
+
+	/**
+	 * 
+	 * @return the categories for this element.
+	 */
+	public List<Category> getCategories() {
+		return source.getCategories();
+	}
+
+	/**
+	 * 
+	 * @return the contributors for this entry.
+	 */
+	public List<Contributor> getContributors() {
+		return source.getContributors();
+	}
+
+	/**
+	 * 
+	 * @return the links for this entry.
+	 */
+	public List<Link> getLinks() {
+		return source.getLinks();
+	}
+
+	/**
 	 * 
 	 * @return the category attribute list.
 	 */
-    public List<Attribute> getAttributes(){
-    	return source.getAttributes();
-    }
-    
-    /**
-	  * 
-	  * @return the extensions for this entry.
-	  */
-    public List<Extension> getExtensions(){
-    	return source.getExtensions();
-    }
+	public List<Attribute> getAttributes() {
+		return source.getAttributes();
+	}
+
+	/**
+	 * 
+	 * @return the extensions for this entry.
+	 */
+	public List<Extension> getExtensions() {
+		return source.getExtensions();
+	}
 }

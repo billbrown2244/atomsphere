@@ -22,48 +22,57 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * This class represents an Atom 1.0 updated element.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *	<pre>
- *		atomUpdated = element atom:updated { atomDateConstruct}
- *	</pre>
+ * 
+ *         <pre>
+ * 	atomUpdated = element atom:updated { atomDateConstruct}
+ * </pre>
  */
-public class Updated {
-    
+public class Updated implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7849178087953320683L;
 	private final AtomDateConstruct updated;
-	
-	//use the factory method in the FeedDoc.
-    Updated(Date updated, List<Attribute> attributes) throws AtomSpecException{
-        this.updated = new AtomDateConstruct(updated,attributes);
-    }
-    
-    /**
-     * 
-     * @return the date timestamp for this element.
-     */
-    public Date getDateTime(){
-    	return updated.getDateTime();
-    }
-    
-    /**
-     * 
-     * @return the string formated version of the time
-     * 	for example 2006-04-28T12:50:43.337-05:00
-     */
-    public String getText(){
-    	return updated.getText();
-    }
-    
-    /**
-     * 
-     * @return the attributes for this element.
-     */
-    public List<Attribute> getAttributes(){
-    	return updated.getAttributes();
-    }
+
+	// use the factory method in the FeedDoc.
+	Updated(Date updated, List<Attribute> attributes) throws AtomSpecException {
+		this.updated = new AtomDateConstruct(updated, attributes);
+	}
+
+	/**
+	 * 
+	 * @return the date timestamp for this element.
+	 */
+	public Date getDateTime() {
+		return updated.getDateTime();
+	}
+
+	/**
+	 * 
+	 * @return the string formated version of the time for example
+	 *         2006-04-28T12:50:43.337-05:00
+	 */
+	public String getText() {
+		return updated.getText();
+	}
+
+	/**
+	 * 
+	 * @return the attributes for this element.
+	 */
+	public List<Attribute> getAttributes() {
+		return updated.getAttributes();
+	}
 }

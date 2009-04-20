@@ -21,15 +21,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * This class represents an Atom 1.0 category.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *  <pre>
+ * 
+ *         <pre>
  *      atomCategory =
  *          element atom:category {
  *          atomCommonAttributes,
@@ -37,101 +42,107 @@ import java.util.List;
  *          attribute scheme { atomUri }?,
  *          attribute label { text }?,
  *          undefinedContent
- *  </pre>
+ * </pre>
  */
-public class Category {
-    
-    private final List<Attribute> attributes;
-    private final Attribute term; //required
-    private final Attribute scheme;
-    private final Attribute label;
-    private final String content;
-    
-    //use the factory method in the FeedDoc.
-    Category(List<Attribute> attributes
-    		, String content) throws AtomSpecException {
-        
-    	if(attributes == null){
-        	this.attributes = new LinkedList<Attribute>();
-    	}else{
-    		this.attributes = new LinkedList<Attribute>();
-    		Iterator<Attribute> attrItr = attributes.iterator();
-    		while(attrItr.hasNext()){
-    			Attribute attr = attrItr.next();
-    			//check for unsupported attribute.
-    			if(!FeedDoc.isAtomCommonAttribute(attr)
-    					&& !FeedDoc.isUndefinedAttribute(attr)
-    					&& !attr.getName().equals("term")
-    					&& !attr.getName().equals("scheme")
-    					&& !attr.getName().equals("label")
-    			){
-    				throw new AtomSpecException("Unsuppported attribute "
-    						+attr.getName()
-    						+" in the atom:category element");
-    			}
-    			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
-    		}
-    	}
+public class Category implements Serializable {
 
-        if((this.term = FeedDoc.getAttributeFromGroup(this.attributes,"term")) 
-        		== null){
-    		throw new AtomSpecException("Category elements MUST have a \"term\" attribute.");
-    	}
-        
-        this.scheme = FeedDoc.getAttributeFromGroup(this.attributes,"scheme");
-        
-        this.label = FeedDoc.getAttributeFromGroup(this.attributes,"label");
-        
-        this.content = content;
-    }
-    
-    /**
-     * 
-     * @return the category attribute list.
-     */
-    public List<Attribute> getAttributes() {
-    	if(attributes == null){
-    		return null;
-    	}
-    	List<Attribute> attrsCopy = new LinkedList<Attribute>();
-		Iterator<Attribute> attrItr = this.attributes.iterator();
-		while(attrItr.hasNext()){
-			Attribute attr = attrItr.next();
-			attrsCopy.add(new Attribute(attr.getName(),attr.getValue()));
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7475777621616906621L;
+	private final List<Attribute> attributes;
+	private final Attribute term; // required
+	private final Attribute scheme;
+	private final Attribute label;
+	private final String content;
+
+	// use the factory method in the FeedDoc.
+	Category(List<Attribute> attributes, String content)
+			throws AtomSpecException {
+
+		if (attributes == null) {
+			this.attributes = new LinkedList<Attribute>();
+		} else {
+			this.attributes = new LinkedList<Attribute>();
+			Iterator<Attribute> attrItr = attributes.iterator();
+			while (attrItr.hasNext()) {
+				Attribute attr = attrItr.next();
+				// check for unsupported attribute.
+				if (!FeedDoc.isAtomCommonAttribute(attr)
+						&& !FeedDoc.isUndefinedAttribute(attr)
+						&& !attr.getName().equals("term")
+						&& !attr.getName().equals("scheme")
+						&& !attr.getName().equals("label")) {
+					throw new AtomSpecException("Unsuppported attribute "
+							+ attr.getName() + " in the atom:category element");
+				}
+				this.attributes.add(new Attribute(attr.getName(), attr
+						.getValue()));
+			}
 		}
-        return attrsCopy;
-    }
-    
-    /**
-     * 
-     * @return the label attribute
-     */
-    public Attribute getLabel() {
-    	return (label == null)?null:new Attribute(label.getName(),label.getValue());
-    }
 
-    /**
-     * 
-     * @return the scheme attribute
-     */
-    public Attribute getScheme() {
-    	return (scheme == null)?null:new Attribute(scheme.getName(),scheme.getValue());
-    }
+		if ((this.term = FeedDoc.getAttributeFromGroup(this.attributes, "term")) == null) {
+			throw new AtomSpecException(
+					"Category elements MUST have a \"term\" attribute.");
+		}
 
-    /**
-     * 
-     * @return the term attribute
-     */
-    public Attribute getTerm() {
-    	return (term == null)?null:new Attribute(term.getName(),term.getValue());
-    }
-    
-    /**
-     * 
-     * @return undefined text content or undefined element.
-     */
-    public String getContent() {
-    	return content;
-    }
+		this.scheme = FeedDoc.getAttributeFromGroup(this.attributes, "scheme");
+
+		this.label = FeedDoc.getAttributeFromGroup(this.attributes, "label");
+
+		this.content = content;
+	}
+
+	/**
+	 * 
+	 * @return the category attribute list.
+	 */
+	public List<Attribute> getAttributes() {
+		if (attributes == null) {
+			return null;
+		}
+		List<Attribute> attrsCopy = new LinkedList<Attribute>();
+		Iterator<Attribute> attrItr = this.attributes.iterator();
+		while (attrItr.hasNext()) {
+			Attribute attr = attrItr.next();
+			attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+		}
+		return attrsCopy;
+	}
+
+	/**
+	 * 
+	 * @return the label attribute
+	 */
+	public Attribute getLabel() {
+		return (label == null) ? null : new Attribute(label.getName(), label
+				.getValue());
+	}
+
+	/**
+	 * 
+	 * @return the scheme attribute
+	 */
+	public Attribute getScheme() {
+		return (scheme == null) ? null : new Attribute(scheme.getName(), scheme
+				.getValue());
+	}
+
+	/**
+	 * 
+	 * @return the term attribute
+	 */
+	public Attribute getTerm() {
+		return (term == null) ? null : new Attribute(term.getName(), term
+				.getValue());
+	}
+
+	/**
+	 * 
+	 * @return undefined text content or undefined element.
+	 */
+	public String getContent() {
+		return content;
+	}
 
 }
