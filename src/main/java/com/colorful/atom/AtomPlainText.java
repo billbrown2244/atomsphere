@@ -21,8 +21,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
-class AtomPlainText {
+import java.io.Serializable;
 
+class AtomPlainText implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -601318756294822761L;
 	private final String text;
     
     /**

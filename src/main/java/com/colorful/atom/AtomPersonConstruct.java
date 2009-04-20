@@ -22,142 +22,162 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-
 /**
  * This class represents an Atom 1.0 person construct.
- * @see <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom Syndication Format</a>
+ * 
+ * @see <a
+ *      href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php">Atom
+ *      Syndication Format</a>
  * @author Bill Brown
- *  <pre> 
+ * 
+ *         <pre>
  *      atomPersonConstruct =
  *          atomCommonAttributes,
  *          (element atom:name { text }
- *          & element atom:uri { atomUri }?
- *          & element atom:email { atomEmailAddress }?
- *          & extensionElement*)
- *  </pre>
+ *          &amp; element atom:uri { atomUri }?
+ *          &amp; element atom:email { atomEmailAddress }?
+ *          &amp; extensionElement*)
+ * </pre>
  */
-class AtomPersonConstruct {
-    
-    private final List<Attribute> attributes;
-    private final Name name;
-    private final URI uri;
-    private final Email email;
-    private final List<Extension> extensions;
-    
-    /**
-     * 
-     * @param name the name of the person
-     * @param uri the uri of the person
-     * @param email the email address of the person
-     * @param attributes
-     * @param extensions
-     */
-    public AtomPersonConstruct(Name name, URI uri
-    		, Email email, List<Attribute> attributes
-    		, List<Extension> extensions) throws AtomSpecException{
-    	
-    	//check to make sure there is a name element
-    	if(name == null){
-    		throw new AtomSpecException("Person constructs MUST contain exactly one \"atom:name\" element.");
-    	}else{
-    		this.name = new Name(name.getText());
-    	}
-    	
-    	this.uri = (uri == null)?null:new URI(uri.getText());
-    	
-    	this.email = (email == null)?null:new Email(email.getText());
-    	
-    	if(attributes == null){
-    		this.attributes = null;
-    	}else{
-    		this.attributes = new LinkedList<Attribute>();
-    		Iterator<Attribute> attrItr = attributes.iterator();
-    		while(attrItr.hasNext()){
-    			Attribute attr = attrItr.next();
-    			//check for unsupported attribute.
-    			if(!FeedDoc.isAtomCommonAttribute(attr)
-    					&& !FeedDoc.isUndefinedAttribute(attr)){
-    				throw new AtomSpecException("Unsuppported attribute "
-    						+attr.getName()
-    						+" for this Atom Person Construct.");
-    			}
-    			this.attributes.add(new Attribute(attr.getName(),attr.getValue()));
-    		}
-    	}
-    	
-    	if(extensions == null){
-    		this.extensions = null;
-    	}else{
-    		this.extensions = new LinkedList<Extension>();
-    		Iterator<Extension> extItr = extensions.iterator();
-    		while(extItr.hasNext()){
-    			Extension extension = extItr.next();
-    			this.extensions.add(new Extension(extension.getElementName(),extension.getAttributes(),extension.getContent()));
-    		}
-    	}
-    	
-    }
-    
-    /**
-     * 
-     * @return the attributes for this element.
-     */
-    public List<Attribute> getAttributes() {
-    	if(attributes == null){
-    		return null;
-    	}
-    	List<Attribute> attrsCopy = new LinkedList<Attribute>();
+class AtomPersonConstruct implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5470418749893434673L;
+
+	private final List<Attribute> attributes;
+
+	private final Name name;
+
+	private final URI uri;
+
+	private final Email email;
+
+	private final List<Extension> extensions;
+
+	/**
+	 * 
+	 * @param name
+	 *            the name of the person
+	 * @param uri
+	 *            the uri of the person
+	 * @param email
+	 *            the email address of the person
+	 * @param attributes
+	 * @param extensions
+	 */
+	public AtomPersonConstruct(Name name, URI uri, Email email,
+			List<Attribute> attributes, List<Extension> extensions)
+			throws AtomSpecException {
+
+		// check to make sure there is a name element
+		if (name == null) {
+			throw new AtomSpecException(
+					"Person constructs MUST contain exactly one \"atom:name\" element.");
+		} else {
+			this.name = new Name(name.getText());
+		}
+
+		this.uri = (uri == null) ? null : new URI(uri.getText());
+
+		this.email = (email == null) ? null : new Email(email.getText());
+
+		if (attributes == null) {
+			this.attributes = null;
+		} else {
+			this.attributes = new LinkedList<Attribute>();
+			Iterator<Attribute> attrItr = attributes.iterator();
+			while (attrItr.hasNext()) {
+				Attribute attr = attrItr.next();
+				// check for unsupported attribute.
+				if (!FeedDoc.isAtomCommonAttribute(attr)
+						&& !FeedDoc.isUndefinedAttribute(attr)) {
+					throw new AtomSpecException("Unsuppported attribute "
+							+ attr.getName()
+							+ " for this Atom Person Construct.");
+				}
+				this.attributes.add(new Attribute(attr.getName(), attr
+						.getValue()));
+			}
+		}
+
+		if (extensions == null) {
+			this.extensions = null;
+		} else {
+			this.extensions = new LinkedList<Extension>();
+			Iterator<Extension> extItr = extensions.iterator();
+			while (extItr.hasNext()) {
+				Extension extension = extItr.next();
+				this.extensions.add(new Extension(extension.getElementName(),
+						extension.getAttributes(), extension.getContent()));
+			}
+		}
+
+	}
+
+	/**
+	 * 
+	 * @return the attributes for this element.
+	 */
+	public List<Attribute> getAttributes() {
+		if (attributes == null) {
+			return null;
+		}
+		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		Iterator<Attribute> attrItr = this.attributes.iterator();
-		while(attrItr.hasNext()){
+		while (attrItr.hasNext()) {
 			Attribute attr = attrItr.next();
-			attrsCopy.add(new Attribute(attr.getName(),attr.getValue()));
+			attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
 		}
-        return attrsCopy;
-    }
-    
-    /**
-     * 
-     * @return the email address for this element.
-     */
-    public Email getEmail() {
-        return (email == null)?null: new Email(email.getText());
-    }
+		return attrsCopy;
+	}
 
-    /**
-     * 
-     * @return the name for this element.
-     */
-    public Name getName() {
-        return (name == null)?null: new Name(name.getText());
-    }
+	/**
+	 * 
+	 * @return the email address for this element.
+	 */
+	public Email getEmail() {
+		return (email == null) ? null : new Email(email.getText());
+	}
 
-    /**
-     * 
-     * @return the URI for this element.
-     */
-    public URI getUri() {
-        return (uri == null)?null: new URI(uri.getText());
-    }
+	/**
+	 * 
+	 * @return the name for this element.
+	 */
+	public Name getName() {
+		return (name == null) ? null : new Name(name.getText());
+	}
 
-    /**
-     * 
-     * @return the extensions for this element.
-     */
-    public List<Extension> getExtensions() {
-    	if(extensions == null){
-    		return null;
-    	}
-    	List<Extension> extnsCopy = new LinkedList<Extension>();
+	/**
+	 * 
+	 * @return the URI for this element.
+	 */
+	public URI getUri() {
+		return (uri == null) ? null : new URI(uri.getText());
+	}
+
+	/**
+	 * 
+	 * @return the extensions for this element.
+	 */
+	public List<Extension> getExtensions() {
+		if (extensions == null) {
+			return null;
+		}
+		List<Extension> extnsCopy = new LinkedList<Extension>();
 		Iterator<Extension> extItr = extensions.iterator();
-		while(extItr.hasNext()){
+		while (extItr.hasNext()) {
 			Extension extension = extItr.next();
-			extnsCopy.add(new Extension(extension.getElementName(),extension.getAttributes(),extension.getContent()));
+			extnsCopy.add(new Extension(extension.getElementName(), extension
+					.getAttributes(), extension.getContent()));
 		}
-        return extnsCopy;
-    }
+		return extnsCopy;
+	}
 
 }
