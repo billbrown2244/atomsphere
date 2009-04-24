@@ -61,97 +61,55 @@ public class FeedDocTest {
 	static {
 		theDate = Calendar.getInstance();
 		theDate.clear();
-		theDate.set(2008,0,1);
+		theDate.set(2008, 0, 1);
 	}
-	
-	private String expectedEntry1 = 
-		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-		+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
-		+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
-		+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
-		+ "<title>test entry</title>"
-		+ "</entry>";
-	
-	private Entry entry1,entry2,entry3;
-	
+
+	private String expectedEntry1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
+			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+			+ "<title>test entry</title>" + "</entry>";
+
+	private Entry entry1, entry2, entry3;
+
 	@Before
 	public void setUp() throws Exception {
-		try{
-			Id id = FeedDoc.buildId(null,"http://www.colorfulsoftware.com/atom.xml");
+		try {
+			Id id = FeedDoc.buildId(null,
+					"http://www.colorfulsoftware.com/atom.xml");
 
-			Updated updated = FeedDoc.buildUpdated(Calendar.getInstance().getTime(),null);
+			Updated updated = FeedDoc.buildUpdated(Calendar.getInstance()
+					.getTime(), null);
 
-			Title title = FeedDoc.buildTitle("test feed",null);
-			
+			Title title = FeedDoc.buildTitle("test feed", null);
+
 			Generator generator = FeedDoc.getAtomsphereVersion();
-			
+
 			List<Author> authors = new LinkedList<Author>();
-			authors.add(FeedDoc.buildAuthor(FeedDoc.buildName("Bill Brown"),null,null,null,null));
-			
-			feed1 = FeedDoc.buildFeed(id
-					, title
-					, updated
-					, null
-					, authors
-					, null
-					, null
-					, null
-					, null
-					, null
-					, generator
-					, null
-					, null
-					, null
-					, null);
-			
-			entry1 = FeedDoc.buildEntry(
-					FeedDoc.buildId(null,"http://www.colorfulsoftware.com/projects/atomsphere/")
-					, FeedDoc.buildTitle("test entry",null)
-					, FeedDoc.buildUpdated(theDate.getTime(),null)
-					, null
-					, null
-					, null
-					, null
-					, null
-					, null
-					, null
-					, null
-					, null
-					, null
-					, null);
-			
-			entry2 = FeedDoc.buildEntry(
-					FeedDoc.buildId(null,"http://www.colorfulsoftware.com/projects/atomsphere/")
-					, FeedDoc.buildTitle("test entry",null)
-					, FeedDoc.buildUpdated(theDate.getTime(),null)
-					, null
-					, null
-					, null
-					, null
-					, null
-					, null
-					, null
-					, null
-					, null
-					, null
-					, null);
-			
-			entry3 = FeedDoc.buildEntry(
-					FeedDoc.buildId(null,"http://www.colorfulsoftware.com/projects/atomsphere/")
-					, FeedDoc.buildTitle("test entry",null)
-					, FeedDoc.buildUpdated(theDate.getTime(),null)
-					, null
-					, null
-					, null
-					, null
-					, null
-					, null
-					, null
-					, null
-					, null
-					, null
-					, null);
-		}catch(Exception e){
+			authors.add(FeedDoc.buildAuthor(FeedDoc.buildName("Bill Brown"),
+					null, null, null, null));
+
+			feed1 = FeedDoc.buildFeed(id, title, updated, null, authors, null,
+					null, null, null, null, generator, null, null, null, null);
+
+			entry1 = FeedDoc.buildEntry(FeedDoc.buildId(null,
+					"http://www.colorfulsoftware.com/projects/atomsphere/"),
+					FeedDoc.buildTitle("test entry", null), FeedDoc
+							.buildUpdated(theDate.getTime(), null), null, null,
+					null, null, null, null, null, null, null, null, null);
+
+			entry2 = FeedDoc.buildEntry(FeedDoc.buildId(null,
+					"http://www.colorfulsoftware.com/projects/atomsphere/"),
+					FeedDoc.buildTitle("test entry", null), FeedDoc
+							.buildUpdated(theDate.getTime(), null), null, null,
+					null, null, null, null, null, null, null, null, null);
+
+			entry3 = FeedDoc.buildEntry(FeedDoc.buildId(null,
+					"http://www.colorfulsoftware.com/projects/atomsphere/"),
+					FeedDoc.buildTitle("test entry", null), FeedDoc
+							.buildUpdated(theDate.getTime(), null), null, null,
+					null, null, null, null, null, null, null, null, null);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -165,11 +123,8 @@ public class FeedDocTest {
 	@Test
 	public void testWriteFeedDocOutputStreamFeedStringString() {
 		try {
-			FeedDoc.writeFeedDoc(
-					new FileOutputStream("out2.xml")
-					,feed1
-					,FeedDoc.encoding
-					,FeedDoc.xml_version);
+			FeedDoc.writeFeedDoc(new FileOutputStream("out2.xml"), feed1,
+					FeedDoc.encoding, FeedDoc.xml_version);
 			Feed feed = FeedDoc.readFeedToBean(new File("out2.xml"));
 			assertNotNull(feed);
 		} catch (Exception e) {
@@ -250,10 +205,10 @@ public class FeedDocTest {
 
 	@Test
 	public void testReadEntryToString() {
-		try{		
-		String entryStr = FeedDoc.readEntryToString(entry1);
-		assertTrue(entryStr != null);
-		assertEquals(entryStr,expectedEntry1);
+		try {
+			String entryStr = FeedDoc.readEntryToString(entry1);
+			assertTrue(entryStr != null);
+			assertEquals(entryStr, expectedEntry1);
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);
@@ -283,14 +238,14 @@ public class FeedDocTest {
 	@Test
 	public void testBuildFeed() {
 		try {
-			
+
 			Generator generator = FeedDoc.getAtomsphereVersion();
 
 			Id id = FeedDoc.buildId(null,
 					"http://www.colorfulsoftware.com/atom.xml");
 
 			Updated updated = FeedDoc.buildUpdated(Calendar.getInstance()
-					.getTime(),null);
+					.getTime(), null);
 
 			Title title = FeedDoc.buildTitle("test feed", null);
 
@@ -350,7 +305,7 @@ public class FeedDocTest {
 											"http://www.colorfulsoftware.com/atom.xml#entry1"),
 							FeedDoc.buildTitle("an example atom entry", null),
 							FeedDoc.buildUpdated(Calendar.getInstance()
-									.getTime(),null),
+									.getTime(), null),
 							null,
 							FeedDoc
 									.buildContent(
@@ -495,49 +450,41 @@ public class FeedDocTest {
 	@Test
 	public void testGetContentType() {
 		List<Attribute> attrs = new LinkedList<Attribute>();
-		attrs.add(FeedDoc.buildAttribute("src","http://www.colorfulsoftware.com/images/logo.gif"));
+		attrs.add(FeedDoc.buildAttribute("src",
+				"http://www.colorfulsoftware.com/images/logo.gif"));
 		attrs.add(FeedDoc.buildAttribute("type", "image/gif"));
-		assertEquals(FeedDoc.getContentType(attrs),ContentType.EXTERNAL);
+		assertEquals(FeedDoc.getContentType(attrs), ContentType.EXTERNAL);
 		attrs = new LinkedList<Attribute>();
 		attrs.add(FeedDoc.buildAttribute("type", "image/gif"));
-		assertEquals(FeedDoc.getContentType(attrs),ContentType.OTHER);
+		assertEquals(FeedDoc.getContentType(attrs), ContentType.OTHER);
 		attrs = new LinkedList<Attribute>();
 		attrs.add(FeedDoc.buildAttribute("type", "text"));
-		assertEquals(FeedDoc.getContentType(attrs),ContentType.TEXT);
+		assertEquals(FeedDoc.getContentType(attrs), ContentType.TEXT);
 		attrs = new LinkedList<Attribute>();
 		attrs.add(FeedDoc.buildAttribute("type", "html"));
-		assertEquals(FeedDoc.getContentType(attrs),ContentType.HTML);
+		assertEquals(FeedDoc.getContentType(attrs), ContentType.HTML);
 		attrs = new LinkedList<Attribute>();
 		attrs.add(FeedDoc.buildAttribute("type", "xhtml"));
-		assertEquals(FeedDoc.getContentType(attrs),ContentType.XHTML);
+		assertEquals(FeedDoc.getContentType(attrs), ContentType.XHTML);
 	}
 
 	@Test
 	public void testSortEntries() {
-		try{
-		SortedMap<String,Entry> entries = new TreeMap<String,Entry>();
-		entries.put(entry1.getUpdated().getText(),entry1);
-		entries.put(entry2.getUpdated().getText(),entry2);
-		entries.put(entry3.getUpdated().getText(),entry3);
-		feed1 = FeedDoc.buildFeed(
-				feed1.getId()
-				, feed1.getTitle()
-				, feed1.getUpdated()
-				, feed1.getRights()
-				, feed1.getAuthors()
-				, feed1.getCategories()
-				, feed1.getContributors()
-				, feed1.getLinks()
-				, feed1.getAttributes()
-				, feed1.getExtensions()
-				, feed1.getGenerator()
-				, feed1.getSubtitle()
-				, feed1.getIcon()
-				, feed1.getLogo()
-				, entries);
-		assertEquals(Title.class.getSimpleName(),"Title");
-		//FeedDoc.sortEntries(feed1, FeedDoc.SORT_ASC, Title.class)
-		}catch(Exception e){
+		try {
+			SortedMap<String, Entry> entries = new TreeMap<String, Entry>();
+			entries.put(entry1.getUpdated().getText(), entry1);
+			entries.put(entry2.getUpdated().getText(), entry2);
+			entries.put(entry3.getUpdated().getText(), entry3);
+			feed1 = FeedDoc.buildFeed(feed1.getId(), feed1.getTitle(), feed1
+					.getUpdated(), feed1.getRights(), feed1.getAuthors(), feed1
+					.getCategories(), feed1.getContributors(),
+					feed1.getLinks(), feed1.getAttributes(), feed1
+							.getExtensions(), feed1.getGenerator(), feed1
+							.getSubtitle(), feed1.getIcon(), feed1.getLogo(),
+					entries);
+			assertEquals(Title.class.getSimpleName(), "Title");
+			// FeedDoc.sortEntries(feed1, FeedDoc.SORT_ASC, Title.class)
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
