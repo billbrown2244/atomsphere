@@ -28,7 +28,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package com.colorful.atom;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -111,9 +110,7 @@ public class Feed implements Serializable {
 		} else {
 
 			this.entries = new TreeMap<String, Entry>(entries.comparator());
-			Iterator<String> entryItr = entries.keySet().iterator();
-			while (entryItr.hasNext()) {
-				String entryKey = entryItr.next();
+			for(String entryKey: entries.keySet()){
 				Entry entry = entries.get(entryKey);
 
 				// if there is no author element at the feed level
@@ -142,9 +139,7 @@ public class Feed implements Serializable {
 		}
 		SortedMap<String, Entry> entriesCopy = new TreeMap<String, Entry>(
 				entries.comparator());
-		Iterator<String> entryItr = entries.keySet().iterator();
-		while (entryItr.hasNext()) {
-			String entryKey = entryItr.next();
+		for(String entryKey: this.entries.keySet()){
 			Entry entry = entries.get(entryKey);
 			try {
 				entriesCopy.put(entryKey, new Entry(entry.getId(), entry

@@ -42,7 +42,6 @@ import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -1068,11 +1067,9 @@ public class FeedDoc {
 	static Attribute getAttributeFromGroup(List<Attribute> attributes,
 			String attributeName) {
 		if (attributes != null) {
-			Iterator<Attribute> attrItr = attributes.iterator();
-			while (attrItr.hasNext()) {
-				Attribute current = attrItr.next();
-				if (current.getName().equalsIgnoreCase(attributeName)) {
-					return buildAttribute(current.getName(), current.getValue());
+			for(Attribute attr: attributes){
+				if (attr.getName().equalsIgnoreCase(attributeName)) {
+					return buildAttribute(attr.getName(), attr.getValue());
 				}
 			}
 		}
@@ -1086,20 +1083,14 @@ public class FeedDoc {
 	 * @return the content type for this element. One of TEXT,HTML,XHTML,OTHER
 	 *         or EXTERNAL
 	 */
-	public static ContentType getContentType(List<Attribute> attriubtes) {
+	public static ContentType getContentType(List<Attribute> attributes) {
 		ContentType contentType = ContentType.TEXT; // default
-		if (attriubtes != null) {
-			Iterator<Attribute> attrItr = attriubtes.iterator();
-			while (attrItr.hasNext()) {
-				Attribute attr = attrItr.next();
+		if (attributes != null) {
+			for(Attribute attr: attributes){
 				if (attr.getName().equals("src")) {
 					return ContentType.EXTERNAL;
 				}
-			}
-
-			attrItr = attriubtes.iterator();
-			while (attrItr.hasNext()) {
-				Attribute attr = attrItr.next();
+				
 				if (attr.getName().equals("type")
 						&& attr.getValue().equals("text")) {
 					contentType = ContentType.TEXT;
@@ -1147,9 +1138,7 @@ public class FeedDoc {
 			SortedMap<String, Entry> resortedEntries = new TreeMap<String, Entry>(
 					comparator);
 			SortedMap<String, Entry> currentEntries = feed.getEntries();
-			Iterator<Entry> entryItr = currentEntries.values().iterator();
-			while (entryItr.hasNext()) {
-				Entry entry = (Entry) entryItr.next();
+			for(Entry entry: currentEntries.values()){
 				if (elementClass.getSimpleName().equals("Updated")) {
 					resortedEntries.put(entry.getUpdated().getText(), entry);
 				}
@@ -1170,10 +1159,7 @@ public class FeedDoc {
 			if (feed.getAttributes() == null) {
 				localFeedAttrs.add(attrLocal);
 			} else {
-				List<Attribute> currentAttributes = feed.getAttributes();
-				Iterator<Attribute> attrItr = currentAttributes.iterator();
-				while (attrItr.hasNext()) {
-					Attribute attr = (Attribute) attrItr.next();
+				for(Attribute attr: feed.getAttributes()){
 					if (!attr.equals(attrLocal)) {
 						localFeedAttrs.add(attr);
 					}
@@ -1211,10 +1197,7 @@ public class FeedDoc {
 			if (feed.getExtensions() == null) {
 				localFeedExtensions.add(localFeedExtension);
 			} else {
-				List<Extension> currentExtensions = feed.getExtensions();
-				Iterator<Extension> extensionItr = currentExtensions.iterator();
-				while (extensionItr.hasNext()) {
-					Extension extn = (Extension) extensionItr.next();
+				for(Extension extn: feed.getExtensions()){
 					// if we find an existing sort extension, ignore it.
 					// add all others to the return list.
 					if (!extn.getElementName().equalsIgnoreCase("sort:asc")
@@ -1254,9 +1237,7 @@ public class FeedDoc {
 
 		// check for the first supported extension
 		// currently only sort is implemented.
-		Iterator<Attribute> attrs = feed.getAttributes().iterator();
-		while (attrs.hasNext()) {
-			Attribute attr = (Attribute) attrs.next();
+		for(Attribute attr: feed.getAttributes()){
 			if (attr.equals(xmlns)) {
 				return applySort(feed);
 			}
@@ -1269,14 +1250,9 @@ public class FeedDoc {
 		// only do the work if there are extensions.
 		if (feed.getExtensions() != null) {
 			// look for the first extension element if the namespace exists.
-			Iterator<Extension> extItr = feed.getExtensions().iterator();
-			Iterator<Attribute> attrs;
-			while (extItr.hasNext()) {
-				Extension ext = (Extension) extItr.next();
+			for(Extension ext: feed.getExtensions()){
 				if (ext.getElementName().equals("sort:asc")) {
-					attrs = ext.getAttributes().iterator();
-					while (attrs.hasNext()) {
-						Attribute attr = (Attribute) attrs.next();
+					for(Attribute attr: ext.getAttributes()){
 						if (attr.getName().equalsIgnoreCase("type")) {
 							String value = attr.getValue();
 							if (value.equals("updated")) {
@@ -1294,9 +1270,7 @@ public class FeedDoc {
 						}
 					}
 				} else if (ext.getElementName().equals("sort:desc")) {
-					attrs = ext.getAttributes().iterator();
-					while (attrs.hasNext()) {
-						Attribute attr = (Attribute) attrs.next();
+					for(Attribute attr: ext.getAttributes()){
 						if (attr.getName().equalsIgnoreCase("type")) {
 							String value = attr.getValue();
 							if (value.equals("updated")) {

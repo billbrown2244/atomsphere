@@ -24,7 +24,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package com.colorful.atom;
 
 import java.text.SimpleDateFormat;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedMap;
@@ -308,12 +307,9 @@ class FeedReader {
 
 	boolean containsXHTML(List<Attribute> attributes) {
 		if (attributes != null) {
-			Iterator<Attribute> attrsItr = attributes.iterator();
-			// look for the xhtml type.
-			while (attrsItr.hasNext()) {
-				Attribute attribute = (Attribute) attrsItr.next();
-				if (attribute.getName().equals("type")
-						&& attribute.getValue().equals("xhtml")) {
+			for(Attribute attr: attributes){
+				if (attr.getName().equals("type")
+						&& attr.getValue().equals("xhtml")) {
 					return true;
 				}
 			}
@@ -481,9 +477,7 @@ class FeedReader {
 					List<Attribute> attributes = getAttributes(reader, null);
 					// add the attributes
 					if (attributes != null && attributes.size() > 0) {
-						Iterator<Attribute> attrItr = attributes.iterator();
-						while (attrItr.hasNext()) {
-							Attribute attr = (Attribute) attrItr.next();
+						for(Attribute attr: attributes){
 							xhtml.append(" " + attr.getName() + "="
 									+ attr.getValue());
 						}

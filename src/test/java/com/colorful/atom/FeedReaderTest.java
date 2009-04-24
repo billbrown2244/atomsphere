@@ -24,7 +24,6 @@ import java.beans.XMLDecoder;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.StringReader;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
 
@@ -139,10 +138,9 @@ public class FeedReaderTest {
 		XMLDecoder decode = new XMLDecoder(new BufferedInputStream(new FileInputStream("src/test/resources/atomConfig.xml")));
 		configFile = (Map<String, String>)decode.readObject();
 		decode.close();
-		Iterator<String> feeds = configFile.values().iterator();
-		while(feeds.hasNext()){
+		for (String feedName : configFile.values()) {
 			//there should only be 1 element.
-			reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(feeds.next()));
+			reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(feedName));
 		}
 		reader2 = XMLInputFactory.newInstance().createXMLStreamReader(new FileInputStream("src/test/resources/flat.xml"));
 		reader3 = XMLInputFactory.newInstance().createXMLStreamReader(new FileInputStream("src/test/resources/dump.xml"));

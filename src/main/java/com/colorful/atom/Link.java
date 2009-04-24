@@ -24,7 +24,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package com.colorful.atom;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -72,9 +71,7 @@ public class Link implements Serializable {
 			this.attributes = new LinkedList<Attribute>();
 		} else {
 			this.attributes = new LinkedList<Attribute>();
-			Iterator<Attribute> attrItr = attributes.iterator();
-			while (attrItr.hasNext()) {
-				Attribute attr = attrItr.next();
+			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
 				if (!FeedDoc.isAtomCommonAttribute(attr)
 						&& !FeedDoc.isUndefinedAttribute(attr)
@@ -120,9 +117,7 @@ public class Link implements Serializable {
 			return null;
 		}
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
-		Iterator<Attribute> attrItr = this.attributes.iterator();
-		while (attrItr.hasNext()) {
-			Attribute attr = attrItr.next();
+		for (Attribute attr : this.attributes) {
 			attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
 		}
 		return attrsCopy;

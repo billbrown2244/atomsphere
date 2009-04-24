@@ -33,7 +33,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor,
  */
 package com.colorful.atom;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.SortedMap;
 
@@ -47,17 +46,14 @@ import javax.xml.stream.XMLStreamWriter;
  */
 class FeedWriter {
 
-	// uded internally by FeedDoc to write feed to output streams.
+	// used internally by FeedDoc to write feed to output streams.
 	void writeFeed(XMLStreamWriter writer, Feed feed) throws Exception {
 
 		// open the feed element
 		writer.writeStartElement("feed");
 		if (feed.getAttributes() != null) {
-			Iterator<Attribute> feedAttrs = feed.getAttributes().iterator();
-			// write the attributes
-			while (feedAttrs.hasNext()) {
-				Attribute feedAttr = (Attribute) feedAttrs.next();
-				writer.writeAttribute(feedAttr.getName(), feedAttr.getValue());
+			for (Attribute attr : feed.getAttributes()) {
+				writer.writeAttribute(attr.getName(), attr.getValue());
 			}
 		}
 		// write the id (REQUIRED)
@@ -121,16 +117,13 @@ class FeedWriter {
 		boolean wrapInXhtmlDiv = false;
 		writer.writeStartElement("subtitle");
 		if (subtitle.getAttributes() != null) {
-			Iterator<Attribute> feedAttrs = subtitle.getAttributes().iterator();
-			// write the attributes
-			while (feedAttrs.hasNext()) {
-				Attribute feedAttr = (Attribute) feedAttrs.next();
-				writer.writeAttribute(feedAttr.getName(), feedAttr.getValue());
+			for (Attribute attr : subtitle.getAttributes()) {
+				writer.writeAttribute(attr.getName(), attr.getValue());
 
 				// check to see if we need to
 				// wrap the text in a an <xhtml:div> tag.
-				if (feedAttr.getName().equals("type")
-						&& feedAttr.getValue().equals("xhtml")) {
+				if (attr.getName().equals("type")
+						&& attr.getValue().equals("xhtml")) {
 					wrapInXhtmlDiv = true;
 				}
 			}
@@ -152,12 +145,8 @@ class FeedWriter {
 			throws Exception {
 		writer.writeStartElement("generator");
 		if (generator.getAttributes() != null) {
-			Iterator<Attribute> feedAttrs = generator.getAttributes()
-					.iterator();
-			// write the attributes
-			while (feedAttrs.hasNext()) {
-				Attribute feedAttr = (Attribute) feedAttrs.next();
-				writer.writeAttribute(feedAttr.getName(), feedAttr.getValue());
+			for (Attribute attr : generator.getAttributes()) {
+				writer.writeAttribute(attr.getName(), attr.getValue());
 			}
 			writer.writeCharacters(generator.getText());
 		}
@@ -167,11 +156,8 @@ class FeedWriter {
 	void writeID(XMLStreamWriter writer, Id id) throws Exception {
 		writer.writeStartElement("id");
 		if (id.getAttributes() != null) {
-			Iterator<Attribute> feedAttrs = id.getAttributes().iterator();
-			// write the attributes
-			while (feedAttrs.hasNext()) {
-				Attribute feedAttr = (Attribute) feedAttrs.next();
-				writer.writeAttribute(feedAttr.getName(), feedAttr.getValue());
+			for (Attribute attr : id.getAttributes()) {
+				writer.writeAttribute(attr.getName(), attr.getValue());
 			}
 		}
 		writer.writeCharacters(id.getAtomUri());
@@ -188,16 +174,13 @@ class FeedWriter {
 		boolean wrapInXhtmlDiv = false;
 		writer.writeStartElement("title");
 		if (title.getAttributes() != null) {
-			Iterator<Attribute> feedAttrs = title.getAttributes().iterator();
-			// write the attributes
-			while (feedAttrs.hasNext()) {
-				Attribute feedAttr = (Attribute) feedAttrs.next();
-				writer.writeAttribute(feedAttr.getName(), feedAttr.getValue());
+			for (Attribute attr : title.getAttributes()) {
+				writer.writeAttribute(attr.getName(), attr.getValue());
 
 				// check to see if we need to wrap the
 				// text in a an <xhtml:div> tag.
-				if (feedAttr.getName().equals("type")
-						&& feedAttr.getValue().equals("xhtml")) {
+				if (attr.getName().equals("type")
+						&& attr.getValue().equals("xhtml")) {
 					wrapInXhtmlDiv = true;
 				}
 			}
@@ -311,18 +294,11 @@ class FeedWriter {
 	void writeAuthors(XMLStreamWriter writer, List<Author> authors)
 			throws Exception {
 		// loop through and print out each author.
-		Iterator<Author> authorList = authors.iterator();
-		while (authorList.hasNext()) {
-			Author author = authorList.next();
+		for (Author author : authors) {
 			writer.writeStartElement("author");
 			if (author.getAttributes() != null) {
-				Iterator<Attribute> feedAttrs = author.getAttributes()
-						.iterator();
-				// write the attributes
-				while (feedAttrs.hasNext()) {
-					Attribute feedAttr = (Attribute) feedAttrs.next();
-					writer.writeAttribute(feedAttr.getName(), feedAttr
-							.getValue());
+				for (Attribute attr : author.getAttributes()) {
+					writer.writeAttribute(attr.getName(), attr.getValue());
 				}
 			}
 			writeName(writer, author.getName());
@@ -361,18 +337,11 @@ class FeedWriter {
 	void writeContributors(XMLStreamWriter writer,
 			List<Contributor> contributors) throws Exception {
 		// loop through and print out each contributor.
-		Iterator<Contributor> contributorList = contributors.iterator();
-		while (contributorList.hasNext()) {
-			Contributor contributor = (Contributor) contributorList.next();
+		for (Contributor contributor : contributors) {
 			writer.writeStartElement("contributor");
 			if (contributor.getAttributes() != null) {
-				Iterator<Attribute> feedAttrs = contributor.getAttributes()
-						.iterator();
-				// write the attributes
-				while (feedAttrs.hasNext()) {
-					Attribute feedAttr = (Attribute) feedAttrs.next();
-					writer.writeAttribute(feedAttr.getName(), feedAttr
-							.getValue());
+				for (Attribute attr : contributor.getAttributes()) {
+					writer.writeAttribute(attr.getName(), attr.getValue());
 				}
 			}
 			writeName(writer, contributor.getName());
@@ -393,16 +362,13 @@ class FeedWriter {
 		boolean wrapInXhtmlDiv = false;
 		writer.writeStartElement("rights");
 		if (rights.getAttributes() != null) {
-			Iterator<Attribute> feedAttrs = rights.getAttributes().iterator();
-			// write the attributes
-			while (feedAttrs.hasNext()) {
-				Attribute feedAttr = (Attribute) feedAttrs.next();
-				writer.writeAttribute(feedAttr.getName(), feedAttr.getValue());
+			for (Attribute attr : rights.getAttributes()) {
+				writer.writeAttribute(attr.getName(), attr.getValue());
 
 				// check to see if we need to
 				// wrap the text in a an <xhtml:div> tag.
-				if (feedAttr.getName().equals("type")
-						&& feedAttr.getValue().equals("xhtml")) {
+				if (attr.getName().equals("type")
+						&& attr.getValue().equals("xhtml")) {
 					wrapInXhtmlDiv = true;
 				}
 			}
@@ -422,11 +388,8 @@ class FeedWriter {
 	void writeLogo(XMLStreamWriter writer, Logo logo) throws Exception {
 		writer.writeStartElement("logo");
 		if (logo.getAttributes() != null) {
-			Iterator<Attribute> feedAttrs = logo.getAttributes().iterator();
-			// write the attributes
-			while (feedAttrs.hasNext()) {
-				Attribute feedAttr = (Attribute) feedAttrs.next();
-				writer.writeAttribute(feedAttr.getName(), feedAttr.getValue());
+			for (Attribute attr : logo.getAttributes()) {
+				writer.writeAttribute(attr.getName(), attr.getValue());
 			}
 		}
 		writer.writeCharacters(logo.getAtomUri());
@@ -436,11 +399,8 @@ class FeedWriter {
 	void writeIcon(XMLStreamWriter writer, Icon icon) throws Exception {
 		writer.writeStartElement("icon");
 		if (icon.getAttributes() != null) {
-			Iterator<Attribute> feedAttrs = icon.getAttributes().iterator();
-			// write the attributes
-			while (feedAttrs.hasNext()) {
-				Attribute feedAttr = (Attribute) feedAttrs.next();
-				writer.writeAttribute(feedAttr.getName(), feedAttr.getValue());
+			for (Attribute attr : icon.getAttributes()) {
+				writer.writeAttribute(attr.getName(), attr.getValue());
 			}
 		}
 		writer.writeCharacters(icon.getAtomUri());
@@ -450,18 +410,11 @@ class FeedWriter {
 	void writeCategories(XMLStreamWriter writer, List<Category> categories)
 			throws Exception {
 
-		Iterator<Category> categoryList = categories.iterator();
-		while (categoryList.hasNext()) {
-			Category category = (Category) categoryList.next();
+		for (Category category : categories) {
 			writer.writeEmptyElement("category");
 			if (category.getAttributes() != null) {
-				Iterator<Attribute> feedAttrs = category.getAttributes()
-						.iterator();
-				// write the attributes
-				while (feedAttrs.hasNext()) {
-					Attribute feedAttr = (Attribute) feedAttrs.next();
-					writer.writeAttribute(feedAttr.getName(), feedAttr
-							.getValue());
+				for (Attribute attr : category.getAttributes()) {
+					writer.writeAttribute(attr.getName(), attr.getValue());
 				}
 			}
 		}
@@ -469,17 +422,11 @@ class FeedWriter {
 
 	void writeLinks(XMLStreamWriter writer, List<Link> links) throws Exception {
 
-		Iterator<Link> linksList = links.iterator();
-		while (linksList.hasNext()) {
-			Link link = (Link) linksList.next();
+		for (Link link : links) {
 			writer.writeEmptyElement("link");
 			if (link.getAttributes() != null) {
-				Iterator<Attribute> feedAttrs = link.getAttributes().iterator();
-				// write the attributes
-				while (feedAttrs.hasNext()) {
-					Attribute feedAttr = (Attribute) feedAttrs.next();
-					writer.writeAttribute(feedAttr.getName(), feedAttr
-							.getValue());
+				for (Attribute attr : link.getAttributes()) {
+					writer.writeAttribute(attr.getName(), attr.getValue());
 				}
 			}
 		}
@@ -487,9 +434,7 @@ class FeedWriter {
 
 	void writeExtensions(XMLStreamWriter writer, List<Extension> extensions)
 			throws Exception {
-		Iterator<Extension> extensionsList = extensions.iterator();
-		while (extensionsList.hasNext()) {
-			Extension extension = (Extension) extensionsList.next();
+		for (Extension extension : extensions) {
 
 			// if there is no content, then
 			// write an empty extension element.
@@ -505,13 +450,8 @@ class FeedWriter {
 					writer.writeEmptyElement(prefix, localName, "");
 				}
 				if (extension.getAttributes() != null) {
-					Iterator<Attribute> feedAttrs = extension.getAttributes()
-							.iterator();
-					// write the attributes
-					while (feedAttrs.hasNext()) {
-						Attribute feedAttr = (Attribute) feedAttrs.next();
-						writer.writeAttribute(feedAttr.getName(), feedAttr
-								.getValue());
+					for (Attribute attr : extension.getAttributes()) {
+						writer.writeAttribute(attr.getName(), attr.getValue());
 					}
 				}
 			} else {
@@ -526,13 +466,8 @@ class FeedWriter {
 					writer.writeStartElement(prefix, localName, "");
 				}
 				if (extension.getAttributes() != null) {
-					Iterator<Attribute> feedAttrs = extension.getAttributes()
-							.iterator();
-					// write the attributes
-					while (feedAttrs.hasNext()) {
-						Attribute feedAttr = (Attribute) feedAttrs.next();
-						writer.writeAttribute(feedAttr.getName(), feedAttr
-								.getValue());
+					for (Attribute attr : extension.getAttributes()) {
+						writer.writeAttribute(attr.getName(), attr.getValue());
 					}
 				}
 				// add the content.
@@ -548,17 +483,11 @@ class FeedWriter {
 			throws Exception {
 
 		// print out the entries.
-		Iterator<Entry> entryItr = entries.values().iterator();
-		while (entryItr.hasNext()) {
-			Entry entry = (Entry) entryItr.next();
+		for (Entry entry : entries.values()) {
 			writer.writeStartElement("entry");
 			if (entry.getAttributes() != null) {
-				Iterator<Attribute> entryAttrs = entry.getAttributes()
-						.iterator();
-				// write the attributes
-				while (entryAttrs.hasNext()) {
-					Attribute entryAttr = (Attribute) entryAttrs.next();
-					writer.writeAttribute(entryAttr.getName(), entryAttr
+				for (Attribute attr : entry.getAttributes()) {
+					writer.writeAttribute(attr.getName(), attr
 							.getValue());
 				}
 			}
@@ -617,16 +546,13 @@ class FeedWriter {
 		boolean wrapInXhtmlDiv = false;
 		writer.writeStartElement("summary");
 		if (summary.getAttributes() != null) {
-			Iterator<Attribute> feedAttrs = summary.getAttributes().iterator();
-			// write the attributes
-			while (feedAttrs.hasNext()) {
-				Attribute feedAttr = (Attribute) feedAttrs.next();
-				writer.writeAttribute(feedAttr.getName(), feedAttr.getValue());
+			for (Attribute attr : summary.getAttributes()) {
+				writer.writeAttribute(attr.getName(), attr.getValue());
 
 				// check to see if we need to
 				// wrap the text in a an <xhtml:div> tag.
-				if (feedAttr.getName().equals("type")
-						&& feedAttr.getValue().equals("xhtml")) {
+				if (attr.getName().equals("type")
+						&& attr.getValue().equals("xhtml")) {
 					wrapInXhtmlDiv = true;
 				}
 			}
@@ -657,12 +583,8 @@ class FeedWriter {
 		boolean externalLink = false;
 		boolean wrapInXhtmlDiv = false;
 		if (content.getAttributes() != null) {
-			Iterator<Attribute> contentAttrs = content.getAttributes()
-					.iterator();
-
-			while (contentAttrs.hasNext()) {
-				Attribute contentAttr = (Attribute) contentAttrs.next();
-				if (contentAttr.getName().equals("src")) {
+			for (Attribute attr : content.getAttributes()) {
+				if (attr.getName().equals("src")) {
 					externalLink = true;
 					writer.writeEmptyElement("content");
 					break;
@@ -674,16 +596,14 @@ class FeedWriter {
 			}
 
 			// write the attributes
-			contentAttrs = content.getAttributes().iterator();
-			while (contentAttrs.hasNext()) {
-				Attribute contentAttr = (Attribute) contentAttrs.next();
-				writer.writeAttribute(contentAttr.getName(), contentAttr
+			for (Attribute attr : content.getAttributes()) {
+				writer.writeAttribute(attr.getName(), attr
 						.getValue());
 
 				// check to see if we need to
 				// wrap the text in a an <xhtml:div> tag.
-				if (contentAttr.getName().equals("type")
-						&& contentAttr.getValue().equals("xhtml")) {
+				if (attr.getName().equals("type")
+						&& attr.getValue().equals("xhtml")) {
 					wrapInXhtmlDiv = true;
 				}
 			}
@@ -711,11 +631,8 @@ class FeedWriter {
 		// open the source element
 		writer.writeStartElement("source");
 		if (source.getAttributes() != null) {
-			Iterator<Attribute> sourceAttrs = source.getAttributes().iterator();
-			// write the attributes
-			while (sourceAttrs.hasNext()) {
-				Attribute sourceAttr = (Attribute) sourceAttrs.next();
-				writer.writeAttribute(sourceAttr.getName(), sourceAttr
+			for (Attribute attr : source.getAttributes()) {
+				writer.writeAttribute(attr.getName(), attr
 						.getValue());
 			}
 		}

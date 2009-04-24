@@ -23,7 +23,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package com.colorful.atom;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -102,10 +101,7 @@ public class Entry implements Serializable {
 		} else {
 
 			if (content.getAttributes() != null) {
-				Iterator<Attribute> attrsItr = content.getAttributes()
-						.iterator();
-				while (attrsItr.hasNext()) {
-					Attribute attr = (Attribute) attrsItr.next();
+				for(Attribute attr: content.getAttributes()){
 					// check for src attribute
 					if (attr.getName().equals("src") && summary == null) {
 						throw new AtomSpecException(

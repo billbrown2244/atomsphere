@@ -23,7 +23,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package com.colorful.atom;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -92,9 +91,7 @@ class AtomPersonConstruct implements Serializable {
 			this.attributes = null;
 		} else {
 			this.attributes = new LinkedList<Attribute>();
-			Iterator<Attribute> attrItr = attributes.iterator();
-			while (attrItr.hasNext()) {
-				Attribute attr = attrItr.next();
+			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
 				if (!FeedDoc.isAtomCommonAttribute(attr)
 						&& !FeedDoc.isUndefinedAttribute(attr)) {
@@ -111,9 +108,7 @@ class AtomPersonConstruct implements Serializable {
 			this.extensions = null;
 		} else {
 			this.extensions = new LinkedList<Extension>();
-			Iterator<Extension> extItr = extensions.iterator();
-			while (extItr.hasNext()) {
-				Extension extension = extItr.next();
+			for (Extension extension : extensions) {
 				this.extensions.add(new Extension(extension.getElementName(),
 						extension.getAttributes(), extension.getContent()));
 			}
@@ -130,9 +125,7 @@ class AtomPersonConstruct implements Serializable {
 			return null;
 		}
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
-		Iterator<Attribute> attrItr = this.attributes.iterator();
-		while (attrItr.hasNext()) {
-			Attribute attr = attrItr.next();
+		for (Attribute attr : this.attributes) {
 			attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
 		}
 		return attrsCopy;
@@ -171,9 +164,7 @@ class AtomPersonConstruct implements Serializable {
 			return null;
 		}
 		List<Extension> extnsCopy = new LinkedList<Extension>();
-		Iterator<Extension> extItr = extensions.iterator();
-		while (extItr.hasNext()) {
-			Extension extension = extItr.next();
+		for (Extension extension : this.extensions) {
 			extnsCopy.add(new Extension(extension.getElementName(), extension
 					.getAttributes(), extension.getContent()));
 		}

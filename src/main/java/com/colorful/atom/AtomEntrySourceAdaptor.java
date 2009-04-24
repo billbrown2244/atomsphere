@@ -23,7 +23,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package com.colorful.atom;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,7 +30,7 @@ import java.util.List;
  * This class serves as an adaptor for sharing the implementation of the comment
  * elements between the entry and source element.
  * 
- * @author billbrown
+ * @author Bill Brown
  * 
  */
 class AtomEntrySourceAdaptor implements Serializable {
@@ -79,9 +78,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 			this.authors = null;
 		} else {
 			this.authors = new LinkedList<Author>();
-			Iterator<Author> authItr = authors.iterator();
-			while (authItr.hasNext()) {
-				Author author = authItr.next();
+			for (Author author : authors) {
 				this.authors.add(new Author(author.getName(), author.getUri(),
 						author.getEmail(), author.getAttributes(), author
 								.getExtensions()));
@@ -92,9 +89,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 			this.categories = null;
 		} else {
 			this.categories = new LinkedList<Category>();
-			Iterator<Category> catItr = categories.iterator();
-			while (catItr.hasNext()) {
-				Category category = catItr.next();
+			for (Category category : categories) {
 				this.categories.add(new Category(category.getAttributes(),
 						category.getContent()));
 			}
@@ -104,9 +99,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 			this.contributors = null;
 		} else {
 			this.contributors = new LinkedList<Contributor>();
-			Iterator<Contributor> contribItr = contributors.iterator();
-			while (contribItr.hasNext()) {
-				Contributor contributor = contribItr.next();
+			for (Contributor contributor : contributors) {
 				this.contributors.add(new Contributor(contributor.getName(),
 						contributor.getUri(), contributor.getEmail(),
 						contributor.getAttributes(), contributor
@@ -118,9 +111,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 			this.links = null;
 		} else {
 			this.links = new LinkedList<Link>();
-			Iterator<Link> linkItr = links.iterator();
-			while (linkItr.hasNext()) {
-				Link link = linkItr.next();
+			for (Link link : links) {
 				this.links
 						.add(new Link(link.getAttributes(), link.getContent()));
 			}
@@ -130,9 +121,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 			this.attributes = null;
 		} else {
 			this.attributes = new LinkedList<Attribute>();
-			Iterator<Attribute> attrItr = attributes.iterator();
-			while (attrItr.hasNext()) {
-				Attribute attr = attrItr.next();
+			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
 				if (!FeedDoc.isAtomCommonAttribute(attr)
 						&& !FeedDoc.isUndefinedAttribute(attr)) {
@@ -148,9 +137,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 			this.extensions = null;
 		} else {
 			this.extensions = new LinkedList<Extension>();
-			Iterator<Extension> extItr = extensions.iterator();
-			while (extItr.hasNext()) {
-				Extension extension = extItr.next();
+			for (Extension extension : extensions) {
 				this.extensions.add(new Extension(extension.getElementName(),
 						extension.getAttributes(), extension.getContent()));
 			}
@@ -166,9 +153,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 			return null;
 		}
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
-		Iterator<Attribute> attrItr = this.attributes.iterator();
-		while (attrItr.hasNext()) {
-			Attribute attr = attrItr.next();
+		for (Attribute attr : this.attributes) {
 			attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
 		}
 		return attrsCopy;
@@ -183,9 +168,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 			return null;
 		}
 		List<Author> authrosCopy = new LinkedList<Author>();
-		Iterator<Author> authItr = authors.iterator();
-		while (authItr.hasNext()) {
-			Author author = authItr.next();
+		for (Author author : authors) {
 			try {
 				authrosCopy.add(new Author(author.getName(), author.getUri(),
 						author.getEmail(), author.getAttributes(), author
@@ -209,9 +192,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 			return null;
 		}
 		List<Category> catsCopy = new LinkedList<Category>();
-		Iterator<Category> catItr = categories.iterator();
-		while (catItr.hasNext()) {
-			Category category = catItr.next();
+		for (Category category : this.categories) {
 			try {
 				catsCopy.add(new Category(category.getAttributes(), category
 						.getContent()));
@@ -234,9 +215,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 			return null;
 		}
 		List<Contributor> contsCopy = new LinkedList<Contributor>();
-		Iterator<Contributor> contribItr = contributors.iterator();
-		while (contribItr.hasNext()) {
-			Contributor contributor = contribItr.next();
+		for (Contributor contributor : this.contributors) {
 			try {
 				contsCopy.add(new Contributor(contributor.getName(),
 						contributor.getUri(), contributor.getEmail(),
@@ -261,9 +240,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 			return null;
 		}
 		List<Extension> extsCopy = new LinkedList<Extension>();
-		Iterator<Extension> extItr = extensions.iterator();
-		while (extItr.hasNext()) {
-			Extension extension = extItr.next();
+		for (Extension extension : this.extensions) {
 			extsCopy.add(new Extension(extension.getElementName(), extension
 					.getAttributes(), extension.getContent()));
 		}
@@ -279,9 +256,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 			return null;
 		}
 		List<Link> linksCopy = new LinkedList<Link>();
-		Iterator<Link> linkItr = links.iterator();
-		while (linkItr.hasNext()) {
-			Link link = linkItr.next();
+		for (Link link : this.links) {
 			try {
 				linksCopy
 						.add(new Link(link.getAttributes(), link.getContent()));
