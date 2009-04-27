@@ -438,7 +438,8 @@ class FeedWriter {
 
 			// if there is no content, then
 			// write an empty extension element.
-			if (extension.getContent() == null) {
+			if (extension.getContent() == null
+					|| extension.getContent().trim().equals("")) {
 				String elementName = extension.getElementName();
 				if (elementName.indexOf(":") == -1) {
 					writer.writeEmptyElement(elementName);

@@ -79,33 +79,33 @@ class FeedReader {
 
 			case XMLStreamConstants.START_ELEMENT:
 				// call each feed elements read method depending on the name
-				if (reader.getLocalName().equals("feed")) {
+				if (reader.getName().toString().equals("feed")) {
 					attributes = getAttributes(reader, attributes);
-				} else if (reader.getLocalName().equals("author")) {
+				} else if (reader.getName().toString().equals("author")) {
 					authors = readAuthor(reader, authors);
-				} else if (reader.getLocalName().equals("category")) {
+				} else if (reader.getName().toString().equals("category")) {
 					categories = readCategory(reader, categories);
-				} else if (reader.getLocalName().equals("contributor")) {
+				} else if (reader.getName().toString().equals("contributor")) {
 					contributors = readContributor(reader, contributors);
-				} else if (reader.getLocalName().equals("generator")) {
+				} else if (reader.getName().toString().equals("generator")) {
 					generator = readGenerator(reader);
-				} else if (reader.getLocalName().equals("icon")) {
+				} else if (reader.getName().toString().equals("icon")) {
 					icon = readIcon(reader);
-				} else if (reader.getLocalName().equals("id")) {
+				} else if (reader.getName().toString().equals("id")) {
 					id = readId(reader);
-				} else if (reader.getLocalName().equals("link")) {
+				} else if (reader.getName().toString().equals("link")) {
 					links = readLink(reader, links);
-				} else if (reader.getLocalName().equals("logo")) {
+				} else if (reader.getName().toString().equals("logo")) {
 					logo = readLogo(reader);
-				} else if (reader.getLocalName().equals("rights")) {
+				} else if (reader.getName().toString().equals("rights")) {
 					rights = readRights(reader);
-				} else if (reader.getLocalName().equals("subtitle")) {
+				} else if (reader.getName().toString().equals("subtitle")) {
 					subtitle = readSubtitle(reader);
-				} else if (reader.getLocalName().equals("title")) {
+				} else if (reader.getName().toString().equals("title")) {
 					title = readTitle(reader);
-				} else if (reader.getLocalName().equals("updated")) {
+				} else if (reader.getName().toString().equals("updated")) {
 					updated = readUpdated(reader);
-				} else if (reader.getLocalName().equals("entry")) {
+				} else if (reader.getName().toString().equals("entry")) {
 					entries = readEntry(reader, entries);
 				} else {// extension
 					extensions = readExtension(reader, extensions);
@@ -194,7 +194,7 @@ class FeedReader {
 		if (extensions == null) {
 			extensions = new LinkedList<Extension>();
 		}
-		boolean breakOut = false;
+		
 
 		String elementName = null;
 		String prefix = reader.getPrefix();
@@ -203,31 +203,40 @@ class FeedReader {
 		} else {
 			elementName = reader.getLocalName();
 		}
-
+		
+		StringBuffer extText = new StringBuffer();
 		List<Attribute> attributes = getAttributes(reader, null);
 
 		while (reader.hasNext()) {
+			boolean breakOut = false;
 			switch (reader.next()) {
-			case XMLStreamConstants.START_ELEMENT:
-				extensions.add(FeedDoc.buildExtension(elementName, attributes,
-						reader.getElementText()));
+			case XMLStreamConstants.START_ELEMENT:				
+				extensions = readExtension(reader,null);
 				break;
 
 			case XMLStreamConstants.END_ELEMENT:
-				if (reader.getLocalName().equals(elementName)) {
+				String elementNameEnd = null;
+				String prefixEnd = reader.getPrefix();				
+				if (prefixEnd != null && !prefixEnd.equals("")) {
+					elementNameEnd = prefixEnd + ":" + reader.getLocalName();
+				} else {
+					elementNameEnd = reader.getLocalName();
+				}
+				if (elementNameEnd.equals(elementName)) {
 					breakOut = true;
 				} else {
 					reader.next();
 				}
 				break;
-			case XMLStreamConstants.CHARACTERS:
-
+			default:
+				extText = extText.append(reader.getText());
 			}
 			if (breakOut) {
 				break;
 			}
 		}
-
+		extensions.add(FeedDoc.buildExtension(elementName, attributes,
+				extText.toString()));
 		return extensions;
 	}
 
@@ -237,8 +246,7 @@ class FeedReader {
 		if (entries == null) {
 			entries = new TreeMap<String, Entry>();
 		}
-		boolean breakOut = false;
-
+		
 		Id id = null;
 		Title title = null;
 		Updated updated = null;
@@ -257,6 +265,7 @@ class FeedReader {
 		attributes = getAttributes(reader, attributes);
 
 		while (reader.hasNext()) {
+			boolean breakOut = false;
 			switch (reader.next()) {
 
 			case XMLStreamConstants.START_DOCUMENT:
@@ -267,29 +276,29 @@ class FeedReader {
 			case XMLStreamConstants.START_ELEMENT:
 
 				// call each feed elements read method depending on the name
-				if (reader.getLocalName().equals("id")) {
+				if (reader.getName().toString().equals("id")) {
 					id = readId(reader);
-				} else if (reader.getLocalName().equals("author")) {
+				} else if (reader.getName().toString().equals("author")) {
 					authors = readAuthor(reader, authors);
-				} else if (reader.getLocalName().equals("category")) {
+				} else if (reader.getName().toString().equals("category")) {
 					categories = readCategory(reader, categories);
-				} else if (reader.getLocalName().equals("contributor")) {
+				} else if (reader.getName().toString().equals("contributor")) {
 					contributors = readContributor(reader, contributors);
-				} else if (reader.getLocalName().equals("content")) {
+				} else if (reader.getName().toString().equals("content")) {
 					content = readContent(reader);
-				} else if (reader.getLocalName().equals("link")) {
+				} else if (reader.getName().toString().equals("link")) {
 					links = readLink(reader, links);
-				} else if (reader.getLocalName().equals("published")) {
+				} else if (reader.getName().toString().equals("published")) {
 					published = readPublished(reader);
-				} else if (reader.getLocalName().equals("rights")) {
+				} else if (reader.getName().toString().equals("rights")) {
 					rights = readRights(reader);
-				} else if (reader.getLocalName().equals("source")) {
+				} else if (reader.getName().toString().equals("source")) {
 					source = readSource(reader);
-				} else if (reader.getLocalName().equals("summary")) {
+				} else if (reader.getName().toString().equals("summary")) {
 					summary = readSummary(reader);
-				} else if (reader.getLocalName().equals("title")) {
+				} else if (reader.getName().toString().equals("title")) {
 					title = readTitle(reader);
-				} else if (reader.getLocalName().equals("updated")) {
+				} else if (reader.getName().toString().equals("updated")) {
 					updated = readUpdated(reader);
 				} else {// extension
 					extensions = readExtension(reader, extensions);
@@ -365,29 +374,29 @@ class FeedReader {
 
 			case XMLStreamConstants.START_ELEMENT:
 				// call each feed elements read method depending on the name
-				if (reader.getLocalName().equals("author")) {
+				if (reader.getName().toString().equals("author")) {
 					authors = readAuthor(reader, authors);
-				} else if (reader.getLocalName().equals("category")) {
+				} else if (reader.getName().toString().equals("category")) {
 					categories = readCategory(reader, categories);
-				} else if (reader.getLocalName().equals("contributor")) {
+				} else if (reader.getName().toString().equals("contributor")) {
 					contributors = readContributor(reader, contributors);
-				} else if (reader.getLocalName().equals("generator")) {
+				} else if (reader.getName().toString().equals("generator")) {
 					generator = readGenerator(reader);
-				} else if (reader.getLocalName().equals("icon")) {
+				} else if (reader.getName().toString().equals("icon")) {
 					icon = readIcon(reader);
-				} else if (reader.getLocalName().equals("id")) {
+				} else if (reader.getName().toString().equals("id")) {
 					id = readId(reader);
-				} else if (reader.getLocalName().equals("link")) {
+				} else if (reader.getName().toString().equals("link")) {
 					links = readLink(reader, links);
-				} else if (reader.getLocalName().equals("logo")) {
+				} else if (reader.getName().toString().equals("logo")) {
 					logo = readLogo(reader);
-				} else if (reader.getLocalName().equals("rights")) {
+				} else if (reader.getName().toString().equals("rights")) {
 					rights = readRights(reader);
-				} else if (reader.getLocalName().equals("subtitle")) {
+				} else if (reader.getName().toString().equals("subtitle")) {
 					subtitle = readSubtitle(reader);
-				} else if (reader.getLocalName().equals("title")) {
+				} else if (reader.getName().toString().equals("title")) {
 					title = readTitle(reader);
-				} else if (reader.getLocalName().equals("updated")) {
+				} else if (reader.getName().toString().equals("updated")) {
 					updated = readUpdated(reader);
 				} else {// extension
 					extensions = readExtension(reader, extensions);
@@ -640,11 +649,11 @@ class FeedReader {
 			switch (reader.next()) {
 			case XMLStreamConstants.START_ELEMENT:
 
-				if (reader.getLocalName().equals("name")) {
+				if (reader.getName().toString().equals("name")) {
 					name = FeedDoc.buildName(reader.getElementText());
-				} else if (reader.getLocalName().equals("uri")) {
+				} else if (reader.getName().toString().equals("uri")) {
 					uri = FeedDoc.buildURI(reader.getElementText());
-				} else if (reader.getLocalName().equals("email")) {
+				} else if (reader.getName().toString().equals("email")) {
 					email = FeedDoc.buildEmail(reader.getElementText());
 				} else {
 					if (extensions == null) {
