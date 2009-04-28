@@ -70,6 +70,27 @@ public class FeedDocTest {
 			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
 			+ "<title>test entry</title>" + "</entry>";
 
+	private String expectedFeed1 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+			"<feed xmlns=\"http://www.w3.org/2005/Atom\">" +
+			" <title>Example Feed</title>" +
+			" <subtitle>A subtitle.</subtitle>" +
+			" <link href=\"http://example.org/feed/\" rel=\"self\"/>" +
+			" <link href=\"http://example.org/\"/>" +
+			" <updated>2003-12-13T18:30:02Z</updated>" +
+			" <author>" +
+			"   <name>John Doe</name>" +
+			"   <email>johndoe@example.com</email>" +
+			" </author>" +
+			" <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>" +
+			" <entry>" +
+			"   <title>Atom-Powered Robots Run Amok</title>" +
+			"   <link href=\"http://example.org/2003/12/13/atom03\"/>" +
+			"   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>" +
+			"   <updated>2003-12-13T18:30:02Z</updated>" +
+			"   <summary>Some text.</summary>" +
+			" </entry>" +
+			"</feed>";
+	
 	private Entry entry1, entry2, entry3;
 
 	@Before
@@ -116,18 +137,19 @@ public class FeedDocTest {
 
 	@After
 	public void tearDown() throws Exception {
-		new File("out.xml").deleteOnExit();
-		new File("out2.xml").deleteOnExit();
+		//new File("out.xml").deleteOnExit();
+		//new File("out2.xml").deleteOnExit();
 	}
 
 	@Test
 	public void testWriteFeedDocOutputStreamFeedStringString() {
 		try {
-			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
-					"http://www.nppa.org/news_and_events/news/rss/atom.xml"));
-			FeedDoc.writeFeedDoc(new FileOutputStream("out2.xml"), feed1,
+			feed1 = FeedDoc
+					.readFeedToBean(new java.net.URL(
+							"http://www.rand.org/news/press/index.xml"));
+			FeedDoc.writeFeedDoc(new FileOutputStream("out1.xml"), feed1,
 					FeedDoc.encoding, FeedDoc.xml_version);
-			Feed feed2 = FeedDoc.readFeedToBean(new File("out2.xml"));
+			Feed feed2 = FeedDoc.readFeedToBean(new File("out1.xml"));
 			assertNotNull(feed2);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -144,17 +166,18 @@ public class FeedDocTest {
 	public void testWriteFeedDocXMLStreamWriterFeedStringString() {
 		try {
 			// pretty print version.
-			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
-			"http://www.nppa.org/news_and_events/news/rss/atom.xml"));
+			feed1 = FeedDoc
+					.readFeedToBean(new java.net.URL(
+							"http://www.rand.org/news/press/index.xml"));
 			FeedDoc.writeFeedDoc(
 					new javanet.staxutils.IndentingXMLStreamWriter(
 							XMLOutputFactory.newInstance()
 									.createXMLStreamWriter(
-											new FileOutputStream("out.xml"),
+											new FileOutputStream("out2.xml"),
 											FeedDoc.encoding)), feed1,
 					FeedDoc.encoding, FeedDoc.xml_version);
-			Feed feed = FeedDoc.readFeedToBean(new File("out.xml"));
-			assertNotNull(feed);
+			Feed feed2 = FeedDoc.readFeedToBean(new File("out2.xml"));
+			assertNotNull(feed2);
 		} catch (Exception e) {
 			fail("could not write output file with custom xml stream writer.");
 		}
@@ -178,7 +201,9 @@ public class FeedDocTest {
 	@Test
 	public void testReadFeedToStringFeedString() {
 		try {
-
+			feed1 = FeedDoc
+			.readFeedToBean(new java.net.URL(
+					"http://www.rand.org/news/press/index.xml"));
 			String feedStr = FeedDoc.readFeedToString(feed1,
 					"com.sun.xml.txw2.output.IndentingXMLStreamWriter");
 			assertNotNull(feedStr);
@@ -187,6 +212,9 @@ public class FeedDocTest {
 		}
 
 		try {
+			feed1 = FeedDoc
+			.readFeedToBean(new java.net.URL(
+					"http://www.rand.org/news/press/index.xml"));
 			String feedStr = FeedDoc.readFeedToString(feed1,
 					"javanet.staxutils.IndentingXMLStreamWriter");
 			assertNotNull(feedStr);
@@ -195,6 +223,9 @@ public class FeedDocTest {
 		}
 
 		try {
+			feed1 = FeedDoc
+			.readFeedToBean(new java.net.URL(
+					"http://www.rand.org/news/press/index.xml"));
 			String feedStr = FeedDoc.readFeedToString(feed1, "bunk");
 			assertNotNull(feedStr);
 		} catch (Exception e) {
@@ -204,7 +235,20 @@ public class FeedDocTest {
 
 	@Test
 	public void testReadFeedToStringFeed() {
-		// fail("Not yet implemented");
+		try {
+			feed1 = FeedDoc.readFeedToBean(expectedFeed1);
+			String feed1Str = FeedDoc.readFeedToString(feed1);
+			assertNotNull(feed1Str);
+			feed1 = FeedDoc.readFeedToBean(feed1Str);
+			assertNotNull(feed1);
+			assertNotNull(feed1.getId());
+			assertNotNull(feed1.getTitle());
+			assertNotNull(feed1.getUpdated());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("should be working. " + e.getLocalizedMessage());
+		}
 	}
 
 	@Test

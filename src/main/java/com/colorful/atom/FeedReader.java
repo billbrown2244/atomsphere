@@ -68,6 +68,7 @@ class FeedReader {
 		Title title = null;
 		Updated updated = null;
 		SortedMap<String, Entry> entries = null;
+		String elementName = null;
 
 		while (reader.hasNext()) {
 			switch (reader.next()) {
@@ -77,40 +78,53 @@ class FeedReader {
 				FeedDoc.xml_version = reader.getVersion();
 				break;
 
-				
 			case XMLStreamConstants.START_ELEMENT:
-				System.out.println("element name = "+reader.getName().toString());
+				elementName = getElementName(reader);
 				// call each feed elements read method depending on the name
-				if (reader.getName().toString().equals("feed")) {
+				if (elementName.equals("feed")
+						|| elementName.equals("atom:feed")) {
 					attributes = getAttributes(reader, attributes);
-				} else if (reader.getName().toString().equals("author")) {
+				} else if (elementName.equals("author")
+						|| elementName.equals("atom:author")) {
 					authors = readAuthor(reader, authors);
-				} else if (reader.getName().toString().equals("category")) {
+				} else if (elementName.equals("category")
+						|| elementName.equals("atom:category")) {
 					categories = readCategory(reader, categories);
-				} else if (reader.getName().toString().equals("contributor")) {
+				} else if (elementName.equals("contributor")
+						|| elementName.equals("atom:contributor")) {
 					contributors = readContributor(reader, contributors);
-				} else if (reader.getName().toString().equals("generator")) {
+				} else if (elementName.equals("generator")
+						|| elementName.equals("atom:generator")) {
 					generator = readGenerator(reader);
-				} else if (reader.getName().toString().equals("icon")) {
+				} else if (elementName.equals("icon")
+						|| elementName.equals("atom:icon")) {
 					icon = readIcon(reader);
-				} else if (reader.getName().toString().equals("id")) {
+				} else if (elementName.equals("id")
+						|| elementName.equals("atom:id")) {
 					id = readId(reader);
-				} else if (reader.getName().toString().equals("link")) {
+				} else if (elementName.equals("link")
+						|| elementName.equals("atom:link")) {
 					links = readLink(reader, links);
-				} else if (reader.getName().toString().equals("logo")) {
+				} else if (elementName.equals("logo")
+						|| elementName.equals("atom:logo")) {
 					logo = readLogo(reader);
-				} else if (reader.getName().toString().equals("rights")) {
+				} else if (elementName.equals("rights")
+						|| elementName.equals("atom:rights")) {
 					rights = readRights(reader);
-				} else if (reader.getName().toString().equals("subtitle")) {
+				} else if (elementName.equals("subtitle")
+						|| elementName.equals("atom:subtitle")) {
 					subtitle = readSubtitle(reader);
-				} else if (reader.getName().toString().equals("title")) {
+				} else if (elementName.equals("title")
+						|| elementName.equals("atom:title")) {
 					title = readTitle(reader);
-				} else if (reader.getName().toString().equals("updated")) {
+				} else if (elementName.equals("updated")
+						|| elementName.equals("atom:updated")) {
 					updated = readUpdated(reader);
-				} else if (reader.getName().toString().equals("entry")) {
+				} else if (elementName.equals("entry")
+						|| elementName.equals("atom:entry")) {
 					entries = readEntry(reader, entries);
 				} else {// extension
-					extensions = readExtension(reader, extensions);
+					extensions = readExtension(reader, extensions, elementName);
 				}
 				break;
 
@@ -191,39 +205,24 @@ class FeedReader {
 	}
 
 	List<Extension> readExtension(XMLStreamReader reader,
-			List<Extension> extensions) throws Exception {
+			List<Extension> extensions, String elementName) throws Exception {
 
 		if (extensions == null) {
 			extensions = new LinkedList<Extension>();
 		}
-		
 
-		String elementName = null;
-		String prefix = reader.getPrefix();
-		if (prefix != null && !prefix.equals("")) {
-			elementName = prefix + ":" + reader.getLocalName();
-		} else {
-			elementName = reader.getLocalName();
-		}
-		
 		StringBuffer extText = new StringBuffer();
 		List<Attribute> attributes = getAttributes(reader, null);
 
 		while (reader.hasNext()) {
 			boolean breakOut = false;
 			switch (reader.next()) {
-			case XMLStreamConstants.START_ELEMENT:				
-				extensions = readExtension(reader,null);
+			case XMLStreamConstants.START_ELEMENT:
+				extensions = readExtension(reader, null, elementName);
 				break;
 
 			case XMLStreamConstants.END_ELEMENT:
-				String elementNameEnd = null;
-				String prefixEnd = reader.getPrefix();				
-				if (prefixEnd != null && !prefixEnd.equals("")) {
-					elementNameEnd = prefixEnd + ":" + reader.getLocalName();
-				} else {
-					elementNameEnd = reader.getLocalName();
-				}
+				String elementNameEnd = getElementName(reader);
 				if (elementNameEnd.equals(elementName)) {
 					breakOut = true;
 				} else {
@@ -237,8 +236,8 @@ class FeedReader {
 				break;
 			}
 		}
-		extensions.add(FeedDoc.buildExtension(elementName, attributes,
-				extText.toString()));
+		extensions.add(FeedDoc.buildExtension(elementName, attributes, extText
+				.toString()));
 		return extensions;
 	}
 
@@ -248,7 +247,7 @@ class FeedReader {
 		if (entries == null) {
 			entries = new TreeMap<String, Entry>();
 		}
-		
+
 		Id id = null;
 		Title title = null;
 		Updated updated = null;
@@ -263,9 +262,10 @@ class FeedReader {
 		Published published = null;
 		Summary summary = null;
 		Source source = null;
-
+		String elementName = null;
+		
 		attributes = getAttributes(reader, attributes);
-
+		
 		while (reader.hasNext()) {
 			boolean breakOut = false;
 			switch (reader.next()) {
@@ -276,39 +276,53 @@ class FeedReader {
 				break;
 
 			case XMLStreamConstants.START_ELEMENT:
-
+				elementName = getElementName(reader);
 				// call each feed elements read method depending on the name
-				if (reader.getName().toString().equals("id")) {
+				if (elementName.equals("id")
+						|| elementName.equals("atom:id")) {
 					id = readId(reader);
-				} else if (reader.getName().toString().equals("author")) {
+				} else if (elementName.equals("author")
+						|| elementName.equals("atom:author")) {
 					authors = readAuthor(reader, authors);
-				} else if (reader.getName().toString().equals("category")) {
+				} else if (elementName.equals("category")
+						|| elementName.equals("atom:category")) {
 					categories = readCategory(reader, categories);
-				} else if (reader.getName().toString().equals("contributor")) {
+				} else if (elementName.equals("contributor")
+						|| elementName.equals("atom:contributor")) {
 					contributors = readContributor(reader, contributors);
-				} else if (reader.getName().toString().equals("content")) {
+				} else if (elementName.equals("content")
+						|| elementName.equals("atom:content")) {
 					content = readContent(reader);
-				} else if (reader.getName().toString().equals("link")) {
+				} else if (elementName.equals("link")
+						|| elementName.equals("atom:link")) {
 					links = readLink(reader, links);
-				} else if (reader.getName().toString().equals("published")) {
+				} else if (elementName.equals("published")
+						|| elementName.equals("atom:published")) {
 					published = readPublished(reader);
-				} else if (reader.getName().toString().equals("rights")) {
+				} else if (elementName.equals("rights")
+						|| elementName.equals("atom:rights")) {
 					rights = readRights(reader);
-				} else if (reader.getName().toString().equals("source")) {
+				} else if (elementName.equals("source")
+						|| elementName.equals("atom:source")) {
 					source = readSource(reader);
-				} else if (reader.getName().toString().equals("summary")) {
+				} else if (elementName.equals("summary")
+						|| elementName.equals("atom:summary")) {
 					summary = readSummary(reader);
-				} else if (reader.getName().toString().equals("title")) {
+				} else if (elementName.equals("title")
+						|| elementName.equals("atom:title")) {
 					title = readTitle(reader);
-				} else if (reader.getName().toString().equals("updated")) {
+				} else if (elementName.equals("updated")
+						|| elementName.equals("atom:updated")) {
 					updated = readUpdated(reader);
 				} else {// extension
-					extensions = readExtension(reader, extensions);
+					extensions = readExtension(reader, extensions, elementName);
 				}
 				break;
 
 			case XMLStreamConstants.END_ELEMENT:
-				if (reader.getLocalName().equals("entry")) {
+				elementName = getElementName(reader);
+				if (elementName.equals("entry")
+						|| elementName.equals("atom:entry")) {
 					breakOut = true;
 				} else {
 					reader.next();
@@ -327,6 +341,17 @@ class FeedReader {
 		return entries;
 	}
 
+	private String getElementName(XMLStreamReader reader) {
+		String elementName = null;
+		String prefix = reader.getPrefix();
+		if (prefix != null && !prefix.equals("")) {
+			elementName = prefix + ":" + reader.getLocalName();
+		} else {
+			elementName = reader.getLocalName();
+		}
+		return elementName;
+	}
+
 	Summary readSummary(XMLStreamReader reader) throws Exception {
 		List<Attribute> attributes = getAttributes(reader, null);
 		// if the content is XHTML, we need to read in the contents of the div.
@@ -341,7 +366,7 @@ class FeedReader {
 
 	boolean containsXHTML(List<Attribute> attributes) {
 		if (attributes != null) {
-			for(Attribute attr: attributes){
+			for (Attribute attr : attributes) {
 				if (attr.getName().equals("type")
 						&& attr.getValue().equals("xhtml")) {
 					return true;
@@ -368,45 +393,61 @@ class FeedReader {
 		Subtitle subtitle = null;
 		Title title = null;
 		Updated updated = null;
-
+		String elementName = null;
+		
 		attributes = getAttributes(reader, attributes);
 
 		while (reader.hasNext()) {
 			switch (reader.next()) {
 
 			case XMLStreamConstants.START_ELEMENT:
+				elementName = getElementName(reader);
 				// call each feed elements read method depending on the name
-				if (reader.getName().toString().equals("author")) {
+				if (elementName.equals("author")
+						|| elementName.equals("atom:author")) {
 					authors = readAuthor(reader, authors);
-				} else if (reader.getName().toString().equals("category")) {
+				} else if (elementName.equals("category")
+						|| elementName.equals("atom:category")) {
 					categories = readCategory(reader, categories);
-				} else if (reader.getName().toString().equals("contributor")) {
+				} else if (elementName.equals("contributor")
+						|| elementName.equals("atom:contributor")) {
 					contributors = readContributor(reader, contributors);
-				} else if (reader.getName().toString().equals("generator")) {
+				} else if (elementName.equals("generator")
+						|| elementName.equals("atom:generator")) {
 					generator = readGenerator(reader);
-				} else if (reader.getName().toString().equals("icon")) {
+				} else if (elementName.equals("icon")
+						|| elementName.equals("atom:icon")) {
 					icon = readIcon(reader);
-				} else if (reader.getName().toString().equals("id")) {
+				} else if (elementName.equals("id")
+						|| elementName.equals("atom:id")) {
 					id = readId(reader);
-				} else if (reader.getName().toString().equals("link")) {
+				} else if (elementName.equals("link")
+						|| elementName.equals("atom:link")) {
 					links = readLink(reader, links);
-				} else if (reader.getName().toString().equals("logo")) {
+				} else if (elementName.equals("logo")
+						|| elementName.equals("atom:logo")) {
 					logo = readLogo(reader);
-				} else if (reader.getName().toString().equals("rights")) {
+				} else if (elementName.equals("rights")
+						|| elementName.equals("atom:rights")) {
 					rights = readRights(reader);
-				} else if (reader.getName().toString().equals("subtitle")) {
+				} else if (elementName.equals("subtitle")
+						|| elementName.equals("atom:subtitle")) {
 					subtitle = readSubtitle(reader);
-				} else if (reader.getName().toString().equals("title")) {
+				} else if (elementName.equals("title")
+						|| elementName.equals("atom:title")) {
 					title = readTitle(reader);
-				} else if (reader.getName().toString().equals("updated")) {
+				} else if (elementName.equals("updated")
+						|| elementName.equals("atom:updated")) {
 					updated = readUpdated(reader);
 				} else {// extension
-					extensions = readExtension(reader, extensions);
+					extensions = readExtension(reader, extensions, elementName);
 				}
 				break;
 
 			case XMLStreamConstants.END_ELEMENT:
-				if (reader.getLocalName().equals("source")) {
+				elementName = getElementName(reader);
+				if (elementName.equals("source")
+						|| elementName.equals("atom:source")) {
 					breakOut = true;
 				} else {
 					reader.next();
@@ -511,7 +552,7 @@ class FeedReader {
 					List<Attribute> attributes = getAttributes(reader, null);
 					// add the attributes
 					if (attributes != null && attributes.size() > 0) {
-						for(Attribute attr: attributes){
+						for (Attribute attr : attributes) {
 							xhtml.append(" " + attr.getName() + "="
 									+ attr.getValue());
 						}
@@ -647,26 +688,33 @@ class FeedReader {
 		URI uri = null;
 		Email email = null;
 		List<Extension> extensions = null;
+		String elementName = null;
+		
 		while (reader.hasNext()) {
 			switch (reader.next()) {
 			case XMLStreamConstants.START_ELEMENT:
-
-				if (reader.getName().toString().equals("name")) {
+				elementName = getElementName(reader);
+				if (elementName.equals("name")
+						|| elementName.equals("atom:name")) {
 					name = FeedDoc.buildName(reader.getElementText());
-				} else if (reader.getName().toString().equals("uri")) {
+				} else if (elementName.equals("uri")
+						|| elementName.equals("atom:uri")) {
 					uri = FeedDoc.buildURI(reader.getElementText());
-				} else if (reader.getName().toString().equals("email")) {
+				} else if (elementName.equals("email")
+						|| elementName.equals("atom:email")) {
 					email = FeedDoc.buildEmail(reader.getElementText());
 				} else {
 					if (extensions == null) {
 						extensions = new LinkedList<Extension>();
 					}
-					extensions = readExtension(reader, extensions);
+					extensions = readExtension(reader, extensions, elementName);
 				}
 				break;
 
 			case XMLStreamConstants.END_ELEMENT:
-				if (reader.getLocalName().equals(personType)) {
+				elementName = getElementName(reader);
+				if (elementName.equals(personType)
+						|| elementName.equals("atom:"+personType)) {
 					breakOut = true;
 				} else {
 					reader.next();
