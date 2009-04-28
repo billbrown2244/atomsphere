@@ -218,6 +218,7 @@ class FeedReader {
 			boolean breakOut = false;
 			switch (reader.next()) {
 			case XMLStreamConstants.START_ELEMENT:
+				elementName = getElementName(reader);
 				extensions = readExtension(reader, null, elementName);
 				break;
 
