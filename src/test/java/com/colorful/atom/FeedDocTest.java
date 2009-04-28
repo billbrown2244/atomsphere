@@ -123,10 +123,12 @@ public class FeedDocTest {
 	@Test
 	public void testWriteFeedDocOutputStreamFeedStringString() {
 		try {
+			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
+					"http://www.nppa.org/news_and_events/news/rss/atom.xml"));
 			FeedDoc.writeFeedDoc(new FileOutputStream("out2.xml"), feed1,
 					FeedDoc.encoding, FeedDoc.xml_version);
-			Feed feed = FeedDoc.readFeedToBean(new File("out2.xml"));
-			assertNotNull(feed);
+			Feed feed2 = FeedDoc.readFeedToBean(new File("out2.xml"));
+			assertNotNull(feed2);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("could not write output file with file output stream.");
@@ -142,6 +144,8 @@ public class FeedDocTest {
 	public void testWriteFeedDocXMLStreamWriterFeedStringString() {
 		try {
 			// pretty print version.
+			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
+			"http://www.nppa.org/news_and_events/news/rss/atom.xml"));
 			FeedDoc.writeFeedDoc(
 					new javanet.staxutils.IndentingXMLStreamWriter(
 							XMLOutputFactory.newInstance()

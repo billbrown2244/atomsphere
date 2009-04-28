@@ -77,7 +77,9 @@ class FeedReader {
 				FeedDoc.xml_version = reader.getVersion();
 				break;
 
+				
 			case XMLStreamConstants.START_ELEMENT:
+				System.out.println("element name = "+reader.getName().toString());
 				// call each feed elements read method depending on the name
 				if (reader.getName().toString().equals("feed")) {
 					attributes = getAttributes(reader, attributes);
