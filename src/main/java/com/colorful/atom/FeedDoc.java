@@ -59,10 +59,13 @@ import javax.xml.stream.XMLStreamWriter;
  * Strings. It contains all of the factory methods for building immutable copies
  * of the object elements.
  * 
+ * You should not instantiate this class directly, rather, use the static
+ * factory methods to obtain instances of the Feed elements.
+ * 
  * @author Bill Brown
  * 
  */
-public class FeedDoc {
+public final class FeedDoc {
 
 	/**
 	 * 
@@ -109,6 +112,8 @@ public class FeedDoc {
 		}
 	}
 
+	private FeedDoc(){}//here to enforce static usage.
+	
 	/**
 	 * @return the Atomsphere library version in the form of a generator
 	 *         element. This element is output for all feeds that are generated

@@ -1,13 +1,16 @@
-<!-- Change History:
-	2008-06-03 wbrown - bumping feature for improved tag library ability to order elements and display images.
- -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<!--
+		Change History: 2008-06-03 wbrown - bumping feature for improved tag
+		library ability to order elements and display images.
+	-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.colorful</groupId>
 	<artifactId>atomsphere</artifactId>
 	<packaging>jar</packaging>
 	<name>Atomsphere</name>
-	<url>http://www.colorfulsoftware.com/projects/atomsphere/</url>
+	<url>http://www.colorfulsoftware.com/projects/atomsphere</url>
 	<version>2.0.3.0-SNAPSHOT</version>
 	<description>Atomsphere - An Atom 1.0 Feed Library written in Java</description>
 	<scm>
@@ -47,6 +50,17 @@
 			<name>Inhouse Repository</name>
 			<url>file:///home/bill/.m2/repository</url>
 		</pluginRepository>
+		<pluginRepository>
+			<id>mc-release</id>
+			<name>Local Maven repository of releases</name>
+			<url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
 	</pluginRepositories>
 	<distributionManagement>
 		<repository>
@@ -73,16 +87,54 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.google.code.maven-license-plugin</groupId>
+				<artifactId>maven-license-plugin</artifactId>
+				<configuration>
+					<header>src/main/resources/licenseHeader.txt</header>
+					<properties>
+						<year>2009</year>
+						<name>William R. Brown</name>
+						<email>info@colorfulsoftware.com</email>
+					</properties>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<configuration>
+					<instrumentation>
+						<excludes>
+							<exclude>
+								src/test/java/**/*.class
+							</exclude>
+						</excludes>
+					</instrumentation>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	<reporting>
-    	<plugins>
-	      <plugin>
-	        <groupId>org.apache.maven.plugins</groupId>
-	        <artifactId>maven-checkstyle-plugin</artifactId>
-	      </plugin>
-    	</plugins>
-  	</reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<configuration>
+					<formats>
+						<format>html</format>
+						<format>xml</format>
+					</formats>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 	<dependencies>
 		<dependency>
 			<groupId>javax.xml</groupId>
