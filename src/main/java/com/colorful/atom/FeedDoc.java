@@ -1,34 +1,19 @@
-/*
-Atomsphere - an atom feed library.
-Copyright (C) 2006 William R. Brown.
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
-Change History:
-    2006-11-08 wbrown - changed API to include url's and make the method calls more intuitive.
-    2006-11-12 wbrown - added javadoc documentation.
-    2007-02-22 wbrown - removed deprecated methods.
-    2007-06-20 wbrown - added 2 methods readFeedToString(Feed feed) and readEntryToString(Entry entry)
-    2008-03-18 wbrown - added factory methods for all the sub elements. Added new file write methods 
-    					to decouple dependency on stax-utils.  Added new input methods to read 
-    					input streams into feeds an strings.
-    2008-04-08 wbrown - added atomshpereVersion (generator) constant for writing out feeds.  Added more
-    					thorws AtomsphereSpecExceptions for attributes that are not atomCommonAttribute
-    2008-04-15 wbrown - fixed entry element to String entry document
-    2008-04-17 wbrown - added better support for reading and writing Entry documents.
-    2008-06-03 wbrown - fixed bug with getContentType()
+/**
+ * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 

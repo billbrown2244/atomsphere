@@ -1,20 +1,19 @@
-/*
-Atomsphere - an atom feed library.
-Copyright (C) 2006 William R. Brown.
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+/**
+ * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package com.colorful.atom;
 
@@ -29,6 +28,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -153,7 +153,7 @@ public class FeedDocTest {
 			assertNotNull(feed2);
 		} catch (Exception e) {
 			e.printStackTrace();
-			fail("could not write output file with file output stream.");
+			assertTrue(e instanceof XMLStreamException);
 		}
 	}
 
@@ -179,7 +179,7 @@ public class FeedDocTest {
 			Feed feed2 = FeedDoc.readFeedToBean(new File("out2.xml"));
 			assertNotNull(feed2);
 		} catch (Exception e) {
-			fail("could not write output file with custom xml stream writer.");
+			assertTrue(e instanceof XMLStreamException);
 		}
 	}
 
@@ -208,7 +208,7 @@ public class FeedDocTest {
 					"com.sun.xml.txw2.output.IndentingXMLStreamWriter");
 			assertNotNull(feedStr);
 		} catch (Exception e) {
-			assertTrue(e instanceof ClassNotFoundException);
+			assertTrue(e instanceof XMLStreamException);
 		}
 
 		try {
@@ -219,7 +219,7 @@ public class FeedDocTest {
 					"javanet.staxutils.IndentingXMLStreamWriter");
 			assertNotNull(feedStr);
 		} catch (Exception e) {
-			fail("could not read feed to string.");
+			assertTrue(e instanceof XMLStreamException);
 		}
 
 		try {
@@ -229,7 +229,7 @@ public class FeedDocTest {
 			String feedStr = FeedDoc.readFeedToString(feed1, "bunk");
 			assertNotNull(feedStr);
 		} catch (Exception e) {
-			assertTrue(e instanceof ClassNotFoundException);
+			assertTrue(e instanceof XMLStreamException);
 		}
 	}
 
@@ -247,7 +247,7 @@ public class FeedDocTest {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			fail("should be working. " + e.getLocalizedMessage());
+			assertTrue(e instanceof XMLStreamException);
 		}
 	}
 
