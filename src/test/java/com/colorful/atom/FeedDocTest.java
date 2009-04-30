@@ -68,7 +68,7 @@ public class FeedDocTest {
 			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
 			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
 			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
-			+ "<title>test entry</title>" + "</entry>";
+			+ "<title>test entry 1</title>" + "</entry>";
 
 	private String expectedFeed1 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
 			"<feed xmlns=\"http://www.w3.org/2005/Atom\">" +
@@ -115,19 +115,19 @@ public class FeedDocTest {
 
 			entry1 = FeedDoc.buildEntry(FeedDoc.buildId(null,
 					"http://www.colorfulsoftware.com/projects/atomsphere/"),
-					FeedDoc.buildTitle("test entry", null), FeedDoc
+					FeedDoc.buildTitle("test entry 1", null), FeedDoc
 							.buildUpdated(theDate.getTime(), null), null, null,
 					null, null, null, null, null, null, null, null, null);
 
 			entry2 = FeedDoc.buildEntry(FeedDoc.buildId(null,
 					"http://www.colorfulsoftware.com/projects/atomsphere/"),
-					FeedDoc.buildTitle("test entry", null), FeedDoc
+					FeedDoc.buildTitle("test entry 2", null), FeedDoc
 							.buildUpdated(theDate.getTime(), null), null, null,
 					null, null, null, null, null, null, null, null, null);
 
 			entry3 = FeedDoc.buildEntry(FeedDoc.buildId(null,
 					"http://www.colorfulsoftware.com/projects/atomsphere/"),
-					FeedDoc.buildTitle("test entry", null), FeedDoc
+					FeedDoc.buildTitle("test entry 3", null), FeedDoc
 							.buildUpdated(theDate.getTime(), null), null, null,
 					null, null, null, null, null, null, null, null, null);
 		} catch (Exception e) {
@@ -520,9 +520,12 @@ public class FeedDocTest {
 	public void testSortEntries() {
 		try {
 			SortedMap<String, Entry> entries = new TreeMap<String, Entry>();
-			entries.put(entry1.getUpdated().getText(), entry1);
-			entries.put(entry2.getUpdated().getText(), entry2);
-			entries.put(entry3.getUpdated().getText(), entry3);
+			String entryStr1 = entry1.getTitle().getText();
+			String entryStr2 = entry2.getTitle().getText();
+			String entryStr3 = entry3.getTitle().getText();
+			entries.put(entryStr1, entry1);
+			entries.put(entryStr2, entry2);
+			entries.put(entryStr3, entry3);
 			feed1 = FeedDoc.buildFeed(feed1.getId(), feed1.getTitle(), feed1
 					.getUpdated(), feed1.getRights(), feed1.getAuthors(), feed1
 					.getCategories(), feed1.getContributors(),
@@ -531,7 +534,39 @@ public class FeedDocTest {
 							.getSubtitle(), feed1.getIcon(), feed1.getLogo(),
 					entries);
 			assertEquals(Title.class.getSimpleName(), "Title");
-			// FeedDoc.sortEntries(feed1, FeedDoc.SORT_ASC, Title.class)
+			feed1 = FeedDoc.sortEntries(feed1, FeedDoc.SORT_ASC, Title.class);
+			for(Entry entry: feed1.getEntries().values()){
+				assertNotNull(entry);
+			}
+			SortedMap<String,Entry> entries2 = feed1.getEntries();
+			assertEquals(entries2.firstKey(),entryStr1);
+			entries2.remove(entries2.firstKey());
+			assertEquals(entries2.firstKey(),entryStr2);
+			entries2.remove(entries2.firstKey());
+			assertEquals(entries2.firstKey(),entryStr3);
+			
+			feed1 = FeedDoc.sortEntries(feed1, FeedDoc.SORT_DESC, Title.class);
+			for(Entry entry: feed1.getEntries().values()){
+				assertNotNull(entry);
+			}
+			entries2 = feed1.getEntries();
+			assertEquals(entries2.firstKey(),entryStr3);
+			entries2.remove(entries2.firstKey());
+			assertEquals(entries2.firstKey(),entryStr2);
+			entries2.remove(entries2.firstKey());
+			assertEquals(entries2.firstKey(),entryStr1);
+			
+			//test the null entries case.
+			feed1 = FeedDoc.buildFeed(feed1.getId(), feed1.getTitle(), feed1
+					.getUpdated(), feed1.getRights(), feed1.getAuthors(), feed1
+					.getCategories(), feed1.getContributors(),
+					feed1.getLinks(), feed1.getAttributes(), feed1
+							.getExtensions(), feed1.getGenerator(), feed1
+							.getSubtitle(), feed1.getIcon(), feed1.getLogo(),
+					null);
+			feed1 = FeedDoc.sortEntries(feed1, FeedDoc.SORT_DESC, Title.class);
+			assertNull(feed1.getEntries());
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
