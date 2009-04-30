@@ -70,28 +70,84 @@ public class FeedDocTest {
 			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
 			+ "<title>test entry 1</title>" + "</entry>";
 
-	private String expectedFeed1 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
-			"<feed xmlns=\"http://www.w3.org/2005/Atom\">" +
-			" <title>Example Feed</title>" +
-			" <subtitle>A subtitle.</subtitle>" +
-			" <link href=\"http://example.org/feed/\" rel=\"self\"/>" +
-			" <link href=\"http://example.org/\"/>" +
-			" <updated>2003-12-13T18:30:02Z</updated>" +
-			" <author>" +
-			"   <name>John Doe</name>" +
-			"   <email>johndoe@example.com</email>" +
-			" </author>" +
-			" <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>" +
-			" <entry>" +
-			"   <title>Atom-Powered Robots Run Amok</title>" +
-			"   <link href=\"http://example.org/2003/12/13/atom03\"/>" +
-			"   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>" +
-			"   <updated>2003-12-13T18:30:02Z</updated>" +
-			"   <summary>Some text.</summary>" +
-			" </entry>" +
-			"</feed>";
-	
+	private String expectedFeed1 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\">"
+			+ " <title>Example Feed</title>"
+			+ " <subtitle>A subtitle.</subtitle>"
+			+ " <link href=\"http://example.org/feed/\" rel=\"self\"/>"
+			+ " <link href=\"http://example.org/\"/>"
+			+ " <updated>2003-12-13T18:30:02Z</updated>" + " <author>"
+			+ "   <name>John Doe</name>"
+			+ "   <email>johndoe@example.com</email>" + " </author>"
+			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
+			+ " <entry>" + "   <title>Atom-Powered Robots Run Amok</title>"
+			+ "   <link href=\"http://example.org/2003/12/13/atom03\"/>"
+			+ "   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>"
+			+ "   <updated>2003-12-13T18:30:02Z</updated>"
+			+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
+
 	private Entry entry1, entry2, entry3;
+
+	// found these examples here:
+	// http://www.xml.com/pub/a/2005/12/07/handling-atom-text-and-content-constructs.html
+	// that should apply to text constructs:
+	// title, subtitle, summary, rights.
+	private String title1 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\">"
+			+ "<title>One bold foot forward</title>"
+			+ " <updated>2003-12-13T18:30:02Z</updated>" + " <author>"
+			+ "   <name>John Doe</name>"
+			+ "   <email>johndoe@example.com</email>" + " </author>"
+			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
+			+ "</feed>";
+	private String title2 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\">"
+			+ "<title type=\"text\">One bold foot forward</title>"
+			+ " <updated>2003-12-13T18:30:02Z</updated>" + " <author>"
+			+ "   <name>John Doe</name>"
+			+ "   <email>johndoe@example.com</email>" + " </author>"
+			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
+			+ "</feed>";
+	private String title3 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\">"
+			+ "<title>One &lt;strong&gt;bold&lt;/strong&gt; foot forward</title>"
+			+ " <updated>2003-12-13T18:30:02Z</updated>" + " <author>"
+			+ "   <name>John Doe</name>"
+			+ "   <email>johndoe@example.com</email>" + " </author>"
+			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
+			+ "</feed>";
+	private String title4 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\">"
+			+ "<title type=\"html\">One &lt;strong&gt;bold&lt;/strong&gt; foot forward</title>"
+			+ " <updated>2003-12-13T18:30:02Z</updated>" + " <author>"
+			+ "   <name>John Doe</name>"
+			+ "   <email>johndoe@example.com</email>" + " </author>"
+			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
+			+ "</feed>";
+	private String title5 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\">"
+			+ "<title type=\"html\"><![CDATA[One <strong>bold</strong> foot forward]]></title>"
+			+ " <updated>2003-12-13T18:30:02Z</updated>" + " <author>"
+			+ "   <name>John Doe</name>"
+			+ "   <email>johndoe@example.com</email>" + " </author>"
+			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
+			+ "</feed>";
+	private String title6 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\">"
+			+ "<title type=\"xhtml\"><div xmlns=\"http://www.w3.org/1999/xhtml\">One <strong>bold</strong> foot forward<title>can you see me</title></div></title>"
+			+ " <updated>2003-12-13T18:30:02Z</updated>" + " <author>"
+			+ "   <name>John Doe</name>"
+			+ "   <email>johndoe@example.com</email>" + " </author>"
+			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
+			+ "</feed>";
+	private String title7 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\"  xmlns:xh=\"http://www.w3.org/1999/xhtml\">"
+			+ "<title type=\"xhtml\"><xh:div>One <xh:strong>bold</xh:strong> foot forward </xh:div></title>"
+			+ " <updated>2003-12-13T18:30:02Z</updated>" + " <author>"
+			+ "   <name>John Doe</name>"
+			+ "   <email>johndoe@example.com</email>" + " </author>"
+			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
+			+ "</feed>";
 
 	@Before
 	public void setUp() throws Exception {
@@ -137,16 +193,15 @@ public class FeedDocTest {
 
 	@After
 	public void tearDown() throws Exception {
-		//new File("out.xml").deleteOnExit();
-		//new File("out2.xml").deleteOnExit();
+		// new File("out.xml").deleteOnExit();
+		// new File("out2.xml").deleteOnExit();
 	}
 
 	@Test
 	public void testWriteFeedDocOutputStreamFeedStringString() {
 		try {
-			feed1 = FeedDoc
-					.readFeedToBean(new java.net.URL(
-							"http://www.rand.org/news/press/index.xml"));
+			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
+					"http://www.rand.org/news/press/index.xml"));
 			FeedDoc.writeFeedDoc(new FileOutputStream("out1.xml"), feed1,
 					FeedDoc.encoding, FeedDoc.xml_version);
 			Feed feed2 = FeedDoc.readFeedToBean(new File("out1.xml"));
@@ -166,9 +221,8 @@ public class FeedDocTest {
 	public void testWriteFeedDocXMLStreamWriterFeedStringString() {
 		try {
 			// pretty print version.
-			feed1 = FeedDoc
-					.readFeedToBean(new java.net.URL(
-							"http://www.rand.org/news/press/index.xml"));
+			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
+					"http://www.rand.org/news/press/index.xml"));
 			FeedDoc.writeFeedDoc(
 					new javanet.staxutils.IndentingXMLStreamWriter(
 							XMLOutputFactory.newInstance()
@@ -201,8 +255,7 @@ public class FeedDocTest {
 	@Test
 	public void testReadFeedToStringFeedString() {
 		try {
-			feed1 = FeedDoc
-			.readFeedToBean(new java.net.URL(
+			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
 			String feedStr = FeedDoc.readFeedToString(feed1,
 					"com.sun.xml.txw2.output.IndentingXMLStreamWriter");
@@ -212,8 +265,7 @@ public class FeedDocTest {
 		}
 
 		try {
-			feed1 = FeedDoc
-			.readFeedToBean(new java.net.URL(
+			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
 			String feedStr = FeedDoc.readFeedToString(feed1,
 					"javanet.staxutils.IndentingXMLStreamWriter");
@@ -223,8 +275,7 @@ public class FeedDocTest {
 		}
 
 		try {
-			feed1 = FeedDoc
-			.readFeedToBean(new java.net.URL(
+			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
 			String feedStr = FeedDoc.readFeedToString(feed1, "bunk");
 			assertNotNull(feedStr);
@@ -232,6 +283,7 @@ public class FeedDocTest {
 			assertTrue(e instanceof XMLStreamException);
 		}
 	}
+	
 
 	@Test
 	public void testReadFeedToStringFeed() {
@@ -244,6 +296,41 @@ public class FeedDocTest {
 			assertNotNull(feed1.getId());
 			assertNotNull(feed1.getTitle());
 			assertNotNull(feed1.getUpdated());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue(e instanceof XMLStreamException);
+		}
+		
+		//test the seven title variants.
+		try {
+			
+			feed1 = FeedDoc.readFeedToBean(title1);
+			String feed1Str = FeedDoc.readFeedToString(feed1);
+			System.out.println("data1:\n\n"+feed1Str+"\n\n");
+			feed1 = FeedDoc.readFeedToBean(title2);
+			feed1Str = FeedDoc.readFeedToString(feed1);
+			System.out.println("data2:\n\n"+feed1Str+"\n\n");
+			System.out.println(feed1Str);
+			feed1 = FeedDoc.readFeedToBean(title3);
+			feed1Str = FeedDoc.readFeedToString(feed1);
+			System.out.println("data3:\n\n"+feed1Str+"\n\n");
+			feed1 = FeedDoc.readFeedToBean(title4);
+			feed1Str = FeedDoc.readFeedToString(feed1);
+			System.out.println("data4:\n\n"+feed1Str+"\n\n");
+			
+			feed1 = FeedDoc.readFeedToBean(title5);
+			System.out.println("feed 5 title = "+feed1.getTitle().getText());
+			feed1Str = FeedDoc.readFeedToString(feed1);
+			System.out.println("data5:\n\n"+feed1Str+"\n\n");
+			
+			feed1 = FeedDoc.readFeedToBean(title6);
+			feed1Str = FeedDoc.readFeedToString(feed1);
+			System.out.println("data6:\n\n"+feed1Str+"\n\n");
+			feed1 = FeedDoc.readFeedToBean(title7);
+			feed1Str = FeedDoc.readFeedToString(feed1);
+			System.out.println("data7:\n\n"+feed1Str+"\n\n");
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -535,28 +622,28 @@ public class FeedDocTest {
 					entries);
 			assertEquals(Title.class.getSimpleName(), "Title");
 			feed1 = FeedDoc.sortEntries(feed1, FeedDoc.SORT_ASC, Title.class);
-			for(Entry entry: feed1.getEntries().values()){
+			for (Entry entry : feed1.getEntries().values()) {
 				assertNotNull(entry);
 			}
-			SortedMap<String,Entry> entries2 = feed1.getEntries();
-			assertEquals(entries2.firstKey(),entryStr1);
+			SortedMap<String, Entry> entries2 = feed1.getEntries();
+			assertEquals(entries2.firstKey(), entryStr1);
 			entries2.remove(entries2.firstKey());
-			assertEquals(entries2.firstKey(),entryStr2);
+			assertEquals(entries2.firstKey(), entryStr2);
 			entries2.remove(entries2.firstKey());
-			assertEquals(entries2.firstKey(),entryStr3);
-			
+			assertEquals(entries2.firstKey(), entryStr3);
+
 			feed1 = FeedDoc.sortEntries(feed1, FeedDoc.SORT_DESC, Title.class);
-			for(Entry entry: feed1.getEntries().values()){
+			for (Entry entry : feed1.getEntries().values()) {
 				assertNotNull(entry);
 			}
 			entries2 = feed1.getEntries();
-			assertEquals(entries2.firstKey(),entryStr3);
+			assertEquals(entries2.firstKey(), entryStr3);
 			entries2.remove(entries2.firstKey());
-			assertEquals(entries2.firstKey(),entryStr2);
+			assertEquals(entries2.firstKey(), entryStr2);
 			entries2.remove(entries2.firstKey());
-			assertEquals(entries2.firstKey(),entryStr1);
-			
-			//test the null entries case.
+			assertEquals(entries2.firstKey(), entryStr1);
+
+			// test the null entries case.
 			feed1 = FeedDoc.buildFeed(feed1.getId(), feed1.getTitle(), feed1
 					.getUpdated(), feed1.getRights(), feed1.getAuthors(), feed1
 					.getCategories(), feed1.getContributors(),
@@ -566,7 +653,7 @@ public class FeedDocTest {
 					null);
 			feed1 = FeedDoc.sortEntries(feed1, FeedDoc.SORT_DESC, Title.class);
 			assertNull(feed1.getEntries());
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
