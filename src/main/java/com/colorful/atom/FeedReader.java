@@ -352,7 +352,8 @@ class FeedReader {
 			elementName = reader.getLocalName();
 		}
 		// set the current namespace prefix:
-		namespaceURI = reader.getNamespaceURI();
+		namespaceURI = (reader.getNamespaceURI() == null) ? "http://www.w3.org/2005/Atom"
+				: reader.getNamespaceURI();
 		return elementName;
 	}
 
@@ -553,10 +554,9 @@ class FeedReader {
 				// add the attributes
 				if (attributes != null && attributes.size() > 0) {
 					for (Attribute attr : attributes) {
-						xhtml.append(" " + attr.getName() + "="
-								+ attr.getValue());
+						xhtml.append(" " + attr.getName() + "=\""
+								+ attr.getValue() + "\"");
 					}
-					xhtml.append(" ");
 				}
 				xhtml.append(">");
 				break;

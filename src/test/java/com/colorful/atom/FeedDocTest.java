@@ -306,30 +306,32 @@ public class FeedDocTest {
 		try {
 			
 			feed1 = FeedDoc.readFeedToBean(title1);
-			String feed1Str = FeedDoc.readFeedToString(feed1);
-			System.out.println("data1:\n\n"+feed1Str+"\n\n");
+			assertNotNull(feed1.getTitle());
+			assertNotNull(FeedDoc.readFeedToString(feed1));
+			
 			feed1 = FeedDoc.readFeedToBean(title2);
-			feed1Str = FeedDoc.readFeedToString(feed1);
-			System.out.println("data2:\n\n"+feed1Str+"\n\n");
-			System.out.println(feed1Str);
+			assertNotNull(feed1.getTitle());
+			assertNotNull(FeedDoc.readFeedToString(feed1));
+			
 			feed1 = FeedDoc.readFeedToBean(title3);
-			feed1Str = FeedDoc.readFeedToString(feed1);
-			System.out.println("data3:\n\n"+feed1Str+"\n\n");
+			assertNotNull(feed1.getTitle());
+			assertNotNull(FeedDoc.readFeedToString(feed1));
+			
 			feed1 = FeedDoc.readFeedToBean(title4);
-			feed1Str = FeedDoc.readFeedToString(feed1);
-			System.out.println("data4:\n\n"+feed1Str+"\n\n");
+			assertNotNull(feed1.getTitle());
+			assertNotNull(FeedDoc.readFeedToString(feed1));
 			
 			feed1 = FeedDoc.readFeedToBean(title5);
-			System.out.println("feed 5 title = "+feed1.getTitle().getText());
-			feed1Str = FeedDoc.readFeedToString(feed1);
-			System.out.println("data5:\n\n"+feed1Str+"\n\n");
+			assertNotNull(feed1.getTitle());
+			assertNotNull(FeedDoc.readFeedToString(feed1));
 			
 			feed1 = FeedDoc.readFeedToBean(title6);
-			feed1Str = FeedDoc.readFeedToString(feed1);
-			System.out.println("data6:\n\n"+feed1Str+"\n\n");
+			assertNotNull(feed1.getTitle());
+			assertNotNull(FeedDoc.readFeedToString(feed1));
+			
 			feed1 = FeedDoc.readFeedToBean(title7);
-			feed1Str = FeedDoc.readFeedToString(feed1);
-			System.out.println("data7:\n\n"+feed1Str+"\n\n");
+			assertNotNull(feed1.getTitle());
+			assertNotNull(FeedDoc.readFeedToString(feed1));
 			
 
 		} catch (Exception e) {

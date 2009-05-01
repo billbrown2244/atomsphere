@@ -34,6 +34,7 @@ package com.colorful.atom;
 import java.util.List;
 import java.util.SortedMap;
 
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 /**
@@ -44,8 +45,14 @@ import javax.xml.stream.XMLStreamWriter;
  */
 class FeedWriter {
 
+	// used to check namespace valuse for xhtml content.
+	private Entry parentEntry = null;
+	private Feed parentFeed = null;
+
 	// used internally by FeedDoc to write feed to output streams.
 	void writeFeed(XMLStreamWriter writer, Feed feed) throws Exception {
+
+		parentFeed = feed;
 
 		// open the feed element
 		writer.writeStartElement("feed");
@@ -112,29 +119,12 @@ class FeedWriter {
 
 	void writeSubtitle(XMLStreamWriter writer, Subtitle subtitle)
 			throws Exception {
-		boolean wrapInXhtmlDiv = false;
+
 		writer.writeStartElement("subtitle");
-		if (subtitle.getAttributes() != null) {
-			for (Attribute attr : subtitle.getAttributes()) {
-				writer.writeAttribute(attr.getName(), attr.getValue());
 
-				// check to see if we need to
-				// wrap the text in a an <xhtml:div> tag.
-				if (attr.getName().equals("type")
-						&& attr.getValue().equals("xhtml")) {
-					wrapInXhtmlDiv = true;
-				}
-			}
-		}
-
-		if (wrapInXhtmlDiv) {
-			writer.writeStartElement("div");
-			writer.writeAttribute("xmlns", "http://www.w3.org/1999/xhtml");
-			writeXHTML(writer, subtitle.getText());
-			writer.writeEndElement();
-		} else {
-			writer.writeCharacters(subtitle.getText());
-		}
+		// write attributes and output the conditional text
+		writeConditionalText(writer, writeAttributesAndCheckForXhtml(writer,
+				subtitle.getAttributes()), subtitle.getText());
 
 		writer.writeEndElement();
 	}
@@ -169,29 +159,12 @@ class FeedWriter {
 	}
 
 	void writeTitle(XMLStreamWriter writer, Title title) throws Exception {
-		boolean wrapInXhtmlDiv = false;
+
 		writer.writeStartElement("title");
-		if (title.getAttributes() != null) {
-			for (Attribute attr : title.getAttributes()) {
-				writer.writeAttribute(attr.getName(), attr.getValue());
 
-				// check to see if we need to wrap the
-				// text in a an <xhtml:div> tag.
-				if (attr.getName().equals("type")
-						&& attr.getValue().equals("xhtml")) {
-					wrapInXhtmlDiv = true;
-				}
-			}
-		}
-
-		if (wrapInXhtmlDiv) {
-			writer.writeStartElement("div");
-			writer.writeAttribute("xmlns", "http://www.w3.org/1999/xhtml");
-			writeXHTML(writer, title.getText());
-			writer.writeEndElement();
-		} else {
-			writer.writeCharacters(title.getText());
-		}
+		// write attributes and output the conditional text
+		writeConditionalText(writer, writeAttributesAndCheckForXhtml(writer,
+				title.getAttributes()), title.getText());
 
 		writer.writeEndElement();
 	}
@@ -357,28 +330,13 @@ class FeedWriter {
 	}
 
 	void writeRights(XMLStreamWriter writer, Rights rights) throws Exception {
-		boolean wrapInXhtmlDiv = false;
-		writer.writeStartElement("rights");
-		if (rights.getAttributes() != null) {
-			for (Attribute attr : rights.getAttributes()) {
-				writer.writeAttribute(attr.getName(), attr.getValue());
 
-				// check to see if we need to
-				// wrap the text in a an <xhtml:div> tag.
-				if (attr.getName().equals("type")
-						&& attr.getValue().equals("xhtml")) {
-					wrapInXhtmlDiv = true;
-				}
-			}
-		}
-		if (wrapInXhtmlDiv) {
-			writer.writeStartElement("div");
-			writer.writeAttribute("xmlns", "http://www.w3.org/1999/xhtml");
-			writeXHTML(writer, rights.getText());
-			writer.writeEndElement();
-		} else {
-			writer.writeCharacters(rights.getText());
-		}
+		writer.writeStartElement("rights");
+
+		// write attributes and output the conditional text
+		writeConditionalText(writer, writeAttributesAndCheckForXhtml(writer,
+				rights.getAttributes()), rights.getText());
+
 		writer.writeEndElement();
 
 	}
@@ -483,11 +441,11 @@ class FeedWriter {
 
 		// print out the entries.
 		for (Entry entry : entries.values()) {
+			parentEntry = entry;
 			writer.writeStartElement("entry");
 			if (entry.getAttributes() != null) {
 				for (Attribute attr : entry.getAttributes()) {
-					writer.writeAttribute(attr.getName(), attr
-							.getValue());
+					writer.writeAttribute(attr.getName(), attr.getValue());
 				}
 			}
 			// write the id
@@ -542,31 +500,32 @@ class FeedWriter {
 	}
 
 	void writeSummary(XMLStreamWriter writer, Summary summary) throws Exception {
-		boolean wrapInXhtmlDiv = false;
+
 		writer.writeStartElement("summary");
-		if (summary.getAttributes() != null) {
-			for (Attribute attr : summary.getAttributes()) {
+
+		// write attributes and output the conditional text
+		writeConditionalText(writer, writeAttributesAndCheckForXhtml(writer,
+				summary.getAttributes()), summary.getText());
+
+		writer.writeEndElement();
+	}
+
+	private boolean writeAttributesAndCheckForXhtml(XMLStreamWriter writer,
+			List<Attribute> attributes) throws XMLStreamException {
+		boolean writeXhtml = false;
+		if (attributes != null) {
+			for (Attribute attr : attributes) {
 				writer.writeAttribute(attr.getName(), attr.getValue());
 
 				// check to see if we need to
 				// wrap the text in a an <xhtml:div> tag.
 				if (attr.getName().equals("type")
 						&& attr.getValue().equals("xhtml")) {
-					wrapInXhtmlDiv = true;
+					writeXhtml = true;
 				}
 			}
 		}
-
-		if (wrapInXhtmlDiv) {
-			writer.writeStartElement("div");
-			writer.writeAttribute("xmlns", "http://www.w3.org/1999/xhtml");
-			writeXHTML(writer, summary.getText());
-			writer.writeEndElement();
-		} else {
-			writer.writeCharacters(summary.getText());
-		}
-
-		writer.writeEndElement();
+		return writeXhtml;
 	}
 
 	void writePublished(XMLStreamWriter writer, Published published)
@@ -577,51 +536,79 @@ class FeedWriter {
 	}
 
 	void writeContent(XMLStreamWriter writer, Content content) throws Exception {
+
 		// look for the src attribute to
 		// see if we need to build an empty tag.
-		boolean externalLink = false;
-		boolean wrapInXhtmlDiv = false;
-		if (content.getAttributes() != null) {
-			for (Attribute attr : content.getAttributes()) {
-				if (attr.getName().equals("src")) {
-					externalLink = true;
-					writer.writeEmptyElement("content");
-					break;
-				}
+		if (FeedDoc.getAttributeFromGroup(content.getAttributes(), "src") != null) {
+			writer.writeEmptyElement("content");
+		} else {
 
-			}
-			if (!externalLink) {
-				writer.writeStartElement("content");
-			}
-
-			// write the attributes
-			for (Attribute attr : content.getAttributes()) {
-				writer.writeAttribute(attr.getName(), attr
-						.getValue());
-
-				// check to see if we need to
-				// wrap the text in a an <xhtml:div> tag.
-				if (attr.getName().equals("type")
-						&& attr.getValue().equals("xhtml")) {
-					wrapInXhtmlDiv = true;
-				}
-			}
-
-		} else {// there are not attributes so assume default 'text';
 			writer.writeStartElement("content");
+			
+			// write attributes and output the conditional text
+			writeConditionalText(writer, writeAttributesAndCheckForXhtml(
+					writer, content.getAttributes()), content.getContent());
+
 		}
-		if (content.getContent() != null) {
-			if (wrapInXhtmlDiv) {
-				writer.writeStartElement("div");
-				writer.writeAttribute("xmlns", "http://www.w3.org/1999/xhtml");
-				writeXHTML(writer, content.getContent());
-				writer.writeEndElement();
+
+		writer.writeEndElement();
+
+	}
+
+	// for writing out text, escaped html or xhtml markup with conditional div
+	// wrapper.
+	private void writeConditionalText(XMLStreamWriter writer,
+			boolean writeXhtml, String conditionalText) throws Exception,
+			XMLStreamException {
+		if (conditionalText != null) {
+			if (writeXhtml) {
+
+				if (conditionalText.trim().endsWith("</div>")
+						|| conditionalText.trim().endsWith(":div>")) {
+					String prefix = null;
+					if(parentEntry != null && parentEntry.getAttributes() != null){
+						for (Attribute attr : parentEntry.getAttributes()) {
+							if (attr.getName().indexOf("xmlns:") > 0
+									&& attr.getValue().equals(
+											"http://www.w3.org/1999/xhtml")) {
+								prefix = attr.getName().substring(
+										attr.getName().indexOf(":"));
+								System.out.println("prefix = " + prefix);
+								break;
+							}
+						}
+					}
+					if(prefix == null && (parentFeed != null && parentFeed.getAttributes() != null)){
+						for (Attribute attr : parentFeed.getAttributes()) {
+							if (attr.getName().indexOf("xmlns:") > 0
+									&& attr.getValue().equals(
+											"http://www.w3.org/1999/xhtml")) {
+								prefix = attr.getName().substring(
+										attr.getName().indexOf(":"));
+								System.out.println("prefix = " + prefix);
+								break;
+							}
+						}
+					}
+					if(prefix != null && conditionalText.trim().startsWith("<"+prefix+":div>")){
+						writeXHTML(writer, conditionalText);
+					}else{
+						writer.writeStartElement("div");
+						writer.writeAttribute("xmlns",
+								"http://www.w3.org/1999/xhtml");
+						writeXHTML(writer, conditionalText);
+						writer.writeEndElement();
+					}
+				} else {
+					writer.writeStartElement("div");
+					writer.writeAttribute("xmlns",
+							"http://www.w3.org/1999/xhtml");
+					writeXHTML(writer, conditionalText);
+					writer.writeEndElement();
+				}
 			} else {
-				writer.writeCharacters(content.getContent());
+				writer.writeCharacters(conditionalText);
 			}
-		}
-		if (!externalLink) {
-			writer.writeEndElement();
 		}
 	}
 
@@ -631,8 +618,7 @@ class FeedWriter {
 		writer.writeStartElement("source");
 		if (source.getAttributes() != null) {
 			for (Attribute attr : source.getAttributes()) {
-				writer.writeAttribute(attr.getName(), attr
-						.getValue());
+				writer.writeAttribute(attr.getName(), attr.getValue());
 			}
 		}
 		// write the id
