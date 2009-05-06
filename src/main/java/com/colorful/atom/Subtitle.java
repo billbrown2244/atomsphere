@@ -50,6 +50,12 @@ public class Subtitle implements Serializable {
 		this.subtitle = new AtomTextConstruct(subtitle, attributes);
 	}
 
+	// copy constructor
+	Subtitle(Subtitle subtitle) throws AtomSpecException {
+		this.subtitle = new AtomTextConstruct(subtitle.getText(), subtitle
+				.getAttributes(), subtitle.getXhtmlPrefix());
+	}
+
 	/**
 	 * 
 	 * @return the text content for this element.
@@ -64,5 +70,10 @@ public class Subtitle implements Serializable {
 	 */
 	public List<Attribute> getAttributes() {
 		return subtitle.getAttributes();
+	}
+
+	// used in the feed writer.
+	String getXhtmlPrefix() {
+		return subtitle.getXhtmlPrefix();
 	}
 }

@@ -66,12 +66,10 @@ class AtomEntrySourceAdaptor implements Serializable {
 			throws AtomSpecException {
 		this.id = (id == null) ? null : new Id(id.getAttributes(), id
 				.getAtomUri());
-		this.title = (title == null) ? null : new Title(title.getText(), title
-				.getAttributes());
+		this.title = (title == null) ? null : new Title(title);
 		this.updated = (updated == null) ? null : new Updated(updated
 				.getDateTime(), updated.getAttributes());
-		this.rights = (rights == null) ? null : new Rights(rights.getText(),
-				rights.getAttributes());
+		this.rights = (rights == null) ? null : new Rights(rights);
 
 		if (authors == null) {
 			this.authors = null;
@@ -303,8 +301,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 */
 	public Title getTitle() {
 		try {
-			return (title == null) ? null : new Title(title.getText(), title
-					.getAttributes());
+			return (title == null) ? null : new Title(title);
 		} catch (Exception e) {
 			// we should never get here.
 			return null;

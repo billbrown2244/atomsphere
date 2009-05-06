@@ -108,6 +108,7 @@ public class FeedDocTest {
 			+ "   <email>johndoe@example.com</email>" + " </author>"
 			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
 			+ "</feed>";
+	//bad example here.  the code actually unencodes the text. 
 	private String title3 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\">"
 			+ "<title>One &lt;strong&gt;bold&lt;/strong&gt; foot forward</title>"
@@ -283,7 +284,6 @@ public class FeedDocTest {
 			assertTrue(e instanceof XMLStreamException);
 		}
 	}
-	
 
 	@Test
 	public void testReadFeedToStringFeed() {
@@ -301,38 +301,51 @@ public class FeedDocTest {
 			e.printStackTrace();
 			assertTrue(e instanceof XMLStreamException);
 		}
-		
-		//test the seven title variants.
+
+		// test the seven title variants.
 		try {
-			
+
 			feed1 = FeedDoc.readFeedToBean(title1);
 			assertNotNull(feed1.getTitle());
+			assertEquals(feed1.getTitle().getText(), "One bold foot forward");
 			assertNotNull(FeedDoc.readFeedToString(feed1));
-			
+
 			feed1 = FeedDoc.readFeedToBean(title2);
 			assertNotNull(feed1.getTitle());
+			assertEquals(feed1.getTitle().getText(), "One bold foot forward");
 			assertNotNull(FeedDoc.readFeedToString(feed1));
-			
+
 			feed1 = FeedDoc.readFeedToBean(title3);
 			assertNotNull(feed1.getTitle());
+			assertEquals(feed1.getTitle().getText(),
+					"One <strong>bold</strong> foot forward");
 			assertNotNull(FeedDoc.readFeedToString(feed1));
-			
+
 			feed1 = FeedDoc.readFeedToBean(title4);
 			assertNotNull(feed1.getTitle());
+			assertEquals(feed1.getTitle().getText(),
+					"One <strong>bold</strong> foot forward");
 			assertNotNull(FeedDoc.readFeedToString(feed1));
-			
+
 			feed1 = FeedDoc.readFeedToBean(title5);
 			assertNotNull(feed1.getTitle());
+			assertEquals(feed1.getTitle().getText(),
+					"One <strong>bold</strong> foot forward");
 			assertNotNull(FeedDoc.readFeedToString(feed1));
-			
+
 			feed1 = FeedDoc.readFeedToBean(title6);
 			assertNotNull(feed1.getTitle());
+			System.out.println("feed title from bean\n"+feed1.getTitle().getText());
+			System.out.println("feed title from raw\n"+"One <strong>bold</strong> foot forward<title>can you see me</title>");
+			assertEquals(feed1.getTitle().getText(),
+					"One <strong>bold</strong> foot forward<title>can you see me</title>");
 			assertNotNull(FeedDoc.readFeedToString(feed1));
-			
+
 			feed1 = FeedDoc.readFeedToBean(title7);
 			assertNotNull(feed1.getTitle());
+			assertEquals(feed1.getTitle().getText(),
+					"One <xh:strong>bold</xh:strong> foot forward ");
 			assertNotNull(FeedDoc.readFeedToString(feed1));
-			
 
 		} catch (Exception e) {
 			e.printStackTrace();

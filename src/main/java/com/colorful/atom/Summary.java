@@ -50,6 +50,12 @@ public class Summary implements Serializable {
 		this.summary = new AtomTextConstruct(summary, attributes);
 	}
 
+	// copy constructor
+	Summary(Summary summary) throws AtomSpecException {
+		this.summary = new AtomTextConstruct(summary.getText(), summary
+				.getAttributes(), summary.getXhtmlPrefix());
+	}
+
 	/**
 	 * 
 	 * @return the text content for this element.
@@ -64,5 +70,10 @@ public class Summary implements Serializable {
 	 */
 	public List<Attribute> getAttributes() {
 		return summary.getAttributes();
+	}
+
+	// used in the feed writer.
+	String getXhtmlPrefix() {
+		return summary.getXhtmlPrefix();
 	}
 }

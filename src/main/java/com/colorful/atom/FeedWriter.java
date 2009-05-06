@@ -122,6 +122,9 @@ class FeedWriter {
 
 		writer.writeStartElement("subtitle");
 
+		// set the local prefix for html content.
+		localPrefix = subtitle.getXhtmlPrefix();
+
 		// write attributes and output the conditional text
 		writeConditionalText(writer, writeAttributesAndCheckForXhtml(writer,
 				subtitle.getAttributes()), subtitle.getText());
@@ -161,6 +164,9 @@ class FeedWriter {
 	void writeTitle(XMLStreamWriter writer, Title title) throws Exception {
 
 		writer.writeStartElement("title");
+
+		// set the local prefix for html content.
+		localPrefix = title.getXhtmlPrefix();
 
 		// write attributes and output the conditional text
 		writeConditionalText(writer, writeAttributesAndCheckForXhtml(writer,
@@ -333,6 +339,9 @@ class FeedWriter {
 
 		writer.writeStartElement("rights");
 
+		// set the local prefix for html content.
+		localPrefix = rights.getXhtmlPrefix();
+
 		// write attributes and output the conditional text
 		writeConditionalText(writer, writeAttributesAndCheckForXhtml(writer,
 				rights.getAttributes()), rights.getText());
@@ -503,6 +512,9 @@ class FeedWriter {
 
 		writer.writeStartElement("summary");
 
+		// set the local prefix for html content.
+		localPrefix = summary.getXhtmlPrefix();
+
 		// write attributes and output the conditional text
 		writeConditionalText(writer, writeAttributesAndCheckForXhtml(writer,
 				summary.getAttributes()), summary.getText());
@@ -512,20 +524,14 @@ class FeedWriter {
 
 	private boolean writeAttributesAndCheckForXhtml(XMLStreamWriter writer,
 			List<Attribute> attributes) throws XMLStreamException {
-		boolean writeXhtml = false;
 		if (attributes != null) {
 			for (Attribute attr : attributes) {
 				writer.writeAttribute(attr.getName(), attr.getValue());
-
-				// check to see if we need to
-				// wrap the text in a an <xhtml:div> tag.
-				if (attr.getName().equals("type")
-						&& attr.getValue().equals("xhtml")) {
-					writeXhtml = true;
-				}
 			}
 		}
-		return writeXhtml;
+		// check to see if we need to
+		// wrap the text in a an <xhtml:div> tag.
+		return (FeedDoc.getContentType(attributes) == FeedDoc.ContentType.XHTML);
 	}
 
 	void writePublished(XMLStreamWriter writer, Published published)
@@ -544,7 +550,10 @@ class FeedWriter {
 		} else {
 
 			writer.writeStartElement("content");
-			
+
+			// set the local prefix for html content.
+			localPrefix = content.getXhtmlPrefix();
+
 			// write attributes and output the conditional text
 			writeConditionalText(writer, writeAttributesAndCheckForXhtml(
 					writer, content.getAttributes()), content.getContent());
@@ -557,48 +566,73 @@ class FeedWriter {
 
 	// for writing out text, escaped html or xhtml markup with conditional div
 	// wrapper.
+	private String localPrefix = null;
+
 	private void writeConditionalText(XMLStreamWriter writer,
 			boolean writeXhtml, String conditionalText) throws Exception,
 			XMLStreamException {
+		boolean namespaceDeclarationExists = false;
 		if (conditionalText != null) {
 			if (writeXhtml) {
 
-				if (conditionalText.trim().endsWith("</div>")
-						|| conditionalText.trim().endsWith(":div>")) {
-					String prefix = null;
-					if(parentEntry != null && parentEntry.getAttributes() != null){
-						for (Attribute attr : parentEntry.getAttributes()) {
-							if (attr.getName().indexOf("xmlns:") > 0
-									&& attr.getValue().equals(
-											"http://www.w3.org/1999/xhtml")) {
-								prefix = attr.getName().substring(
-										attr.getName().indexOf(":"));
-								System.out.println("prefix = " + prefix);
-								break;
-							}
+				String prefix = null;
+				if (parentEntry != null && parentEntry.getAttributes() != null) {
+					for (Attribute attr : parentEntry.getAttributes()) {
+						System.out.println("attr name = " + attr.getName());
+						System.out.println("attr val = " + attr.getValue());
+						if (attr.getName().indexOf("xmlns:") >= 0) {
+							prefix = attr.getName().substring(
+									attr.getName().indexOf(":")+1);
+							System.out.println("prefix should be: "+attr.getName().substring(
+									attr.getName().indexOf(":")));
+						}else {
+							System.out.println("attr.getName = "+attr.getName().indexOf("xmlns:"));
 						}
-					}
-					if(prefix == null && (parentFeed != null && parentFeed.getAttributes() != null)){
-						for (Attribute attr : parentFeed.getAttributes()) {
-							if (attr.getName().indexOf("xmlns:") > 0
-									&& attr.getValue().equals(
-											"http://www.w3.org/1999/xhtml")) {
-								prefix = attr.getName().substring(
-										attr.getName().indexOf(":"));
-								System.out.println("prefix = " + prefix);
-								break;
-							}
+
+						if ((attr.getValue()
+								.equals("http://www.w3.org/1999/xhtml"))
+								&& (localPrefix.equals(prefix))) {
+							namespaceDeclarationExists = true;
+							break;
 						}
+
+						System.out
+								.println("prefix in parent entry = " + prefix);
 					}
-					if(prefix != null && conditionalText.trim().startsWith("<"+prefix+":div>")){
-						writeXHTML(writer, conditionalText);
-					}else{
-						writer.writeStartElement("div");
+				}
+				if (prefix == null
+						&& (parentFeed != null && parentFeed.getAttributes() != null)) {
+					for (Attribute attr : parentEntry.getAttributes()) {
+						System.out.println("attr name = " + attr.getName());
+						System.out.println("attr val = " + attr.getValue());
+						if (attr.getName().indexOf("xmlns:") >= 0) {
+							prefix = attr.getName().substring(
+									attr.getName().indexOf(":")+1);
+						}
+
+						if ((attr.getValue()
+								.equals("http://www.w3.org/1999/xhtml"))
+								&& (localPrefix.equals(prefix))) {
+							namespaceDeclarationExists = true;
+							break;
+						}
+
+						System.out
+								.println("prefix in parent feed = " + prefix);
+					}
+				}
+				
+				System.out.println("prefix = " + prefix);
+				if (prefix != null) {
+					writer.writeStartElement(prefix + ":div");
+					// include the namespace declaration if it doesn't exist
+					// already in the parent.
+					if (!namespaceDeclarationExists) {
 						writer.writeAttribute("xmlns",
 								"http://www.w3.org/1999/xhtml");
-						writeXHTML(writer, conditionalText);
-						writer.writeEndElement();
 					}
+					writeXHTML(writer, conditionalText);
+					writer.writeEndElement();
 				} else {
 					writer.writeStartElement("div");
 					writer.writeAttribute("xmlns",
@@ -606,7 +640,10 @@ class FeedWriter {
 					writeXHTML(writer, conditionalText);
 					writer.writeEndElement();
 				}
+
 			} else {
+				// write the standard escaped text.
+				// where the stax api takes care of the escaping.
 				writer.writeCharacters(conditionalText);
 			}
 		}

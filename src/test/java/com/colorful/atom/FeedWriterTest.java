@@ -80,26 +80,28 @@ public class FeedWriterTest {
 			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>    "
 			+ "<title>Requirements</title>    <published>"
 			+ "2007-02-26T12:58:53.197-06:00</published>    "
+			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 			// non xhtml prefix xh is bound at entry
-			+ "<summary type=\"xhtml\">"
+			+ "<content type=\"xhtml\">"
 			+ "<xh:div>"
 			+ "This is <xh:b>XHTML</xh:b> content."
 			+ "</xh:div>"
-			+ "</summary>" + "</entry>";
+			+ "</content>" + "</entry>";
 
 	private String entry1Result = "<entry xmlns:xh=\"http://some.xh.specific.uri/xh\">"
 			+ "<id>http://colorfulsoftware.localhost/colorfulsoftware/projects/"
 			+ "atomsphere/atom.xml#Requirements</id>"
 			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>"
 			+ "<title>Requirements</title>"
+			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 			+ "<published>2007-02-26T12:58:53.197-06:00</published>"
-			+ "<summary type=\"xhtml\">"
+			+ "<content type=\"xhtml\">"
 			// non xhtml prefix xh is bound at entry means 
 			//wrap in supplied xhtml div
 			+ "<div xmlns=\"http://www.w3.org/1999/xhtml\"><xh:div>"
 			+ "This is &lt;xh:b&gt;XHTML&lt;/xh:b&gt; content."
 			+ "</xh:div></div>"
-			+ "</summary>" + "</entry>";
+			+ "</content>" + "</entry>";
 
 	private String entry2 = "<entry xmlns:xh=\"http://www.w3.org/1999/xhtml\">    "
 			+ "<id>http://colorfulsoftware.localhost/colorfulsoftware/projects/"
@@ -107,6 +109,7 @@ public class FeedWriterTest {
 			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>    "
 			+ "<title>Requirements</title>    "
 			+ "<published>2007-02-26T12:58:53.197-06:00</published>    "
+			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 			// xhtml prefix xh is bound at entry
 			+ "<content type=\"xhtml\">"
 			+ "<xh:div>"
@@ -120,6 +123,7 @@ public class FeedWriterTest {
 			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>"
 			+ "<title>Requirements</title>"
 			+ "<published>2007-02-26T12:58:53.197-06:00</published>"
+			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 			+ "<content type=\"xhtml\">"
 			// xhtml prefix xh is bound at entry
 			// no need to wrap in supplied div.
@@ -132,6 +136,7 @@ public class FeedWriterTest {
 			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>    "
 			+ "<title>Requirements</title>    "
 			+ "<published>2007-02-26T12:58:53.197-06:00</published>    "
+			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 			+ "<summary type=\"xhtml\">"
 			// xhtml namespace is bound at div
 			+ "<div xmlns=\"http://www.w3.org/1999/xhtml\">"
@@ -151,6 +156,7 @@ public class FeedWriterTest {
 			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>"
 			+ "<title>Requirements</title>"
 			+ "<published>2007-02-26T12:58:53.197-06:00</published>"
+			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 			+ "<summary type=\"xhtml\">"
 			// xhtml namespace is bound at div
 			// no need to wrap in supplied div.
@@ -173,6 +179,7 @@ public class FeedWriterTest {
 		+ "<updated>2007-03-02T12:59:54.274-06:00</updated>    "
 		+ "<title>Requirements</title>    "
 		+ "<published>2007-02-26T12:58:53.197-06:00</published>    "
+		+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 		+ "<summary type=\"xhtml\">"
 		// xhtml namespace is bound at div
 		+ "<div xmlns=\"http://www.w3.org/1999/xhtml\">"
@@ -192,6 +199,7 @@ private String entry4Result = "<entry xmlns:xhtml=\"http://www.w3.org/1999/xhtml
 		+ "<updated>2007-03-02T12:59:54.274-06:00</updated>"
 		+ "<title>Requirements</title>"
 		+ "<published>2007-02-26T12:58:53.197-06:00</published>"
+		+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 		+ "<summary type=\"xhtml\">"
 		// xhtml namespace is bound at div
 		// no need to wrap in supplied div.

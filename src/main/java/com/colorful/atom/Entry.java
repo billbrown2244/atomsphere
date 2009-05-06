@@ -100,7 +100,7 @@ public class Entry implements Serializable {
 		} else {
 
 			if (content.getAttributes() != null) {
-				for(Attribute attr: content.getAttributes()){
+				for (Attribute attr : content.getAttributes()) {
 					// check for src attribute
 					if (attr.getName().equals("src") && summary == null) {
 						throw new AtomSpecException(
@@ -121,8 +121,7 @@ public class Entry implements Serializable {
 				}
 			}
 
-			this.content = new Content(content.getContent(), content
-					.getAttributes());
+			this.content = new Content(content);
 		}
 
 		this.published = (published == null) ? null : new Published(published
@@ -134,8 +133,7 @@ public class Entry implements Serializable {
 						.getAttributes(), source.getExtensions(), source
 						.getGenerator(), source.getSubtitle(),
 				source.getIcon(), source.getLogo());
-		this.summary = (summary == null) ? null : new Summary(
-				summary.getText(), summary.getAttributes());
+		this.summary = (summary == null) ? null : new Summary(summary);
 	}
 
 	/**
@@ -144,8 +142,7 @@ public class Entry implements Serializable {
 	 */
 	public Content getContent() {
 		try {
-			return (content == null) ? null : new Content(content.getContent(),
-					content.getAttributes());
+			return (content == null) ? null : new Content(content);
 		} catch (Exception e) {
 			// we should never get here.
 			return null;
@@ -194,8 +191,7 @@ public class Entry implements Serializable {
 	 */
 	public Summary getSummary() {
 		try {
-			return (summary == null) ? null : new Summary(summary.getText(),
-					summary.getAttributes());
+			return (summary == null) ? null : new Summary(summary);
 		} catch (Exception e) {
 			// we should never get here.
 			return null;

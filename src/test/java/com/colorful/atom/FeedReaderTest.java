@@ -181,7 +181,7 @@ public class FeedReaderTest {
 			assertTrue(summary
 					.getText()
 					.equals(
-							"<div xmlns=\"http://www.w3.org/1999/xhtml\">This is <b>XHTML</b> content.</div>"));
+							"This is <b>XHTML</b> content."));
 			assertTrue(summary.getAttributes() != null);
 			assertTrue(summary.getAttributes().size() == 1);
 			assertTrue(summary.getAttributes().get(0).getName().equals("type"));
@@ -194,7 +194,7 @@ public class FeedReaderTest {
 			assertTrue(summary
 					.getText()
 					.equals(
-							"<xhtml:div xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">This is <xhtml:b>XHTML</xhtml:b> content.</xhtml:div>"));
+							"This is <xhtml:b>XHTML</xhtml:b> content."));
 			assertTrue(summary.getAttributes() != null);
 			assertTrue(summary.getAttributes().size() == 1);
 			assertTrue(summary.getAttributes().get(0).getName().equals("type"));
@@ -219,7 +219,7 @@ public class FeedReaderTest {
 			summary = entry.getSummary();
 			assertTrue(summary != null);
 			assertTrue(summary.getText().equals(
-					"<xh:div>This is <xh:b>XHTML</xh:b> content.</xh:div>"));
+					"This is <xh:b>XHTML</xh:b> content."));
 			assertTrue(summary.getAttributes() != null);
 			assertTrue(summary.getAttributes().size() == 1);
 			assertTrue(summary.getAttributes().get(0).getName().equals("type"));
@@ -261,7 +261,7 @@ public class FeedReaderTest {
 			assertTrue(content
 					.getContent()
 					.equals(
-							"<div xmlns=\"http://www.w3.org/1999/xhtml\">This is <b>XHTML</b> content.</div>"));
+							"This is <b>XHTML</b> content."));
 			assertTrue(content.getAttributes() != null);
 			assertTrue(content.getAttributes().size() == 1);
 			assertTrue(content.getAttributes().get(0).getName().equals("type"));
@@ -274,7 +274,7 @@ public class FeedReaderTest {
 			assertTrue(content
 					.getContent()
 					.equals(
-							"<xhtml:div xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">This is <xhtml:b>XHTML</xhtml:b> content.</xhtml:div>"));
+							"This is <xhtml:b>XHTML</xhtml:b> content."));
 			assertTrue(content.getAttributes() != null);
 			assertTrue(content.getAttributes().size() == 1);
 			assertTrue(content.getAttributes().get(0).getName().equals("type"));
@@ -299,7 +299,7 @@ public class FeedReaderTest {
 			content = entry.getContent();
 			assertTrue(content != null);
 			assertTrue(content.getContent().equals(
-					"<xh:div>This is <xh:b>XHTML</xh:b> content.</xh:div>"));
+					"This is <xh:b>XHTML</xh:b> content."));
 			assertTrue(content.getAttributes() != null);
 			assertTrue(content.getAttributes().size() == 1);
 			assertTrue(content.getAttributes().get(0).getName().equals("type"));
@@ -324,7 +324,7 @@ public class FeedReaderTest {
 					new StringReader(title1));
 			Title title = feedReader.readTitle(reader);
 			assertTrue(title.getText().equals(
-					"<xhtml:div>Less: <xhtml:em> < </xhtml:em></xhtml:div>"));
+					"Less: <xhtml:em> < </xhtml:em>"));
 			assertTrue(title.getAttributes() != null);
 			assertTrue(title.getAttributes().size() == 2);
 			assertTrue(title.getAttributes().get(1).getName().equals("type"));

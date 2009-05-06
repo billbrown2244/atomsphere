@@ -77,8 +77,7 @@ public class Source implements Serializable {
 				extensions);
 		this.generator = (generator == null) ? null : new Generator(generator
 				.getAttributes(), generator.getText());
-		this.subtitle = (subtitle == null) ? null : new Subtitle(subtitle
-				.getText(), subtitle.getAttributes());
+		this.subtitle = (subtitle == null) ? null : new Subtitle(subtitle);
 		this.icon = (icon == null) ? null : new Icon(icon.getAttributes(), icon
 				.getAtomUri());
 		this.logo = (logo == null) ? null : new Logo(logo.getAttributes(), logo
@@ -133,8 +132,7 @@ public class Source implements Serializable {
 	 */
 	public Subtitle getSubtitle() {
 		try {
-			return (subtitle == null) ? null : new Subtitle(subtitle.getText(),
-					subtitle.getAttributes());
+			return (subtitle == null) ? null : new Subtitle(subtitle);
 		} catch (Exception e) {
 			// we should never get here.
 			return null;

@@ -74,19 +74,15 @@ public class Content implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -6990178735588333050L;
-	private final List<Attribute> attributes;
-	private final String content;
+	private final AtomTextConstruct content;
 
 	// use the factory method in the FeedDoc.
 	Content(String content, List<Attribute> attributes)
 			throws AtomSpecException {
-		this.content = content;
-
-		if (attributes == null) {
-			this.attributes = null;
-		} else {
-			this.attributes = new LinkedList<Attribute>();
-			for(Attribute attr: attributes){
+		List<Attribute> attrsLocal = null;
+		if (attributes != null) {
+			attrsLocal = new LinkedList<Attribute>();
+			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
 				if (!FeedDoc.isAtomCommonAttribute(attr)
 						&& !FeedDoc.isUndefinedAttribute(attr)
@@ -95,25 +91,17 @@ public class Content implements Serializable {
 					throw new AtomSpecException("Unsuppported attribute "
 							+ attr.getName() + " in this content element ");
 				}
-				this.attributes.add(new Attribute(attr.getName(), attr
-						.getValue()));
+				attrsLocal.add(new Attribute(attr.getName(), attr.getValue()));
 			}
 		}
+
+		this.content = new AtomTextConstruct(content, attrsLocal);
 	}
 
-	/**
-	 * 
-	 * @return the attributes for this element.
-	 */
-	public List<Attribute> getAttributes() {
-		if (attributes == null) {
-			return null;
-		}
-		List<Attribute> attrsCopy = new LinkedList<Attribute>();
-		for(Attribute attr: this.attributes){
-			attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
-		}
-		return attrsCopy;
+	// copy constructor
+	Content(Content content) throws AtomSpecException {
+		this.content = new AtomTextConstruct(content.getContent(), content
+				.getAttributes(), content.getXhtmlPrefix());
 	}
 
 	/**
@@ -121,6 +109,19 @@ public class Content implements Serializable {
 	 * @return the content for this element.
 	 */
 	public String getContent() {
-		return content;
+		return content.getText();
+	}
+
+	/**
+	 * 
+	 * @return the attributes for this element.
+	 */
+	public List<Attribute> getAttributes() {
+		return content.getAttributes();
+	}
+
+	// used in the feed writer.
+	String getXhtmlPrefix() {
+		return content.getXhtmlPrefix();
 	}
 }

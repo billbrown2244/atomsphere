@@ -361,26 +361,24 @@ class FeedReader {
 		List<Attribute> attributes = getAttributes(reader, null);
 		// if the content is XHTML, we need to read in the contents of the div.
 		String summary = null;
-		if (containsHTMLOrXHTML(attributes)) {
+		if (containsXHTML(attributes)) {
 			summary = readXHTML(reader, "summary");
+		} else if (containsHTML(attributes)) {
+			summary = readHTML(reader, "summary");
 		} else {
 			summary = reader.getElementText();
 		}
 		return FeedDoc.buildSummary(summary, attributes);
 	}
 
-	boolean containsHTMLOrXHTML(List<Attribute> attributes) {
-		if (attributes != null) {
-			for (Attribute attr : attributes) {
-				if ((attr.getName().equals("type") && attr.getValue().equals(
-						"xhtml"))
-						|| (attr.getName().equals("type") && attr.getValue()
-								.equals("html"))) {
-					return true;
-				}
-			}
-		}
-		return false;
+	boolean containsXHTML(List<Attribute> attributes) {
+		Attribute xhtml = FeedDoc.getAttributeFromGroup(attributes, "type");
+		return ((xhtml != null) && xhtml.getValue().equals("xhtml"));
+	}
+
+	boolean containsHTML(List<Attribute> attributes) {
+		Attribute xhtml = FeedDoc.getAttributeFromGroup(attributes, "type");
+		return ((xhtml != null) && xhtml.getValue().equals("html"));
 	}
 
 	Source readSource(XMLStreamReader reader) throws Exception {
@@ -504,8 +502,10 @@ class FeedReader {
 		List<Attribute> attributes = getAttributes(reader, null);
 		// if the content is XHTML, we need to skip the contents of the div.
 		String content = null;
-		if (containsHTMLOrXHTML(attributes)) {
+		if (containsXHTML(attributes)) {
 			content = readXHTML(reader, "content");
+		} else if (containsHTML(attributes)) {
+			content = readHTML(reader, "content");
 		} else {
 			content = reader.getElementText();
 		}
@@ -530,11 +530,14 @@ class FeedReader {
 		List<Attribute> attributes = getAttributes(reader, null);
 		// if the content is XHTML, we need to read in the contents of the div.
 		String title = null;
-		if (containsHTMLOrXHTML(attributes)) {
+		if (containsXHTML(attributes)) {
 			title = readXHTML(reader, "title");
+		} else if (containsHTML(attributes)) {
+			title = readHTML(reader, "title");
 		} else {
 			title = reader.getElementText();
 		}
+		System.out.println("title before build = "+title);
 		return FeedDoc.buildTitle(title, attributes);
 	}
 
@@ -588,12 +591,65 @@ class FeedReader {
 				"<hr></hr>", "<hr />");
 	}
 
+	//escape the tag names here.
+	String readHTML(XMLStreamReader reader, String parentElement)
+			throws XMLStreamException, Exception {
+		StringBuffer xhtml = new StringBuffer();
+		String elementName = null;
+
+		while (reader.hasNext()) {
+			boolean breakOut = false;
+			switch (reader.next()) {
+
+			case XMLStreamConstants.START_ELEMENT:
+				elementName = getElementName(reader);
+				xhtml.append("&gt;" + elementName);
+				List<Attribute> attributes = getAttributes(reader, null);
+				// add the attributes
+				if (attributes != null && attributes.size() > 0) {
+					for (Attribute attr : attributes) {
+						xhtml.append(" " + attr.getName() + "=\""
+								+ attr.getValue() + "\"");
+					}
+				}
+				xhtml.append("&lt;");
+				break;
+
+			case XMLStreamConstants.END_ELEMENT:
+				elementName = getElementName(reader);
+				if (elementName.equals(parentElement)
+						&& namespaceURI.equals("http://www.w3.org/2005/Atom")) {
+					breakOut = true;
+				} else {
+					xhtml.append("&gt;/" + elementName + "&gt;");
+				}
+				break;
+
+			case XMLStreamConstants.CDATA:
+				xhtml.append("<![CDATA[" + reader.getText() + "]]>");
+				break;
+
+			default:
+				xhtml.append(reader.getText());
+			}
+			if (breakOut) {
+				// clear past the end enclosing div.
+				// reader.next();
+				break;
+			}
+		}
+		return xhtml.toString().replaceAll("<br></br>", "&gt;br /&lt;")
+				.replaceAll("<hr></hr>", "&gt;hr /&lt;");
+	}
+
 	Subtitle readSubtitle(XMLStreamReader reader) throws Exception {
 		List<Attribute> attributes = getAttributes(reader, null);
 		// if the content is XHTML, we need to read in the contents of the div.
 		String subtitle = null;
-		if (containsHTMLOrXHTML(attributes)) {
+		if (containsXHTML(attributes)) {
 			subtitle = readXHTML(reader, "subtitle");
+		}else if (containsHTML(attributes)) {
+			subtitle = readHTML(reader, "subtitle");
 		} else {
 			subtitle = reader.getElementText();
 		}
@@ -604,8 +660,10 @@ class FeedReader {
 		List<Attribute> attributes = getAttributes(reader, null);
 		// if the content is XHTML, we need to read in the contents of the div.
 		String rights = null;
-		if (containsHTMLOrXHTML(attributes)) {
+		if (containsXHTML(attributes)) {
 			rights = readXHTML(reader, "rights");
+		}else if (containsHTML(attributes)) {
+			rights = readHTML(reader, "rights");
 		} else {
 			rights = reader.getElementText();
 		}

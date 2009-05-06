@@ -49,6 +49,11 @@ public class Rights implements Serializable {
 		this.rights = new AtomTextConstruct(rights, attributes);
 	}
 
+	Rights(Rights rights) throws AtomSpecException {
+		this.rights = new AtomTextConstruct(rights.getText(), rights
+				.getAttributes(), rights.getXhtmlPrefix());
+	}
+
 	/**
 	 * 
 	 * @return the text content for this element.
@@ -63,5 +68,10 @@ public class Rights implements Serializable {
 	 */
 	public List<Attribute> getAttributes() {
 		return rights.getAttributes();
+	}
+
+	// used in the feed writer.
+	String getXhtmlPrefix() {
+		return rights.getXhtmlPrefix();
 	}
 }
