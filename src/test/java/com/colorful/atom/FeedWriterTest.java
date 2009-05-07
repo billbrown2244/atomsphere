@@ -74,34 +74,30 @@ public class FeedWriterTest {
 			+ "<ul >				<li>Deploy the war file to any J2EE "
 			+ "servlet container.</li>				</ul>";
 
-	private String entry1 = "<entry xmlns:xh=\"http://some.xh.specific.uri/xh\">    "
+	private String entry1 = "<entry xmlns=\"http://www.w3.org/2005/Atom\">"
 			+ "<id>http://colorfulsoftware.localhost/colorfulsoftware/"
 			+ "projects/atomsphere/atom.xml#Requirements</id>    "
 			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>    "
-			+ "<title>Requirements</title>    <published>"
+			+ "<title type=\"xhtml\" xmlns:xhtml=\"http://www.w3.org/1999/xhtml\"><xhtml:div>"
+			+ "Less: <xhtml:em> &lt; </xhtml:em></xhtml:div></title>"
+			+ "<summary>About the project</summary>    "
+			+ "<published>"
 			+ "2007-02-26T12:58:53.197-06:00</published>    "
 			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
-			// non xhtml prefix xh is bound at entry
-			+ "<content type=\"xhtml\">"
-			+ "<xh:div>"
-			+ "This is <xh:b>XHTML</xh:b> content."
-			+ "</xh:div>"
-			+ "</content>" + "</entry>";
+			+ "<content type=\"text/html\" src=\"http://some.xh.specific.uri/xh\" />"
+			+ "</entry>";
 
-	private String entry1Result = "<entry xmlns:xh=\"http://some.xh.specific.uri/xh\">"
+	private String entry1Result = "<entry xmlns=\"http://www.w3.org/2005/Atom\">"
 			+ "<id>http://colorfulsoftware.localhost/colorfulsoftware/projects/"
 			+ "atomsphere/atom.xml#Requirements</id>"
 			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>"
-			+ "<title>Requirements</title>"
+			+ "<title xmlns:xhtml=\"http://www.w3.org/1999/xhtml\" type=\"xhtml\"><xhtml:div>"
+			+ "Less: <xhtml:em> &lt; </xhtml:em></xhtml:div></title>"
+			+ "<summary>About the project</summary>    "
 			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 			+ "<published>2007-02-26T12:58:53.197-06:00</published>"
-			+ "<content type=\"xhtml\">"
-			// non xhtml prefix xh is bound at entry means 
-			//wrap in supplied xhtml div
-			+ "<div xmlns=\"http://www.w3.org/1999/xhtml\"><xh:div>"
-			+ "This is &lt;xh:b&gt;XHTML&lt;/xh:b&gt; content."
-			+ "</xh:div></div>"
-			+ "</content>" + "</entry>";
+			+ "<content type=\"text/html\" src=\"http://some.xh.specific.uri/xh\" />"
+			+ "</entry>";
 
 	private String entry2 = "<entry xmlns:xh=\"http://www.w3.org/1999/xhtml\">    "
 			+ "<id>http://colorfulsoftware.localhost/colorfulsoftware/projects/"
@@ -169,52 +165,48 @@ public class FeedWriterTest {
 			// no need to wrap in supplied div.
 			+ "<xh:div>"
 			+ "This is &lt;xh:b&gt;XHTML&lt;/xh:b&gt; content."
-			+ "</xh:div>"
-			+ "</content>"
-			+ "</entry>";
-	
-	private String entry4 = "<entry xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">    "
-		+ "<id>http://colorfulsoftware.localhost/colorfulsoftware/"
-		+ "projects/atomsphere/atom.xml#Requirements</id>    "
-		+ "<updated>2007-03-02T12:59:54.274-06:00</updated>    "
-		+ "<title>Requirements</title>    "
-		+ "<published>2007-02-26T12:58:53.197-06:00</published>    "
-		+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
-		+ "<summary type=\"xhtml\">"
-		// xhtml namespace is bound at div
-		+ "<div xmlns=\"http://www.w3.org/1999/xhtml\">"
-		+ "This is <b>XHTML</b> content."
-		+ "</div>"
-		+ "</summary>"
-		+ "<content type=\"xhtml\">"
-		// xhtml prefix xhtml is bound at entry
-		+ "<xh:div>"
-		+ "This is <xh:b>XHTML</xh:b> content."
-		+ "</xh:div>"
-		+ "</content>" + "</entry>";
+			+ "</xh:div>" + "</content>" + "</entry>";
 
-private String entry4Result = "<entry xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">"
-		+ "<id>http://colorfulsoftware.localhost/colorfulsoftware/"
-		+ "projects/atomsphere/atom.xml#Requirements</id>"
-		+ "<updated>2007-03-02T12:59:54.274-06:00</updated>"
-		+ "<title>Requirements</title>"
-		+ "<published>2007-02-26T12:58:53.197-06:00</published>"
-		+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
-		+ "<summary type=\"xhtml\">"
-		// xhtml namespace is bound at div
-		// no need to wrap in supplied div.
-		+ "<div xmlns=\"http://www.w3.org/1999/xhtml\">"
-		+ "<xh:div>This is &lt;xh:b&gt;XHTML&lt;/xh:b&gt; content.</xh:div>"
-		+ "</div>"
-		+ "</summary>"
-		+ "<content type=\"xhtml\">"
-		// xhtml prefix xhtml is bound at entry
-		// no need to wrap in supplied div.
-		+ "<xhtml:div>"
-		+ "This is &lt;xhtml:b&gt;XHTML&lt;/xhtml:b&gt; content."
-		+ "</xhtml:div>"
-		+ "</content>"
-		+ "</entry>";
+	private String entry4 = "<entry xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">    "
+			+ "<id>http://colorfulsoftware.localhost/colorfulsoftware/"
+			+ "projects/atomsphere/atom.xml#Requirements</id>    "
+			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>    "
+			+ "<title>Requirements</title>    "
+			+ "<published>2007-02-26T12:58:53.197-06:00</published>    "
+			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
+			+ "<summary type=\"xhtml\">"
+			// xhtml namespace is bound at div
+			+ "<div xmlns=\"http://www.w3.org/1999/xhtml\">"
+			+ "This is <b>XHTML</b> content."
+			+ "</div>"
+			+ "</summary>"
+			+ "<content type=\"xhtml\">"
+			// xhtml prefix xhtml is bound at entry
+			+ "<xh:div>"
+			+ "This is <xh:b>XHTML</xh:b> content."
+			+ "</xh:div>"
+			+ "</content>" + "</entry>";
+
+	private String entry4Result = "<entry xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">"
+			+ "<id>http://colorfulsoftware.localhost/colorfulsoftware/"
+			+ "projects/atomsphere/atom.xml#Requirements</id>"
+			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>"
+			+ "<title>Requirements</title>"
+			+ "<published>2007-02-26T12:58:53.197-06:00</published>"
+			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
+			+ "<summary type=\"xhtml\">"
+			// xhtml namespace is bound at div
+			// no need to wrap in supplied div.
+			+ "<div xmlns=\"http://www.w3.org/1999/xhtml\">"
+			+ "<xh:div>This is &lt;xh:b&gt;XHTML&lt;/xh:b&gt; content.</xh:div>"
+			+ "</div>"
+			+ "</summary>"
+			+ "<content type=\"xhtml\">"
+			// xhtml prefix xhtml is bound at entry
+			// no need to wrap in supplied div.
+			+ "<xhtml:div>"
+			+ "This is &lt;xhtml:b&gt;XHTML&lt;/xhtml:b&gt; content."
+			+ "</xhtml:div>" + "</content>" + "</entry>";
 
 	@Before
 	public void setUp() throws Exception {
@@ -405,7 +397,7 @@ private String entry4Result = "<entry xmlns:xhtml=\"http://www.w3.org/1999/xhtml
 					null);
 			assertTrue(entries != null);
 			assertTrue(entries.size() == 1);
-			
+
 			entries = new FeedReader().readEntry(XMLInputFactory.newInstance()
 					.createXMLStreamReader(new StringReader(entry4)), null);
 			assertTrue(entries != null);
@@ -420,7 +412,6 @@ private String entry4Result = "<entry xmlns:xhtml=\"http://www.w3.org/1999/xhtml
 			System.out.println("\nxml7 = " + theXMLString.toString()
 					+ "\nxml8 = " + entry4Result);
 			assertEquals(theXMLString.toString(), entry4Result);
-			
 
 		} catch (Exception e) {
 			e.printStackTrace();

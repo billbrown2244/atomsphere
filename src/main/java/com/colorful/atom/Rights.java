@@ -46,12 +46,13 @@ public class Rights implements Serializable {
 
 	// use the factory method in the FeedDoc.
 	Rights(String rights, List<Attribute> attributes) throws AtomSpecException {
-		this.rights = new AtomTextConstruct(rights, attributes);
+		this.rights = new AtomTextConstruct(rights, attributes, false);
 	}
 
 	Rights(Rights rights) throws AtomSpecException {
 		this.rights = new AtomTextConstruct(rights.getText(), rights
-				.getAttributes(), rights.getXhtmlPrefix());
+				.getAttributes(), rights.getDivWrapperStart(), rights
+				.getDivWrapperEnd(), false);
 	}
 
 	/**
@@ -70,8 +71,11 @@ public class Rights implements Serializable {
 		return rights.getAttributes();
 	}
 
-	// used in the feed writer.
-	String getXhtmlPrefix() {
-		return rights.getXhtmlPrefix();
+	String getDivWrapperStart() {
+		return rights.getDivWrapperStart();
+	}
+
+	String getDivWrapperEnd() {
+		return rights.getDivWrapperEnd();
 	}
 }

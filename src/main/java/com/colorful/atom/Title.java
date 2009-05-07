@@ -47,14 +47,15 @@ public class Title implements Serializable {
 	// use the factory method in the FeedDoc.
 	Title(String title, List<Attribute> attributes) throws AtomSpecException {
 		System.out.println("calling regular constructor.");
-		this.title = new AtomTextConstruct(title, attributes);
+		this.title = new AtomTextConstruct(title, attributes, false);
 	}
 
-	//copy constructor
+	// copy constructor
 	Title(Title title) throws AtomSpecException {
 		System.out.println("calling copy constructor.");
 		this.title = new AtomTextConstruct(title.getText(), title
-				.getAttributes(), title.getXhtmlPrefix());
+				.getAttributes(), title.getDivWrapperStart(), title
+				.getDivWrapperEnd(), false);
 	}
 
 	/**
@@ -73,8 +74,11 @@ public class Title implements Serializable {
 		return title.getAttributes();
 	}
 
-	// used in the feed writer.
-	String getXhtmlPrefix() {
-		return title.getXhtmlPrefix();
+	String getDivWrapperStart() {
+		return title.getDivWrapperStart();
+	}
+
+	String getDivWrapperEnd() {
+		return title.getDivWrapperEnd();
 	}
 }

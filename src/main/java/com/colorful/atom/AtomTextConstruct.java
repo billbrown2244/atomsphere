@@ -48,108 +48,138 @@ import java.util.List;
  * 
  */
 class AtomTextConstruct implements Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 5347393958118559606L;
 
 	private final List<Attribute> attributes;
 	private final String text;
-	private final String xhtmlPrefix;
+	private final String divWrapperStart;
+	private final String divWrapperEnd;
 
-	/**
-	 * 
-	 * @param text
-	 *            the text content of the element
-	 * @param attributes
-	 *            the attributes of the element. the attributes should contain a
-	 *            "type" attribute specifying either text,html, or xhtml.
-	 */
-	public AtomTextConstruct(String text, List<Attribute> attributes)
-			throws AtomSpecException {
-
+	// content elements do a different validation.
+	AtomTextConstruct(String text, List<Attribute> attributes,
+			boolean isContentElement) throws AtomSpecException {
 		if (attributes == null) {
 			this.attributes = null;
 		} else {
-
-			// add the attributes
-			this.attributes = new LinkedList<Attribute>();
-
-			for (Attribute attr : attributes) {
-				// check for unsupported attribute.
-				if (!FeedDoc.isAtomCommonAttribute(attr)
-						&& !FeedDoc.isUndefinedAttribute(attr)
-						&& !attr.getName().equals("type")) {
-					throw new AtomSpecException("Unsuppported attribute "
-							+ attr.getName() + " for this Atom Text Construct.");
+			// content elements have a slightly different validation.
+			if (isContentElement) {
+				this.attributes = new LinkedList<Attribute>();
+				for (Attribute attr : attributes) {
+					// check for unsupported attribute.
+					if (!FeedDoc.isAtomCommonAttribute(attr)
+							&& !FeedDoc.isUndefinedAttribute(attr)
+							&& !attr.getName().equals("type")
+							&& !attr.getName().equals("src")) {
+						throw new AtomSpecException("Unsuppported attribute "
+								+ attr.getName() + " in this content element ");
+					}
+					this.attributes.add(new Attribute(attr.getName(), attr
+							.getValue()));
 				}
-				this.attributes.add(new Attribute(attr.getName(), attr
-						.getValue()));
-			}
-		}
-
-		// if this is xhtml, strip the outer div tag from the content
-		String textLocal = text;
-		String prefix = null;
-		System.out.println("textLocal = " + textLocal);
-		System.out.println("contains xhtml: "+(FeedDoc.getContentType(this.attributes) == FeedDoc.ContentType.XHTML));
-		if (FeedDoc.getContentType(this.attributes) == FeedDoc.ContentType.XHTML) {
-			// check for a prefix.
-			int endBracket = textLocal.indexOf(">");
-			int firstSpace = textLocal.indexOf(" ");
-			if (firstSpace != -1 && firstSpace < endBracket) {
-				prefix = textLocal.substring(0, firstSpace + 1);
 			} else {
-				prefix = textLocal.substring(0, endBracket);
-			}
-			prefix = prefix.substring(1).trim();
-			System.out.println("xhtmlPrefix before = " + prefix);
-			prefix = (prefix.equals("div")) ? null : prefix.substring(0, prefix
-					.indexOf(":"));
-			System.out.println("xhtmlPrefix = " + prefix);
+				// add the attributes
+				this.attributes = new LinkedList<Attribute>();
 
-			// strip the wrapper start and end tags.
-			System.out.println("textLocal orig = " + textLocal);
-			textLocal = textLocal.substring(textLocal.indexOf(">") + 1);
-			System.out.println("textLocal stripped front = " + textLocal);
-			textLocal = reverseIt(textLocal);
-			System.out.println("textLocal reversed = " + textLocal);
-			textLocal = textLocal.substring(textLocal.indexOf("<") + 1);
-			System.out
-					.println("textLocal stripped back reverse = " + textLocal);
-			textLocal = reverseIt(textLocal);
-			System.out.println("textLocal final = " + textLocal);
+				for (Attribute attr : attributes) {
+					// check for unsupported attribute.
+					if (!FeedDoc.isAtomCommonAttribute(attr)
+							&& !FeedDoc.isUndefinedAttribute(attr)
+							&& !attr.getName().equals("type")) {
+						throw new AtomSpecException("Unsuppported attribute "
+								+ attr.getName()
+								+ " for this Atom Text Construct.");
+					}
+					this.attributes.add(new Attribute(attr.getName(), attr
+							.getValue()));
+				}
+			}
 		}
-		this.text = textLocal;
-		this.xhtmlPrefix = prefix;
+		if (FeedDoc.getContentType(this.attributes) == FeedDoc.ContentType.XHTML) {
+			this.divWrapperStart = getDivWrapperStart(text);
+			this.divWrapperEnd = getDivWrapperEnd(text);
+		} else {
+			this.divWrapperStart = null;
+			this.divWrapperEnd = null;
+		}
+		this.text = getText(text);
+
+		System.out.println("this.divWrapperStart = " + this.divWrapperStart);
+		System.out.println("this.divWrapperEnd = " + this.divWrapperEnd);
+		System.out.println("this.text = " + this.text);
 	}
 
-	//copy constructor
+	// copy constructor
 	AtomTextConstruct(String text, List<Attribute> attributes,
-			String xhtmlPrefix) throws AtomSpecException {
-		System.out.println("in copy constructor");
-		System.out.println("xhtmlPrefix = " + xhtmlPrefix);
+			String divWrapperStart, String divWrapperEnd, boolean isContentElement)
+			throws AtomSpecException {
+		// System.out.println("in copy constructor");
+		// System.out.println("xhtmlPrefix = " + xhtmlPrefix);
 		this.text = text;
-		this.xhtmlPrefix = xhtmlPrefix;
+		this.divWrapperStart = divWrapperStart;
+		this.divWrapperEnd = divWrapperEnd;
+		
 		if (attributes == null) {
 			this.attributes = null;
 		} else {
-
-			// add the attributes
-			this.attributes = new LinkedList<Attribute>();
-
-			for (Attribute attr : attributes) {
-				// check for unsupported attribute.
-				if (!FeedDoc.isAtomCommonAttribute(attr)
-						&& !FeedDoc.isUndefinedAttribute(attr)
-						&& !attr.getName().equals("type")) {
-					throw new AtomSpecException("Unsuppported attribute "
-							+ attr.getName() + " for this Atom Text Construct.");
+			// content elements have a slightly different validation.
+			if (isContentElement) {
+				this.attributes = new LinkedList<Attribute>();
+				for (Attribute attr : attributes) {
+					// check for unsupported attribute.
+					if (!FeedDoc.isAtomCommonAttribute(attr)
+							&& !FeedDoc.isUndefinedAttribute(attr)
+							&& !attr.getName().equals("type")
+							&& !attr.getName().equals("src")) {
+						throw new AtomSpecException("Unsuppported attribute "
+								+ attr.getName() + " in this content element ");
+					}
+					this.attributes.add(new Attribute(attr.getName(), attr
+							.getValue()));
 				}
-				this.attributes.add(new Attribute(attr.getName(), attr
-						.getValue()));
+			} else {
+				// add the attributes
+				this.attributes = new LinkedList<Attribute>();
+
+				for (Attribute attr : attributes) {
+					// check for unsupported attribute.
+					if (!FeedDoc.isAtomCommonAttribute(attr)
+							&& !FeedDoc.isUndefinedAttribute(attr)
+							&& !attr.getName().equals("type")) {
+						throw new AtomSpecException("Unsuppported attribute "
+								+ attr.getName()
+								+ " for this Atom Text Construct.");
+					}
+					this.attributes.add(new Attribute(attr.getName(), attr
+							.getValue()));
+				}
 			}
 		}
+
+	}
+
+	private String getDivWrapperStart(String text) {
+		return text.substring(0, text.indexOf(">") + 1);
+	}
+
+	private String getDivWrapperEnd(String text) {
+		text = reverseIt(text);
+		text = text.substring(0, text.indexOf("<") + 1);
+		return reverseIt(text);
+	}
+
+	private String getText(String text) {
+		// strip the wrapper start and end tags.
+		// System.out.println("textLocal orig = " + textLocal);
+		text = text.substring(text.indexOf(">") + 1);
+		// System.out.println("textLocal stripped front = " + textLocal);
+		text = reverseIt(text);
+		// System.out.println("textLocal reversed = " + textLocal);
+		text = text.substring(text.indexOf("<") + 1);
+		// System.out
+		// .println("textLocal stripped back reverse = " + textLocal);
+		return reverseIt(text);
+		// System.out.println("textLocal final = " + textLocal);
 
 	}
 
@@ -185,9 +215,11 @@ class AtomTextConstruct implements Serializable {
 		return text;
 	}
 
-	// used in the feed writer.
-	String getXhtmlPrefix() {
-		return xhtmlPrefix;
+	String getDivWrapperStart() {
+		return divWrapperStart;
 	}
 
+	String getDivWrapperEnd() {
+		return divWrapperEnd;
+	}
 }

@@ -45,14 +45,8 @@ import javax.xml.stream.XMLStreamWriter;
  */
 class FeedWriter {
 
-	// used to check namespace valuse for xhtml content.
-	private Entry parentEntry = null;
-	private Feed parentFeed = null;
-
 	// used internally by FeedDoc to write feed to output streams.
 	void writeFeed(XMLStreamWriter writer, Feed feed) throws Exception {
-
-		parentFeed = feed;
 
 		// open the feed element
 		writer.writeStartElement("feed");
@@ -122,12 +116,13 @@ class FeedWriter {
 
 		writer.writeStartElement("subtitle");
 
-		// set the local prefix for html content.
-		localPrefix = subtitle.getXhtmlPrefix();
-
-		// write attributes and output the conditional text
-		writeConditionalText(writer, writeAttributesAndCheckForXhtml(writer,
-				subtitle.getAttributes()), subtitle.getText());
+		if (writeAttributesAndCheckForXhtml(writer, subtitle.getAttributes())) {
+			writer.writeCharacters(subtitle.getDivWrapperStart());
+			writeXHTML(writer, subtitle.getText());
+			writer.writeCharacters(subtitle.getDivWrapperEnd());
+		} else {
+			writer.writeCharacters(subtitle.getText());
+		}
 
 		writer.writeEndElement();
 	}
@@ -165,12 +160,16 @@ class FeedWriter {
 
 		writer.writeStartElement("title");
 
-		// set the local prefix for html content.
-		localPrefix = title.getXhtmlPrefix();
-
-		// write attributes and output the conditional text
-		writeConditionalText(writer, writeAttributesAndCheckForXhtml(writer,
-				title.getAttributes()), title.getText());
+		if (writeAttributesAndCheckForXhtml(writer, title.getAttributes())) {
+			System.out
+					.println("title.startWrap: " + title.getDivWrapperStart());
+			// writer.writeCharacters(title.getDivWrapperStart());
+			writeXHTML(writer, title.getDivWrapperStart() + title.getText()
+					+ title.getDivWrapperEnd());
+			// writer.writeCharacters(title.getDivWrapperEnd());
+		} else {
+			writer.writeCharacters(title.getText());
+		}
 
 		writer.writeEndElement();
 	}
@@ -189,7 +188,7 @@ class FeedWriter {
 				// get the opening element content
 				String startElement = text.substring(0, text.indexOf('>'))
 						.trim();
-
+				System.out.println("startElement: " + startElement);
 				// check for empty element
 				if (startElement.indexOf('/') == startElement.length() - 1) {
 					// check for attributes
@@ -221,9 +220,12 @@ class FeedWriter {
 				} else {// this is regular start element
 					// check for attributes
 					String[] attributes = startElement.split(" ");
+					System.out.println("attributes length: "
+							+ attributes.length);
 					if (attributes.length > 1) {
 						// if the name has a prefix,
 						// just write it as part of the local name.
+						System.out.println("attributes0: " + attributes[0]);
 						writer.writeStartElement(attributes[0]);
 						for (int i = 1; i < attributes.length; i++) {
 							if (attributes[i].indexOf("=") != -1) {
@@ -242,22 +244,40 @@ class FeedWriter {
 					// write the characters up until
 					// the beginning of the end element.
 					text = text.substring(text.indexOf('>') + 1);
+					System.out.println("text here: " + text);
 
-					if (attributes.length > 1) {
-						writer.writeCharacters(text.substring(0, text
-								.indexOf("</" + attributes[0])));
-						text = text.substring(text
-								.indexOf("</" + attributes[0])
-								+ ("</" + attributes[0] + ">").length());
-					} else {
-						writer.writeCharacters(text.substring(0, text
-								.indexOf("</" + startElement)));
-						text = text.substring(text.indexOf("</" + startElement)
-								+ ("</" + startElement + ">").length());
+					// if we reach another start element before an end element,
+					// we should not write out the text.
+					if (text.indexOf("</") < text.indexOf("<")
+							&& (text.indexOf("<") >= 0)) {
+						if (attributes.length > 1) {
+							writer.writeCharacters(text.substring(0, text
+									.indexOf("</" + attributes[0])));
+							text = text.substring(text.indexOf("</"
+									+ attributes[0])
+									+ ("</" + attributes[0] + ">").length());
+						} else {
+							writer.writeCharacters(text.substring(0, text
+									.indexOf("</" + startElement)));
+							text = text.substring(text.indexOf("</"
+									+ startElement)
+									+ ("</" + startElement + ">").length());
+						}
+
+						// write the end element
+						writer.writeEndElement();
+
+					}else{
+						if (attributes.length > 1) {
+							writer.writeCharacters(text.substring(0, text
+									.indexOf("<")));
+							text = text.substring(text.indexOf("<"));
+						} else {
+							writer.writeCharacters(text.substring(0, text
+									.indexOf("<")));
+							text = text.substring(text.indexOf("<"));
+						}
 					}
-
-					// write the end element
-					writer.writeEndElement();
 
 					writeXHTML(writer, text);
 				}
@@ -339,12 +359,13 @@ class FeedWriter {
 
 		writer.writeStartElement("rights");
 
-		// set the local prefix for html content.
-		localPrefix = rights.getXhtmlPrefix();
-
-		// write attributes and output the conditional text
-		writeConditionalText(writer, writeAttributesAndCheckForXhtml(writer,
-				rights.getAttributes()), rights.getText());
+		if (writeAttributesAndCheckForXhtml(writer, rights.getAttributes())) {
+			writer.writeCharacters(rights.getDivWrapperStart());
+			writeXHTML(writer, rights.getText());
+			writer.writeCharacters(rights.getDivWrapperEnd());
+		} else {
+			writer.writeCharacters(rights.getText());
+		}
 
 		writer.writeEndElement();
 
@@ -450,7 +471,6 @@ class FeedWriter {
 
 		// print out the entries.
 		for (Entry entry : entries.values()) {
-			parentEntry = entry;
 			writer.writeStartElement("entry");
 			if (entry.getAttributes() != null) {
 				for (Attribute attr : entry.getAttributes()) {
@@ -512,12 +532,13 @@ class FeedWriter {
 
 		writer.writeStartElement("summary");
 
-		// set the local prefix for html content.
-		localPrefix = summary.getXhtmlPrefix();
-
-		// write attributes and output the conditional text
-		writeConditionalText(writer, writeAttributesAndCheckForXhtml(writer,
-				summary.getAttributes()), summary.getText());
+		if (writeAttributesAndCheckForXhtml(writer, summary.getAttributes())) {
+			writer.writeCharacters(summary.getDivWrapperStart());
+			writeXHTML(writer, summary.getText());
+			writer.writeCharacters(summary.getDivWrapperEnd());
+		} else {
+			writer.writeCharacters(summary.getText());
+		}
 
 		writer.writeEndElement();
 	}
@@ -546,107 +567,23 @@ class FeedWriter {
 		// look for the src attribute to
 		// see if we need to build an empty tag.
 		if (FeedDoc.getAttributeFromGroup(content.getAttributes(), "src") != null) {
+			System.out.println("writing empty content.");
 			writer.writeEmptyElement("content");
 		} else {
-
+			System.out.println("writing filled content.");
 			writer.writeStartElement("content");
 
-			// set the local prefix for html content.
-			localPrefix = content.getXhtmlPrefix();
-
-			// write attributes and output the conditional text
-			writeConditionalText(writer, writeAttributesAndCheckForXhtml(
-					writer, content.getAttributes()), content.getContent());
-
-		}
-
-		writer.writeEndElement();
-
-	}
-
-	// for writing out text, escaped html or xhtml markup with conditional div
-	// wrapper.
-	private String localPrefix = null;
-
-	private void writeConditionalText(XMLStreamWriter writer,
-			boolean writeXhtml, String conditionalText) throws Exception,
-			XMLStreamException {
-		boolean namespaceDeclarationExists = false;
-		if (conditionalText != null) {
-			if (writeXhtml) {
-
-				String prefix = null;
-				if (parentEntry != null && parentEntry.getAttributes() != null) {
-					for (Attribute attr : parentEntry.getAttributes()) {
-						System.out.println("attr name = " + attr.getName());
-						System.out.println("attr val = " + attr.getValue());
-						if (attr.getName().indexOf("xmlns:") >= 0) {
-							prefix = attr.getName().substring(
-									attr.getName().indexOf(":")+1);
-							System.out.println("prefix should be: "+attr.getName().substring(
-									attr.getName().indexOf(":")));
-						}else {
-							System.out.println("attr.getName = "+attr.getName().indexOf("xmlns:"));
-						}
-
-						if ((attr.getValue()
-								.equals("http://www.w3.org/1999/xhtml"))
-								&& (localPrefix.equals(prefix))) {
-							namespaceDeclarationExists = true;
-							break;
-						}
-
-						System.out
-								.println("prefix in parent entry = " + prefix);
-					}
-				}
-				if (prefix == null
-						&& (parentFeed != null && parentFeed.getAttributes() != null)) {
-					for (Attribute attr : parentEntry.getAttributes()) {
-						System.out.println("attr name = " + attr.getName());
-						System.out.println("attr val = " + attr.getValue());
-						if (attr.getName().indexOf("xmlns:") >= 0) {
-							prefix = attr.getName().substring(
-									attr.getName().indexOf(":")+1);
-						}
-
-						if ((attr.getValue()
-								.equals("http://www.w3.org/1999/xhtml"))
-								&& (localPrefix.equals(prefix))) {
-							namespaceDeclarationExists = true;
-							break;
-						}
-
-						System.out
-								.println("prefix in parent feed = " + prefix);
-					}
-				}
-				
-				System.out.println("prefix = " + prefix);
-				if (prefix != null) {
-					writer.writeStartElement(prefix + ":div");
-					// include the namespace declaration if it doesn't exist
-					// already in the parent.
-					if (!namespaceDeclarationExists) {
-						writer.writeAttribute("xmlns",
-								"http://www.w3.org/1999/xhtml");
-					}
-					writeXHTML(writer, conditionalText);
-					writer.writeEndElement();
-				} else {
-					writer.writeStartElement("div");
-					writer.writeAttribute("xmlns",
-							"http://www.w3.org/1999/xhtml");
-					writeXHTML(writer, conditionalText);
-					writer.writeEndElement();
-				}
-
+			if (writeAttributesAndCheckForXhtml(writer, content.getAttributes())) {
+				writer.writeCharacters(content.getDivWrapperStart());
+				writeXHTML(writer, content.getContent());
+				writer.writeCharacters(content.getDivWrapperEnd());
 			} else {
-				// write the standard escaped text.
-				// where the stax api takes care of the escaping.
-				writer.writeCharacters(conditionalText);
+				writer.writeCharacters(content.getContent());
 			}
+
+			writer.writeEndElement();
 		}
+
 	}
 
 	void writeSource(XMLStreamWriter writer, Source source) throws Exception {

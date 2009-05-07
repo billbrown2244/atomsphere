@@ -47,13 +47,14 @@ public class Subtitle implements Serializable {
 	// use the factory method in the FeedDoc.
 	Subtitle(String subtitle, List<Attribute> attributes)
 			throws AtomSpecException {
-		this.subtitle = new AtomTextConstruct(subtitle, attributes);
+		this.subtitle = new AtomTextConstruct(subtitle, attributes, false);
 	}
 
 	// copy constructor
 	Subtitle(Subtitle subtitle) throws AtomSpecException {
 		this.subtitle = new AtomTextConstruct(subtitle.getText(), subtitle
-				.getAttributes(), subtitle.getXhtmlPrefix());
+				.getAttributes(), subtitle.getDivWrapperStart(), subtitle
+				.getDivWrapperEnd(), false);
 	}
 
 	/**
@@ -72,8 +73,11 @@ public class Subtitle implements Serializable {
 		return subtitle.getAttributes();
 	}
 
-	// used in the feed writer.
-	String getXhtmlPrefix() {
-		return subtitle.getXhtmlPrefix();
+	String getDivWrapperStart() {
+		return subtitle.getDivWrapperStart();
+	}
+
+	String getDivWrapperEnd() {
+		return subtitle.getDivWrapperEnd();
 	}
 }

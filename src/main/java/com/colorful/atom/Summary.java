@@ -47,13 +47,14 @@ public class Summary implements Serializable {
 	// use the factory method in the FeedDoc.
 	Summary(String summary, List<Attribute> attributes)
 			throws AtomSpecException {
-		this.summary = new AtomTextConstruct(summary, attributes);
+		this.summary = new AtomTextConstruct(summary, attributes, false);
 	}
 
 	// copy constructor
 	Summary(Summary summary) throws AtomSpecException {
 		this.summary = new AtomTextConstruct(summary.getText(), summary
-				.getAttributes(), summary.getXhtmlPrefix());
+				.getAttributes(), summary.getDivWrapperStart(), summary
+				.getDivWrapperEnd(), false);
 	}
 
 	/**
@@ -72,8 +73,11 @@ public class Summary implements Serializable {
 		return summary.getAttributes();
 	}
 
-	// used in the feed writer.
-	String getXhtmlPrefix() {
-		return summary.getXhtmlPrefix();
+	String getDivWrapperStart() {
+		return summary.getDivWrapperStart();
+	}
+
+	String getDivWrapperEnd() {
+		return summary.getDivWrapperEnd();
 	}
 }

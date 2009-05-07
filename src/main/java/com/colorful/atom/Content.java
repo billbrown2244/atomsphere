@@ -21,7 +21,6 @@
 package com.colorful.atom;
 
 import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -79,29 +78,14 @@ public class Content implements Serializable {
 	// use the factory method in the FeedDoc.
 	Content(String content, List<Attribute> attributes)
 			throws AtomSpecException {
-		List<Attribute> attrsLocal = null;
-		if (attributes != null) {
-			attrsLocal = new LinkedList<Attribute>();
-			for (Attribute attr : attributes) {
-				// check for unsupported attribute.
-				if (!FeedDoc.isAtomCommonAttribute(attr)
-						&& !FeedDoc.isUndefinedAttribute(attr)
-						&& !attr.getName().equals("type")
-						&& !attr.getName().equals("src")) {
-					throw new AtomSpecException("Unsuppported attribute "
-							+ attr.getName() + " in this content element ");
-				}
-				attrsLocal.add(new Attribute(attr.getName(), attr.getValue()));
-			}
-		}
-
-		this.content = new AtomTextConstruct(content, attrsLocal);
+		this.content = new AtomTextConstruct(content, attributes, true);
 	}
 
 	// copy constructor
 	Content(Content content) throws AtomSpecException {
 		this.content = new AtomTextConstruct(content.getContent(), content
-				.getAttributes(), content.getXhtmlPrefix());
+				.getAttributes(), content.getDivWrapperStart(), content
+				.getDivWrapperEnd(), true);
 	}
 
 	/**
@@ -120,8 +104,11 @@ public class Content implements Serializable {
 		return content.getAttributes();
 	}
 
-	// used in the feed writer.
-	String getXhtmlPrefix() {
-		return content.getXhtmlPrefix();
+	String getDivWrapperStart() {
+		return content.getDivWrapperStart();
+	}
+
+	String getDivWrapperEnd() {
+		return content.getDivWrapperEnd();
 	}
 }
