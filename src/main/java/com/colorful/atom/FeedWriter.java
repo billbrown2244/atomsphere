@@ -225,6 +225,7 @@ class FeedWriter {
 					if (attributes.length > 1) {
 						// if the name has a prefix,
 						// just write it as part of the local name.
+						
 						System.out.println("attributes0: " + attributes[0]);
 						writer.writeStartElement(attributes[0]);
 						for (int i = 1; i < attributes.length; i++) {
@@ -236,6 +237,7 @@ class FeedWriter {
 								writer.writeAttribute(attrName, attrValue);
 							}
 						}
+						startElement = attributes[0];
 					} else {
 						// if the name has a prefix,
 						// just write it as part of the local name.
@@ -248,8 +250,16 @@ class FeedWriter {
 
 					// if we reach another start element before an end element,
 					// we should not write out the text.
-					if (text.indexOf("</") < text.indexOf("<")
-							&& (text.indexOf("<") >= 0)) {
+					int startTag = text.indexOf("<");
+					if ((text.indexOf("</") < startTag)
+							&& (startTag >= 0)) {
+						
+						//check for a plain < character
+						if ((startTag == text.indexOf("< "))
+								&& (text.indexOf("< ") >= 0)) {
+							//TODO: START HERE
+						}
+						
 						if (attributes.length > 1) {
 							writer.writeCharacters(text.substring(0, text
 									.indexOf("</" + attributes[0])));
@@ -267,16 +277,6 @@ class FeedWriter {
 						// write the end element
 						writer.writeEndElement();
 
-					}else{
-						if (attributes.length > 1) {
-							writer.writeCharacters(text.substring(0, text
-									.indexOf("<")));
-							text = text.substring(text.indexOf("<"));
-						} else {
-							writer.writeCharacters(text.substring(0, text
-									.indexOf("<")));
-							text = text.substring(text.indexOf("<"));
-						}
 					}
 
 					writeXHTML(writer, text);

@@ -80,10 +80,10 @@ public class FeedWriterTest {
 			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>    "
 			+ "<title type=\"xhtml\" xmlns:xhtml=\"http://www.w3.org/1999/xhtml\"><xhtml:div>"
 			+ "Less: <xhtml:em> &lt; </xhtml:em></xhtml:div></title>"
+			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 			+ "<summary>About the project</summary>    "
 			+ "<published>"
 			+ "2007-02-26T12:58:53.197-06:00</published>    "
-			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 			+ "<content type=\"text/html\" src=\"http://some.xh.specific.uri/xh\" />"
 			+ "</entry>";
 
@@ -92,9 +92,9 @@ public class FeedWriterTest {
 			+ "atomsphere/atom.xml#Requirements</id>"
 			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>"
 			+ "<title xmlns:xhtml=\"http://www.w3.org/1999/xhtml\" type=\"xhtml\"><xhtml:div>"
+			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 			+ "Less: <xhtml:em> &lt; </xhtml:em></xhtml:div></title>"
 			+ "<summary>About the project</summary>    "
-			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 			+ "<published>2007-02-26T12:58:53.197-06:00</published>"
 			+ "<content type=\"text/html\" src=\"http://some.xh.specific.uri/xh\" />"
 			+ "</entry>";
