@@ -176,110 +176,123 @@ class FeedWriter {
 
 	void writeXHTML(XMLStreamWriter writer, String text) throws Exception {
 		try {
-
+			
+			System.out.println("Initial Text = " + text);
+			
 			if (text.indexOf('<') == -1) {
+				System.out.println("writing all characters: "+text);
 				writer.writeCharacters(text);
 			} else {
+
 				// write up until the
 				// opening of the next element
-				writer.writeCharacters(text.substring(0, text.indexOf('<')));
+				String localWrite = text.substring(0, text.indexOf('<'));
+				System.out.println("writing some characters: "+localWrite);
+				writer.writeCharacters(localWrite);
 				text = text.substring(text.indexOf('<') + 1);
+				System.out.println("remaining after some characters: "+text);
 
-				// get the opening element content
-				String startElement = text.substring(0, text.indexOf('>'))
-						.trim();
-				System.out.println("startElement: " + startElement);
-				// check for empty element
-				if (startElement.indexOf('/') == startElement.length() - 1) {
-					// check for attributes
-					String[] attributes = startElement.split(" ");
-					if (attributes.length > 1) {
-						// if the name has a prefix, just
-						// write it as part of the local name.
-						writer.writeEmptyElement(attributes[0]);
-						for (int i = 1; i < attributes.length; i++) {
-							if (attributes[i].indexOf("=") != -1) {
-								// we nee to put everything
-								// to the right of the first '=' sign
-								// in the value part because we could have
-								// a query string with multiple '=' signs.
-								String attrName = attributes[i].substring(0,
-										attributes[i].indexOf('='));
-								String attrValue = attributes[i]
-										.substring(attributes[i].indexOf('=') + 1);
-								writer.writeAttribute(attrName, attrValue);
-							}
-						}
-					} else {
-						// if the name has a prefix, just
-						// write it as part of the local name.
-						writer.writeEmptyElement(startElement);
-					}
-					// search for the next element
-					writeXHTML(writer, text.substring(text.indexOf('>') + 1));
-				} else {// this is regular start element
-					// check for attributes
-					String[] attributes = startElement.split(" ");
-					System.out.println("attributes length: "
-							+ attributes.length);
-					if (attributes.length > 1) {
-						// if the name has a prefix,
-						// just write it as part of the local name.
-						
-						System.out.println("attributes0: " + attributes[0]);
-						writer.writeStartElement(attributes[0]);
-						for (int i = 1; i < attributes.length; i++) {
-							if (attributes[i].indexOf("=") != -1) {
-								String attrName = attributes[i].substring(0,
-										attributes[i].indexOf('='));
-								String attrValue = attributes[i]
-										.substring(attributes[i].indexOf('=') + 1);
-								writer.writeAttribute(attrName, attrValue);
-							}
-						}
-						startElement = attributes[0];
-					} else {
-						// if the name has a prefix,
-						// just write it as part of the local name.
-						writer.writeStartElement(startElement);
-					}
-					// write the characters up until
-					// the beginning of the end element.
-					text = text.substring(text.indexOf('>') + 1);
-					System.out.println("text here: " + text);
+				// if we reach another < before > then this
+				// is not a start element.
+				if (text.indexOf(">") > text.indexOf("<")) {
+					
+					System.out.println("found < that isn't start element.");
+					localWrite = text.substring(0, text.indexOf('<') + 1);
+					System.out.println("writing some more characters: "+localWrite);
+					writer.writeCharacters(localWrite);
+					text = text.substring(text.indexOf('<') + 1);
+					System.out.println("remaining after some characters: "+text);
+					writeXHTML(writer,text);
 
-					// if we reach another start element before an end element,
-					// we should not write out the text.
-					int startTag = text.indexOf("<");
-					if ((text.indexOf("</") < startTag)
-							&& (startTag >= 0)) {
-						
-						//check for a plain < character
-						if ((startTag == text.indexOf("< "))
-								&& (text.indexOf("< ") >= 0)) {
-							//TODO: START HERE
-						}
-						
-						if (attributes.length > 1) {
-							writer.writeCharacters(text.substring(0, text
-									.indexOf("</" + attributes[0])));
-							text = text.substring(text.indexOf("</"
-									+ attributes[0])
-									+ ("</" + attributes[0] + ">").length());
-						} else {
-							writer.writeCharacters(text.substring(0, text
-									.indexOf("</" + startElement)));
-							text = text.substring(text.indexOf("</"
-									+ startElement)
-									+ ("</" + startElement + ">").length());
-						}
+				} else {
 
+					//get the start element
+					String startElement = text.substring(0, text.indexOf('>'))
+							.trim();
+					System.out.println("startElement: " + startElement);
+
+					// check for end element.
+					if (startElement.startsWith("/")) {
+						System.out.println("writing end element.");
 						// write the end element
 						writer.writeEndElement();
+						// search for the next element
+						text = text.substring(text.indexOf('>') + 1);
+						System.out.println("remaining after end element: "+text);
+						writeXHTML(writer,text);
+						
+					} else {
 
+						// check for empty element
+						if (startElement.indexOf('/') == startElement.length() - 1) {
+							System.out.println("writing empty element.");
+							// check for attributes
+							String[] attributes = startElement.split(" ");
+							if (attributes.length > 1) {
+								// if the name has a prefix, just
+								// write it as part of the local name.
+								writer.writeEmptyElement(attributes[0]);
+								for (int i = 1; i < attributes.length; i++) {
+									if (attributes[i].indexOf("=") != -1) {
+										// we nee to put everything
+										// to the right of the first '=' sign
+										// in the value part because we could
+										// have
+										// a query string with multiple '='
+										// signs.
+										String attrName = attributes[i]
+												.substring(0, attributes[i]
+														.indexOf('='));
+										String attrValue = attributes[i]
+												.substring(attributes[i]
+														.indexOf('=') + 1);
+										writer.writeAttribute(attrName,
+												attrValue);
+									}
+								}
+							} else {
+								// if the name has a prefix, just
+								// write it as part of the local name.
+								writer.writeEmptyElement(startElement);
+							}
+							
+
+						} else {// this is regular start element
+							System.out.println("writing normal element.");
+							
+							// check for attributes
+							String[] attributes = startElement.split(" ");
+
+							if (attributes.length > 1) {
+								// if the name has a prefix,
+								// just write it as part of the local name.
+
+								writer.writeStartElement(attributes[0]);
+								for (int i = 1; i < attributes.length; i++) {
+									if (attributes[i].indexOf("=") != -1) {
+										String attrName = attributes[i]
+												.substring(0, attributes[i]
+														.indexOf('='));
+										String attrValue = attributes[i]
+												.substring(attributes[i]
+														.indexOf('=') + 1);
+										writer.writeAttribute(attrName,
+												attrValue);
+									}
+								}
+								startElement = attributes[0];
+							} else {
+								// if the name has a prefix,
+								// just write it as part of the local name.
+								writer.writeStartElement(startElement);
+							}
+						}
+						text = text.substring(text.indexOf('>') + 1);
+						System.out.println("End Text = " + text);
+						
+						// search for the next element
+						writeXHTML(writer, text);
 					}
-
-					writeXHTML(writer, text);
 				}
 			}
 		} catch (Exception e) {

@@ -59,6 +59,7 @@ class AtomTextConstruct implements Serializable {
 	// content elements do a different validation.
 	AtomTextConstruct(String text, List<Attribute> attributes,
 			boolean isContentElement) throws AtomSpecException {
+		System.out.println("text initially: "+text);
 		if (attributes == null) {
 			this.attributes = null;
 		} else {
@@ -95,14 +96,17 @@ class AtomTextConstruct implements Serializable {
 				}
 			}
 		}
+		System.out.println("Content type = "+FeedDoc.getContentType(this.attributes));
 		if (FeedDoc.getContentType(this.attributes) == FeedDoc.ContentType.XHTML) {
 			this.divWrapperStart = getDivWrapperStart(text);
 			this.divWrapperEnd = getDivWrapperEnd(text);
+			this.text = getXhtmlText(text);
 		} else {
 			this.divWrapperStart = null;
 			this.divWrapperEnd = null;
+			this.text = text;
 		}
-		this.text = getText(text);
+		
 
 		System.out.println("this.divWrapperStart = " + this.divWrapperStart);
 		System.out.println("this.divWrapperEnd = " + this.divWrapperEnd);
@@ -168,7 +172,7 @@ class AtomTextConstruct implements Serializable {
 		return reverseIt(text);
 	}
 
-	private String getText(String text) {
+	private String getXhtmlText(String text) {
 		// strip the wrapper start and end tags.
 		// System.out.println("textLocal orig = " + textLocal);
 		text = text.substring(text.indexOf(">") + 1);

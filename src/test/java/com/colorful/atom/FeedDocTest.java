@@ -317,6 +317,9 @@ public class FeedDocTest {
 
 			feed1 = FeedDoc.readFeedToBean(title3);
 			assertNotNull(feed1.getTitle());
+			System.out.println("feed title getText:\n"+feed1.getTitle().getText());
+			System.out.println("feed title getDivWrapperStart:\n"+feed1.getTitle().getDivWrapperStart());
+			System.out.println("feed title getDivWrapperEnd:\n"+feed1.getTitle().getDivWrapperEnd());
 			assertEquals(feed1.getTitle().getText(),
 					"One <strong>bold</strong> foot forward");
 			assertNotNull(FeedDoc.readFeedToString(feed1));
