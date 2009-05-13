@@ -82,8 +82,7 @@ public class FeedWriterTest {
 			+ "Less: <xhtml:em> &lt; </xhtml:em></xhtml:div></title>"
 			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 			+ "<summary>About the project</summary>    "
-			+ "<published>"
-			+ "2007-02-26T12:58:53.197-06:00</published>    "
+			+ "<published>2007-02-26T12:58:53.197-06:00</published>"
 			+ "<content type=\"text/html\" src=\"http://some.xh.specific.uri/xh\" />"
 			+ "</entry>";
 
@@ -92,14 +91,14 @@ public class FeedWriterTest {
 			+ "atomsphere/atom.xml#Requirements</id>"
 			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>"
 			+ "<title xmlns:xhtml=\"http://www.w3.org/1999/xhtml\" type=\"xhtml\"><xhtml:div>"
-			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 			+ "Less: <xhtml:em> &lt; </xhtml:em></xhtml:div></title>"
-			+ "<summary>About the project</summary>    "
+			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 			+ "<published>2007-02-26T12:58:53.197-06:00</published>"
-			+ "<content type=\"text/html\" src=\"http://some.xh.specific.uri/xh\" />"
+			+ "<summary>About the project</summary>"
+			+ "<content type=\"text/html\" src=\"http://some.xh.specific.uri/xh\"/>"
 			+ "</entry>";
 
-	private String entry2 = "<entry xmlns:xh=\"http://www.w3.org/1999/xhtml\">    "
+	private String entry2 = "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:xh=\"http://www.w3.org/1999/xhtml\">    "
 			+ "<id>http://colorfulsoftware.localhost/colorfulsoftware/projects/"
 			+ "atomsphere/atom.xml#Requirements</id>    "
 			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>    "
@@ -113,20 +112,20 @@ public class FeedWriterTest {
 			+ "</xh:div>"
 			+ "</content>" + "</entry>";
 
-	private String entry2Result = "<entry xmlns:xh=\"http://www.w3.org/1999/xhtml\">"
+	private String entry2Result = "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:xh=\"http://www.w3.org/1999/xhtml\">"
 			+ "<id>http://colorfulsoftware.localhost/colorfulsoftware/"
 			+ "projects/atomsphere/atom.xml#Requirements</id>"
 			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>"
 			+ "<title>Requirements</title>"
-			+ "<published>2007-02-26T12:58:53.197-06:00</published>"
 			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
+			+ "<published>2007-02-26T12:58:53.197-06:00</published>"
 			+ "<content type=\"xhtml\">"
 			// xhtml prefix xh is bound at entry
 			// no need to wrap in supplied div.
-			+ "<xh:div>This is &lt;xh:b&gt;XHTML&lt;/xh:b&gt; content.</xh:div>"
+			+ "<xh:div>This is <xh:b>XHTML</xh:b> content.</xh:div>"
 			+ "</content>" + "</entry>";
 
-	private String entry3 = "<entry xmlns:xh=\"http://www.w3.org/1999/xhtml\">    "
+	private String entry3 = "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:xh=\"http://www.w3.org/1999/xhtml\">    "
 			+ "<id>http://colorfulsoftware.localhost/colorfulsoftware/"
 			+ "projects/atomsphere/atom.xml#Requirements</id>    "
 			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>    "
@@ -136,7 +135,7 @@ public class FeedWriterTest {
 			+ "<summary type=\"xhtml\">"
 			// xhtml namespace is bound at div
 			+ "<div xmlns=\"http://www.w3.org/1999/xhtml\">"
-			+ "This is <b>XHTML</b> content."
+			+ "red green blue <b>XHTML</b> content."
 			+ "</div>"
 			+ "</summary>"
 			+ "<content type=\"xhtml\">"
@@ -146,28 +145,28 @@ public class FeedWriterTest {
 			+ "</xh:div>"
 			+ "</content>" + "</entry>";
 
-	private String entry3Result = "<entry xmlns:xh=\"http://www.w3.org/1999/xhtml\">"
+	private String entry3Result = "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:xh=\"http://www.w3.org/1999/xhtml\">"
 			+ "<id>http://colorfulsoftware.localhost/colorfulsoftware/"
 			+ "projects/atomsphere/atom.xml#Requirements</id>"
 			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>"
 			+ "<title>Requirements</title>"
-			+ "<published>2007-02-26T12:58:53.197-06:00</published>"
 			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
+			+ "<published>2007-02-26T12:58:53.197-06:00</published>"
 			+ "<summary type=\"xhtml\">"
 			// xhtml namespace is bound at div
 			// no need to wrap in supplied div.
 			+ "<div xmlns=\"http://www.w3.org/1999/xhtml\">"
-			+ "<xh:div>This is &lt;xh:b&gt;XHTML&lt;/xh:b&gt; content.</xh:div>"
+			+ "red green blue <b>XHTML</b> content."
 			+ "</div>"
 			+ "</summary>"
 			+ "<content type=\"xhtml\">"
 			// xhtml prefix xh is bound at entry
 			// no need to wrap in supplied div.
 			+ "<xh:div>"
-			+ "This is &lt;xh:b&gt;XHTML&lt;/xh:b&gt; content."
+			+ "This is <xh:b>XHTML</xh:b> content."
 			+ "</xh:div>" + "</content>" + "</entry>";
 
-	private String entry4 = "<entry xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">    "
+	private String entry4 = "<entry xmlns=\"http://www.w3.org/2005/Atom\">"
 			+ "<id>http://colorfulsoftware.localhost/colorfulsoftware/"
 			+ "projects/atomsphere/atom.xml#Requirements</id>    "
 			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>    "
@@ -180,33 +179,33 @@ public class FeedWriterTest {
 			+ "This is <b>XHTML</b> content."
 			+ "</div>"
 			+ "</summary>"
-			+ "<content type=\"xhtml\">"
+			+ "<content type=\"xhtml\" xmlns:xh=\"http://www.w3.org/1999/xhtml\">"
 			// xhtml prefix xhtml is bound at entry
 			+ "<xh:div>"
 			+ "This is <xh:b>XHTML</xh:b> content."
 			+ "</xh:div>"
 			+ "</content>" + "</entry>";
 
-	private String entry4Result = "<entry xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">"
+	private String entry4Result = "<entry xmlns=\"http://www.w3.org/2005/Atom\">"
 			+ "<id>http://colorfulsoftware.localhost/colorfulsoftware/"
 			+ "projects/atomsphere/atom.xml#Requirements</id>"
 			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>"
 			+ "<title>Requirements</title>"
-			+ "<published>2007-02-26T12:58:53.197-06:00</published>"
 			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
+			+ "<published>2007-02-26T12:58:53.197-06:00</published>"
 			+ "<summary type=\"xhtml\">"
 			// xhtml namespace is bound at div
 			// no need to wrap in supplied div.
 			+ "<div xmlns=\"http://www.w3.org/1999/xhtml\">"
-			+ "<xh:div>This is &lt;xh:b&gt;XHTML&lt;/xh:b&gt; content.</xh:div>"
+			+ "This is <b>XHTML</b> content."
 			+ "</div>"
 			+ "</summary>"
-			+ "<content type=\"xhtml\">"
+			+ "<content xmlns:xh=\"http://www.w3.org/1999/xhtml\" type=\"xhtml\">"
 			// xhtml prefix xhtml is bound at entry
 			// no need to wrap in supplied div.
-			+ "<xhtml:div>"
-			+ "This is &lt;xhtml:b&gt;XHTML&lt;/xhtml:b&gt; content."
-			+ "</xhtml:div>" + "</content>" + "</entry>";
+			+ "<xh:div>"
+			+ "This is <xh:b>XHTML</xh:b> content."
+			+ "</xh:div>" + "</content>" + "</entry>";
 
 	@Before
 	public void setUp() throws Exception {
@@ -271,6 +270,7 @@ public class FeedWriterTest {
 			feedWriter2.writeXHTML(writer2, queryStringXHTML);
 			writer2.flush();
 			writer2.close();
+
 			XMLStreamReader reader = XMLInputFactory.newInstance()
 					.createXMLStreamReader(new FileInputStream("xhtml.xml"));
 			Content content = (new FeedReader()).readContent(reader);

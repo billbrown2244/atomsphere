@@ -117,8 +117,9 @@ class AtomTextConstruct implements Serializable {
 	AtomTextConstruct(String text, List<Attribute> attributes,
 			String divWrapperStart, String divWrapperEnd, boolean isContentElement)
 			throws AtomSpecException {
-		// System.out.println("in copy constructor");
-		// System.out.println("xhtmlPrefix = " + xhtmlPrefix);
+		 System.out.println("in copy constructor");
+		 System.out.println("divWrapperStart = " + divWrapperStart);
+		 System.out.println("divWrapperEnd = " + divWrapperEnd);
 		this.text = text;
 		this.divWrapperStart = divWrapperStart;
 		this.divWrapperEnd = divWrapperEnd;
@@ -159,7 +160,9 @@ class AtomTextConstruct implements Serializable {
 				}
 			}
 		}
-
+		System.out.println("this.divWrapperStart = " + this.divWrapperStart);
+		System.out.println("this.divWrapperEnd = " + this.divWrapperEnd);
+		System.out.println("this.text = " + this.text);
 	}
 
 	private String getDivWrapperStart(String text) {
