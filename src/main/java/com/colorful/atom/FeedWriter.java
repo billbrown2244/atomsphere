@@ -183,7 +183,8 @@ class FeedWriter {
 			if (text.indexOf('<') == -1) {
 
 				System.out.println("writing all characters: " + text);
-				writer.writeCharacters(text);
+				writer.writeCharacters(text.replace("&lt;", "<")
+						.replace("&gt;", ">").replaceAll("&amp;", "&"));
 
 			} else {
 
@@ -206,7 +207,8 @@ class FeedWriter {
 						localWrite = text.substring(0, text.indexOf('<'));
 						System.out.println("writing some characters: "
 								+ localWrite);
-						writer.writeCharacters(localWrite);
+						writer.writeCharacters(localWrite.replace("&lt;", "<")
+								.replace("&gt;", ">").replaceAll("&amp;", "&"));
 						text = text.substring(text.indexOf('<') + 1);
 						System.out.println("remaining after some characters: "
 								+ text);
@@ -221,7 +223,8 @@ class FeedWriter {
 						localWrite = text.substring(1, text.indexOf('<') + 1);
 						System.out.println("writing some more characters: "
 								+ localWrite);
-						writer.writeCharacters(localWrite);
+						writer.writeCharacters(localWrite.replace("&lt;", "<")
+								.replace("&gt;", ">").replaceAll("&amp;", "&"));
 						text = text.substring(localWrite.length() - 1);
 						System.out.println("remaining after some characters: "
 								+ text);
@@ -287,13 +290,13 @@ class FeedWriter {
 								}
 
 							} else {// this is regular start element
-								
 
 								// check for attributes
 								String[] attributes = startElement.split(" ");
 
-								System.out.println("writing normal element: "+attributes[0]);
-								
+								System.out.println("writing normal element: "
+										+ attributes[0]);
+
 								if (attributes.length > 1) {
 									// if the name has a prefix,
 									// just write it as part of the local name.

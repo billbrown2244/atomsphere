@@ -328,6 +328,11 @@ class FeedReader {
 			}
 		}
 
+		// throw an error if the updated entry is not available here.
+		if (updated == null) {
+			throw new AtomSpecException(
+					"atom:entry elements MUST contain exactly one atom:updated element.");
+		}
 		entries.put(updated.getText(), FeedDoc.buildEntry(id, title, updated,
 				rights, content, authors, categories, contributors, links,
 				attributes, extensions, published, summary, source));
@@ -358,22 +363,17 @@ class FeedReader {
 		String summary = null;
 		if (containsXHTML(attributes)) {
 			summary = readXHTML(reader, "summary");
-		} else if (containsHTML(attributes)) {
-			summary = readHTML(reader, "summary");
 		} else {
 			summary = reader.getElementText();
 		}
 		return FeedDoc.buildSummary(summary, attributes);
 	}
 
+	//used for html or xhtml.
 	boolean containsXHTML(List<Attribute> attributes) {
 		Attribute xhtml = FeedDoc.getAttributeFromGroup(attributes, "type");
-		return ((xhtml != null) && xhtml.getValue().equals("xhtml"));
-	}
-
-	boolean containsHTML(List<Attribute> attributes) {
-		Attribute xhtml = FeedDoc.getAttributeFromGroup(attributes, "type");
-		return ((xhtml != null) && xhtml.getValue().equals("html"));
+		return ((xhtml != null) && (xhtml.getValue().equals("xhtml") || xhtml
+				.getValue().equals("html")));
 	}
 
 	Source readSource(XMLStreamReader reader) throws Exception {
@@ -499,18 +499,14 @@ class FeedReader {
 		String content = null;
 		if (containsXHTML(attributes)) {
 			content = readXHTML(reader, "content");
-		} else if (containsHTML(attributes)) {
-			content = readHTML(reader, "content");
 		} else {
 			if (reader.hasNext()) {
 				int next = reader.next();
 				System.out.println("next = " + next);
 				if (next == XMLStreamConstants.START_ELEMENT) {
-					content = readXHTML(reader, "content");
+					content = reader.getElementText();
 				} else if (next == XMLStreamConstants.END_ELEMENT) {
 					reader.next();
-				} else {
-					content = reader.getElementText();
 				}
 			}
 
@@ -538,8 +534,6 @@ class FeedReader {
 		String title = null;
 		if (containsXHTML(attributes)) {
 			title = readXHTML(reader, "title");
-		} else if (containsHTML(attributes)) {
-			title = readHTML(reader, "title");
 		} else {
 			title = reader.getElementText();
 		}
@@ -585,7 +579,9 @@ class FeedReader {
 				break;
 
 			default:
-				xhtml.append(reader.getText());
+				// escape the necessary characters.
+				xhtml.append(reader.getText().replaceAll("&", "&amp;")
+						.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
 			}
 			if (breakOut) {
 				// clear past the end enclosing div.
@@ -597,56 +593,40 @@ class FeedReader {
 				"<hr></hr>", "<hr />");
 	}
 
-	// escape the tag names here.
-	String readHTML(XMLStreamReader reader, String parentElement)
-			throws XMLStreamException, Exception {
-		StringBuffer xhtml = new StringBuffer();
-		String elementName = null;
-
-		while (reader.hasNext()) {
-			boolean breakOut = false;
-			switch (reader.next()) {
-
-			case XMLStreamConstants.START_ELEMENT:
-				elementName = getElementName(reader);
-				xhtml.append("&gt;" + elementName);
-				List<Attribute> attributes = getAttributes(reader);
-				// add the attributes
-				if (attributes != null && attributes.size() > 0) {
-					for (Attribute attr : attributes) {
-						xhtml.append(" " + attr.getName() + "=\""
-								+ attr.getValue() + "\"");
-					}
-				}
-				xhtml.append("&lt;");
-				break;
-
-			case XMLStreamConstants.END_ELEMENT:
-				elementName = getElementName(reader);
-				if (elementName.equals(parentElement)
-						&& namespaceURI.equals("http://www.w3.org/2005/Atom")) {
-					breakOut = true;
-				} else {
-					xhtml.append("&gt;/" + elementName + "&gt;");
-				}
-				break;
-
-			case XMLStreamConstants.CDATA:
-				xhtml.append("<![CDATA[" + reader.getText() + "]]>");
-				break;
-
-			default:
-				xhtml.append(reader.getText());
-			}
-			if (breakOut) {
-				// clear past the end enclosing div.
-				// reader.next();
-				break;
-			}
-		}
-		return xhtml.toString().replaceAll("<br></br>", "&gt;br /&lt;")
-				.replaceAll("<hr></hr>", "&gt;hr /&lt;");
-	}
+	/*
+	 * // escape the tag names and & here. String readHTML(XMLStreamReader
+	 * reader, String parentElement) throws XMLStreamException, Exception {
+	 * StringBuffer xhtml = new StringBuffer(); String elementName = null;
+	 * 
+	 * while (reader.hasNext()) { boolean breakOut = false; switch
+	 * (reader.next()) {
+	 * 
+	 * case XMLStreamConstants.START_ELEMENT:
+	 * System.out.println("in start element."); elementName =
+	 * getElementName(reader); xhtml.append("&lt;" + elementName);
+	 * List<Attribute> attributes = getAttributes(reader); // add the attributes
+	 * if (attributes != null && attributes.size() > 0) { for (Attribute attr :
+	 * attributes) { xhtml.append(" " + attr.getName() + "=\"" + attr.getValue()
+	 * + "\""); } } xhtml.append("&lt;"); break;
+	 * 
+	 * case XMLStreamConstants.END_ELEMENT:
+	 * System.out.println("in end element."); elementName =
+	 * getElementName(reader); if (elementName.equals(parentElement) &&
+	 * namespaceURI.equals("http://www.w3.org/2005/Atom")) { breakOut = true; }
+	 * else { xhtml.append("&gt;/" + elementName + "&gt;"); } break;
+	 * 
+	 * case XMLStreamConstants.CDATA: xhtml.append("<![CDATA[" +
+	 * reader.getText() + "]]>"); break;
+	 * 
+	 * default: System.out.println("in regular section");
+	 * xhtml.append(reader.getText()); } if (breakOut) { // clear past the end
+	 * enclosing div. // reader.next(); break; } }
+	 * System.out.println("before escaped in reader = " + xhtml.toString());
+	 * System.out.println("escaped in reader = " +
+	 * xhtml.toString().replaceAll("&", "&amp;").replaceAll("<",
+	 * "&lt;").replaceAll(">", "&gt;")); return xhtml.toString().replaceAll("&",
+	 * "&amp;") .replaceAll("<", "&lt;").replaceAll(">", "&gt;"); }
+	 */
 
 	Subtitle readSubtitle(XMLStreamReader reader) throws Exception {
 		List<Attribute> attributes = getAttributes(reader);
@@ -654,8 +634,6 @@ class FeedReader {
 		String subtitle = null;
 		if (containsXHTML(attributes)) {
 			subtitle = readXHTML(reader, "subtitle");
-		} else if (containsHTML(attributes)) {
-			subtitle = readHTML(reader, "subtitle");
 		} else {
 			subtitle = reader.getElementText();
 		}
@@ -668,8 +646,6 @@ class FeedReader {
 		String rights = null;
 		if (containsXHTML(attributes)) {
 			rights = readXHTML(reader, "rights");
-		} else if (containsHTML(attributes)) {
-			rights = readHTML(reader, "rights");
 		} else {
 			rights = reader.getElementText();
 		}
