@@ -54,10 +54,8 @@ public class Generator implements Serializable {
 	// use the factory method in the FeedDoc.
 	Generator(List<Attribute> attributes, String text) throws AtomSpecException {
 
-		if (attributes == null) {
-			this.attributes = new LinkedList<Attribute>();
-		} else {
-			this.attributes = new LinkedList<Attribute>();
+		this.attributes = new LinkedList<Attribute>();
+		if (attributes != null) {
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
 				if (!FeedDoc.isAtomCommonAttribute(attr)
@@ -76,7 +74,6 @@ public class Generator implements Serializable {
 
 		this.version = FeedDoc
 				.getAttributeFromGroup(this.attributes, "version");
-
 		this.text = text;
 	}
 
@@ -85,14 +82,14 @@ public class Generator implements Serializable {
 	 * @return the category attribute list.
 	 */
 	public List<Attribute> getAttributes() {
-		if (attributes == null) {
-			return null;
-		}
+
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
-		for (Attribute attr : this.attributes) {
-			attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+		if (this.attributes != null) {
+			for (Attribute attr : this.attributes) {
+				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+			}
 		}
-		return attrsCopy;
+		return (this.attributes == null) ? null : attrsCopy;
 	}
 
 	/**

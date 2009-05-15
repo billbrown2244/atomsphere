@@ -104,16 +104,16 @@ class AtomDateConstruct implements Serializable {
 
 	/**
 	 * 
-	 * @return the attributes for this element.
+	 * @return the category attribute list.
 	 */
 	public List<Attribute> getAttributes() {
-		if (attributes == null) {
-			return null;
-		}
+
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
-		for(Attribute attr: this.attributes){
-			attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+		if (this.attributes != null) {
+			for (Attribute attr : this.attributes) {
+				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+			}
 		}
-		return attrsCopy;
+		return (this.attributes == null) ? null : attrsCopy;
 	}
 }

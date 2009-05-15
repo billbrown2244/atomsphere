@@ -1059,6 +1059,7 @@ public final class FeedDoc {
 		if (attributes != null) {
 			for(Attribute attr: attributes){
 				if (attr.getName().equalsIgnoreCase(attributeName)) {
+					System.out.println("attr name: "+attr.getName());
 					return buildAttribute(attr.getName(), attr.getValue());
 				}
 			}

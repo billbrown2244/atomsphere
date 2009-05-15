@@ -21,13 +21,18 @@ import static org.junit.Assert.*;
 
 import java.beans.XMLDecoder;
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.StringReader;
+import java.net.URL;
 import java.util.Map;
 import java.util.SortedMap;
 
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
 
 import org.junit.After;
 import org.junit.Before;
@@ -44,16 +49,22 @@ import com.colorful.atom.Title;
 public class FeedReaderTest {
 
 	private FeedReader feedReader;
-	private XMLStreamReader reader, reader2, reader3;
+	private XMLStreamReader reader, reader2, reader3, reader4;
 	private Map<String, String> configFile;
 	private String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">  "
-			+ "<id>http://colorfulsoftware.localhost/projects/atomsphere/atom.xml</id>  "
+			+ "<id testAttr=\"testVal\">http://colorfulsoftware.localhost/projects/atomsphere/atom.xml</id>  "
 			+ "<updated>2007-03-08T20:52:40.70-06:00</updated>  "
 			+ "<generator uri=\"http://www.colorfulsoftware.com/projects/atomsphere\" version=\"1.0.20\">Atomsphere</generator>  "
 			+ "<title>Atomsphere</title>  <subtitle>a java atom feed library</subtitle>  "
-			+ "<author>    <name>Bill Brown</name>    <uri>http://www.colorfulsoftware.com</uri>    <email>info@colorfulsoftware.com</email>  </author>  "
+			+ "<author testAttr=\"testVal\">    <name>Bill Brown</name>    <uri>http://www.colorfulsoftware.com</uri>    <email>info@colorfulsoftware.com</email>  </author>  "
+			+ "<contributor>    <name>Bill Brown</name>    <uri>http://www.colorfulsoftware.com</uri>    <email>info@colorfulsoftware.com</email>  </contributor>  "
+			+ "<contributor testAttr=\"testVal\">    <name>Bill Brown</name>    <uri>http://www.colorfulsoftware.com</uri>    <email>info@colorfulsoftware.com</email>  </contributor>  "
+			+ "<category term=\"math\" scheme=\"http://www.colorfulsoftware.com/projects/atomsphere/\" lable=\"math\" />"
+			+ "<category term=\"science\" scheme=\"http://www.colorfulsoftware.com/projects/atomsphere/\" lable=\"science\" />"
 			+ "<link href=\"http://www.colorfulsoftware.com/projects/atomsphere/atom.xml\" rel=\"self\" type=\"application/atom+xml\"/>  "
+			+ "<icon testAttr=\"testVal\">http://www.minoritydirectory.net/images/logo.gif</icon>"
+			+ "<logo testAttr=\"testVal\">http://www.minoritydirectory.net/images/logo.gif</logo>"
 			+ "<rights>Copyright 2007</rights>  "
 			+ "<entry>    <id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#About</id>    "
 			+ "<updated>2007-03-02T13:00:00.699-06:00</updated>    <title>About</title>    <published>2007-02-26T12:34:01.330-06:00</published>    "
@@ -63,9 +74,10 @@ public class FeedReaderTest {
 			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>    <title>Requirements</title>    <published>2007-02-26T12:58:53.197-06:00</published>    "
 			+ "<summary>Requirements for using the libraries</summary>    "
 			+ "<content type=\"html\">&lt;br /&gt;the project is usable with jdk 1.4.2 and above&lt;br /&gt;                                    &amp;nbsp;&lt;br /&gt;            needed for using the library&lt;br /&gt;                &lt;ul&gt;                &lt;li&gt;&lt;a href=\"https://sjsxp.dev.java.net/\"&gt;jsr173&lt;/a&gt; (STAX api jar) - see the &lt;a href=\"http://jcp.org/aboutJava/communityprocess/final/jsr173/index.html\"&gt;API&lt;/a&gt;.&lt;/li&gt;         &lt;li&gt;&lt;a href=\"https://sjsxp.dev.java.net/\"&gt;sjsxp&lt;/a&gt; (STAX implementation) - others implementations may work but have not been tested.&lt;/li&gt;          &lt;li&gt;&lt;a href=\"https://stax-utils.dev.java.net/\"&gt;stax-utils&lt;/a&gt; (for pretty printing)&lt;/li&gt;          &lt;/ul&gt;        needed for using the atomsphere-taglib&lt;br /&gt;              &lt;ul&gt;        &lt;li&gt;the atomsphere library&lt;/li&gt;                             &lt;li&gt;Any J2EE Servlet Container&lt;/li&gt;           &lt;/ul&gt;             needed for using the atomsphere-weblib&lt;br /&gt;                &lt;ul&gt;              &lt;li&gt;the atomsphere library&lt;/li&gt;                       &lt;li&gt;Any J2EE Servlet Container&lt;/li&gt;           &lt;/ul&gt;             needed for using the example atomsphere-webapp&lt;br /&gt;                &lt;ul&gt;              &lt;li&gt;Any J2EE Servlet Container&lt;/li&gt;&lt;/ul&gt;</content>  </entry>  "
-			+ "<entry>    <id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#Documentation</id>    "
+			+ "<entry  xmlns:test=\"http://www.w3.org/1999/test\">    <id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#Documentation</id>    "
 			+ "<updated>2007-03-02T12:59:45.475-06:00</updated>    <title>Documentation</title>    <published>2007-02-26T13:00:00.478-06:00</published>    "
 			+ "<summary>Starting Documentation</summary>    "
+			+ "<test:test>this is an <test:fakeEle /> extension test <test:does> it work? </test:does> we'll see</test:test>"
 			+ "<content type=\"html\">&lt;h4&gt;Installation (atomsphere library)&lt;/h4&gt;                 &lt;ul&gt;                &lt;li&gt;Add the jsr173, sjsxp, stax-utils and atomsphere jars to the classpath (WEB-INF/lib for webapps).&lt;/li&gt;                    &lt;/ul&gt;                &lt;h4&gt;Installation (atomsphere-taglib)&lt;/h4&gt;                   &lt;ul&gt;                        &lt;li&gt;Add the atomsphere jar to the classpath (WEB-INF/lib for webapps).&lt;/li&gt;&lt;li&gt;Add the atomsphereTags.tld tag descriptor to the top of the jsp page (See example below). &lt;/li&gt;                      &lt;li&gt;Add anyrequired attributes and optional attributes to the custom tag (See example below).&lt;/li&gt;                     &lt;li&gt;View the atomsphereTags.tld for a description of the attributes and what they do.&lt;/li&gt;&lt;/ul&gt;                &lt;h4&gt;Installation (atomsphere-weblib)&lt;/h4&gt;                   &lt;ul&gt;&lt;li&gt;Add the atomsphere and atomsphere-weblib jars to the classpath (WEB-INF/lib for webapps).&lt;/li&gt;&lt;li&gt;Copy the web-fragrment.xml (embeded in the jar file) to your application's web.xml file.&lt;/li&gt;&lt;/ul&gt;                               &lt;h4&gt;Installation (atomsphere-webapp)&lt;/h4&gt;                    &lt;ul&gt;       &lt;li&gt;Deploy the war file to any J2EE servlet container.&lt;/li&gt;                   &lt;/ul&gt;</content>  </entry>  "
 			+ "<entry>    <id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#Examples</id>    "
 			+ "<updated>2007-03-02T12:59:10.517-06:00</updated>    <title>Examples</title>    <published>2007-02-26T13:01:43.57-06:00</published>    "
@@ -195,6 +207,8 @@ public class FeedReaderTest {
 				new FileInputStream("src/test/resources/flat.xml"));
 		reader3 = XMLInputFactory.newInstance().createXMLStreamReader(
 				new FileInputStream("src/test/resources/dump.xml"));
+		reader4 = XMLInputFactory.newInstance().createXMLStreamReader(
+				new URL("http://www.earthbeats.net/drops.xml").openStream());
 	}
 
 	@After
@@ -214,8 +228,17 @@ public class FeedReaderTest {
 			feed = feedReader.readFeed(reader3);
 			assertTrue(feed.getEntries().size() == 4);
 
+			//read and write a full feed.
 			feed = FeedDoc.readFeedToBean(xmlString);
 			assertTrue(feed.getEntries().size() == 4);
+			FeedWriter feedWriter = new FeedWriter();
+			XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
+					new FileOutputStream("dump1.xml"));
+			feedWriter.writeFeed(writer, feed);
+			new File("dump1.xml").deleteOnExit();
+			
+			feed = feedReader.readFeed(reader4);
+			assertNotNull(feed);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -317,13 +340,21 @@ public class FeedReaderTest {
 			reader = XMLInputFactory.newInstance().createXMLStreamReader(
 					new StringReader(source1));
 			Feed feed = feedReader.readFeed(reader);
+			
 			assertNotNull(feed.getEntries());
+						
 			for (Entry entry : feed.getEntries().values()) {
 				assertNotNull(entry.getSource());
 				Source source = entry.getSource();
 				assertNotNull(source.getId());
 			}
 
+			//make sure it can also be written afterwards.
+			FeedWriter feedWriter = new FeedWriter();
+			XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
+					new FileOutputStream("dump1.xml"));
+			feedWriter.writeFeed(writer, feed);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("could not read fead.");

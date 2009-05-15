@@ -34,7 +34,6 @@ package com.colorful.atom;
 import java.util.List;
 import java.util.SortedMap;
 
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 /**
@@ -116,12 +115,9 @@ class FeedWriter {
 
 		writer.writeStartElement("subtitle");
 
-		if (writeAttributesAndCheckForXhtml(writer, subtitle.getAttributes())) {
-			writeXHTML(writer, subtitle.getDivWrapperStart()
-					+ subtitle.getText() + subtitle.getDivWrapperEnd());
-		} else {
-			writer.writeCharacters(subtitle.getText());
-		}
+		writeAtomTextConstruct(writer, subtitle.getAttributes(), subtitle
+				.getDivWrapperStart(), subtitle.getDivWrapperEnd(), subtitle
+				.getText());
 
 		writer.writeEndElement();
 	}
@@ -159,14 +155,9 @@ class FeedWriter {
 
 		writer.writeStartElement("title");
 
-		if (writeAttributesAndCheckForXhtml(writer, title.getAttributes())) {
-			System.out
-					.println("title.startWrap: " + title.getDivWrapperStart());
-			writeXHTML(writer, title.getDivWrapperStart() + title.getText()
-					+ title.getDivWrapperEnd());
-		} else {
-			writer.writeCharacters(title.getText());
-		}
+		writeAtomTextConstruct(writer, title.getAttributes(), title
+				.getDivWrapperStart(), title.getDivWrapperEnd(), title
+				.getText());
 
 		writer.writeEndElement();
 	}
@@ -178,23 +169,23 @@ class FeedWriter {
 				return;
 			}
 
-			System.out.println("Initial Text = " + text);
+			//System.out.println("Initial Text = " + text);
 
 			if (text.indexOf('<') == -1) {
 
-				System.out.println("writing all characters: " + text);
-				writer.writeCharacters(text.replace("&lt;", "<")
-						.replace("&gt;", ">").replaceAll("&amp;", "&"));
+				//System.out.println("writing all characters: " + text);
+				writer.writeCharacters(text.replace("&lt;", "<").replace(
+						"&gt;", ">").replaceAll("&amp;", "&"));
 
 			} else {
 
 				if (text.startsWith("</")) {
-					System.out.println("writing end element.");
+					//System.out.println("writing end element.");
 					// write the end element
 					writer.writeEndElement();
 					// search for the next element
 					text = text.substring(text.indexOf('>') + 1);
-					System.out.println("remaining after end element: " + text);
+					//System.out.println("remaining after end element: " + text);
 					writeXHTML(writer, text);
 
 				} else {
@@ -205,13 +196,13 @@ class FeedWriter {
 					String localWrite = null;
 					if (!text.startsWith("/")) {
 						localWrite = text.substring(0, text.indexOf('<'));
-						System.out.println("writing some characters: "
-								+ localWrite);
+						//System.out.println("writing some characters: "
+						//		+ localWrite);
 						writer.writeCharacters(localWrite.replace("&lt;", "<")
 								.replace("&gt;", ">").replaceAll("&amp;", "&"));
 						text = text.substring(text.indexOf('<') + 1);
-						System.out.println("remaining after some characters: "
-								+ text);
+						//System.out.println("remaining after some characters: "
+						//		+ text);
 					}
 
 					// if we reach another < before > then this
@@ -219,15 +210,15 @@ class FeedWriter {
 					if ((text.indexOf(">") > text.indexOf("<"))
 							&& !text.startsWith("/")) {
 
-						System.out.println("found < that isn't start element.");
-						localWrite = text.substring(1, text.indexOf('<') + 1);
-						System.out.println("writing some more characters: "
-								+ localWrite);
+						//System.out.println("found < that isn't start element.");
+						//localWrite = text.substring(1, text.indexOf('<') + 1);
+						//System.out.println("writing some more characters: "
+						//		+ localWrite);
 						writer.writeCharacters(localWrite.replace("&lt;", "<")
 								.replace("&gt;", ">").replaceAll("&amp;", "&"));
 						text = text.substring(localWrite.length() - 1);
-						System.out.println("remaining after some characters: "
-								+ text);
+						//System.out.println("remaining after some characters: "
+						//		+ text);
 						writeXHTML(writer, text);
 
 					} else {
@@ -235,17 +226,17 @@ class FeedWriter {
 						// get the start element
 						String startElement = text.substring(0,
 								text.indexOf('>')).trim();
-						System.out.println("startElement: " + startElement);
+						//System.out.println("startElement: " + startElement);
 
 						// check for end element.
 						if (startElement.startsWith("/")) {
-							System.out.println("writing end element.");
+							//System.out.println("writing end element.");
 							// write the end element
 							writer.writeEndElement();
 							// search for the next element
 							text = text.substring(text.indexOf('>') + 1);
-							System.out.println("remaining after end element: "
-									+ text);
+							//System.out.println("remaining after end element: "
+							//		+ text);
 							writeXHTML(writer, text);
 
 						} else {
@@ -253,7 +244,7 @@ class FeedWriter {
 							// check for empty element
 							if (startElement.indexOf('/') == startElement
 									.length() - 1) {
-								System.out.println("writing empty element.");
+								//System.out.println("writing empty element.");
 								// check for attributes
 								String[] attributes = startElement.split(" ");
 								if (attributes.length > 1) {
@@ -294,8 +285,8 @@ class FeedWriter {
 								// check for attributes
 								String[] attributes = startElement.split(" ");
 
-								System.out.println("writing normal element: "
-										+ attributes[0]);
+								//System.out.println("writing normal element: "
+								//		+ attributes[0]);
 
 								if (attributes.length > 1) {
 									// if the name has a prefix,
@@ -313,10 +304,10 @@ class FeedWriter {
 																	.indexOf('=') + 2,
 															attributes[i]
 																	.lastIndexOf("\""));
-											System.out.println("attrName: "
-													+ attrName);
-											System.out.println("attrValue: "
-													+ attrValue);
+											//System.out.println("attrName: "
+											//		+ attrName);
+											//System.out.println("attrValue: "
+											//		+ attrValue);
 											writer.writeAttribute(attrName,
 													attrValue);
 										}
@@ -329,7 +320,7 @@ class FeedWriter {
 								}
 							}
 							text = text.substring(text.indexOf('>') + 1);
-							System.out.println("End Text = " + text);
+							//System.out.println("End Text = " + text);
 
 							// search for the next element
 							writeXHTML(writer, text);
@@ -414,12 +405,9 @@ class FeedWriter {
 
 		writer.writeStartElement("rights");
 
-		if (writeAttributesAndCheckForXhtml(writer, rights.getAttributes())) {
-			writeXHTML(writer, rights.getDivWrapperStart() + rights.getText()
-					+ rights.getDivWrapperEnd());
-		} else {
-			writer.writeCharacters(rights.getText());
-		}
+		writeAtomTextConstruct(writer, rights.getAttributes(), rights
+				.getDivWrapperStart(), rights.getDivWrapperEnd(), rights
+				.getText());
 
 		writer.writeEndElement();
 
@@ -586,18 +574,17 @@ class FeedWriter {
 
 		writer.writeStartElement("summary");
 
-		if (writeAttributesAndCheckForXhtml(writer, summary.getAttributes())) {
-			writeXHTML(writer, summary.getDivWrapperStart() + summary.getText()
-					+ summary.getDivWrapperEnd());
-		} else {
-			writer.writeCharacters(summary.getText());
-		}
+		writeAtomTextConstruct(writer, summary.getAttributes(), summary
+				.getDivWrapperStart(), summary.getDivWrapperEnd(), summary
+				.getText());
 
 		writer.writeEndElement();
 	}
 
-	private boolean writeAttributesAndCheckForXhtml(XMLStreamWriter writer,
-			List<Attribute> attributes) throws XMLStreamException {
+	private void writeAtomTextConstruct(XMLStreamWriter writer,
+			List<Attribute> attributes, String startDivWrapper,
+			String endDivWrapper, String text) throws Exception {
+		// write the attributes if there are any
 		if (attributes != null) {
 			for (Attribute attr : attributes) {
 				writer.writeAttribute(attr.getName(), attr.getValue());
@@ -605,7 +592,20 @@ class FeedWriter {
 		}
 		// check to see if we need to
 		// wrap the text in a an <xhtml:div> tag.
-		return (FeedDoc.getContentType(attributes) == FeedDoc.ContentType.XHTML);
+		if (FeedDoc.getContentType(attributes) == FeedDoc.ContentType.XHTML) {
+
+			writeXHTML(writer, startDivWrapper + text + endDivWrapper);
+
+			// check to see if we need to escape the data
+		} else if (FeedDoc.getContentType(attributes) == FeedDoc.ContentType.HTML) {
+
+			writer.writeCharacters(text.replaceAll("&", "&amp;").replace(
+					"&lt;", "<").replace(">", "&gt;"));
+
+			// just write the text.
+		} else {
+			writer.writeCharacters(text);
+		}
 	}
 
 	void writePublished(XMLStreamWriter writer, Published published)
@@ -631,12 +631,9 @@ class FeedWriter {
 			System.out.println("writing filled content.");
 			writer.writeStartElement("content");
 
-			if (writeAttributesAndCheckForXhtml(writer, content.getAttributes())) {
-				writeXHTML(writer, content.getDivWrapperStart()
-						+ content.getContent() + content.getDivWrapperEnd());
-			} else {
-				writer.writeCharacters(content.getContent());
-			}
+			writeAtomTextConstruct(writer, content.getAttributes(), content
+					.getDivWrapperStart(), content.getDivWrapperEnd(), content
+					.getContent());
 
 			writer.writeEndElement();
 		}

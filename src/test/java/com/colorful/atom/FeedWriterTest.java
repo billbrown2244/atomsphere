@@ -29,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.SortedMap;
 
 import org.junit.After;
@@ -164,7 +165,8 @@ public class FeedWriterTest {
 			// no need to wrap in supplied div.
 			+ "<xh:div>"
 			+ "This is <xh:b>XHTML</xh:b> content."
-			+ "</xh:div>" + "</content>" + "</entry>";
+			+ "</xh:div>"
+			+ "</content>" + "</entry>";
 
 	private String entry4 = "<entry xmlns=\"http://www.w3.org/2005/Atom\">"
 			+ "<id>http://colorfulsoftware.localhost/colorfulsoftware/"
@@ -181,9 +183,7 @@ public class FeedWriterTest {
 			+ "</summary>"
 			+ "<content type=\"xhtml\" xmlns:xh=\"http://www.w3.org/1999/xhtml\">"
 			// xhtml prefix xhtml is bound at entry
-			+ "<xh:div>"
-			+ "This is <xh:b>XHTML</xh:b> content."
-			+ "</xh:div>"
+			+ "<xh:div>" + "This is <xh:b>XHTML</xh:b> content." + "</xh:div>"
 			+ "</content>" + "</entry>";
 
 	private String entry4Result = "<entry xmlns=\"http://www.w3.org/2005/Atom\">"
@@ -205,7 +205,8 @@ public class FeedWriterTest {
 			// no need to wrap in supplied div.
 			+ "<xh:div>"
 			+ "This is <xh:b>XHTML</xh:b> content."
-			+ "</xh:div>" + "</content>" + "</entry>";
+			+ "</xh:div>"
+			+ "</content>" + "</entry>";
 
 	@Before
 	public void setUp() throws Exception {
@@ -224,11 +225,23 @@ public class FeedWriterTest {
 		new File("out.xml").deleteOnExit();
 		new File("out2.xml").deleteOnExit();
 		new File("xhtml.xml").deleteOnExit();
+		new File("dump1.xml").deleteOnExit();
 	}
 
 	@Test
 	public void testWriteFeed() {
-		// fail("Not yet implemented");
+		try {
+			feedWriter = new FeedWriter();
+			writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
+					new FileOutputStream("dump1.xml"));
+			Feed feed = FeedDoc.readFeedToBean(new URL(
+					"http://www.earthbeats.net/drops.xml"));
+			feedWriter.writeFeed(writer, feed);
+					
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("could not read and write feed.");
+		}
 	}
 
 	@Test

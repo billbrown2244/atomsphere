@@ -27,8 +27,10 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import org.junit.After;
 import org.junit.Before;
@@ -125,7 +127,13 @@ public class FeedDocTest {
 			+ "   <email>johndoe@example.com</email>" + " </author>"
 			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
 			+ "</feed>";
-	//current implementation does not support reading in cdata sections as cdata.
+	/*currently of the 3 implementations tested:
+	sjsxp
+	stax
+	woodstox
+	None of them are able to detect CDATA sections.
+	so the markup display ends up being escaped in the output without the cdata section.
+	*/
 	private String title5 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\">"
 			+ "<title type=\"html\"><![CDATA[One <strong>bold</strong> foot forward]]></title>"
@@ -330,11 +338,24 @@ public class FeedDocTest {
 			assertEquals(feed1.getTitle().getText(),
 					"One &lt;strong&gt;bold&lt;/strong&gt; foot forward");
 			assertNotNull(FeedDoc.readFeedToString(feed1));
-
+			
+			/*currently of the 3 implementations tested:
+			sjsxp
+			stax
+			woodstox
+			None of them are able to detect CDATA sections.
+			*/
+			System.out.println("reading all events.");
+			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+			XMLStreamReader reader = inputFactory
+					.createXMLStreamReader(new java.io.StringReader(title5));
+			FeedReader.checkForCDATA(reader);
+			System.out.println("end reading all events.");
+			
 			feed1 = FeedDoc.readFeedToBean(title5);
 			assertNotNull(feed1.getTitle());
 			assertEquals(feed1.getTitle().getText(),
-					"One <strong>bold</strong> foot forward");
+					"One &lt;strong&gt;bold&lt;/strong&gt; foot forward");
 			assertNotNull(FeedDoc.readFeedToString(feed1));
 
 			feed1 = FeedDoc.readFeedToBean(title6);

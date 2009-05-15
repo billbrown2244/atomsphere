@@ -145,11 +145,36 @@
 			<artifactId>jsr173</artifactId>
 			<version>1.0</version>
 		</dependency>
+
+		<!--
+			NOTES: passes all but CDATA test. -->
+
 		<dependency>
 			<groupId>com.sun.xml</groupId>
 			<artifactId>sjsxp</artifactId>
 			<version>1.0.1</version>
 		</dependency>
+
+
+		<!--
+			NOTES: passes all but CDATA test. -->
+		<!--
+			<dependency> <groupId>stax</groupId> <artifactId>stax</artifactId>
+			<version>1.2.0_rc2-dev</version> </dependency>
+		-->
+
+		<!--
+			NOTES: writes <?xml doctype and encoding with single quotes Does not
+			pass the CDATA test.
+		-->
+		<!--
+			<dependency> <groupId>woodstox</groupId>
+			<artifactId>wstx-asl</artifactId> <version>3.2.0</version>
+			</dependency>
+		-->
+
+
+
 		<dependency>
 			<groupId>javanet.staxutils</groupId>
 			<artifactId>stax-utils</artifactId>
