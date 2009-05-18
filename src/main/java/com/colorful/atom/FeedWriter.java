@@ -169,23 +169,18 @@ class FeedWriter {
 				return;
 			}
 
-			//System.out.println("Initial Text = " + text);
-
 			if (text.indexOf('<') == -1) {
 
-				//System.out.println("writing all characters: " + text);
 				writer.writeCharacters(text.replace("&lt;", "<").replace(
 						"&gt;", ">").replaceAll("&amp;", "&"));
 
 			} else {
 
 				if (text.startsWith("</")) {
-					//System.out.println("writing end element.");
 					// write the end element
 					writer.writeEndElement();
 					// search for the next element
 					text = text.substring(text.indexOf('>') + 1);
-					//System.out.println("remaining after end element: " + text);
 					writeXHTML(writer, text);
 
 				} else {
@@ -196,13 +191,9 @@ class FeedWriter {
 					String localWrite = null;
 					if (!text.startsWith("/")) {
 						localWrite = text.substring(0, text.indexOf('<'));
-						//System.out.println("writing some characters: "
-						//		+ localWrite);
 						writer.writeCharacters(localWrite.replace("&lt;", "<")
 								.replace("&gt;", ">").replaceAll("&amp;", "&"));
 						text = text.substring(text.indexOf('<') + 1);
-						//System.out.println("remaining after some characters: "
-						//		+ text);
 					}
 
 					// if we reach another < before > then this
@@ -210,15 +201,10 @@ class FeedWriter {
 					if ((text.indexOf(">") > text.indexOf("<"))
 							&& !text.startsWith("/")) {
 
-						//System.out.println("found < that isn't start element.");
-						//localWrite = text.substring(1, text.indexOf('<') + 1);
-						//System.out.println("writing some more characters: "
-						//		+ localWrite);
 						writer.writeCharacters(localWrite.replace("&lt;", "<")
 								.replace("&gt;", ">").replaceAll("&amp;", "&"));
 						text = text.substring(localWrite.length() - 1);
-						//System.out.println("remaining after some characters: "
-						//		+ text);
+
 						writeXHTML(writer, text);
 
 					} else {
@@ -226,17 +212,13 @@ class FeedWriter {
 						// get the start element
 						String startElement = text.substring(0,
 								text.indexOf('>')).trim();
-						//System.out.println("startElement: " + startElement);
 
 						// check for end element.
 						if (startElement.startsWith("/")) {
-							//System.out.println("writing end element.");
 							// write the end element
 							writer.writeEndElement();
 							// search for the next element
 							text = text.substring(text.indexOf('>') + 1);
-							//System.out.println("remaining after end element: "
-							//		+ text);
 							writeXHTML(writer, text);
 
 						} else {
@@ -244,7 +226,6 @@ class FeedWriter {
 							// check for empty element
 							if (startElement.indexOf('/') == startElement
 									.length() - 1) {
-								//System.out.println("writing empty element.");
 								// check for attributes
 								String[] attributes = startElement.split(" ");
 								if (attributes.length > 1) {
@@ -285,9 +266,6 @@ class FeedWriter {
 								// check for attributes
 								String[] attributes = startElement.split(" ");
 
-								//System.out.println("writing normal element: "
-								//		+ attributes[0]);
-
 								if (attributes.length > 1) {
 									// if the name has a prefix,
 									// just write it as part of the local name.
@@ -304,10 +282,6 @@ class FeedWriter {
 																	.indexOf('=') + 2,
 															attributes[i]
 																	.lastIndexOf("\""));
-											//System.out.println("attrName: "
-											//		+ attrName);
-											//System.out.println("attrValue: "
-											//		+ attrValue);
 											writer.writeAttribute(attrName,
 													attrValue);
 										}
@@ -320,7 +294,6 @@ class FeedWriter {
 								}
 							}
 							text = text.substring(text.indexOf('>') + 1);
-							//System.out.println("End Text = " + text);
 
 							// search for the next element
 							writeXHTML(writer, text);
@@ -620,7 +593,6 @@ class FeedWriter {
 		// look for the src attribute to
 		// see if we need to build an empty tag.
 		if (FeedDoc.getAttributeFromGroup(content.getAttributes(), "src") != null) {
-			System.out.println("writing empty content.");
 			writer.writeEmptyElement("content");
 			if (content.getAttributes() != null) {
 				for (Attribute attr : content.getAttributes()) {
@@ -628,7 +600,6 @@ class FeedWriter {
 				}
 			}
 		} else {
-			System.out.println("writing filled content.");
 			writer.writeStartElement("content");
 
 			writeAtomTextConstruct(writer, content.getAttributes(), content

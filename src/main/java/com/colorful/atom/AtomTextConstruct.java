@@ -59,7 +59,7 @@ class AtomTextConstruct implements Serializable {
 	// content elements do a different validation.
 	AtomTextConstruct(String text, List<Attribute> attributes,
 			boolean isContentElement) throws AtomSpecException {
-		System.out.println("text initially: "+text);
+
 		if (attributes == null) {
 			this.attributes = null;
 		} else {
@@ -96,7 +96,7 @@ class AtomTextConstruct implements Serializable {
 				}
 			}
 		}
-		System.out.println("Content type = "+FeedDoc.getContentType(this.attributes));
+
 		if (FeedDoc.getContentType(this.attributes) == FeedDoc.ContentType.XHTML) {
 			this.divWrapperStart = getDivWrapperStart(text);
 			this.divWrapperEnd = getDivWrapperEnd(text);
@@ -106,24 +106,17 @@ class AtomTextConstruct implements Serializable {
 			this.divWrapperEnd = null;
 			this.text = text;
 		}
-		
-
-		System.out.println("this.divWrapperStart = " + this.divWrapperStart);
-		System.out.println("this.divWrapperEnd = " + this.divWrapperEnd);
-		System.out.println("this.text = " + this.text);
 	}
 
 	// copy constructor
 	AtomTextConstruct(String text, List<Attribute> attributes,
-			String divWrapperStart, String divWrapperEnd, boolean isContentElement)
-			throws AtomSpecException {
-		 System.out.println("in copy constructor");
-		 System.out.println("divWrapperStart = " + divWrapperStart);
-		 System.out.println("divWrapperEnd = " + divWrapperEnd);
+			String divWrapperStart, String divWrapperEnd,
+			boolean isContentElement) throws AtomSpecException {
+
 		this.text = text;
 		this.divWrapperStart = divWrapperStart;
 		this.divWrapperEnd = divWrapperEnd;
-		
+
 		if (attributes == null) {
 			this.attributes = null;
 		} else {
@@ -160,9 +153,6 @@ class AtomTextConstruct implements Serializable {
 				}
 			}
 		}
-		System.out.println("this.divWrapperStart = " + this.divWrapperStart);
-		System.out.println("this.divWrapperEnd = " + this.divWrapperEnd);
-		System.out.println("this.text = " + this.text);
 	}
 
 	private String getDivWrapperStart(String text) {
@@ -177,17 +167,10 @@ class AtomTextConstruct implements Serializable {
 
 	private String getXhtmlText(String text) {
 		// strip the wrapper start and end tags.
-		// System.out.println("textLocal orig = " + textLocal);
 		text = text.substring(text.indexOf(">") + 1);
-		// System.out.println("textLocal stripped front = " + textLocal);
 		text = reverseIt(text);
-		// System.out.println("textLocal reversed = " + textLocal);
 		text = text.substring(text.indexOf("<") + 1);
-		// System.out
-		// .println("textLocal stripped back reverse = " + textLocal);
 		return reverseIt(text);
-		// System.out.println("textLocal final = " + textLocal);
-
 	}
 
 	// Convenience for reversing the string.

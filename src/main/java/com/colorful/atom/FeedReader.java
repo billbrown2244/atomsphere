@@ -163,12 +163,11 @@ class FeedReader {
 
 		List<Attribute> attributes = new LinkedList<Attribute>();
 
-		System.out.println("reader = here: "+reader.getEventType());
 		if (reader.getEventType() == XMLStreamConstants.START_DOCUMENT) {
 			reader.next();
 		}
-		
-		if(reader.getEventType() != XMLStreamConstants.START_ELEMENT){
+
+		if (reader.getEventType() != XMLStreamConstants.START_ELEMENT) {
 			return null;
 		}
 
@@ -218,25 +217,26 @@ class FeedReader {
 			switch (reader.next()) {
 			case XMLStreamConstants.START_ELEMENT:
 				elementName = getElementName(reader);
-				if((elementNamePrev != null) && (!elementName.equals(elementNamePrev))){
-				List<Extension> subExtn = readExtension(reader, null,
-						elementName);
-				Extension extn = subExtn.get(0);
-				if (extn != null) {
-					StringBuffer extnStr = new StringBuffer();
-					extnStr.append("<" + extn.getElementName());
-					List<Attribute> extnAttrs = extn.getAttributes();
-					// add the attributes
-					if (extnAttrs != null && extnAttrs.size() > 0) {
-						for (Attribute attr : extnAttrs) {
-							extnStr.append(" " + attr.getName() + "=\""
-									+ attr.getValue() + "\"");
+				if ((elementNamePrev != null)
+						&& (!elementName.equals(elementNamePrev))) {
+					List<Extension> subExtn = readExtension(reader, null,
+							elementName);
+					Extension extn = subExtn.get(0);
+					if (extn != null) {
+						StringBuffer extnStr = new StringBuffer();
+						extnStr.append("<" + extn.getElementName());
+						List<Attribute> extnAttrs = extn.getAttributes();
+						// add the attributes
+						if (extnAttrs != null && extnAttrs.size() > 0) {
+							for (Attribute attr : extnAttrs) {
+								extnStr.append(" " + attr.getName() + "=\""
+										+ attr.getValue() + "\"");
+							}
 						}
+						extnStr.append(">");
+						extnStr.append(extn.getContent());
+						extnStr.append("</" + extn.getElementName() + ">");
 					}
-					extnStr.append(">");
-					extnStr.append(extn.getContent());
-					extnStr.append("</" + extn.getElementName() + ">");
-				}
 				}
 				break;
 
@@ -392,7 +392,7 @@ class FeedReader {
 		return FeedDoc.buildSummary(summary, attributes);
 	}
 
-	// used for html or xhtml.
+	// used for xhtml.
 	boolean containsXHTML(List<Attribute> attributes) {
 		Attribute xhtml = FeedDoc.getAttributeFromGroup(attributes, "type");
 		return ((xhtml != null) && (xhtml.getValue().equals("xhtml") || xhtml
@@ -523,16 +523,7 @@ class FeedReader {
 		if (containsXHTML(attributes)) {
 			content = readXHTML(reader, "content");
 		} else {
-			if (reader.hasNext()) {
-				int next = reader.next();
-				System.out.println("next = " + next);
-				if (next == XMLStreamConstants.START_ELEMENT) {
-					content = reader.getElementText();
-				} else if (next == XMLStreamConstants.END_ELEMENT) {
-					reader.next();
-				}
-			}
-
+			content = reader.getElementText();
 		}
 		return FeedDoc.buildContent(content, attributes);
 	}
@@ -558,75 +549,44 @@ class FeedReader {
 		if (containsXHTML(attributes)) {
 			title = readXHTML(reader, "title");
 		} else {
-			/*
-			if (reader.hasNext()) {
-				int next = reader.next();
-				System.out.println("next = " + next);
-				if (next == XMLStreamConstants.START_ELEMENT) {
-					title = reader.getElementText();
-				} else if (next == XMLStreamConstants.END_ELEMENT) {
-					reader.next();
-				}
-			}
-			*/
 			title = reader.getElementText();
 		}
-		System.out.println("title before build = " + title);
 		return FeedDoc.buildTitle(title, attributes);
 	}
 
 	public static void checkForCDATA(XMLStreamReader reader) throws Exception {
 		while (reader.hasNext()) {
 			int next = reader.next();
-			System.out.println("next = " + next);
 			switch (next) {
 			case XMLStreamConstants.START_DOCUMENT:
-				System.out.println("found XMLStreamConstants.START_DOCUMENT");
 				break;
 			case XMLStreamConstants.START_ELEMENT:
-				System.out.println("found XMLStreamConstants.START_ELEMENT");
 				break;
 			case XMLStreamConstants.END_ELEMENT:
-				System.out.println("found XMLStreamConstants.END_ELEMENT");
 				break;
 			case XMLStreamConstants.ATTRIBUTE:
-				System.out.println("found XMLStreamConstants.ATTRIBUTE");
 				break;
 			case XMLStreamConstants.CDATA:
-				System.out.println("found XMLStreamConstants.CDATA");
 				break;
 			case XMLStreamConstants.CHARACTERS:
-				System.out.println("found XMLStreamConstants.CHARACTERS");
 				break;
 			case XMLStreamConstants.COMMENT:
-				System.out.println("found XMLStreamConstants.COMMENT");
 				break;
 			case XMLStreamConstants.DTD:
-				System.out.println("found XMLStreamConstants.DTD");
 				break;
 			case XMLStreamConstants.END_DOCUMENT:
-				System.out.println("found XMLStreamConstants.END_DOCUMENT");
 				break;
 			case XMLStreamConstants.ENTITY_DECLARATION:
-				System.out
-						.println("found XMLStreamConstants.ENTITY_DECLARATION");
 				break;
 			case XMLStreamConstants.ENTITY_REFERENCE:
-				System.out.println("found XMLStreamConstants.ENTITY_REFERENCE");
 				break;
 			case XMLStreamConstants.NAMESPACE:
-				System.out.println("found XMLStreamConstants.NAMESPACE");
 				break;
 			case XMLStreamConstants.NOTATION_DECLARATION:
-				System.out
-						.println("found XMLStreamConstants.NOTATION_DECLARATION");
 				break;
 			case XMLStreamConstants.PROCESSING_INSTRUCTION:
-				System.out
-						.println("found XMLStreamConstants.PROCESSING_INSTRUCTION");
 				break;
 			case XMLStreamConstants.SPACE:
-				System.out.println("found XMLStreamConstants.SPACE");
 				break;
 			}
 		}
@@ -640,7 +600,7 @@ class FeedReader {
 		while (reader.hasNext()) {
 			boolean breakOut = false;
 			int next = reader.next();
-			System.out.println("next = " + next);
+
 			switch (next) {
 
 			case XMLStreamConstants.START_ELEMENT:
@@ -673,17 +633,15 @@ class FeedReader {
 
 			default:
 				// escape the necessary characters.
-				xhtml.append(reader.getText().replaceAll("&", "&amp;")
-						.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+				String escapedTxt = reader.getText().replaceAll("&", "&amp;")
+						.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+				xhtml.append(escapedTxt);
 			}
 			if (breakOut) {
-				// clear past the end enclosing div.
-				// reader.next();
 				break;
 			}
 		}
-		return xhtml.toString().replaceAll("<br></br>", "<br />").replaceAll(
-				"<hr></hr>", "<hr />");
+		return xhtml.toString();
 	}
 
 	Subtitle readSubtitle(XMLStreamReader reader) throws Exception {

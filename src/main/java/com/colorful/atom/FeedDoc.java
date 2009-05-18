@@ -97,8 +97,9 @@ public final class FeedDoc {
 		}
 	}
 
-	private FeedDoc(){}//here to enforce static usage.
-	
+	private FeedDoc() {
+	}// here to enforce static usage.
+
 	/**
 	 * @return the Atomsphere library version in the form of a generator
 	 *         element. This element is output for all feeds that are generated
@@ -1057,9 +1058,8 @@ public final class FeedDoc {
 	static Attribute getAttributeFromGroup(List<Attribute> attributes,
 			String attributeName) {
 		if (attributes != null) {
-			for(Attribute attr: attributes){
+			for (Attribute attr : attributes) {
 				if (attr.getName().equalsIgnoreCase(attributeName)) {
-					System.out.println("attr name: "+attr.getName());
 					return buildAttribute(attr.getName(), attr.getValue());
 				}
 			}
@@ -1077,11 +1077,11 @@ public final class FeedDoc {
 	public static ContentType getContentType(List<Attribute> attributes) {
 		ContentType contentType = ContentType.TEXT; // default
 		if (attributes != null) {
-			for(Attribute attr: attributes){
+			for (Attribute attr : attributes) {
 				if (attr.getName().equals("src")) {
 					return ContentType.EXTERNAL;
 				}
-				
+
 				if (attr.getName().equals("type")
 						&& attr.getValue().equals("text")) {
 					contentType = ContentType.TEXT;
@@ -1129,7 +1129,7 @@ public final class FeedDoc {
 			SortedMap<String, Entry> resortedEntries = new TreeMap<String, Entry>(
 					comparator);
 			SortedMap<String, Entry> currentEntries = feed.getEntries();
-			for(Entry entry: currentEntries.values()){
+			for (Entry entry : currentEntries.values()) {
 				if (elementClass.getSimpleName().equals("Updated")) {
 					resortedEntries.put(entry.getUpdated().getText(), entry);
 				}
@@ -1150,7 +1150,7 @@ public final class FeedDoc {
 			if (feed.getAttributes() == null) {
 				localFeedAttrs.add(attrLocal);
 			} else {
-				for(Attribute attr: feed.getAttributes()){
+				for (Attribute attr : feed.getAttributes()) {
 					if (!attr.equals(attrLocal)) {
 						localFeedAttrs.add(attr);
 					}
@@ -1188,7 +1188,7 @@ public final class FeedDoc {
 			if (feed.getExtensions() == null) {
 				localFeedExtensions.add(localFeedExtension);
 			} else {
-				for(Extension extn: feed.getExtensions()){
+				for (Extension extn : feed.getExtensions()) {
 					// if we find an existing sort extension, ignore it.
 					// add all others to the return list.
 					if (!extn.getElementName().equalsIgnoreCase("sort:asc")
@@ -1228,7 +1228,7 @@ public final class FeedDoc {
 
 		// check for the first supported extension
 		// currently only sort is implemented.
-		for(Attribute attr: feed.getAttributes()){
+		for (Attribute attr : feed.getAttributes()) {
 			if (attr.equals(xmlns)) {
 				return applySort(feed);
 			}
@@ -1241,9 +1241,9 @@ public final class FeedDoc {
 		// only do the work if there are extensions.
 		if (feed.getExtensions() != null) {
 			// look for the first extension element if the namespace exists.
-			for(Extension ext: feed.getExtensions()){
+			for (Extension ext : feed.getExtensions()) {
 				if (ext.getElementName().equals("sort:asc")) {
-					for(Attribute attr: ext.getAttributes()){
+					for (Attribute attr : ext.getAttributes()) {
 						if (attr.getName().equalsIgnoreCase("type")) {
 							String value = attr.getValue();
 							if (value.equals("updated")) {
@@ -1261,7 +1261,7 @@ public final class FeedDoc {
 						}
 					}
 				} else if (ext.getElementName().equals("sort:desc")) {
-					for(Attribute attr: ext.getAttributes()){
+					for (Attribute attr : ext.getAttributes()) {
 						if (attr.getName().equalsIgnoreCase("type")) {
 							String value = attr.getValue();
 							if (value.equals("updated")) {

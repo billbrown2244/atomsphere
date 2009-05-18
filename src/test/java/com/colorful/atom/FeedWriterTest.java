@@ -371,8 +371,6 @@ public class FeedWriterTest {
 			new FeedWriter().writeEntries(writer, entries);
 			writer.flush();
 			writer.close();
-			System.out.println("\nxml1 = " + theXMLString.toString()
-					+ "\nxml2 = " + entry1Result);
 			assertEquals(theXMLString.toString(), entry1Result);
 
 			entries = new FeedReader().readEntry(XMLInputFactory.newInstance()
@@ -386,8 +384,6 @@ public class FeedWriterTest {
 			new FeedWriter().writeEntries(writer, entries);
 			writer.flush();
 			writer.close();
-			System.out.println("\nxml3 = " + theXMLString.toString()
-					+ "\nxml4 = " + entry2Result);
 			assertEquals(theXMLString.toString(), entry2Result);
 
 			entries = new FeedReader().readEntry(XMLInputFactory.newInstance()
@@ -401,8 +397,6 @@ public class FeedWriterTest {
 			new FeedWriter().writeEntries(writer, entries);
 			writer.flush();
 			writer.close();
-			System.out.println("\nxml5 = " + theXMLString.toString()
-					+ "\nxml6 = " + entry3Result);
 			assertEquals(theXMLString.toString(), entry3Result);
 
 			entries = new FeedReader().readEntry(XMLInputFactory.newInstance()
@@ -422,8 +416,6 @@ public class FeedWriterTest {
 			new FeedWriter().writeEntries(writer, entries);
 			writer.flush();
 			writer.close();
-			System.out.println("\nxml7 = " + theXMLString.toString()
-					+ "\nxml8 = " + entry4Result);
 			assertEquals(theXMLString.toString(), entry4Result);
 
 		} catch (Exception e) {

@@ -21,7 +21,6 @@ import static org.junit.Assert.*;
 
 import java.beans.XMLDecoder;
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.StringReader;
@@ -41,7 +40,6 @@ import org.junit.Test;
 import com.colorful.atom.Content;
 import com.colorful.atom.Entry;
 import com.colorful.atom.Feed;
-import com.colorful.atom.FeedDoc;
 import com.colorful.atom.FeedReader;
 import com.colorful.atom.Summary;
 import com.colorful.atom.Title;
@@ -412,8 +410,6 @@ public class FeedReaderTest {
 			reader = XMLInputFactory.newInstance().createXMLStreamReader(
 					new StringReader(title1HTML));
 			title = feedReader.readTitle(reader);
-			System.out.println("title text: " + title.getText());
-			System.out.println("test text: "+"Less: &lt;b&gt;Bold Text&lt;/b&gt;  &lt;hr /&gt;");
 			assertEquals(title.getText(),
 					"Less: &lt;b&gt;Bold Text&lt;/b&gt;  &lt;hr /&gt;");
 			assertTrue(title.getAttributes() != null);
