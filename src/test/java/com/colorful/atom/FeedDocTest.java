@@ -31,6 +31,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
 
 import org.junit.After;
 import org.junit.Before;
@@ -65,6 +66,38 @@ public class FeedDocTest {
 		theDate.clear();
 		theDate.set(2008, 0, 1);
 	}
+
+	private String mega = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">  "
+			+ "<id testAttr=\"testVal\">http://colorfulsoftware.localhost/projects/atomsphere/atom.xml</id>  "
+			+ "<updated>2007-03-08T20:52:40.70-06:00</updated>  "
+			+ "<generator uri=\"http://www.colorfulsoftware.com/projects/atomsphere\" version=\"1.0.20\">Atomsphere</generator>  "
+			+ "<title>Atomsphere</title>  <subtitle>a java atom feed library</subtitle>  "
+			+ "<author testAttr=\"testVal\">    <name>Bill Brown</name>    <uri>http://www.colorfulsoftware.com</uri>    <email>info@colorfulsoftware.com</email>  </author>  "
+			+ "<contributor>    <name>Bill Brown</name>    <uri>http://www.colorfulsoftware.com</uri>    <email>info@colorfulsoftware.com</email>  </contributor>  "
+			+ "<contributor testAttr=\"testVal\">    <name>Bill Brown</name>    <uri>http://www.colorfulsoftware.com</uri>    <email>info@colorfulsoftware.com</email>  </contributor>  "
+			+ "<category term=\"math\" scheme=\"http://www.colorfulsoftware.com/projects/atomsphere/\" lable=\"math\" />"
+			+ "<category term=\"science\" scheme=\"http://www.colorfulsoftware.com/projects/atomsphere/\" lable=\"science\" />"
+			+ "<link href=\"http://www.colorfulsoftware.com/projects/atomsphere/atom.xml\" rel=\"self\" type=\"application/atom+xml\"/>  "
+			+ "<icon testAttr=\"testVal\">http://www.minoritydirectory.net/images/logo.gif</icon>"
+			+ "<logo testAttr=\"testVal\">http://www.minoritydirectory.net/images/logo.gif</logo>"
+			+ "<rights>Copyright 2007</rights>  "
+			+ "<entry>    <id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#About</id>    "
+			+ "<updated>2007-03-02T13:00:00.699-06:00</updated>    <title>About</title>    <published>2007-02-26T12:34:01.330-06:00</published>    "
+			+ "<summary>About the project</summary>    "
+			+ "<content type=\"html\">&lt;ul&gt;         &lt;li&gt;&lt;span class=\"boldText\"&gt;Atomsphere&lt;/span&gt; isa java library that allows you to create and modify atom 1.0 feeds.&lt;/li&gt;          &lt;li&gt;It is distributed under the GNU GPL license and can be used in any manner complient with the license.&lt;/li&gt;          &lt;li&gt;It is also packaged as a servlet-lib for use in web applications.&lt;/li&gt;            &lt;li&gt;It is also packaged as a customtag library to display feeds on a webapage.&lt;/li&gt;          &lt;li&gt;It also comes with an example webapp which demonstrates some example uses of the library.&lt;/li&gt;        &lt;li&gt;It is written to be tied as closely as possible to the current atom specification found &lt;a href=\"http://www.atomenabled.org/developers/syndication/atom-format-spec.php\"&gt;here&lt;/a&gt;.&lt;/li&gt;                 &lt;/ul&gt;</content>  </entry>  "
+			+ "<entry>    <id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#Requirements</id>    "
+			+ "<updated>2007-03-02T12:59:54.274-06:00</updated>    <title>Requirements</title>    <published>2007-02-26T12:58:53.197-06:00</published>    "
+			+ "<summary>Requirements for using the libraries</summary>    "
+			+ "<content type=\"html\">&lt;br /&gt;the project is usable with jdk 1.4.2 and above&lt;br /&gt;                                    &amp;nbsp;&lt;br /&gt;            needed for using the library&lt;br /&gt;                &lt;ul&gt;                &lt;li&gt;&lt;a href=\"https://sjsxp.dev.java.net/\"&gt;jsr173&lt;/a&gt; (STAX api jar) - see the &lt;a href=\"http://jcp.org/aboutJava/communityprocess/final/jsr173/index.html\"&gt;API&lt;/a&gt;.&lt;/li&gt;         &lt;li&gt;&lt;a href=\"https://sjsxp.dev.java.net/\"&gt;sjsxp&lt;/a&gt; (STAX implementation) - others implementations may work but have not been tested.&lt;/li&gt;          &lt;li&gt;&lt;a href=\"https://stax-utils.dev.java.net/\"&gt;stax-utils&lt;/a&gt; (for pretty printing)&lt;/li&gt;          &lt;/ul&gt;        needed for using the atomsphere-taglib&lt;br /&gt;              &lt;ul&gt;        &lt;li&gt;the atomsphere library&lt;/li&gt;                             &lt;li&gt;Any J2EE Servlet Container&lt;/li&gt;           &lt;/ul&gt;             needed for using the atomsphere-weblib&lt;br /&gt;                &lt;ul&gt;              &lt;li&gt;the atomsphere library&lt;/li&gt;                       &lt;li&gt;Any J2EE Servlet Container&lt;/li&gt;           &lt;/ul&gt;             needed for using the example atomsphere-webapp&lt;br /&gt;                &lt;ul&gt;              &lt;li&gt;Any J2EE Servlet Container&lt;/li&gt;&lt;/ul&gt;</content>  </entry>  "
+			+ "<entry  xmlns:test=\"http://www.w3.org/1999/test\">    <id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#Documentation</id>    "
+			+ "<updated>2007-03-02T12:59:45.475-06:00</updated>    <title>Documentation</title>    <published>2007-02-26T13:00:00.478-06:00</published>    "
+			+ "<summary>Starting Documentation</summary>    "
+			+ "<test:test>this is an <test:fakeEle /> extension test <test:does> it work? </test:does> we'll see</test:test>"
+			+ "<content type=\"html\">&lt;h4&gt;Installation (atomsphere library)&lt;/h4&gt;                 &lt;ul&gt;                &lt;li&gt;Add the jsr173, sjsxp, stax-utils and atomsphere jars to the classpath (WEB-INF/lib for webapps).&lt;/li&gt;                    &lt;/ul&gt;                &lt;h4&gt;Installation (atomsphere-taglib)&lt;/h4&gt;                   &lt;ul&gt;                        &lt;li&gt;Add the atomsphere jar to the classpath (WEB-INF/lib for webapps).&lt;/li&gt;&lt;li&gt;Add the atomsphereTags.tld tag descriptor to the top of the jsp page (See example below). &lt;/li&gt;                      &lt;li&gt;Add anyrequired attributes and optional attributes to the custom tag (See example below).&lt;/li&gt;                     &lt;li&gt;View the atomsphereTags.tld for a description of the attributes and what they do.&lt;/li&gt;&lt;/ul&gt;                &lt;h4&gt;Installation (atomsphere-weblib)&lt;/h4&gt;                   &lt;ul&gt;&lt;li&gt;Add the atomsphere and atomsphere-weblib jars to the classpath (WEB-INF/lib for webapps).&lt;/li&gt;&lt;li&gt;Copy the web-fragrment.xml (embeded in the jar file) to your application's web.xml file.&lt;/li&gt;&lt;/ul&gt;                               &lt;h4&gt;Installation (atomsphere-webapp)&lt;/h4&gt;                    &lt;ul&gt;       &lt;li&gt;Deploy the war file to any J2EE servlet container.&lt;/li&gt;                   &lt;/ul&gt;</content>  </entry>  "
+			+ "<entry>    <id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#Examples</id>    "
+			+ "<updated>2007-03-02T12:59:10.517-06:00</updated>    <title>Examples</title>    <published>2007-02-26T13:01:43.57-06:00</published>    "
+			+ "<summary>Basic examples</summary>    <content type=\"html\">&lt;br /&gt;Read an atom xml file into a Feed bean&lt;br /&gt;              &lt;code&gt;                    Feed feed = FeedDoc.readFeedToBean(new File(fullPath));                   &lt;/code&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;                                   Read an atom URL into a Feed bean&lt;br /&gt;             &lt;code&gt;                    Feed feed = FeedDoc.readFeedToBean(new URL(\"http://www.colorfulsoftware.com/atom.xml\"));                  &lt;/code&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;                                   Read an atom xml file into an xml atom string&lt;br /&gt;                 &lt;code&gt;                    String atomXML = FeedDoc.readFeedToString(new File(fullPath));                    &lt;/code&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;                                   Write a feed bean into an xml file&lt;br /&gt;                    &lt;code&gt;                    FeedDoc.writeFeedDoc(fullPath,feed,FeedDoc.encoding,FeedDoc.xml_version);                 &lt;/code&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;                                   Add the custom feed tag to a jsp page.&lt;br /&gt;                                &lt;code&gt;  &amp;lt;%@taglib uri=\"/WEB-INF/atomsphereTags.tld\" prefix=\"atom\" %&amp;gt;&lt;/code&gt;&lt;br /&gt;...&lt;br /&gt;&lt;code&gt;&amp;lt;atom:atomFeed &lt;/code&gt;&lt;br /&gt;&lt;code&gt;     clazz=\"myFeed\"&lt;/code&gt;&lt;br /&gt;&lt;code&gt;    url=\"http://www.colorfulsoftware.com/atom.xml\"&lt;/code&gt;&lt;br /&gt;&lt;code&gt;feedSummary=\"true\"&lt;/code&gt;&lt;br /&gt;&lt;code&gt;entryUpdated=\"true\"&lt;/code&gt;&lt;br /&gt;&lt;code&gt;entryUpdatedFormat=\"yyyy-MM-dd\" /&amp;gt;&lt;/code&gt;&lt;br /&gt;&amp;nbsp;&lt;br /&gt;</content> </entry></feed>";
 
 	private String expectedEntry1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
@@ -102,6 +135,7 @@ public class FeedDocTest {
 			+ "   <email>johndoe@example.com</email>" + " </author>"
 			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
 			+ "</feed>";
+
 	private String title2 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\">"
 			+ "<title type=\"text\">One bold foot forward</title>"
@@ -110,7 +144,8 @@ public class FeedDocTest {
 			+ "   <email>johndoe@example.com</email>" + " </author>"
 			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
 			+ "</feed>";
-	//bad example here.  the code actually unencodes the text. 
+
+	// bad example here. the code actually unencodes the text.
 	private String title3 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\">"
 			+ "<title>One &lt;strong&gt;bold&lt;/strong&gt; foot forward</title>"
@@ -119,6 +154,7 @@ public class FeedDocTest {
 			+ "   <email>johndoe@example.com</email>" + " </author>"
 			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
 			+ "</feed>";
+
 	private String title4 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\">"
 			+ "<title type=\"html\">One &lt;strong&gt;bold&lt;/strong&gt; foot forward</title>"
@@ -127,13 +163,12 @@ public class FeedDocTest {
 			+ "   <email>johndoe@example.com</email>" + " </author>"
 			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
 			+ "</feed>";
-	/*currently of the 3 implementations tested:
-	sjsxp
-	stax
-	woodstox
-	None of them are able to detect CDATA sections.
-	so the markup display ends up being escaped in the output without the cdata section.
-	*/
+
+	/*
+	 * currently of the 3 implementations tested: sjsxp stax woodstox None of
+	 * them are able to detect CDATA sections. so the markup display ends up
+	 * being escaped in the output without the cdata section.
+	 */
 	private String title5 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\">"
 			+ "<title type=\"html\"><![CDATA[One <strong>bold</strong> foot forward]]></title>"
@@ -142,6 +177,7 @@ public class FeedDocTest {
 			+ "   <email>johndoe@example.com</email>" + " </author>"
 			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
 			+ "</feed>";
+
 	private String title6 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\">"
 			+ "<title type=\"xhtml\"><div xmlns=\"http://www.w3.org/1999/xhtml\">One <strong>bold</strong> foot forward<title>can you see me</title></div></title>"
@@ -150,6 +186,7 @@ public class FeedDocTest {
 			+ "   <email>johndoe@example.com</email>" + " </author>"
 			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
 			+ "</feed>";
+
 	private String title7 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\"  xmlns:xh=\"http://www.w3.org/1999/xhtml\">"
 			+ "<title type=\"xhtml\"><xh:div>One <xh:strong>bold</xh:strong> foot forward </xh:div></title>"
@@ -326,9 +363,12 @@ public class FeedDocTest {
 
 			feed1 = FeedDoc.readFeedToBean(title3);
 			assertNotNull(feed1.getTitle());
-			System.out.println("feed title getText:\n"+feed1.getTitle().getText());
-			System.out.println("feed title getDivWrapperStart:\n"+feed1.getTitle().getDivWrapperStart());
-			System.out.println("feed title getDivWrapperEnd:\n"+feed1.getTitle().getDivWrapperEnd());
+			System.out.println("feed title getText:\n"
+					+ feed1.getTitle().getText());
+			System.out.println("feed title getDivWrapperStart:\n"
+					+ feed1.getTitle().getDivWrapperStart());
+			System.out.println("feed title getDivWrapperEnd:\n"
+					+ feed1.getTitle().getDivWrapperEnd());
 			assertEquals(feed1.getTitle().getText(),
 					"One <strong>bold</strong> foot forward");
 			assertNotNull(FeedDoc.readFeedToString(feed1));
@@ -338,20 +378,18 @@ public class FeedDocTest {
 			assertEquals(feed1.getTitle().getText(),
 					"One &lt;strong&gt;bold&lt;/strong&gt; foot forward");
 			assertNotNull(FeedDoc.readFeedToString(feed1));
-			
-			/*currently of the 3 implementations tested:
-			sjsxp
-			stax
-			woodstox
-			None of them are able to detect CDATA sections.
-			*/
+
+			/*
+			 * currently of the 3 implementations tested: sjsxp stax woodstox
+			 * None of them are able to detect CDATA sections.
+			 */
 			System.out.println("reading all events.");
 			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 			XMLStreamReader reader = inputFactory
 					.createXMLStreamReader(new java.io.StringReader(title5));
 			FeedReader.checkForCDATA(reader);
 			System.out.println("end reading all events.");
-			
+
 			feed1 = FeedDoc.readFeedToBean(title5);
 			assertNotNull(feed1.getTitle());
 			assertEquals(feed1.getTitle().getText(),
@@ -360,8 +398,11 @@ public class FeedDocTest {
 
 			feed1 = FeedDoc.readFeedToBean(title6);
 			assertNotNull(feed1.getTitle());
-			System.out.println("feed title from bean\n"+feed1.getTitle().getText());
-			System.out.println("feed title from raw\n"+"One <strong>bold</strong> foot forward<title>can you see me</title>");
+			System.out.println("feed title from bean\n"
+					+ feed1.getTitle().getText());
+			System.out
+					.println("feed title from raw\n"
+							+ "One <strong>bold</strong> foot forward<title>can you see me</title>");
 			assertEquals(feed1.getTitle().getText(),
 					"One <strong>bold</strong> foot forward<title>can you see me</title>");
 			assertNotNull(FeedDoc.readFeedToString(feed1));
@@ -496,6 +537,16 @@ public class FeedDocTest {
 					generator, null, icon, logo, entries);
 
 			assertNotNull(feed);
+			
+			
+			//read and write a full feed.
+			feed = FeedDoc.readFeedToBean(mega);
+			FeedWriter feedWriter = new FeedWriter();
+			XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
+					new FileOutputStream("dump1.xml"));
+			feedWriter.writeFeed(writer, feed);
+			new File("dump1.xml").deleteOnExit();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Issue building feed doc.");
