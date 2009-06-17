@@ -195,6 +195,45 @@ public class FeedDocTest {
 			+ "   <email>johndoe@example.com</email>" + " </author>"
 			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
 			+ "</feed>";
+	
+	//mising id
+	private String brokenEntry1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+		+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+		//+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
+		+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+		+ "<title>test entry 1</title>" + "</entry>";
+	
+	//missing title
+	private String brokenEntry2 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+		+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+		+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
+		+ "<updated>2008-01-01T00:00:00.00-06:00</updated>";
+		//+ "<title>test entry 1</title>" + "</entry>";
+	
+	//missing updated
+	private String brokenEntry3 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+		+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+		+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
+		//+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+		+ "<title>test entry 1</title>" + "</entry>";
+	
+	//missing summary attribute for empty content element
+	private String brokenEntry4 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+		+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+		+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
+		+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+		+ "<title>test entry 1</title>" 
+		+ "<content src=\"missingSummaryAttr\" />"
+		+ "</entry>";
+	
+	//bad content content type
+	private String brokenEntry5 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+		+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+		+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
+		+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+		+ "<title>test entry 1</title>" 
+		+ "<content type=\"noGood\">this is no good</content>"
+		+ "</entry>";
 
 	@Before
 	public void setUp() throws Exception {
@@ -411,6 +450,51 @@ public class FeedDocTest {
 
 	@Test
 	public void testReadEntryToString() {
+		try {
+			String entryStr = FeedDoc.readEntryToString(entry1);
+			assertTrue(entryStr != null);
+			assertEquals(entryStr, expectedEntry1);
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue(e instanceof AtomSpecException);
+		}
+		
+		try {
+			String entryStr = FeedDoc.readEntryToString(entry1);
+			assertTrue(entryStr != null);
+			assertEquals(entryStr, expectedEntry1);
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue(e instanceof AtomSpecException);
+		}
+		
+		try {
+			String entryStr = FeedDoc.readEntryToString(entry1);
+			assertTrue(entryStr != null);
+			assertEquals(entryStr, expectedEntry1);
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue(e instanceof AtomSpecException);
+		}
+		
+		try {
+			String entryStr = FeedDoc.readEntryToString(entry1);
+			assertTrue(entryStr != null);
+			assertEquals(entryStr, expectedEntry1);
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue(e instanceof AtomSpecException);
+		}
+		
+		try {
+			String entryStr = FeedDoc.readEntryToString(entry1);
+			assertTrue(entryStr != null);
+			assertEquals(entryStr, expectedEntry1);
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue(e instanceof AtomSpecException);
+		}
+		
 		try {
 			String entryStr = FeedDoc.readEntryToString(entry1);
 			assertTrue(entryStr != null);
