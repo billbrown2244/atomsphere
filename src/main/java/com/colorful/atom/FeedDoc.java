@@ -473,11 +473,10 @@ public final class FeedDoc {
 				.createXMLStreamReader(new java.io.StringReader(xmlString));
 		SortedMap<String, Entry> entries = new FeedReader().readEntry(reader,
 				null);
-		if (entries == null || entries.size() > 1) {
-			throw new AtomSpecException(
-					"invalid number of entries for this entry document.");
-		}
-		return entries.values().iterator().next();
+		// readEntry() only reads at most one entry.
+		// so if the string contains more than one entry, only the first gets
+		// returned.
+		return entries.get(entries.firstKey());
 	}
 
 	/**
@@ -511,11 +510,10 @@ public final class FeedDoc {
 				.createXMLStreamReader(new FileInputStream(file));
 		SortedMap<String, Entry> entries = new FeedReader().readEntry(reader,
 				null);
-		if (entries == null || entries.size() > 1) {
-			throw new AtomSpecException(
-					"invalid number of entries for this entry document.");
-		}
-		return entries.values().iterator().next();
+		// readEntry() only reads at most one entry.
+		// so if the string contains more than one entry, only the first gets
+		// returned.
+		return entries.get(entries.firstKey());
 	}
 
 	/**
@@ -576,11 +574,10 @@ public final class FeedDoc {
 				.createXMLStreamReader(inputStream);
 		SortedMap<String, Entry> entries = new FeedReader().readEntry(reader,
 				null);
-		if (entries == null || entries.size() > 1) {
-			throw new AtomSpecException(
-					"invalid number of entries for this entry document.");
-		}
-		return entries.values().iterator().next();
+		// readEntry() only reads at most one entry.
+		// so if the string contains more than one entry, only the first gets
+		// returned.
+		return entries.get(entries.firstKey());
 	}
 
 	/**

@@ -90,10 +90,8 @@ public class Entry implements Serializable {
 					"atom:entry elements MUST contain exactly one atom:title element.");
 		}
 		// make sure updated is present
-		if (updated == null) {
-			throw new AtomSpecException(
-					"atom:entry elements MUST contain exactly one atom:updated element.");
-		}
+		//it is actually checked further up in the reader because of how 
+		//we store entries.
 
 		if (content == null) {
 			this.content = null;

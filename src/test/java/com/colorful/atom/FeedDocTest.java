@@ -21,6 +21,8 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -55,6 +57,7 @@ import com.colorful.atom.Rights;
 import com.colorful.atom.Title;
 import com.colorful.atom.Updated;
 import com.colorful.atom.FeedDoc.ContentType;
+import javanet.staxutils.IndentingXMLStreamWriter;
 
 public class FeedDocTest {
 
@@ -195,45 +198,43 @@ public class FeedDocTest {
 			+ "   <email>johndoe@example.com</email>" + " </author>"
 			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
 			+ "</feed>";
-	
-	//mising id
+
+	// mising id
 	private String brokenEntry1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-		+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
-		//+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
-		+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
-		+ "<title>test entry 1</title>" + "</entry>";
-	
-	//missing title
+			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+			// + "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
+			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+			+ "<title>test entry 1</title>" + "</entry>";
+
+	// missing title
 	private String brokenEntry2 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-		+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
-		+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
-		+ "<updated>2008-01-01T00:00:00.00-06:00</updated>";
-		//+ "<title>test entry 1</title>" + "</entry>";
-	
-	//missing updated
+			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
+			+ "<updated>2008-01-01T00:00:00.00-06:00</updated></entry>";
+	// + "<title>test entry 1</title>" + "</entry>";
+
+	// missing updated
 	private String brokenEntry3 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-		+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
-		+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
-		//+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
-		+ "<title>test entry 1</title>" + "</entry>";
-	
-	//missing summary attribute for empty content element
+			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
+			// + "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+			+ "<title>test entry 1</title>" + "</entry>";
+
+	// missing summary attribute for empty content element
 	private String brokenEntry4 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-		+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
-		+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
-		+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
-		+ "<title>test entry 1</title>" 
-		+ "<content src=\"missingSummaryAttr\" />"
-		+ "</entry>";
-	
-	//bad content content type
+			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
+			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+			+ "<title>test entry 1</title>"
+			+ "<content src=\"missingSummaryAttr\" />" + "</entry>";
+
+	// bad content content type
 	private String brokenEntry5 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-		+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
-		+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
-		+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
-		+ "<title>test entry 1</title>" 
-		+ "<content type=\"noGood\">this is no good</content>"
-		+ "</entry>";
+			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
+			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+			+ "<title>test entry 1</title>"
+			+ "<content type=\"noGood\">this is no good</content>" + "</entry>";
 
 	@Before
 	public void setUp() throws Exception {
@@ -285,6 +286,48 @@ public class FeedDocTest {
 
 	@Test
 	public void testWriteFeedDocOutputStreamFeedStringString() {
+		try {
+			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
+					"http://www.rand.org/news/press/index.xml"));
+			FeedDoc.writeFeedDoc(new FileOutputStream("out1.xml"), feed1,
+					FeedDoc.encoding, FeedDoc.xml_version);
+			Feed feed2 = FeedDoc.readFeedToBean(new File("out1.xml"));
+			assertNotNull(feed2);
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue(e instanceof XMLStreamException);
+		}
+
+		try {
+			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
+					"http://www.rand.org/news/press/index.xml"));
+			FileWriter writer = new FileWriter("out2.xml");
+			FeedDoc.writeFeedDoc(writer, feed1,
+					writer.getEncoding().toLowerCase(), FeedDoc.xml_version);
+			Feed feed2 = FeedDoc.readFeedToBean(new File("out2.xml"));
+			assertNotNull(feed2);
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue(e instanceof XMLStreamException);
+		}
+
+		try {
+			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
+					"http://www.rand.org/news/press/index.xml"));
+			FeedDoc.writeFeedDoc(new IndentingXMLStreamWriter(XMLOutputFactory
+					.newInstance().createXMLStreamWriter(
+							new FileOutputStream("out3.xml"), "UTF-8")), feed1,
+					FeedDoc.encoding, FeedDoc.xml_version);
+			Feed feed2 = FeedDoc.readFeedToBean(new File("out3.xml"));
+			assertNotNull(feed2);
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue(e instanceof XMLStreamException);
+		}
+	}
+
+	@Test
+	public void testWriteEntryDocOutputStreamEntryStringString() {
 		try {
 			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
@@ -458,56 +501,81 @@ public class FeedDocTest {
 			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);
 		}
-		
-		try {
-			String entryStr = FeedDoc.readEntryToString(entry1);
-			assertTrue(entryStr != null);
-			assertEquals(entryStr, expectedEntry1);
-		} catch (Exception e) {
-			e.printStackTrace();
-			assertTrue(e instanceof AtomSpecException);
-		}
-		
-		try {
-			String entryStr = FeedDoc.readEntryToString(entry1);
-			assertTrue(entryStr != null);
-			assertEquals(entryStr, expectedEntry1);
-		} catch (Exception e) {
-			e.printStackTrace();
-			assertTrue(e instanceof AtomSpecException);
-		}
-		
-		try {
-			String entryStr = FeedDoc.readEntryToString(entry1);
-			assertTrue(entryStr != null);
-			assertEquals(entryStr, expectedEntry1);
-		} catch (Exception e) {
-			e.printStackTrace();
-			assertTrue(e instanceof AtomSpecException);
-		}
-		
-		try {
-			String entryStr = FeedDoc.readEntryToString(entry1);
-			assertTrue(entryStr != null);
-			assertEquals(entryStr, expectedEntry1);
-		} catch (Exception e) {
-			e.printStackTrace();
-			assertTrue(e instanceof AtomSpecException);
-		}
-		
-		try {
-			String entryStr = FeedDoc.readEntryToString(entry1);
-			assertTrue(entryStr != null);
-			assertEquals(entryStr, expectedEntry1);
-		} catch (Exception e) {
-			e.printStackTrace();
-			assertTrue(e instanceof AtomSpecException);
-		}
 	}
 
 	@Test
-	public void testReadFeedToBeanString() {
-		// fail("Not yet implemented");
+	public void testReadEntryToBeanString() {
+		Entry entry;
+		try {
+			entry = FeedDoc.readEntryToBean(brokenEntry1);
+			assertTrue(entry == null);
+			fail("should not get here;");
+		} catch (Exception e) {
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(e.getMessage(),
+					"atom:entry elements MUST contain exactly one atom:id element.");
+		}
+
+		try {
+			entry = FeedDoc.readEntryToBean(brokenEntry2);
+			fail("should not get here;");
+		} catch (Exception e) {
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(e.getMessage(),
+					"atom:entry elements MUST contain exactly one atom:title element.");
+		}
+
+		try {
+			entry = FeedDoc.readEntryToBean(brokenEntry3);
+			fail("should not get here;");
+		} catch (Exception e) {
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(e.getMessage(),
+					"atom:entry elements MUST contain exactly one atom:updated element.");
+		}
+
+		try {
+			entry = FeedDoc.readEntryToBean(brokenEntry4);
+			fail("should not get here;");
+		} catch (Exception e) {
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(
+					e.getMessage(),
+					"atom:entry elements MUST contain an atom:summary element if the atom:entry contains an atom:content that has a \"src\" attribute (and is thus empty).");
+		}
+
+		try {
+			entry = FeedDoc.readEntryToBean(brokenEntry5);
+			fail("should not get here;");
+		} catch (Exception e) {
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(
+					e.getMessage(),
+					"atom:entry elements MUST contain an atom:summary element if the atom:entry contains content that is encoded in Base64; i.e., the \"type\" attribute of atom:content is a MIME media type [MIMEREG], but is not an XML media type [RFC3023], does not begin with \"text/\", and does not end with \"/xml\" or \"+xml\".");
+		}
+
+		try {
+			entry = FeedDoc.readEntryToBean(expectedEntry1);
+			assertNotNull(entry);
+		} catch (Exception e) {
+			fail("should not get here;");
+		}
+
+		try {
+			entry = FeedDoc.readEntryToBean(new File(
+					"src/test/resources/expectedEntry1.xml"));
+			assertNotNull(entry);
+		} catch (Exception e) {
+			fail("should not get here;");
+		}
+
+		try {
+			entry = FeedDoc.readEntryToBean(new URL(
+					"http://www.earthbeats.net/drops.xml"));
+			assertNotNull(entry);
+		} catch (Exception e) {
+			fail("should not get here;");
+		}
 	}
 
 	@Test
