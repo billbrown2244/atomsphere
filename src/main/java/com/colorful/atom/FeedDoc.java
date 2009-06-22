@@ -246,11 +246,8 @@ public final class FeedDoc {
 	public static void writeFeedDoc(XMLStreamWriter output, Feed feed,
 			String encoding, String version) throws Exception {
 
-		try {
-			writeFeedOutput(feed, output, encoding, version);
-		} catch (Exception e) {
-			throw new Exception("error creating the feed document.", e);
-		}
+		writeFeedOutput(feed, output, encoding, version);
+
 	}
 
 	/**
@@ -271,11 +268,7 @@ public final class FeedDoc {
 	 */
 	public static void writeEntryDoc(XMLStreamWriter output, Entry entry,
 			String encoding, String version) throws Exception {
-		try {
-			writeEntryOutput(entry, output, encoding, version);
-		} catch (Exception e) {
-			throw new Exception("error creating entry document.", e);
-		}
+		writeEntryOutput(entry, output, encoding, version);
 	}
 
 	/**
@@ -366,16 +359,12 @@ public final class FeedDoc {
 	public static String readFeedToString(Feed feed) throws Exception {
 
 		StringWriter theString = new StringWriter();
-		try {
-			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-			XMLStreamWriter writer = outputFactory
-					.createXMLStreamWriter(theString);
 
-			writeFeedOutput(feed, writer, encoding, xml_version);
+		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+		XMLStreamWriter writer = outputFactory.createXMLStreamWriter(theString);
 
-		} catch (Exception e) {
-			throw new Exception("error creating xml file.", e);
-		}
+		writeFeedOutput(feed, writer, encoding, xml_version);
+
 		return theString.toString();
 	}
 
@@ -393,16 +382,12 @@ public final class FeedDoc {
 	public static String readEntryToString(Entry entry) throws Exception {
 
 		StringWriter theString = new StringWriter();
-		try {
-			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-			XMLStreamWriter writer = outputFactory
-					.createXMLStreamWriter(theString);
 
-			writeEntryOutput(entry, writer, encoding, xml_version);
+		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+		XMLStreamWriter writer = outputFactory.createXMLStreamWriter(theString);
 
-		} catch (Exception e) {
-			throw new Exception("error creating xml file.", e);
-		}
+		writeEntryOutput(entry, writer, encoding, xml_version);
+
 		return theString.toString();
 	}
 

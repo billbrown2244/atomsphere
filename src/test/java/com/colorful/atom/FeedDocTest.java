@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -301,9 +301,10 @@ public class FeedDocTest {
 		try {
 			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
-			FileWriter writer = new FileWriter("out2.xml");
-			FeedDoc.writeFeedDoc(writer, feed1,
-					writer.getEncoding().toLowerCase(), FeedDoc.xml_version);
+			OutputStreamWriter writer = new OutputStreamWriter(
+					new FileOutputStream("out2.xml"), "UTF-8");
+			FeedDoc.writeFeedDoc(writer, feed1, FeedDoc.encoding,
+					FeedDoc.xml_version);
 			Feed feed2 = FeedDoc.readFeedToBean(new File("out2.xml"));
 			assertNotNull(feed2);
 		} catch (Exception e) {
@@ -331,13 +332,27 @@ public class FeedDocTest {
 		try {
 			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
-			FeedDoc.writeFeedDoc(new FileOutputStream("out1.xml"), feed1,
+			FeedDoc.writeEntryDoc(new FileOutputStream("out1.xml"), feed1
+					.getEntries().get(feed1.getEntries().firstKey()),
 					FeedDoc.encoding, FeedDoc.xml_version);
-			Feed feed2 = FeedDoc.readFeedToBean(new File("out1.xml"));
-			assertNotNull(feed2);
+			Entry entry1 = FeedDoc.readEntryToBean(new File("out1.xml"));
+			assertNotNull(entry1);
 		} catch (Exception e) {
-			e.printStackTrace();
-			assertTrue(e instanceof XMLStreamException);
+			fail("should not get here.");
+		}
+
+		try {
+			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
+					"http://www.rand.org/news/press/index.xml"));
+			OutputStreamWriter writer = new OutputStreamWriter(
+					new FileOutputStream("out2.xml"), "UTF-8");
+			FeedDoc.writeEntryDoc(writer, feed1.getEntries().get(
+					feed1.getEntries().firstKey()), FeedDoc.encoding,
+					FeedDoc.xml_version);
+			Entry entry1 = FeedDoc.readEntryToBean(new File("out2.xml"));
+			assertNotNull(entry1);
+		} catch (Exception e) {
+			fail("should not get here.");
 		}
 	}
 
@@ -498,8 +513,24 @@ public class FeedDocTest {
 			assertTrue(entryStr != null);
 			assertEquals(entryStr, expectedEntry1);
 		} catch (Exception e) {
-			e.printStackTrace();
-			assertTrue(e instanceof AtomSpecException);
+			fail("this should not happen.");
+		}
+
+		try {
+			String entryStr = FeedDoc.readEntryToString(entry1,
+					"javanet.staxutils.IndentingXMLStreamWriter");
+			assertTrue(entryStr != null);
+		} catch (Exception e) {
+			fail("this should not happen.");
+		}
+		
+		//test a bad writer.
+		try {
+			String entryStr = FeedDoc.readEntryToString(entry1,
+					"com.fake.BunkWriter");
+			assertTrue(entryStr != null);
+		} catch (Exception e) {
+			fail("this should not happen.");
 		}
 	}
 
