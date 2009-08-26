@@ -75,4 +75,8 @@ public class Published implements Serializable {
 	public List<Attribute> getAttributes() {
 		return published.getAttributes();
 	}
+	
+	public Attribute getAttribute(String attrName) {
+		return published.getAttribute(attrName);
+	}
 }

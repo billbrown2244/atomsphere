@@ -68,4 +68,8 @@ public class Id implements Serializable {
 	public List<Attribute> getAttributes() {
 		return id.getAttributes();
 	}
+	
+	public Attribute getAttribute(String attrName) {
+		return id.getAttribute(attrName);
+	}
 }

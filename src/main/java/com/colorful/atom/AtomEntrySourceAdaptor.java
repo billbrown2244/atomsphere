@@ -321,4 +321,86 @@ class AtomEntrySourceAdaptor implements Serializable {
 			return null;
 		}
 	}
+
+	public Attribute getAttribute(String attrName) {
+		if (this.attributes != null) {
+			for (Attribute attribute : this.attributes) {
+				if (attribute.getName() != null
+						&& attribute.getName().equals(attrName)) {
+					return new Attribute(attribute.getName(), attribute
+							.getValue());
+				}
+			}
+		}
+		return null;
+	}
+
+	public Author getAuthor(String name) throws AtomSpecException {
+		if (this.authors != null) {
+			for (Author author : this.authors) {
+				if (author.getName() != null
+						&& author.getName().getText() != null
+						&& author.getName().getText().equals(name)) {
+					return new Author(author.getName(), author.getUri(), author
+							.getEmail(), author.getAttributes(), author
+							.getExtensions());
+				}
+			}
+		}
+		return null;
+	}
+
+	public Category getCategory(String termValue) throws AtomSpecException {
+		if (this.categories != null) {
+			for (Category category : this.categories) {
+				if (category.getAttribute("term") != null
+						&& category.getAttribute("term").getValue().equals(
+								termValue)) {
+					return new Category(category.getAttributes(), category
+							.getContent());
+				}
+			}
+		}
+		return null;
+	}
+
+	public Contributor getContributor(String name) throws AtomSpecException {
+		if (this.contributors != null) {
+			for (Contributor contributor : this.contributors) {
+				if (contributor.getName() != null
+						&& contributor.getName().getText() != null
+						&& contributor.getName().getText().equals(name)) {
+					return new Contributor(contributor.getName(), contributor
+							.getUri(), contributor.getEmail(), contributor
+							.getAttributes(), contributor.getExtensions());
+				}
+			}
+		}
+		return null;
+	}
+
+	public Link getLink(String hrefVal) throws AtomSpecException {
+		if (this.links != null) {
+			for (Link link : this.links) {
+				if (link.getHref().getValue() != null
+						&& link.getHref().getValue().equals(hrefVal)) {
+					return new Link(link.getAttributes(), link.getContent());
+				}
+			}
+		}
+		return null;
+	}
+
+	public Extension getExtension(String extName) {
+		if (this.extensions != null) {
+			for (Extension extension : this.extensions) {
+				if (extension.getElementName() != null
+						&& extension.getElementName().equals(extName)) {
+					return new Extension(extension.getElementName(), extension
+							.getAttributes(), extension.getContent());
+				}
+			}
+		}
+		return null;
+	}
 }

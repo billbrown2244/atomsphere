@@ -74,4 +74,8 @@ public class Updated implements Serializable {
 	public List<Attribute> getAttributes() {
 		return updated.getAttributes();
 	}
+	
+	public Attribute getAttribute(String attrName) {
+		return updated.getAttribute(attrName);
+	}
 }

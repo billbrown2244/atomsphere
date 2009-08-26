@@ -289,9 +289,9 @@ public class FeedDocTest {
 		try {
 			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
-			FeedDoc.writeFeedDoc(new FileOutputStream("out1.xml"), feed1,
+			FeedDoc.writeFeedDoc(new FileOutputStream("src/test/resources/out1.xml"), feed1,
 					FeedDoc.encoding, FeedDoc.xml_version);
-			Feed feed2 = FeedDoc.readFeedToBean(new File("out1.xml"));
+			Feed feed2 = FeedDoc.readFeedToBean(new File("src/test/resources/out1.xml"));
 			assertNotNull(feed2);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -332,10 +332,10 @@ public class FeedDocTest {
 		try {
 			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
-			FeedDoc.writeEntryDoc(new FileOutputStream("out1.xml"), feed1
+			FeedDoc.writeEntryDoc(new FileOutputStream("src/test/resources/out1.xml"), feed1
 					.getEntries().get(feed1.getEntries().firstKey()),
 					FeedDoc.encoding, FeedDoc.xml_version);
-			Entry entry1 = FeedDoc.readEntryToBean(new File("out1.xml"));
+			Entry entry1 = FeedDoc.readEntryToBean(new File("src/test/resources/out1.xml"));
 			assertNotNull(entry1);
 		} catch (Exception e) {
 			fail("should not get here.");

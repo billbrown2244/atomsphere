@@ -218,4 +218,28 @@ public class Source implements Serializable {
 	public List<Extension> getExtensions() {
 		return sourceAdaptor.getExtensions();
 	}
+	
+	public Attribute getAttribute(String attrName) {
+		return sourceAdaptor.getAttribute(attrName);
+	}
+
+	public Author getAuthor(String name) throws AtomSpecException {
+		return sourceAdaptor.getAuthor(name);
+	}
+
+	public Category getCategory(String termValue) throws AtomSpecException {
+		return sourceAdaptor.getCategory(termValue);
+	}
+
+	public Contributor getContributor(String name) throws AtomSpecException {
+		return sourceAdaptor.getContributor(name);
+	}
+
+	public Link getLink(String hrefVal) throws AtomSpecException {
+		return sourceAdaptor.getLink(hrefVal);
+	}
+
+	public Extension getExtension(String extName) {
+		return sourceAdaptor.getExtension(extName);
+	}
 }

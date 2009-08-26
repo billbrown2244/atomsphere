@@ -111,4 +111,8 @@ public class Content implements Serializable {
 	String getDivWrapperEnd() {
 		return content.getDivWrapperEnd();
 	}
+	
+	public Attribute getAttribute(String attrName) {
+		return content.getAttribute(attrName);
+	}
 }

@@ -275,4 +275,28 @@ public class Entry implements Serializable {
 	public List<Extension> getExtensions() {
 		return entryAdaptor.getExtensions();
 	}
+	
+	public Attribute getAttribute(String attrName) {
+		return entryAdaptor.getAttribute(attrName);
+	}
+
+	public Author getAuthor(String name) throws AtomSpecException {
+		return entryAdaptor.getAuthor(name);
+	}
+
+	public Category getCategory(String termValue) throws AtomSpecException {
+		return entryAdaptor.getCategory(termValue);
+	}
+
+	public Contributor getContributor(String name) throws AtomSpecException {
+		return entryAdaptor.getContributor(name);
+	}
+
+	public Link getLink(String hrefVal) throws AtomSpecException {
+		return entryAdaptor.getLink(hrefVal);
+	}
+
+	public Extension getExtension(String extName) {
+		return entryAdaptor.getExtension(extName);
+	}
 }

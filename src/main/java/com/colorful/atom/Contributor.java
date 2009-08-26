@@ -70,4 +70,12 @@ public class Contributor implements Serializable {
 	public List<Extension> getExtensions() {
 		return person.getExtensions();
 	}
+	
+	public Attribute getAttribute(String attrName) {
+		return person.getAttribute(attrName);
+	}
+
+	public Extension getExtension(String extName) {
+		return person.getExtension(extName);
+	}
 }

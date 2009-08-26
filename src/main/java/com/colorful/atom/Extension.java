@@ -99,4 +99,17 @@ public class Extension implements Serializable {
 	public String getElementName() {
 		return elementName;
 	}
+	
+	public Attribute getAttribute(String attrName) {
+		if (this.attributes != null) {
+			for (Attribute attribute : this.attributes) {
+				if (attribute.getName() != null
+						&& attribute.getName().equals(attrName)) {
+					return new Attribute(attribute.getName(), attribute
+							.getValue());
+				}
+			}
+		}
+		return null;
+	}
 }

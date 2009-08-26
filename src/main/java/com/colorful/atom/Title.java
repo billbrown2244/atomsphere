@@ -79,4 +79,8 @@ public class Title implements Serializable {
 	String getDivWrapperEnd() {
 		return title.getDivWrapperEnd();
 	}
+	
+	public Attribute getAttribute(String attrName) {
+		return title.getAttribute(attrName);
+	}
 }

@@ -80,4 +80,8 @@ public class Subtitle implements Serializable {
 	String getDivWrapperEnd() {
 		return subtitle.getDivWrapperEnd();
 	}
+	
+	public Attribute getAttribute(String attrName) {
+		return subtitle.getAttribute(attrName);
+	}
 }

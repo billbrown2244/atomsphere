@@ -67,4 +67,8 @@ public class Icon implements Serializable {
 	public List<Attribute> getAttributes() {
 		return icon.getAttributes();
 	}
+	
+	public Attribute getAttribute(String attrName) {
+		return icon.getAttribute(attrName);
+	}
 }

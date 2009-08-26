@@ -67,4 +67,8 @@ public class Logo implements Serializable {
 	public List<Attribute> getAttributes() {
 		return logo.getAttributes();
 	}
+	
+	public Attribute getAttribute(String attrName) {
+		return logo.getAttribute(attrName);
+	}
 }

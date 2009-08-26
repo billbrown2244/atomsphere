@@ -80,4 +80,8 @@ public class Summary implements Serializable {
 	String getDivWrapperEnd() {
 		return summary.getDivWrapperEnd();
 	}
+	
+	public Attribute getAttribute(String attrName) {
+		return summary.getAttribute(attrName);
+	}
 }

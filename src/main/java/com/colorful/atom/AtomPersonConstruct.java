@@ -170,4 +170,29 @@ class AtomPersonConstruct implements Serializable {
 		return extnsCopy;
 	}
 
+	public Attribute getAttribute(String attrName) {
+		if (this.attributes != null) {
+			for (Attribute attribute : this.attributes) {
+				if (attribute.getName() != null
+						&& attribute.getName().equals(attrName)) {
+					return new Attribute(attribute.getName(), attribute
+							.getValue());
+				}
+			}
+		}
+		return null;
+	}
+
+	public Extension getExtension(String extName) {
+		if (this.extensions != null) {
+			for (Extension extension : this.extensions) {
+				if (extension.getElementName() != null
+						&& extension.getElementName().equals(extName)) {
+					return new Extension(extension.getElementName(), extension
+							.getAttributes(), extension.getContent());
+				}
+			}
+		}
+		return null;
+	}
 }

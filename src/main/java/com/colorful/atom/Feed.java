@@ -269,4 +269,28 @@ public class Feed implements Serializable {
 	public List<Extension> getExtensions() {
 		return source.getExtensions();
 	}
+	
+	public Attribute getAttribute(String attrName) {
+		return source.getAttribute(attrName);
+	}
+
+	public Author getAuthor(String name) throws AtomSpecException {
+		return source.getAuthor(name);
+	}
+
+	public Category getCategory(String termValue) throws AtomSpecException {
+		return source.getCategory(termValue);
+	}
+
+	public Contributor getContributor(String name) throws AtomSpecException {
+		return source.getContributor(name);
+	}
+
+	public Link getLink(String hrefVal) throws AtomSpecException {
+		return source.getLink(hrefVal);
+	}
+
+	public Extension getExtension(String extName) {
+		return source.getExtension(extName);
+	}
 }

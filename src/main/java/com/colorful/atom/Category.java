@@ -139,4 +139,16 @@ public class Category implements Serializable {
 		return content;
 	}
 
+	public Attribute getAttribute(String attrName) {
+		if (this.attributes != null) {
+			for (Attribute attribute : this.attributes) {
+				if (attribute.getName() != null
+						&& attribute.getName().equals(attrName)) {
+					return new Attribute(attribute.getName(), attribute
+							.getValue());
+				}
+			}
+		}
+		return null;
+	}
 }
