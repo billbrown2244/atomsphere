@@ -73,6 +73,13 @@
 				</executions>
 			</plugin>
 		</plugins>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>1.0-alpha-5</version>
+			</extension>
+		</extensions>
 	</build>
 	<reporting>
 		<plugins>
@@ -140,7 +147,7 @@
 			<uniqueVersion>true</uniqueVersion>
 			<id>com.colorfulsoftware</id>
 			<name>Colorful Software Maven Repository</name>
-			<url>http://www.colorfulsoftware.com/repository</url>
+			<url>scp://www.colorfulsoftware.com/repository</url>
 			<layout>default</layout>
 		</repository>
 	</distributionManagement>
