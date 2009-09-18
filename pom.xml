@@ -6,13 +6,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.colorful</groupId>
+	<groupId>com.colorfulsoftware</groupId>
 	<artifactId>atomsphere</artifactId>
 	<packaging>jar</packaging>
 	<name>Atomsphere</name>
+	<version>0.5.0.0-SNAPSHOT</version>
+	<description>An Atom 1.0 Feed Library written in Java</description>
 	<url>http://www.colorfulsoftware.com/projects/atomsphere</url>
-	<version>2.0.3.0-SNAPSHOT</version>
-	<description>Atomsphere - An Atom 1.0 Feed Library written in Java</description>
+	<licenses>
+    <license>
+      <name>GNU General Public License, version </name>
+      <url>http://www.gnu.org/licenses/gpl-2.0.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 	<scm>
 		<connection>scm:svn:https://billbrown.homelinux.net/repo/atomsphere/trunk</connection>
 		<url>scm:svn:https://billbrown.homelinux.net/repo/atomsphere/trunk</url>
