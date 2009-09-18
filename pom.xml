@@ -1,8 +1,4 @@
-
-	<!--
-		Change History: 2008-06-03 wbrown - bumping feature for improved tag
-		library ability to order elements and display images.
-	-->
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -14,70 +10,15 @@
 	<description>An Atom 1.0 Feed Library written in Java</description>
 	<url>http://www.colorfulsoftware.com/projects/atomsphere</url>
 	<licenses>
-    <license>
-      <name>GNU General Public License, version </name>
-      <url>http://www.gnu.org/licenses/gpl-2.0.html</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
+		<license>
+			<name>GNU General Public License, version </name>
+			<url>http://www.gnu.org/licenses/gpl-2.0.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 	<scm>
-		<connection>scm:svn:https://billbrown.homelinux.net/repo/atomsphere/trunk</connection>
-		<url>scm:svn:https://billbrown.homelinux.net/repo/atomsphere/trunk</url>
-		<developerConnection>scm:svn:https://billbrown.homelinux.net/repo/atomsphere/trunk</developerConnection>
+		<url>http://www.colorfulsoftware.com/projects/atomsphere/scm</url>
 	</scm>
-	<ciManagement>
-		<system>continuum</system>
-		<notifiers>
-			<notifier>
-				<type>mail</type>
-				<configuration>
-					<address>wbrown@colorfulsoftware.com</address>
-				</configuration>
-			</notifier>
-		</notifiers>
-	</ciManagement>
-	<repositories>
-		<repository>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</releases>
-			<id>com.colorful</id>
-			<name>Inhouse Repository</name>
-			<url>file:///home/bill/.m2/repository</url>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</releases>
-			<id>com.colorful</id>
-			<name>Inhouse Repository</name>
-			<url>file:///home/bill/.m2/repository</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>mc-release</id>
-			<name>Local Maven repository of releases</name>
-			<url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</pluginRepository>
-	</pluginRepositories>
-	<distributionManagement>
-		<repository>
-			<uniqueVersion>true</uniqueVersion>
-			<id>com.colorful</id>
-			<name>Inhouse Repository</name>
-			<url>file:///home/bill/.m2/repository</url>
-			<layout>default</layout>
-		</repository>
-	</distributionManagement>
 	<build>
 		<resources>
 			<resource>
@@ -97,6 +38,7 @@
 			<plugin>
 				<groupId>com.google.code.maven-license-plugin</groupId>
 				<artifactId>maven-license-plugin</artifactId>
+				<version>1.4.0</version>
 				<configuration>
 					<header>src/main/resources/licenseHeader.txt</header>
 					<excludes>
@@ -147,51 +89,59 @@
 		</plugins>
 	</reporting>
 	<dependencies>
+		<!--
+			NOTES: currently not in central repository needs to be downloaded
+			from http://ftpna2.bea.com/pub/downloads/jsr173.ja
+		-->
 		<dependency>
 			<groupId>javax.xml</groupId>
 			<artifactId>jsr173</artifactId>
 			<version>1.0</version>
 		</dependency>
-
 		<!--
 			NOTES: passes all but CDATA test. -->
-
 		<dependency>
-			<groupId>com.sun.xml</groupId>
+			<groupId>com.sun.xml.stream</groupId>
 			<artifactId>sjsxp</artifactId>
 			<version>1.0.1</version>
+			<scope>provided</scope>
 		</dependency>
-
-
 		<!--
-			NOTES: passes all but CDATA test. -->
+			NOTES: passes all but CDATA equality test. -->
 		<!--
 			<dependency> <groupId>stax</groupId> <artifactId>stax</artifactId>
 			<version>1.2.0_rc2-dev</version> </dependency>
 		-->
 
 		<!--
-			NOTES: writes <?xml doctype and encoding with single quotes Does not
-			pass the CDATA test.
+			NOTES: writes <?xml doctype and encoding with single quotes ' and
+			Does not pass the CDATA equality test.
 		-->
 		<!--
 			<dependency> <groupId>woodstox</groupId>
 			<artifactId>wstx-asl</artifactId> <version>3.2.0</version>
 			</dependency>
 		-->
-
-
-
 		<dependency>
-			<groupId>javanet.staxutils</groupId>
+			<groupId>net.java.dev.stax-utils</groupId>
 			<artifactId>stax-utils</artifactId>
-			<version>1.0</version>
+			<version>20060502</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.3.1</version>
+			<version>4.7</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<distributionManagement>
+		<repository>
+			<uniqueVersion>true</uniqueVersion>
+			<id>com.colorfulsoftware</id>
+			<name>Colorful Software Maven Repository</name>
+			<url>http://www.colorfulsoftware.com/repository</url>
+			<layout>default</layout>
+		</repository>
+	</distributionManagement>
 </project>
