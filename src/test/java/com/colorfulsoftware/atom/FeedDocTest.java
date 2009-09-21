@@ -61,7 +61,8 @@ import com.colorfulsoftware.atom.Title;
 import com.colorfulsoftware.atom.Updated;
 import com.colorfulsoftware.atom.FeedDoc.ContentType;
 
-import javanet.staxutils.IndentingXMLStreamWriter;
+//uncomment stax-utils dependency in the root pom.xml to see exapmle usage.
+//import javanet.staxutils.IndentingXMLStreamWriter;
 
 public class FeedDocTest {
 
@@ -293,9 +294,11 @@ public class FeedDocTest {
 		try {
 			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
-			FeedDoc.writeFeedDoc(new FileOutputStream("src/test/resources/out1.xml"), feed1,
-					FeedDoc.encoding, FeedDoc.xml_version);
-			Feed feed2 = FeedDoc.readFeedToBean(new File("src/test/resources/out1.xml"));
+			FeedDoc.writeFeedDoc(new FileOutputStream(
+					"src/test/resources/out1.xml"), feed1, FeedDoc.encoding,
+					FeedDoc.xml_version);
+			Feed feed2 = FeedDoc.readFeedToBean(new File(
+					"src/test/resources/out1.xml"));
 			assertNotNull(feed2);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -316,19 +319,18 @@ public class FeedDocTest {
 			assertTrue(e instanceof XMLStreamException);
 		}
 
-		try {
-			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
-					"http://www.rand.org/news/press/index.xml"));
-			FeedDoc.writeFeedDoc(new IndentingXMLStreamWriter(XMLOutputFactory
-					.newInstance().createXMLStreamWriter(
-							new FileOutputStream("target/out3.xml"), "UTF-8")), feed1,
-					FeedDoc.encoding, FeedDoc.xml_version);
-			Feed feed2 = FeedDoc.readFeedToBean(new File("target/out3.xml"));
-			assertNotNull(feed2);
-		} catch (Exception e) {
-			e.printStackTrace();
-			assertTrue(e instanceof XMLStreamException);
-		}
+		/*
+		 * uncomment stax-utils dependency in the root pom.xml to see example in
+		 * action try { feed1 = FeedDoc.readFeedToBean(new java.net.URL(
+		 * "http://www.rand.org/news/press/index.xml"));
+		 * FeedDoc.writeFeedDoc(new IndentingXMLStreamWriter(XMLOutputFactory
+		 * .newInstance().createXMLStreamWriter( new
+		 * FileOutputStream("target/out3.xml"), "UTF-8")), feed1,
+		 * FeedDoc.encoding, FeedDoc.xml_version); Feed feed2 =
+		 * FeedDoc.readFeedToBean(new File("target/out3.xml"));
+		 * assertNotNull(feed2); } catch (Exception e) { e.printStackTrace();
+		 * assertTrue(e instanceof XMLStreamException); }
+		 */
 	}
 
 	@Test
@@ -336,10 +338,12 @@ public class FeedDocTest {
 		try {
 			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
-			FeedDoc.writeEntryDoc(new FileOutputStream("src/test/resources/out1.xml"), feed1
-					.getEntries().get(feed1.getEntries().firstKey()),
-					FeedDoc.encoding, FeedDoc.xml_version);
-			Entry entry1 = FeedDoc.readEntryToBean(new File("src/test/resources/out1.xml"));
+			FeedDoc.writeEntryDoc(new FileOutputStream(
+					"src/test/resources/out1.xml"), feed1.getEntries().get(
+					feed1.getEntries().firstKey()), FeedDoc.encoding,
+					FeedDoc.xml_version);
+			Entry entry1 = FeedDoc.readEntryToBean(new File(
+					"src/test/resources/out1.xml"));
 			assertNotNull(entry1);
 		} catch (Exception e) {
 			fail("should not get here.");
@@ -371,13 +375,11 @@ public class FeedDocTest {
 			// pretty print version.
 			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
-			FeedDoc.writeFeedDoc(
-					new javanet.staxutils.IndentingXMLStreamWriter(
-							XMLOutputFactory.newInstance()
-									.createXMLStreamWriter(
-											new FileOutputStream("target/out2.xml"),
-											FeedDoc.encoding)), feed1,
-					FeedDoc.encoding, FeedDoc.xml_version);
+			FeedDoc.writeFeedDoc(XMLOutputFactory.newInstance()
+					.createXMLStreamWriter(
+							new FileOutputStream("target/out2.xml"),
+							FeedDoc.encoding), feed1, FeedDoc.encoding,
+					FeedDoc.xml_version);
 			Feed feed2 = FeedDoc.readFeedToBean(new File("target/out2.xml"));
 			assertNotNull(feed2);
 		} catch (Exception e) {
@@ -527,8 +529,8 @@ public class FeedDocTest {
 		} catch (Exception e) {
 			fail("this should not happen.");
 		}
-		
-		//test a bad writer.
+
+		// test a bad writer.
 		try {
 			String entryStr = FeedDoc.readEntryToString(entry1,
 					"com.fake.BunkWriter");
@@ -719,7 +721,8 @@ public class FeedDocTest {
 			feed = FeedDoc.readFeedToBean(mega);
 			FeedWriter feedWriter = new FeedWriter();
 			XMLStreamWriter writer = XMLOutputFactory.newInstance()
-					.createXMLStreamWriter(new FileOutputStream("target/dump1.xml"));
+					.createXMLStreamWriter(
+							new FileOutputStream("target/dump1.xml"));
 			feedWriter.writeFeed(writer, feed);
 			writer.flush();
 			writer.close();

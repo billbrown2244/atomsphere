@@ -95,16 +95,18 @@
 			<version>1.0.1</version>
 		</dependency>
 		<dependency>
-			<groupId>net.java.dev.stax-utils</groupId>
-			<artifactId>stax-utils</artifactId>
-			<version>20060502</version>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.7</version>
 			<scope>test</scope>
 		</dependency>
+		<!--
+			Notes: Use this dependency for additional functionality such as
+			formatted output. Take a look at FeedDocTest.java for example
+			<dependency> <groupId>net.java.dev.stax-utils</groupId>
+			<artifactId>stax-utils</artifactId> <version>20060502</version>
+			</dependency>
+		-->
 		<!--
 			NOTES: currently not in central repository needs to be downloaded
 			from http://ftpna2.bea.com/pub/downloads/jsr173.ja <dependency>
@@ -129,27 +131,27 @@
 		-->
 	</dependencies>
 	<profiles>
-    <profile>
-      <id>release</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>attach-sources</id>
-                <goals>
-                  <goal>jar-no-fork</goal>
-                  <goal>test-jar-no-fork</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+									<goal>test-jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 	<distributionManagement>
 		<repository>
 			<uniqueVersion>true</uniqueVersion>
