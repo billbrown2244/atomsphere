@@ -17,7 +17,7 @@
 	</licenses>
 	<scm>
 		<url>scm:svn:http://www.colorfulsoftware.com/projects/scm/atomsphere/tags/atomsphere-0.4.0.0</url>
-		<developerConnection>scm:svn:https://billbrown.homelinux.net/pubRepo/atomsphere</developerConnection>
+		<developerConnection>${settings.developerConnection}/atomsphere</developerConnection>
 	</scm>
 	<build>
 		<resources>
@@ -156,7 +156,7 @@
 			<uniqueVersion>true</uniqueVersion>
 			<id>com.colorfulsoftware</id>
 			<name>Colorful Software Maven Repository</name>
-			<url>file:///home/bill/.m2/repository</url>
+			<url>${settings.localRepository}</url>
 			<layout>default</layout>
 		</repository>
 	</distributionManagement>
