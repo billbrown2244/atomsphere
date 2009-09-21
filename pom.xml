@@ -17,8 +17,8 @@
 		</license>
 	</licenses>
 	<scm>
-		<url>http://www.colorfulsoftware.com/projects/atomsphere/scm</url>
-		<developerConnection>http://www.colorfulsoftware.com/projects/atomsphere/scm</developerConnection>
+		<url>http://www.colorfulsoftware.com/projects/scm/atomsphere</url>
+		<developerConnection>http://www.colorfulsoftware.com/projects/scm/atomsphere</developerConnection>
 	</scm>
 	<build>
 		<resources>
