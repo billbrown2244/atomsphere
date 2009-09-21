@@ -16,7 +16,7 @@
 		</license>
 	</licenses>
 	<scm>
-		<url>scm:svn:http://www.colorfulsoftware.com/projects/scm/atomsphere/tags/atomsphere-0.4.0.0</url>
+		<url>scm:svn:http://www.colorfulsoftware.com/projects/scm/atomsphere</url>
 		<developerConnection>${settings.localRepository}/atomsphere</developerConnection>
 	</scm>
 	<build>
