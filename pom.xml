@@ -5,7 +5,7 @@
 	<artifactId>atomsphere</artifactId>
 	<packaging>jar</packaging>
 	<name>Atomsphere</name>
-	<version>0.4.0.1</version>
+	<version>0.4.0.2-SNAPSHOT</version>
 	<description>An Atom 1.0 Feed Library written in Java</description>
 	<url>http://www.colorfulsoftware.com/projects/atomsphere</url>
 	<licenses>
@@ -16,8 +16,8 @@
 		</license>
 	</licenses>
 	<scm>
-		<url>scm:svn:http://www.colorfulsoftware.com/projects/scm/atomsphere/tags/atomsphere-0.4.0.1</url>
-		<developerConnection>scm:svn:https://billbrown.homelinux.net/pubRepo//atomsphere/tags/atomsphere-0.4.0.1</developerConnection>
+		<url>scm:svn:http://www.colorfulsoftware.com/projects/scm/atomsphere/tags/atomsphere-0.4.0.0</url>
+		<developerConnection>scm:svn:https://billbrown.homelinux.net/pubRepo//atomsphere</developerConnection>
 	</scm>
 	<build>
 		<resources>
