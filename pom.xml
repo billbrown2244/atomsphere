@@ -48,7 +48,7 @@
 					<properties>
 						<year>2009</year>
 						<name>William R. Brown</name>
-						<email>info@colorfulsoftware.com</email>
+						<email>wbrown@colorfulsoftware.com</email>
 					</properties>
 				</configuration>
 			</plugin>
@@ -73,12 +73,6 @@
 				</executions>
 			</plugin>
 		</plugins>
-		<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh-external</artifactId>
-			</extension>
-		</extensions>
 	</build>
 	<reporting>
 		<plugins>
@@ -95,44 +89,15 @@
 		</plugins>
 	</reporting>
 	<dependencies>
-		<!--
-			NOTES: currently not in central repository needs to be downloaded
-			from http://ftpna2.bea.com/pub/downloads/jsr173.ja
-		-->
 		<dependency>
-			<groupId>javax.xml</groupId>
-			<artifactId>jsr173</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<!--
-			NOTES: passes all but CDATA test. -->
-		<dependency>
-			<groupId>com.sun.xml.stream</groupId>
-			<artifactId>sjsxp</artifactId>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-stax-api_1.0_spec</artifactId>
 			<version>1.0.1</version>
-			<scope>provided</scope>
 		</dependency>
-		<!--
-			NOTES: passes all but CDATA equality test. -->
-		<!--
-			<dependency> <groupId>stax</groupId> <artifactId>stax</artifactId>
-			<version>1.2.0_rc2-dev</version> </dependency>
-		-->
-
-		<!--
-			NOTES: writes <?xml doctype and encoding with single quotes ' and
-			Does not pass the CDATA equality test.
-		-->
-		<!--
-			<dependency> <groupId>woodstox</groupId>
-			<artifactId>wstx-asl</artifactId> <version>3.2.0</version>
-			</dependency>
-		-->
 		<dependency>
 			<groupId>net.java.dev.stax-utils</groupId>
 			<artifactId>stax-utils</artifactId>
 			<version>20060502</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -140,13 +105,35 @@
 			<version>4.7</version>
 			<scope>test</scope>
 		</dependency>
+		<!--
+			NOTES: currently not in central repository needs to be downloaded
+			from http://ftpna2.bea.com/pub/downloads/jsr173.ja <dependency>
+			<groupId>javax.xml</groupId> <artifactId>jsr173</artifactId>
+			<version>1.0</version> </dependency>
+		-->
+		<!--
+			NOTES: passes all but CDATA test. <dependency>
+			<groupId>com.sun.xml.stream</groupId> <artifactId>sjsxp</artifactId>
+			<version>1.0.1</version> <scope>provided</scope> </dependency>
+		-->
+		<!--
+			NOTES: passes all but CDATA equality test. <dependency>
+			<groupId>stax</groupId> <artifactId>stax</artifactId>
+			<version>1.2.0_rc2-dev</version> </dependency>
+		-->
+		<!--
+			NOTES: writes <?xml doctype and encoding with single quotes ' and
+			Does not pass the CDATA equality test. <dependency>
+			<groupId>woodstox</groupId> <artifactId>wstx-asl</artifactId>
+			<version>3.2.0</version> </dependency>
+		-->
 	</dependencies>
 	<distributionManagement>
 		<repository>
 			<uniqueVersion>true</uniqueVersion>
 			<id>com.colorfulsoftware</id>
 			<name>Colorful Software Maven Repository</name>
-			<url>scpexe://www.colorfulsoftware.com/repository</url>
+			<url>file:///home/bill/.m2/repository</url>
 			<layout>default</layout>
 		</repository>
 	</distributionManagement>
