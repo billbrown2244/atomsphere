@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.colorfulsoftware</groupId>
 	<artifactId>atomsphere</artifactId>
@@ -16,8 +17,8 @@
 		</license>
 	</licenses>
 	<scm>
-		<url>scm:svn:http://www.colorfulsoftware.com/projects/scm/atomsphere</url>
-		<developerConnection>${settings.localRepository}/atomsphere</developerConnection>
+		<url>scm:svn:http://www.colorfulsoftware.com/browse</url>
+		<developerConnection>${settings.developerConnection}/atomsphere</developerConnection>
 	</scm>
 	<build>
 		<resources>
@@ -76,11 +77,17 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<configuration>
-					<includes>
-						<include>src/main/java/**</include>
-						<include>src/test/java/**</include>
-					</includes>
+					<attach>true</attach>
 				</configuration>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>jar</goal>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
@@ -134,7 +141,8 @@
 			<version>1.2.0_rc2-dev</version> </dependency>
 		-->
 		<!--
-			NOTES: writes <?xml doctype and encoding with single quotes ' and Does not pass the CDATA equality test. <dependency>
+			NOTES: writes <?xml doctype and encoding with single quotes ' and
+			Does not pass the CDATA equality test. <dependency>
 			<groupId>woodstox</groupId> <artifactId>wstx-asl</artifactId>
 			<version>3.2.0</version> </dependency>
 		-->
