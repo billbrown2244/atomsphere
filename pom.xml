@@ -18,6 +18,7 @@
 	</licenses>
 	<scm>
 		<url>http://www.colorfulsoftware.com/svn</url>
+		<connection>scm:svn:http://www.colorfulsoftware.com/scm/atomsphere</connection>
 		<developerConnection>${settings.developerConnection}atomsphere</developerConnection>
 	</scm>
 	<build>
