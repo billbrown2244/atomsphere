@@ -773,7 +773,8 @@ public final class FeedDoc {
 	 * @return an immutable Extension object.
 	 */
 	public static Extension buildExtension(String elementName,
-			List<Attribute> attributes, String content) {
+			List<Attribute> attributes, String content)
+			throws AtomSpecException {
 		return new Extension(elementName, attributes, content);
 	}
 

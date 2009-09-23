@@ -162,12 +162,17 @@ class AtomPersonConstruct implements Serializable {
 		if (extensions == null) {
 			return null;
 		}
-		List<Extension> extnsCopy = new LinkedList<Extension>();
+		List<Extension> extsCopy = new LinkedList<Extension>();
 		for (Extension extension : this.extensions) {
-			extnsCopy.add(new Extension(extension.getElementName(), extension
-					.getAttributes(), extension.getContent()));
+			try {
+				extsCopy.add(new Extension(extension.getElementName(),
+						extension.getAttributes(), extension.getContent()));
+			} catch (Exception e) {
+				// we should never get here.
+				return null;
+			}
 		}
-		return extnsCopy;
+		return extsCopy;
 	}
 
 	public Attribute getAttribute(String attrName) {
@@ -186,10 +191,15 @@ class AtomPersonConstruct implements Serializable {
 	public Extension getExtension(String extName) {
 		if (this.extensions != null) {
 			for (Extension extension : this.extensions) {
-				if (extension.getElementName() != null
-						&& extension.getElementName().equals(extName)) {
-					return new Extension(extension.getElementName(), extension
-							.getAttributes(), extension.getContent());
+				if (extension.getElementName().equals(extName)) {
+					try {
+						return new Extension(extension.getElementName(),
+								extension.getAttributes(), extension
+										.getContent());
+					} catch (Exception e) {
+						// we should never get here.
+						return null;
+					}
 				}
 			}
 		}

@@ -61,8 +61,14 @@ public class Extension implements Serializable {
 	private final String content;
 
 	// use the factory method in the FeedDoc.
-	Extension(String elementName, List<Attribute> attributes, String content) {
+	Extension(String elementName, List<Attribute> attributes, String content)
+			throws AtomSpecException {
 
+		// spec doesn't require it but elementName should be present
+		if (elementName == null) {
+			throw new AtomSpecException(
+					"channel elements SHOULD contain a title element.");
+		}
 		this.elementName = elementName;
 		this.content = content;
 
@@ -70,7 +76,7 @@ public class Extension implements Serializable {
 			this.attributes = null;
 		} else {
 			this.attributes = new LinkedList<Attribute>();
-			for(Attribute attr: attributes){
+			for (Attribute attr : attributes) {
 				this.attributes.add(new Attribute(attr.getName(), attr
 						.getValue()));
 			}
@@ -99,7 +105,7 @@ public class Extension implements Serializable {
 	public String getElementName() {
 		return elementName;
 	}
-	
+
 	public Attribute getAttribute(String attrName) {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
