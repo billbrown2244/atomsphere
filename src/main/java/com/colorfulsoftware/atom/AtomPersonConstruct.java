@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ * Copyright (C) 2009 William R. Brown <wbrown@colorfulsoftware.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -68,13 +68,17 @@ class AtomPersonConstruct implements Serializable {
 	 * @param email
 	 *            the email address of the person
 	 * @param attributes
+	 *            for this author or contributor elements.
 	 * @param extensions
-	 * @throws AtomSpecException 
+	 *            for this author or contributor elements.
+	 * @throws AtomSpecException
+	 *             if the data is not formatted properly.
 	 */
 	public AtomPersonConstruct(Name name, URI uri, Email email,
 			List<Attribute> attributes, List<Extension> extensions)
 			throws AtomSpecException {
 
+		FeedDoc feedDoc = new FeedDoc();
 		// check to make sure there is a name element
 		if (name == null) {
 			throw new AtomSpecException(
@@ -93,8 +97,8 @@ class AtomPersonConstruct implements Serializable {
 			this.attributes = new LinkedList<Attribute>();
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
-				if (!FeedDoc.isAtomCommonAttribute(attr)
-						&& !FeedDoc.isUndefinedAttribute(attr)) {
+				if (!feedDoc.isAtomCommonAttribute(attr)
+						&& !feedDoc.isUndefinedAttribute(attr)) {
 					throw new AtomSpecException("Unsuppported attribute "
 							+ attr.getName()
 							+ " for this Atom Person Construct.");
@@ -125,7 +129,12 @@ class AtomPersonConstruct implements Serializable {
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		if (this.attributes != null) {
 			for (Attribute attr : this.attributes) {
-				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+				try {
+					attrsCopy
+							.add(new Attribute(attr.getName(), attr.getValue()));
+				} catch (AtomSpecException e) {
+					// this should not happen.
+				}
 			}
 		}
 		return (this.attributes == null) ? null : attrsCopy;
@@ -176,19 +185,32 @@ class AtomPersonConstruct implements Serializable {
 		return extsCopy;
 	}
 
+	/**
+	 * @param attrName
+	 *            the name of the attribute to get.
+	 * @return the Attribute object if attrName matches or null if not found.
+	 */
 	public Attribute getAttribute(String attrName) {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
-				if (attribute.getName() != null
-						&& attribute.getName().equals(attrName)) {
-					return new Attribute(attribute.getName(), attribute
-							.getValue());
+				if (attribute.getName().equals(attrName)) {
+					try {
+						return new Attribute(attribute.getName(), attribute
+								.getValue());
+					} catch (AtomSpecException e) {
+						// this should not happen.
+					}
 				}
 			}
 		}
 		return null;
 	}
 
+	/**
+	 * @param extName
+	 *            the element name of the extension to get.
+	 * @return the Extension object if extName matches or null if not found.
+	 */
 	public Extension getExtension(String extName) {
 		if (this.extensions != null) {
 			for (Extension extension : this.extensions) {

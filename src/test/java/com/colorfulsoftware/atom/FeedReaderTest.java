@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ * Copyright (C) 2009 William R. Brown <wbrown@colorfulsoftware.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -48,8 +48,9 @@ import com.colorfulsoftware.atom.Title;
 
 /**
  * This class tests the FeedReader.
+ * 
  * @author Bill Brown
- *
+ * 
  */
 public class FeedReaderTest {
 
@@ -166,6 +167,7 @@ public class FeedReaderTest {
 
 	/**
 	 * @throws Exception
+	 *             if there is an error creating the test data.
 	 */
 	@SuppressWarnings("unchecked")
 	@Before
@@ -190,6 +192,7 @@ public class FeedReaderTest {
 
 	/**
 	 * @throws Exception
+	 *             if there is an error cleaning up the test data.
 	 */
 	@After
 	public void tearDown() throws Exception {
@@ -210,7 +213,7 @@ public class FeedReaderTest {
 
 			feed = feedReader.readFeed(reader3);
 			assertTrue(feed.getEntries().size() == 4);
-			
+
 			feed = feedReader.readFeed(reader4);
 			assertNotNull(feed);
 
@@ -299,7 +302,6 @@ public class FeedReaderTest {
 		}
 	}
 
-
 	/**
 	 * test the source reading functionality.
 	 */
@@ -309,21 +311,22 @@ public class FeedReaderTest {
 			reader = XMLInputFactory.newInstance().createXMLStreamReader(
 					new StringReader(source1));
 			Feed feed = feedReader.readFeed(reader);
-			
+
 			assertNotNull(feed.getEntries());
-						
+
 			for (Entry entry : feed.getEntries().values()) {
 				assertNotNull(entry.getSource());
 				Source source = entry.getSource();
 				assertNotNull(source.getId());
 			}
 
-			//make sure it can also be written afterwards.
+			// make sure it can also be written afterwards.
 			FeedWriter feedWriter = new FeedWriter();
-			XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
-					new FileOutputStream("target/dump1.xml"));
+			XMLStreamWriter writer = XMLOutputFactory.newInstance()
+					.createXMLStreamWriter(
+							new FileOutputStream("target/dump1.xml"));
 			feedWriter.writeFeed(writer, feed);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("could not read fead.");
@@ -398,7 +401,8 @@ public class FeedReaderTest {
 			reader = XMLInputFactory.newInstance().createXMLStreamReader(
 					new StringReader(title1));
 			Title title = feedReader.readTitle(reader);
-			assertTrue(title.getText().equals("Less: <xhtml:em> &lt; </xhtml:em>"));
+			assertTrue(title.getText().equals(
+					"Less: <xhtml:em> &lt; </xhtml:em>"));
 			assertTrue(title.getAttributes() != null);
 			assertTrue(title.getAttributes().size() == 2);
 			assertTrue(title.getAttributes().get(1).getName().equals("type"));

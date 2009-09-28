@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ * Copyright (C) 2009 William R. Brown <wbrown@colorfulsoftware.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -65,15 +65,18 @@ public class Link implements Serializable {
 
 	// use the factory method in the FeedDoc.
 	Link(List<Attribute> attributes, String content) throws AtomSpecException {
-
+		FeedDoc feedDoc = new FeedDoc();
+		System.out.println("attributes here: "+attributes);
 		if (attributes == null) {
 			this.attributes = new LinkedList<Attribute>();
 		} else {
 			this.attributes = new LinkedList<Attribute>();
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
-				if (!FeedDoc.isAtomCommonAttribute(attr)
-						&& !FeedDoc.isUndefinedAttribute(attr)
+				System.out.println("attr here: "+attr);
+				
+				if (!feedDoc.isAtomCommonAttribute(attr)
+						&& !feedDoc.isUndefinedAttribute(attr)
 						&& !attr.getName().equals("href")
 						&& !attr.getName().equals("rel")
 						&& !attr.getName().equals("type")
@@ -88,21 +91,21 @@ public class Link implements Serializable {
 			}
 		}
 
-		if ((this.href = FeedDoc.getAttributeFromGroup(this.attributes, "href")) == null) {
+		if ((this.href = feedDoc.getAttributeFromGroup(this.attributes, "href")) == null) {
 			throw new AtomSpecException(
 					"atom:link elements MUST have an href attribute, whose value MUST be a IRI reference");
 		}
 
-		this.rel = FeedDoc.getAttributeFromGroup(this.attributes, "rel");
+		this.rel = feedDoc.getAttributeFromGroup(this.attributes, "rel");
 
-		this.type = FeedDoc.getAttributeFromGroup(this.attributes, "type");
+		this.type = feedDoc.getAttributeFromGroup(this.attributes, "type");
 
-		this.hreflang = FeedDoc.getAttributeFromGroup(this.attributes,
+		this.hreflang = feedDoc.getAttributeFromGroup(this.attributes,
 				"hreflang");
 
-		this.title = FeedDoc.getAttributeFromGroup(this.attributes, "title");
+		this.title = feedDoc.getAttributeFromGroup(this.attributes, "title");
 
-		this.length = FeedDoc.getAttributeFromGroup(this.attributes, "length");
+		this.length = feedDoc.getAttributeFromGroup(this.attributes, "length");
 
 		this.content = content;
 	}
@@ -116,7 +119,13 @@ public class Link implements Serializable {
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		if (this.attributes != null) {
 			for (Attribute attr : this.attributes) {
-				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+				try {
+					attrsCopy
+							.add(new Attribute(attr.getName(), attr.getValue()));
+				} catch (AtomSpecException e) {
+					// this should not happen.
+					return null;
+				}
 			}
 		}
 		return (this.attributes == null) ? null : attrsCopy;
@@ -127,8 +136,13 @@ public class Link implements Serializable {
 	 * @return the href contains the link's IRI
 	 */
 	public Attribute getHref() {
-		return (href == null) ? null : new Attribute(href.getName(), href
-				.getValue());
+		try {
+			return (href == null) ? null : new Attribute(href.getName(), href
+					.getValue());
+		} catch (AtomSpecException e) {
+			// this should not happen.
+			return null;
+		}
 	}
 
 	/**
@@ -137,8 +151,13 @@ public class Link implements Serializable {
 	 *         the href attribute.
 	 */
 	public Attribute getHreflang() {
-		return (hreflang == null) ? null : new Attribute(hreflang.getName(),
-				hreflang.getValue());
+		try {
+			return (hreflang == null) ? null : new Attribute(
+					hreflang.getName(), hreflang.getValue());
+		} catch (AtomSpecException e) {
+			// this should not happen.
+			return null;
+		}
 	}
 
 	/**
@@ -147,8 +166,13 @@ public class Link implements Serializable {
 	 *         octets.
 	 */
 	public Attribute getLength() {
-		return (length == null) ? null : new Attribute(length.getName(), length
-				.getValue());
+		try {
+			return (length == null) ? null : new Attribute(length.getName(),
+					length.getValue());
+		} catch (AtomSpecException e) {
+			// this should not happen.
+			return null;
+		}
 	}
 
 	/**
@@ -157,8 +181,13 @@ public class Link implements Serializable {
 	 *         production in [RFC3987]
 	 */
 	public Attribute getRel() {
-		return (rel == null) ? null : new Attribute(rel.getName(), rel
-				.getValue());
+		try {
+			return (rel == null) ? null : new Attribute(rel.getName(), rel
+					.getValue());
+		} catch (AtomSpecException e) {
+			// this should not happen.
+			return null;
+		}
 	}
 
 	/**
@@ -166,8 +195,13 @@ public class Link implements Serializable {
 	 * @return the title conveys human-readable information about the link.
 	 */
 	public Attribute getTitle() {
-		return (title == null) ? null : new Attribute(title.getName(), title
-				.getValue());
+		try {
+			return (title == null) ? null : new Attribute(title.getName(),
+					title.getValue());
+		} catch (AtomSpecException e) {
+			// this should not happen.
+			return null;
+		}
 	}
 
 	/**
@@ -175,8 +209,13 @@ public class Link implements Serializable {
 	 * @return the type which is an advisory media type
 	 */
 	public Attribute getType() {
-		return (type == null) ? null : new Attribute(type.getName(), type
-				.getValue());
+		try {
+			return (type == null) ? null : new Attribute(type.getName(), type
+					.getValue());
+		} catch (AtomSpecException e) {
+			// this should not happen.
+			return null;
+		}
 	}
 
 	/**
@@ -186,7 +225,7 @@ public class Link implements Serializable {
 	public String getContent() {
 		return content;
 	}
-	
+
 	/**
 	 * @param attrName
 	 *            the name of the attribute to get.
@@ -195,10 +234,13 @@ public class Link implements Serializable {
 	public Attribute getAttribute(String attrName) {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
-				if (attribute.getName() != null
-						&& attribute.getName().equals(attrName)) {
-					return new Attribute(attribute.getName(), attribute
-							.getValue());
+				if (attribute.getName().equals(attrName)) {
+					try {
+						return new Attribute(attribute.getName(), attribute
+								.getValue());
+					} catch (AtomSpecException e) {
+						// this should not happen.
+					}
 				}
 			}
 		}

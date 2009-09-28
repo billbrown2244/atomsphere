@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ * Copyright (C) 2009 William R. Brown <wbrown@colorfulsoftware.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,6 +41,8 @@ import javax.xml.stream.XMLStreamReader;
  */
 class FeedReader {
 
+	FeedDoc feedDoc = new FeedDoc();
+
 	/**
 	 * This method transforms an xml stream into a Feed bean
 	 * 
@@ -52,7 +54,7 @@ class FeedReader {
 	 */
 	Feed readFeed(XMLStreamReader reader) throws Exception {
 
-		List<Attribute> attributes = null;
+		List<Attribute> attributes = getAttributes(reader);
 		List<Author> authors = null;
 		List<Category> categories = null;
 		List<Contributor> contributors = null;
@@ -73,8 +75,7 @@ class FeedReader {
 			switch (reader.next()) {
 
 			case XMLStreamConstants.START_DOCUMENT:
-				FeedDoc.encoding = reader.getEncoding();
-				FeedDoc.xml_version = reader.getVersion();
+				feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
 				break;
 
 			case XMLStreamConstants.START_ELEMENT:
@@ -149,22 +150,24 @@ class FeedReader {
 			}
 		}
 
-		Feed feed = FeedDoc.buildFeed(id, title, updated, rights, authors,
+		Feed feed = feedDoc.buildFeed(id, title, updated, rights, authors,
 				categories, contributors, links, attributes, extensions,
 				generator, subtitle, icon, logo, entries);
 
 		// because the sort extension does not enforce placement of the element
 		// do a check after the feed is built to determine if it needs to be
 		// sorted.
-		return FeedDoc.checkForAndApplyExtension(feed, FeedDoc.sort);
+		return feedDoc.checkForAndApplyExtension(feed, feedDoc.getSort());
 	}
 
 	List<Attribute> getAttributes(XMLStreamReader reader) throws Exception {
-
+		System.out.println("reader start type: "+reader.getEventType());
 		List<Attribute> attributes = new LinkedList<Attribute>();
 
 		if (reader.getEventType() == XMLStreamConstants.START_DOCUMENT) {
+			feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
 			reader.next();
+			System.out.println("reader start next: "+reader.getEventType());
 		}
 
 		if (reader.getEventType() != XMLStreamConstants.START_ELEMENT) {
@@ -179,7 +182,7 @@ class FeedReader {
 				attrName += ":" + reader.getNamespacePrefix(i);
 			}
 
-			attributes.add(FeedDoc.buildAttribute(attrName, reader
+			attributes.add(feedDoc.buildAttribute(attrName, reader
 					.getNamespaceURI(i)));
 		}
 		for (int i = 0; i < reader.getAttributeCount(); i++) {
@@ -193,7 +196,7 @@ class FeedReader {
 				attrName = reader.getAttributeName(i).getLocalPart();
 			}
 
-			attributes.add(FeedDoc.buildAttribute(attrName, reader
+			attributes.add(feedDoc.buildAttribute(attrName, reader
 					.getAttributeValue(i)));
 		}
 
@@ -254,7 +257,7 @@ class FeedReader {
 				break;
 			}
 		}
-		extensions.add(FeedDoc.buildExtension(elementName, attributes, extText
+		extensions.add(feedDoc.buildExtension(elementName, attributes, extText
 				.toString()));
 		return extensions;
 	}
@@ -289,8 +292,7 @@ class FeedReader {
 			switch (reader.next()) {
 
 			case XMLStreamConstants.START_DOCUMENT:
-				FeedDoc.encoding = reader.getEncoding();
-				FeedDoc.xml_version = reader.getVersion();
+				feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
 				break;
 
 			case XMLStreamConstants.START_ELEMENT:
@@ -356,7 +358,7 @@ class FeedReader {
 			throw new AtomSpecException(
 					"atom:entry elements MUST contain exactly one atom:updated element.");
 		}
-		entries.put(updated.getText(), FeedDoc.buildEntry(id, title, updated,
+		entries.put(updated.getText(), feedDoc.buildEntry(id, title, updated,
 				rights, content, authors, categories, contributors, links,
 				attributes, extensions, published, summary, source));
 
@@ -389,12 +391,12 @@ class FeedReader {
 		} else {
 			summary = reader.getElementText();
 		}
-		return FeedDoc.buildSummary(summary, attributes);
+		return feedDoc.buildSummary(summary, attributes);
 	}
 
 	// used for xhtml.
 	boolean containsXHTML(List<Attribute> attributes) {
-		Attribute xhtml = FeedDoc.getAttributeFromGroup(attributes, "type");
+		Attribute xhtml = feedDoc.getAttributeFromGroup(attributes, "type");
 		return ((xhtml != null) && (xhtml.getValue().equals("xhtml") || xhtml
 				.getValue().equals("html")));
 	}
@@ -481,7 +483,7 @@ class FeedReader {
 				break;
 			}
 		}
-		return FeedDoc.buildSource(id, title, updated, rights, authors,
+		return feedDoc.buildSource(id, title, updated, rights, authors,
 				categories, contributors, links, attributes, extensions,
 				generator, subtitle, icon, logo);
 	}
@@ -506,12 +508,12 @@ class FeedReader {
 		List<Attribute> attributes = getAttributes(reader);
 		String dateText = reader.getElementText();
 		try {
-			return FeedDoc.buildPublished(
+			return feedDoc.buildPublished(
 					getSimpleDateFormat().parse(dateText), attributes);
 		} catch (Exception e) {
 			SimpleDateFormat simpleDateFmt2 = new SimpleDateFormat(
 					getSimpleDateFormat().toPattern().substring(0, 19));
-			return FeedDoc.buildPublished(simpleDateFmt2.parse(dateText
+			return feedDoc.buildPublished(simpleDateFmt2.parse(dateText
 					.substring(0, 19)), attributes);
 		}
 	}
@@ -525,19 +527,19 @@ class FeedReader {
 		} else {
 			content = reader.getElementText();
 		}
-		return FeedDoc.buildContent(content, attributes);
+		return feedDoc.buildContent(content, attributes);
 	}
 
 	Updated readUpdated(XMLStreamReader reader) throws Exception {
 		List<Attribute> attributes = getAttributes(reader);
 		String dateText = reader.getElementText();
 		try {
-			return FeedDoc.buildUpdated(getSimpleDateFormat().parse(dateText),
+			return feedDoc.buildUpdated(getSimpleDateFormat().parse(dateText),
 					attributes);
 		} catch (Exception e) {
 			SimpleDateFormat simpleDateFmt2 = new SimpleDateFormat(
 					getSimpleDateFormat().toPattern().substring(0, 19));
-			return FeedDoc.buildUpdated(simpleDateFmt2.parse(dateText
+			return feedDoc.buildUpdated(simpleDateFmt2.parse(dateText
 					.substring(0, 19)), attributes);
 		}
 	}
@@ -551,7 +553,7 @@ class FeedReader {
 		} else {
 			title = reader.getElementText();
 		}
-		return FeedDoc.buildTitle(title, attributes);
+		return feedDoc.buildTitle(title, attributes);
 	}
 
 	public static void checkForCDATA(XMLStreamReader reader) throws Exception {
@@ -653,7 +655,7 @@ class FeedReader {
 		} else {
 			subtitle = reader.getElementText();
 		}
-		return FeedDoc.buildSubtitle(subtitle, attributes);
+		return feedDoc.buildSubtitle(subtitle, attributes);
 	}
 
 	Rights readRights(XMLStreamReader reader) throws Exception {
@@ -665,11 +667,11 @@ class FeedReader {
 		} else {
 			rights = reader.getElementText();
 		}
-		return FeedDoc.buildRights(rights, attributes);
+		return feedDoc.buildRights(rights, attributes);
 	}
 
 	Logo readLogo(XMLStreamReader reader) throws Exception {
-		return FeedDoc
+		return feedDoc
 				.buildLogo(getAttributes(reader), reader.getElementText());
 	}
 
@@ -678,22 +680,22 @@ class FeedReader {
 		if (links == null) {
 			links = new LinkedList<Link>();
 		}
-		links.add(FeedDoc.buildLink(getAttributes(reader), reader
+		links.add(feedDoc.buildLink(getAttributes(reader), reader
 				.getElementText()));
 		return links;
 	}
 
 	Id readId(XMLStreamReader reader) throws Exception {
-		return FeedDoc.buildId(getAttributes(reader), reader.getElementText());
+		return feedDoc.buildId(getAttributes(reader), reader.getElementText());
 	}
 
 	Icon readIcon(XMLStreamReader reader) throws Exception {
-		return FeedDoc
+		return feedDoc
 				.buildIcon(getAttributes(reader), reader.getElementText());
 	}
 
 	Generator readGenerator(XMLStreamReader reader) throws Exception {
-		return FeedDoc.buildGenerator(getAttributes(reader), reader
+		return feedDoc.buildGenerator(getAttributes(reader), reader
 				.getElementText());
 	}
 
@@ -706,7 +708,7 @@ class FeedReader {
 
 		AtomPersonConstruct person = readAtomPersonConstruct(reader,
 				"contributor");
-		contributors.add(FeedDoc.buildContributor(person.getName(), person
+		contributors.add(feedDoc.buildContributor(person.getName(), person
 				.getUri(), person.getEmail(), person.getAttributes(), person
 				.getExtensions()));
 
@@ -718,7 +720,7 @@ class FeedReader {
 		if (categories == null) {
 			categories = new LinkedList<Category>();
 		}
-		categories.add(FeedDoc.buildCategory(getAttributes(reader), reader
+		categories.add(feedDoc.buildCategory(getAttributes(reader), reader
 				.getElementText()));
 		return categories;
 	}
@@ -729,7 +731,7 @@ class FeedReader {
 			authors = new LinkedList<Author>();
 		}
 		AtomPersonConstruct person = readAtomPersonConstruct(reader, "author");
-		authors.add(FeedDoc.buildAuthor(person.getName(), person.getUri(),
+		authors.add(feedDoc.buildAuthor(person.getName(), person.getUri(),
 				person.getEmail(), person.getAttributes(), person
 						.getExtensions()));
 		return authors;
@@ -751,13 +753,13 @@ class FeedReader {
 				elementName = getElementName(reader);
 				if (elementName.equals("name")
 						|| elementName.equals("atom:name")) {
-					name = FeedDoc.buildName(reader.getElementText());
+					name = feedDoc.buildName(reader.getElementText());
 				} else if (elementName.equals("uri")
 						|| elementName.equals("atom:uri")) {
-					uri = FeedDoc.buildURI(reader.getElementText());
+					uri = feedDoc.buildURI(reader.getElementText());
 				} else if (elementName.equals("email")
 						|| elementName.equals("atom:email")) {
-					email = FeedDoc.buildEmail(reader.getElementText());
+					email = feedDoc.buildEmail(reader.getElementText());
 				} else {
 					if (extensions == null) {
 						extensions = new LinkedList<Extension>();
@@ -781,7 +783,7 @@ class FeedReader {
 			}
 
 		}
-		return FeedDoc.buildAtomPersonConstruct(name, uri, email, attributes,
+		return feedDoc.buildAtomPersonConstruct(name, uri, email, attributes,
 				extensions);
 	}
 }

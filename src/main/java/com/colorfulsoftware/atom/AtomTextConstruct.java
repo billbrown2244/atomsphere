@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ * Copyright (C) 2009 William R. Brown <wbrown@colorfulsoftware.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -68,8 +68,8 @@ class AtomTextConstruct implements Serializable {
 				this.attributes = new LinkedList<Attribute>();
 				for (Attribute attr : attributes) {
 					// check for unsupported attribute.
-					if (!FeedDoc.isAtomCommonAttribute(attr)
-							&& !FeedDoc.isUndefinedAttribute(attr)
+					if (!new FeedDoc().isAtomCommonAttribute(attr)
+							&& !new FeedDoc().isUndefinedAttribute(attr)
 							&& !attr.getName().equals("type")
 							&& !attr.getName().equals("src")) {
 						throw new AtomSpecException("Unsuppported attribute "
@@ -84,8 +84,8 @@ class AtomTextConstruct implements Serializable {
 
 				for (Attribute attr : attributes) {
 					// check for unsupported attribute.
-					if (!FeedDoc.isAtomCommonAttribute(attr)
-							&& !FeedDoc.isUndefinedAttribute(attr)
+					if (!new FeedDoc().isAtomCommonAttribute(attr)
+							&& !new FeedDoc().isUndefinedAttribute(attr)
 							&& !attr.getName().equals("type")) {
 						throw new AtomSpecException("Unsuppported attribute "
 								+ attr.getName()
@@ -97,7 +97,7 @@ class AtomTextConstruct implements Serializable {
 			}
 		}
 
-		if (FeedDoc.getContentType(this.attributes) == FeedDoc.ContentType.XHTML) {
+		if (new FeedDoc().getContentType(this.attributes) == FeedDoc.ContentType.XHTML) {
 			this.divWrapperStart = getDivWrapperStart(text);
 			this.divWrapperEnd = getDivWrapperEnd(text);
 			this.text = getXhtmlText(text);
@@ -113,6 +113,7 @@ class AtomTextConstruct implements Serializable {
 			String divWrapperStart, String divWrapperEnd,
 			boolean isContentElement) throws AtomSpecException {
 
+		FeedDoc feedDoc = new FeedDoc();
 		this.text = text;
 		this.divWrapperStart = divWrapperStart;
 		this.divWrapperEnd = divWrapperEnd;
@@ -125,8 +126,8 @@ class AtomTextConstruct implements Serializable {
 				this.attributes = new LinkedList<Attribute>();
 				for (Attribute attr : attributes) {
 					// check for unsupported attribute.
-					if (!FeedDoc.isAtomCommonAttribute(attr)
-							&& !FeedDoc.isUndefinedAttribute(attr)
+					if (!feedDoc.isAtomCommonAttribute(attr)
+							&& !feedDoc.isUndefinedAttribute(attr)
 							&& !attr.getName().equals("type")
 							&& !attr.getName().equals("src")) {
 						throw new AtomSpecException("Unsuppported attribute "
@@ -141,8 +142,8 @@ class AtomTextConstruct implements Serializable {
 
 				for (Attribute attr : attributes) {
 					// check for unsupported attribute.
-					if (!FeedDoc.isAtomCommonAttribute(attr)
-							&& !FeedDoc.isUndefinedAttribute(attr)
+					if (!feedDoc.isAtomCommonAttribute(attr)
+							&& !feedDoc.isUndefinedAttribute(attr)
 							&& !attr.getName().equals("type")) {
 						throw new AtomSpecException("Unsuppported attribute "
 								+ attr.getName()
@@ -191,7 +192,12 @@ class AtomTextConstruct implements Serializable {
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		if (this.attributes != null) {
 			for (Attribute attr : this.attributes) {
-				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+				try {
+					attrsCopy
+							.add(new Attribute(attr.getName(), attr.getValue()));
+				} catch (AtomSpecException e) {
+					// this should not happen.
+				}
 			}
 		}
 		return (this.attributes == null) ? null : attrsCopy;
@@ -213,13 +219,21 @@ class AtomTextConstruct implements Serializable {
 		return divWrapperEnd;
 	}
 
+	/**
+	 * @param attrName
+	 *            the name of the attribute to get.
+	 * @return the Attribute object if attrName matches or null if not found.
+	 */
 	public Attribute getAttribute(String attrName) {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
-				if (attribute.getName() != null
-						&& attribute.getName().equals(attrName)) {
-					return new Attribute(attribute.getName(), attribute
-							.getValue());
+				if (attribute.getName().equals(attrName)) {
+					try {
+						return new Attribute(attribute.getName(), attribute
+								.getValue());
+					} catch (AtomSpecException e) {
+						// this should not happen.
+					}
 				}
 			}
 		}

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ * Copyright (C) 2009 William R. Brown <wbrown@colorfulsoftware.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,27 +33,31 @@ import com.colorfulsoftware.atom.Id;
 
 /**
  * @author Bill Brown
- *
+ * 
  */
 public class IdTest {
-
+	private FeedDoc feedDoc;
 	private Id id;
 	private Attribute xmlBase;
 	private Attribute xmlLang;
 	private Attribute local;
-	
+
 	/**
 	 * @throws Exception
+	 *             if there is an error creating the test data.
 	 */
 	@Before
 	public void setUp() throws Exception {
-		xmlBase = FeedDoc.buildAttribute("xml:base", "http://www.colorfulsoftware.com/projects/atomsphere/");
-		xmlLang = FeedDoc.lang_en;
-		local = FeedDoc.buildAttribute("xmlns:abcAttribute","theValue");
+		feedDoc = new FeedDoc();
+		xmlBase = feedDoc.buildAttribute("xml:base",
+				"http://www.colorfulsoftware.com/projects/atomsphere/");
+		xmlLang = feedDoc.getLangEn();
+		local = feedDoc.buildAttribute("xmlns:abcAttribute", "theValue");
 	}
 
 	/**
 	 * @throws Exception
+	 *             if there is an error cleaning up the test data.
 	 */
 	@After
 	public void tearDown() throws Exception {
@@ -65,21 +69,24 @@ public class IdTest {
 	@Test
 	public void testId() {
 		List<Attribute> attributes = new LinkedList<Attribute>();
-		try{
+		try {
 			attributes.add(xmlBase);
 			attributes.add(xmlLang);
 			attributes.add(local);
-			id = FeedDoc.buildId(attributes, "http://www.colorfulsoftware.com/");
+			id = feedDoc
+					.buildId(attributes, "http://www.colorfulsoftware.com/");
 			assertTrue(id != null);
-			
-			attributes.add(FeedDoc.buildAttribute("href","http://www.colorfulsoftware.com"));
-			id = FeedDoc.buildId(attributes, "http://www.colorfulsoftware.com/");
+
+			attributes.add(feedDoc.buildAttribute("href",
+					"http://www.colorfulsoftware.com"));
+			id = feedDoc
+					.buildId(attributes, "http://www.colorfulsoftware.com/");
 			fail("should not get here");
-			
-		}catch(Exception e){
+
+		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
-			assertEquals(e.getMessage(),"Unsuppported attribute "
-					+"href for this element.");
+			assertEquals(e.getMessage(), "Unsuppported attribute "
+					+ "href for this element.");
 		}
 	}
 }

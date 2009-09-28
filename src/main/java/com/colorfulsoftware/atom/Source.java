@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ * Copyright (C) 2009 William R. Brown <wbrown@colorfulsoftware.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -218,7 +218,7 @@ public class Source implements Serializable {
 	public List<Extension> getExtensions() {
 		return sourceAdaptor.getExtensions();
 	}
-	
+
 	/**
 	 * @param attrName
 	 *            the name of the attribute to get.
@@ -232,39 +232,56 @@ public class Source implements Serializable {
 	 * @param name
 	 *            the name of the author to get.
 	 * @return the Author object if the name matches or null if not found.
-	 * @throws AtomSpecException
 	 */
-	public Author getAuthor(String name) throws AtomSpecException {
-		return sourceAdaptor.getAuthor(name);
+	public Author getAuthor(String name) {
+		try {
+			return sourceAdaptor.getAuthor(name);
+		} catch (AtomSpecException e) {
+			// this should not happen.
+			return null;
+		}
 	}
 
 	/**
 	 * @param termValue
 	 *            the term value.
 	 * @return the Category object if the term matches or null if not found.
-	 * @throws AtomSpecException
 	 */
-	public Category getCategory(String termValue) throws AtomSpecException {
-		return sourceAdaptor.getCategory(termValue);
+	public Category getCategory(String termValue) {
+		try {
+			return sourceAdaptor.getCategory(termValue);
+		} catch (AtomSpecException e) {
+			// this should not happen.
+			return null;
+		}
 	}
 
 	/**
 	 * @param name
 	 *            the name of the author to get.
 	 * @return the Contributor object if the name matches or null if not found.
-	 * @throws AtomSpecException
 	 */
-	public Contributor getContributor(String name) throws AtomSpecException {
-		return sourceAdaptor.getContributor(name);
+	public Contributor getContributor(String name) {
+		try {
+			return sourceAdaptor.getContributor(name);
+		} catch (AtomSpecException e) {
+			// this should not happen.
+			return null;
+		}
 	}
 
 	/**
-	 * @param hrefVal the href attribute value to look for.
-	 * @return the Link object if href matches or null if not found. 
-	 * @throws AtomSpecException
+	 * @param hrefVal
+	 *            the href attribute value to look for.
+	 * @return the Link object if href matches or null if not found.
 	 */
-	public Link getLink(String hrefVal) throws AtomSpecException {
-		return sourceAdaptor.getLink(hrefVal);
+	public Link getLink(String hrefVal) {
+		try {
+			return sourceAdaptor.getLink(hrefVal);
+		} catch (AtomSpecException e) {
+			// this should not happen.
+			return null;
+		}
 	}
 
 	/**

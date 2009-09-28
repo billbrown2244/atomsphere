@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ * Copyright (C) 2009 William R. Brown <wbrown@colorfulsoftware.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -58,14 +58,15 @@ public class Category implements Serializable {
 	Category(List<Attribute> attributes, String content)
 			throws AtomSpecException {
 
+		FeedDoc feedDoc = new FeedDoc();
 		if (attributes == null) {
 			this.attributes = new LinkedList<Attribute>();
 		} else {
 			this.attributes = new LinkedList<Attribute>();
-			for(Attribute attr: attributes){
+			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
-				if (!FeedDoc.isAtomCommonAttribute(attr)
-						&& !FeedDoc.isUndefinedAttribute(attr)
+				if (!feedDoc.isAtomCommonAttribute(attr)
+						&& !feedDoc.isUndefinedAttribute(attr)
 						&& !attr.getName().equals("term")
 						&& !attr.getName().equals("scheme")
 						&& !attr.getName().equals("label")) {
@@ -77,14 +78,14 @@ public class Category implements Serializable {
 			}
 		}
 
-		if ((this.term = FeedDoc.getAttributeFromGroup(this.attributes, "term")) == null) {
+		if ((this.term = feedDoc.getAttributeFromGroup(this.attributes, "term")) == null) {
 			throw new AtomSpecException(
 					"Category elements MUST have a \"term\" attribute.");
 		}
 
-		this.scheme = FeedDoc.getAttributeFromGroup(this.attributes, "scheme");
+		this.scheme = feedDoc.getAttributeFromGroup(this.attributes, "scheme");
 
-		this.label = FeedDoc.getAttributeFromGroup(this.attributes, "label");
+		this.label = feedDoc.getAttributeFromGroup(this.attributes, "label");
 
 		this.content = content;
 	}
@@ -98,7 +99,12 @@ public class Category implements Serializable {
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		if (this.attributes != null) {
 			for (Attribute attr : this.attributes) {
-				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+				try {
+					attrsCopy
+							.add(new Attribute(attr.getName(), attr.getValue()));
+				} catch (AtomSpecException e) {
+					// this should not happen.
+				}
 			}
 		}
 		return (this.attributes == null) ? null : attrsCopy;
@@ -109,8 +115,13 @@ public class Category implements Serializable {
 	 * @return the label attribute
 	 */
 	public Attribute getLabel() {
-		return (label == null) ? null : new Attribute(label.getName(), label
-				.getValue());
+		try {
+			return (label == null) ? null : new Attribute(label.getName(),
+					label.getValue());
+		} catch (AtomSpecException e) {
+			// this should not happen.
+			return null;
+		}
 	}
 
 	/**
@@ -118,8 +129,13 @@ public class Category implements Serializable {
 	 * @return the scheme attribute
 	 */
 	public Attribute getScheme() {
-		return (scheme == null) ? null : new Attribute(scheme.getName(), scheme
-				.getValue());
+		try {
+			return (scheme == null) ? null : new Attribute(scheme.getName(),
+					scheme.getValue());
+		} catch (AtomSpecException e) {
+			// this should not happen.
+			return null;
+		}
 	}
 
 	/**
@@ -127,8 +143,13 @@ public class Category implements Serializable {
 	 * @return the term attribute
 	 */
 	public Attribute getTerm() {
-		return (term == null) ? null : new Attribute(term.getName(), term
-				.getValue());
+		try {
+			return (term == null) ? null : new Attribute(term.getName(), term
+					.getValue());
+		} catch (AtomSpecException e) {
+			// this should not happen.
+			return null;
+		}
 	}
 
 	/**
@@ -140,16 +161,20 @@ public class Category implements Serializable {
 	}
 
 	/**
-	 * @param attrName the name of the attribute to get.
-	 * @return the Attribute object if attrName matches.
+	 * @param attrName
+	 *            the name of the attribute to get.
+	 * @return the Attribute object if attrName matches or null if not found.
 	 */
 	public Attribute getAttribute(String attrName) {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
-				if (attribute.getName() != null
-						&& attribute.getName().equals(attrName)) {
-					return new Attribute(attribute.getName(), attribute
-							.getValue());
+				if (attribute.getName().equals(attrName)) {
+					try {
+						return new Attribute(attribute.getName(), attribute
+								.getValue());
+					} catch (AtomSpecException e) {
+						// this should not happen.
+					}
 				}
 			}
 		}

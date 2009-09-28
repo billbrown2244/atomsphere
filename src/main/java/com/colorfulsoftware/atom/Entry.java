@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ * Copyright (C) 2009 William R. Brown <wbrown@colorfulsoftware.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -290,6 +290,7 @@ public class Entry implements Serializable {
 	 *            the name of the author to get.
 	 * @return the Author object if the name matches or null if not found.
 	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
 	public Author getAuthor(String name) throws AtomSpecException {
 		return entryAdaptor.getAuthor(name);
@@ -300,24 +301,29 @@ public class Entry implements Serializable {
 	 *            the term value.
 	 * @return the Category object if the term matches or null if not found.
 	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
 	public Category getCategory(String termValue) throws AtomSpecException {
 		return entryAdaptor.getCategory(termValue);
 	}
 
 	/**
-	 * @param name the name of the contributor
+	 * @param name
+	 *            the name of the contributor
 	 * @return the Contributor object if name matches or null if not found.
 	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
 	public Contributor getContributor(String name) throws AtomSpecException {
 		return entryAdaptor.getContributor(name);
 	}
 
 	/**
-	 * @param hrefVal the href attribute value to look for.
-	 * @return the Link object if href matches or null if not found. 
+	 * @param hrefVal
+	 *            the href attribute value to look for.
+	 * @return the Link object if href matches or null if not found.
 	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
 	public Link getLink(String hrefVal) throws AtomSpecException {
 		return entryAdaptor.getLink(hrefVal);

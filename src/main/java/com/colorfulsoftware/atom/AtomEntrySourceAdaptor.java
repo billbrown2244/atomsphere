@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ * Copyright (C) 2009 William R. Brown <wbrown@colorfulsoftware.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -64,6 +64,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 			List<Contributor> contributors, List<Link> links,
 			List<Attribute> attributes, List<Extension> extensions)
 			throws AtomSpecException {
+		FeedDoc feedDoc = new FeedDoc();
 		this.id = (id == null) ? null : new Id(id.getAttributes(), id
 				.getAtomUri());
 		this.title = (title == null) ? null : new Title(title);
@@ -120,8 +121,8 @@ class AtomEntrySourceAdaptor implements Serializable {
 			this.attributes = new LinkedList<Attribute>();
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
-				if (!FeedDoc.isAtomCommonAttribute(attr)
-						&& !FeedDoc.isUndefinedAttribute(attr)) {
+				if (!feedDoc.isAtomCommonAttribute(attr)
+						&& !feedDoc.isUndefinedAttribute(attr)) {
 					throw new AtomSpecException("Unsuppported attribute "
 							+ attr.getName() + " for this element.");
 				}
@@ -150,7 +151,12 @@ class AtomEntrySourceAdaptor implements Serializable {
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		if (this.attributes != null) {
 			for (Attribute attr : this.attributes) {
-				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+				try {
+					attrsCopy
+							.add(new Attribute(attr.getName(), attr.getValue()));
+				} catch (AtomSpecException e) {
+					// this should not happen.
+				}
 			}
 		}
 		return (this.attributes == null) ? null : attrsCopy;
@@ -327,19 +333,34 @@ class AtomEntrySourceAdaptor implements Serializable {
 		}
 	}
 
+	/**
+	 * @param attrName
+	 *            the name of the attribute to get.
+	 * @return the Attribute object if attrName matches or null if not found.
+	 */
 	public Attribute getAttribute(String attrName) {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
-				if (attribute.getName() != null
-						&& attribute.getName().equals(attrName)) {
-					return new Attribute(attribute.getName(), attribute
-							.getValue());
+				if (attribute.getName().equals(attrName)) {
+					try {
+						return new Attribute(attribute.getName(), attribute
+								.getValue());
+					} catch (AtomSpecException e) {
+						// this should not happen.
+					}
 				}
 			}
 		}
 		return null;
 	}
 
+	/**
+	 * @param name
+	 *            the name of the author to get.
+	 * @return the Author object if the name matches or null if not found.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
+	 */
 	public Author getAuthor(String name) throws AtomSpecException {
 		if (this.authors != null) {
 			for (Author author : this.authors) {
@@ -355,6 +376,13 @@ class AtomEntrySourceAdaptor implements Serializable {
 		return null;
 	}
 
+	/**
+	 * @param termValue
+	 *            the term value.
+	 * @return the Category object if the term matches or null if not found.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
+	 */
 	public Category getCategory(String termValue) throws AtomSpecException {
 		if (this.categories != null) {
 			for (Category category : this.categories) {
@@ -369,6 +397,13 @@ class AtomEntrySourceAdaptor implements Serializable {
 		return null;
 	}
 
+	/**
+	 * @param name
+	 *            the name of the contributor
+	 * @return the Contributor object if name matches or null if not found.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
+	 */
 	public Contributor getContributor(String name) throws AtomSpecException {
 		if (this.contributors != null) {
 			for (Contributor contributor : this.contributors) {
@@ -384,6 +419,13 @@ class AtomEntrySourceAdaptor implements Serializable {
 		return null;
 	}
 
+	/**
+	 * @param hrefVal
+	 *            the href attribute value to look for.
+	 * @return the Link object if href matches or null if not found.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
+	 */
 	public Link getLink(String hrefVal) throws AtomSpecException {
 		if (this.links != null) {
 			for (Link link : this.links) {
@@ -396,6 +438,11 @@ class AtomEntrySourceAdaptor implements Serializable {
 		return null;
 	}
 
+	/**
+	 * @param extName
+	 *            the element name of the extension to get.
+	 * @return the Extension object if extName matches or null if not found.
+	 */
 	public Extension getExtension(String extName) {
 		if (this.extensions != null) {
 			for (Extension extension : this.extensions) {

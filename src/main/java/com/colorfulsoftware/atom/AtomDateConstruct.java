@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ * Copyright (C) 2009 William R. Brown <wbrown@colorfulsoftware.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -40,22 +40,24 @@ class AtomDateConstruct implements Serializable {
 
 	/**
 	 * 
-	 * @param dateTime the date
-	 * @param attributes the attributes for the date.
-	 *            the date formatted to [RFC3339]
-	 * @throws AtomSpecException 
+	 * @param dateTime
+	 *            the date
+	 * @param attributes
+	 *            the attributes for the date. the date formatted to [RFC3339]
+	 * @throws AtomSpecException
+	 *             if the date format is not valid.
 	 */
 	public AtomDateConstruct(Date dateTime, List<Attribute> attributes)
 			throws AtomSpecException {
-
+		FeedDoc feedDoc = new FeedDoc();
 		if (attributes == null) {
 			this.attributes = null;
 		} else {
 			this.attributes = new LinkedList<Attribute>();
-			for(Attribute attr: attributes){
+			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
-				if (!FeedDoc.isAtomCommonAttribute(attr)
-						&& !FeedDoc.isUndefinedAttribute(attr)) {
+				if (!feedDoc.isAtomCommonAttribute(attr)
+						&& !feedDoc.isUndefinedAttribute(attr)) {
 					throw new AtomSpecException("Unsuppported attribute "
 							+ attr.getName() + " for this Atom Date Construct.");
 				}
@@ -65,7 +67,8 @@ class AtomDateConstruct implements Serializable {
 		}
 
 		if (dateTime == null) {
-			this.dateTime = null;
+			throw new AtomSpecException(
+					"The date for the Atom Date Construct SHOULD not be null.");
 		} else {
 			this.dateTime = new Date(dateTime.getTime());
 		}
@@ -76,7 +79,7 @@ class AtomDateConstruct implements Serializable {
 	 * @return the date timestamp for this element.
 	 */
 	protected Date getDateTime() {
-		return (dateTime == null) ? null : new Date(dateTime.getTime());
+		return new Date(dateTime.getTime());
 	}
 
 	/**
@@ -85,9 +88,7 @@ class AtomDateConstruct implements Serializable {
 	 *         2006-04-28T12:50:43.337-05:00
 	 */
 	public String getText() {
-		if (dateTime == null) {
-			return null;
-		}
+
 		// example 2006-04-28T12:50:43.337-05:00
 		final String timeZoneOffset;
 		TimeZone timeZone = TimeZone.getDefault();
@@ -113,19 +114,32 @@ class AtomDateConstruct implements Serializable {
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		if (this.attributes != null) {
 			for (Attribute attr : this.attributes) {
-				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+				try {
+					attrsCopy
+							.add(new Attribute(attr.getName(), attr.getValue()));
+				} catch (AtomSpecException e) {
+					// this should not happen.
+				}
 			}
 		}
 		return (this.attributes == null) ? null : attrsCopy;
 	}
-	
+
+	/**
+	 * @param attrName
+	 *            the name of the attribute to get.
+	 * @return the Attribute object if attrName matches or null if not found.
+	 */
 	public Attribute getAttribute(String attrName) {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
-				if (attribute.getName() != null
-						&& attribute.getName().equals(attrName)) {
-					return new Attribute(attribute.getName(), attribute
-							.getValue());
+				if (attribute.getName().equals(attrName)) {
+					try {
+						return new Attribute(attribute.getName(), attribute
+								.getValue());
+					} catch (AtomSpecException e) {
+						// this should not happen.
+					}
 				}
 			}
 		}

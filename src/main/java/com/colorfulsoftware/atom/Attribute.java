@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ * Copyright (C) 2009 William R. Brown <wbrown@colorfulsoftware.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -54,7 +54,10 @@ public class Attribute implements Serializable {
 	private final String value;
 
 	// use the factory method in the FeedDoc.
-	Attribute(String name, String value) {
+	Attribute(String name, String value) throws AtomSpecException{
+		if(this.name == null){
+			throw new AtomSpecException("Attributes SHOULD have a name and SHOULD NOT be blank.");
+		}
 		this.name = name;
 		this.value = value;
 	}

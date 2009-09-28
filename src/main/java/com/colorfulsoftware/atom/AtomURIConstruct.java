@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ * Copyright (C) 2009 William R. Brown <wbrown@colorfulsoftware.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,22 +36,25 @@ class AtomURIConstruct implements Serializable {
 
 	/**
 	 * 
-	 * @param attributes 
+	 * @param attributes
+	 *            for this uri element.
 	 * @param atomUri
 	 *            the unique identifier for the document.
-	 * @throws AtomSpecException 
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
 	public AtomURIConstruct(List<Attribute> attributes, String atomUri)
 			throws AtomSpecException {
 
+		FeedDoc feedDoc = new FeedDoc();
 		if (attributes == null) {
 			this.attributes = null;
 		} else {
 			this.attributes = new LinkedList<Attribute>();
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
-				if (!FeedDoc.isAtomCommonAttribute(attr)
-						&& !FeedDoc.isUndefinedAttribute(attr)) {
+				if (!feedDoc.isAtomCommonAttribute(attr)
+						&& !feedDoc.isUndefinedAttribute(attr)) {
 					throw new AtomSpecException("Unsuppported attribute "
 							+ attr.getName() + " for this element.");
 				}
@@ -72,7 +75,12 @@ class AtomURIConstruct implements Serializable {
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		if (this.attributes != null) {
 			for (Attribute attr : this.attributes) {
-				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+				try {
+					attrsCopy
+							.add(new Attribute(attr.getName(), attr.getValue()));
+				} catch (AtomSpecException e) {
+					// this should not happen.
+				}
 			}
 		}
 		return (this.attributes == null) ? null : attrsCopy;
@@ -86,13 +94,21 @@ class AtomURIConstruct implements Serializable {
 		return atomUri;
 	}
 
+	/**
+	 * @param attrName
+	 *            the name of the attribute to get.
+	 * @return the Attribute object if attrName matches or null if not found.
+	 */
 	public Attribute getAttribute(String attrName) {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
-				if (attribute.getName() != null
-						&& attribute.getName().equals(attrName)) {
-					return new Attribute(attribute.getName(), attribute
-							.getValue());
+				if (attribute.getName().equals(attrName)) {
+					try {
+						return new Attribute(attribute.getName(), attribute
+								.getValue());
+					} catch (AtomSpecException e) {
+						// this should not happen.
+					}
 				}
 			}
 		}

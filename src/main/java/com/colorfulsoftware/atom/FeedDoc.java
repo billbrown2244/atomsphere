@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ * Copyright (C) 2009 William R. Brown <wbrown@colorfulsoftware.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -57,7 +57,7 @@ public final class FeedDoc {
 	 * An enumeration of the different types of supported content.
 	 * 
 	 */
-	public static enum ContentType {
+	public enum ContentType {
 		/**
 		 * text content
 		 */
@@ -79,27 +79,31 @@ public final class FeedDoc {
 	/**
 	 * the default atom xml namespace attribute of "http://www.w3.org/2005/Atom"
 	 */
-	public static final Attribute atomBase = buildAttribute("xmlns",
+	private final Attribute atomBase = buildAttribute("xmlns",
 			"http://www.w3.org/2005/Atom");
 
 	/**
 	 * the default library language attribute of "en-US"
 	 */
-	public static final Attribute lang_en = buildAttribute("xml:lang", "en-US");
+	private final Attribute langEn = buildAttribute("xml:lang", "en-US");
 
 	/**
 	 * the default document encoding of "UTF-8"
 	 */
-	public static String encoding = "UTF-8";
+	private String encoding = "UTF-8";
 
 	/**
 	 * the default XML version of "1.0"
 	 */
-	public static String xml_version = "1.0";
+	private String xmlVersion = "1.0";
 
-	private static String libUri;
-	private static String libVersion;
-	static {
+	private String libUri;
+	private String libVersion;
+
+	/**
+	 * creates a new feed document.
+	 */
+	public FeedDoc() {
 		try {
 			Properties props = new Properties();
 			props.load(FeedDoc.class
@@ -112,20 +116,29 @@ public final class FeedDoc {
 		}
 	}
 
-	private FeedDoc() {
-	}// here to enforce static usage.
+	/**
+	 * @param encoding
+	 *            the document encoding. eg: UTF-8
+	 * @param xmlVersion
+	 *            the document xml version eg: 1.0
+	 */
+	public FeedDoc(String encoding, String xmlVersion) {
+		this();
+		this.encoding = encoding;
+		this.xmlVersion = xmlVersion;
+	}
 
 	/**
 	 * @return the Atomsphere library version in the form of a generator
 	 *         element. This element is output for all feeds that are generated
 	 *         by Atomsphere.
 	 */
-	public static Generator getAtomsphereVersion() {
+	public Generator getAtomsphereVersion() {
 		try {
 			List<Attribute> attributes = new LinkedList<Attribute>();
-			attributes.add(FeedDoc.buildAttribute("uri", libUri));
-			attributes.add(FeedDoc.buildAttribute("version", libVersion));
-			return FeedDoc.buildGenerator(attributes, "Atomsphere");
+			attributes.add(buildAttribute("uri", libUri));
+			attributes.add(buildAttribute("version", libVersion));
+			return buildGenerator(attributes, "Atomsphere");
 		} catch (Exception e) {
 			// this shouldn't happen;
 			return null;
@@ -137,13 +150,17 @@ public final class FeedDoc {
 	 * href="http://www.colorfulsoftware.com/projects/atomsphere"> Project
 	 * Page</a> for more details
 	 */
-	public static final Attribute sort = buildAttribute("xmlns:sort",
+	private final Attribute sort = buildAttribute("xmlns:sort",
 			"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0");
+
+	Attribute getSort() {
+		return sort;
+	}
 
 	/**
 	 * Comparator for sorting feed entries in ascending order.
 	 */
-	public static final Comparator<String> SORT_ASC = new Comparator<String>() {
+	public final Comparator<String> SORT_ASC = new Comparator<String>() {
 		public int compare(String key1, String key2) {
 			return key1.compareTo(key2);
 
@@ -153,7 +170,7 @@ public final class FeedDoc {
 	/**
 	 * Comparator for sorting feed entries in descending order
 	 */
-	public static final Comparator<String> SORT_DESC = new Comparator<String>() {
+	public final Comparator<String> SORT_DESC = new Comparator<String>() {
 		public int compare(String key1, String key2) {
 			return key2.compareTo(key1);
 		}
@@ -172,8 +189,8 @@ public final class FeedDoc {
 	 * @throws Exception
 	 *             thrown if the feed cannot be written to the output
 	 */
-	public static void writeFeedDoc(OutputStream output, Feed feed,
-			String encoding, String version) throws Exception {
+	public void writeFeedDoc(OutputStream output, Feed feed, String encoding,
+			String version) throws Exception {
 		writeFeedDoc(XMLOutputFactory.newInstance().createXMLStreamWriter(
 				output, encoding), feed, encoding, version);
 	}
@@ -191,7 +208,7 @@ public final class FeedDoc {
 	 * @throws Exception
 	 *             thrown if the atom document cannot be written to the output
 	 */
-	public static void writeEntryDoc(OutputStream output, Entry entry,
+	public void writeEntryDoc(OutputStream output, Entry entry,
 			String encoding, String version) throws Exception {
 		writeEntryDoc(XMLOutputFactory.newInstance().createXMLStreamWriter(
 				output, encoding), entry, encoding, version);
@@ -210,7 +227,7 @@ public final class FeedDoc {
 	 * @throws Exception
 	 *             thrown if the feed cannot be written to the output
 	 */
-	public static void writeFeedDoc(Writer output, Feed feed, String encoding,
+	public void writeFeedDoc(Writer output, Feed feed, String encoding,
 			String version) throws Exception {
 		writeFeedDoc(XMLOutputFactory.newInstance().createXMLStreamWriter(
 				output), feed, encoding, version);
@@ -229,8 +246,8 @@ public final class FeedDoc {
 	 * @throws Exception
 	 *             thrown if the atom document cannot be written to the output
 	 */
-	public static void writeEntryDoc(Writer output, Entry entry,
-			String encoding, String version) throws Exception {
+	public void writeEntryDoc(Writer output, Entry entry, String encoding,
+			String version) throws Exception {
 		writeEntryDoc(XMLOutputFactory.newInstance().createXMLStreamWriter(
 				output), entry, encoding, version);
 	}
@@ -258,7 +275,7 @@ public final class FeedDoc {
 	 * @throws Exception
 	 *             thrown if the feed cannot be written to the output
 	 */
-	public static void writeFeedDoc(XMLStreamWriter output, Feed feed,
+	public void writeFeedDoc(XMLStreamWriter output, Feed feed,
 			String encoding, String version) throws Exception {
 
 		writeFeedOutput(feed, output, encoding, version);
@@ -281,7 +298,7 @@ public final class FeedDoc {
 	 * 
 	 *             <code>writeFeedDoc(XMLStreamWriter output,Feed feed,String encoding,String version)</code>
 	 */
-	public static void writeEntryDoc(XMLStreamWriter output, Entry entry,
+	public void writeEntryDoc(XMLStreamWriter output, Entry entry,
 			String encoding, String version) throws Exception {
 		writeEntryOutput(entry, output, encoding, version);
 	}
@@ -308,7 +325,7 @@ public final class FeedDoc {
 	 * @throws Exception
 	 *             thrown if the feed cannot be returned as a String
 	 */
-	public static String readFeedToString(Feed feed, String xmlStreamWriter)
+	public String readFeedToString(Feed feed, String xmlStreamWriter)
 			throws Exception {
 
 		StringWriter theString = new StringWriter();
@@ -320,7 +337,7 @@ public final class FeedDoc {
 					.createXMLStreamWriter(theString) };
 			XMLStreamWriter writer = (XMLStreamWriter) ct.newInstance(arglist);
 
-			writeFeedOutput(feed, writer, encoding, xml_version);
+			writeFeedOutput(feed, writer, encoding, xmlVersion);
 
 		} catch (Exception e) {
 			return readFeedToString(feed);
@@ -341,7 +358,7 @@ public final class FeedDoc {
 	 *             if the entry cannot be returned as a String see
 	 *             <code>readFeedToString(Feed feed, String xmlStreamWriter)</code>
 	 */
-	public static String readEntryToString(Entry entry, String xmlStreamWriter)
+	public String readEntryToString(Entry entry, String xmlStreamWriter)
 			throws Exception {
 
 		StringWriter theString = new StringWriter();
@@ -353,7 +370,7 @@ public final class FeedDoc {
 					.createXMLStreamWriter(theString) };
 			XMLStreamWriter writer = (XMLStreamWriter) ct.newInstance(arglist);
 
-			writeEntryOutput(entry, writer, encoding, xml_version);
+			writeEntryOutput(entry, writer, encoding, xmlVersion);
 
 		} catch (Exception e) {
 			return readEntryToString(entry);
@@ -371,14 +388,14 @@ public final class FeedDoc {
 	 * @throws Exception
 	 *             thrown if the feed cannot be returned as a String
 	 */
-	public static String readFeedToString(Feed feed) throws Exception {
+	public String readFeedToString(Feed feed) throws Exception {
 
 		StringWriter theString = new StringWriter();
 
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 		XMLStreamWriter writer = outputFactory.createXMLStreamWriter(theString);
 
-		writeFeedOutput(feed, writer, encoding, xml_version);
+		writeFeedOutput(feed, writer, encoding, xmlVersion);
 
 		return theString.toString();
 	}
@@ -394,20 +411,20 @@ public final class FeedDoc {
 	 * @throws Exception
 	 *             thrown if the feed cannot be returned as a String
 	 */
-	public static String readEntryToString(Entry entry) throws Exception {
+	public String readEntryToString(Entry entry) throws Exception {
 
 		StringWriter theString = new StringWriter();
 
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 		XMLStreamWriter writer = outputFactory.createXMLStreamWriter(theString);
 
-		writeEntryOutput(entry, writer, encoding, xml_version);
+		writeEntryOutput(entry, writer, encoding, xmlVersion);
 
 		return theString.toString();
 	}
 
 	// used for writing entry documents to their output.
-	private static void writeEntryOutput(Entry entry, XMLStreamWriter writer,
+	private void writeEntryOutput(Entry entry, XMLStreamWriter writer,
 			String encoding, String version) throws AtomSpecException,
 			Exception, XMLStreamException {
 		SortedMap<String, Entry> entries = new TreeMap<String, Entry>();
@@ -420,8 +437,8 @@ public final class FeedDoc {
 		if (getAttributeFromGroup(attributes, atomBase.getName()) == null) {
 			attributes.add(atomBase);
 		}
-		if (getAttributeFromGroup(attributes, lang_en.getName()) == null) {
-			attributes.add(lang_en);
+		if (getAttributeFromGroup(attributes, langEn.getName()) == null) {
+			attributes.add(langEn);
 		}
 
 		// rebuild the entry with the added attributes.
@@ -451,7 +468,7 @@ public final class FeedDoc {
 	 * @throws Exception
 	 *             if the string cannot be parsed into a Feed element.
 	 */
-	public static Feed readFeedToBean(String xmlString) throws Exception {
+	public Feed readFeedToBean(String xmlString) throws Exception {
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 		XMLStreamReader reader = inputFactory
 				.createXMLStreamReader(new java.io.StringReader(xmlString));
@@ -467,7 +484,7 @@ public final class FeedDoc {
 	 * @throws Exception
 	 *             if the string cannot be parsed into a Entry element.
 	 */
-	public static Entry readEntryToBean(String xmlString) throws Exception {
+	public Entry readEntryToBean(String xmlString) throws Exception {
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 		XMLStreamReader reader = inputFactory
 				.createXMLStreamReader(new java.io.StringReader(xmlString));
@@ -488,7 +505,7 @@ public final class FeedDoc {
 	 * @throws Exception
 	 *             if the file cannot be parsed into a Feed element.
 	 */
-	public static Feed readFeedToBean(File file) throws Exception {
+	public Feed readFeedToBean(File file) throws Exception {
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 		XMLStreamReader reader = inputFactory
 				.createXMLStreamReader(new FileInputStream(file));
@@ -504,7 +521,7 @@ public final class FeedDoc {
 	 * @throws Exception
 	 *             if the file cannot be parsed into an Entry element.
 	 */
-	public static Entry readEntryToBean(File file) throws Exception {
+	public Entry readEntryToBean(File file) throws Exception {
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 		XMLStreamReader reader = inputFactory
 				.createXMLStreamReader(new FileInputStream(file));
@@ -525,7 +542,7 @@ public final class FeedDoc {
 	 * @throws Exception
 	 *             if the URL cannot be parsed into a Feed element.
 	 */
-	public static Feed readFeedToBean(URL url) throws Exception {
+	public Feed readFeedToBean(URL url) throws Exception {
 		return readFeedToBean(url.openStream());
 	}
 
@@ -538,7 +555,7 @@ public final class FeedDoc {
 	 * @throws Exception
 	 *             if the URL cannot be parsed into a Entry element.
 	 */
-	public static Entry readEntryToBean(URL url) throws Exception {
+	public Entry readEntryToBean(URL url) throws Exception {
 		return readEntryToBean(url.openStream());
 	}
 
@@ -551,7 +568,7 @@ public final class FeedDoc {
 	 * @throws Exception
 	 *             if the URL cannot be parsed into a Feed element.
 	 */
-	public static Feed readFeedToBean(InputStream inputStream) throws Exception {
+	public Feed readFeedToBean(InputStream inputStream) throws Exception {
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 		XMLStreamReader reader = inputFactory
 				.createXMLStreamReader(inputStream);
@@ -567,8 +584,7 @@ public final class FeedDoc {
 	 * @throws Exception
 	 *             if the URL cannot be parsed into a Feed element.
 	 */
-	public static Entry readEntryToBean(InputStream inputStream)
-			throws Exception {
+	public Entry readEntryToBean(InputStream inputStream) throws Exception {
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 		XMLStreamReader reader = inputFactory
 				.createXMLStreamReader(inputStream);
@@ -618,8 +634,8 @@ public final class FeedDoc {
 	 *             "http://atomenabled.org/developers/syndication/atom-format-spec.php"
 	 *             >specification</a>.
 	 */
-	public static Feed buildFeed(Id id, Title title, Updated updated,
-			Rights rights, List<Author> authors, List<Category> categories,
+	public Feed buildFeed(Id id, Title title, Updated updated, Rights rights,
+			List<Author> authors, List<Category> categories,
 			List<Contributor> contributors, List<Link> links,
 			List<Attribute> attributes, List<Extension> extensions,
 			Generator generator, Subtitle subtitle, Icon icon, Logo logo,
@@ -637,8 +653,13 @@ public final class FeedDoc {
 	 *            the attribute value.
 	 * @return an immutable Attribute object.
 	 */
-	public static Attribute buildAttribute(String name, String value) {
-		return new Attribute(name, value);
+	public Attribute buildAttribute(String name, String value) {
+		try {
+			return new Attribute(name, value);
+		} catch (AtomSpecException e) {
+			// this should not happen.
+			return null;
+		}
 	}
 
 	/**
@@ -659,7 +680,7 @@ public final class FeedDoc {
 	 *             "http://atomenabled.org/developers/syndication/atom-format-spec.php"
 	 *             >specification</a>.
 	 */
-	public static Author buildAuthor(Name name, URI uri, Email email,
+	public Author buildAuthor(Name name, URI uri, Email email,
 			List<Attribute> attributes, List<Extension> extensions)
 			throws AtomSpecException {
 		return new Author(name, uri, email, attributes, extensions);
@@ -678,8 +699,8 @@ public final class FeedDoc {
 	 *             "http://atomenabled.org/developers/syndication/atom-format-spec.php"
 	 *             >specification</a>.
 	 */
-	public static Category buildCategory(List<Attribute> attributes,
-			String content) throws AtomSpecException {
+	public Category buildCategory(List<Attribute> attributes, String content)
+			throws AtomSpecException {
 		return new Category(attributes, content);
 	}
 
@@ -690,10 +711,11 @@ public final class FeedDoc {
 	 * @param attributes
 	 *            additional attributes.
 	 * @return an immutable Content object.
-	 * @throws AtomSpecException 
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public static Content buildContent(String content,
-			List<Attribute> attributes) throws AtomSpecException {
+	public Content buildContent(String content, List<Attribute> attributes)
+			throws AtomSpecException {
 		return new Content(content, attributes);
 	}
 
@@ -715,7 +737,7 @@ public final class FeedDoc {
 	 *             "http://atomenabled.org/developers/syndication/atom-format-spec.php"
 	 *             >specification</a>.
 	 */
-	public static Contributor buildContributor(Name name, URI uri, Email email,
+	public Contributor buildContributor(Name name, URI uri, Email email,
 			List<Attribute> attributes, List<Extension> extensions)
 			throws AtomSpecException {
 		return new Contributor(name, uri, email, attributes, extensions);
@@ -727,7 +749,7 @@ public final class FeedDoc {
 	 *            a human-readable email for the person
 	 * @return an immutable Email object.
 	 */
-	public static Email buildEmail(String email) {
+	public Email buildEmail(String email) {
 		return new Email(email);
 	}
 
@@ -767,12 +789,12 @@ public final class FeedDoc {
 	 *             "http://atomenabled.org/developers/syndication/atom-format-spec.php"
 	 *             >specification</a>.
 	 */
-	public static Entry buildEntry(Id id, Title title, Updated updated,
-			Rights rights, Content content, List<Author> authors,
-			List<Category> categories, List<Contributor> contributors,
-			List<Link> links, List<Attribute> attributes,
-			List<Extension> extensions, Published published, Summary summary,
-			Source source) throws AtomSpecException {
+	public Entry buildEntry(Id id, Title title, Updated updated, Rights rights,
+			Content content, List<Author> authors, List<Category> categories,
+			List<Contributor> contributors, List<Link> links,
+			List<Attribute> attributes, List<Extension> extensions,
+			Published published, Summary summary, Source source)
+			throws AtomSpecException {
 		return new Entry(id, title, updated, rights, content, authors,
 				categories, contributors, links, attributes, extensions,
 				published, summary, source);
@@ -787,9 +809,10 @@ public final class FeedDoc {
 	 * @param content
 	 *            the content of the extension element.
 	 * @return an immutable Extension object.
-	 * @throws AtomSpecException 
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public static Extension buildExtension(String elementName,
+	public Extension buildExtension(String elementName,
 			List<Attribute> attributes, String content)
 			throws AtomSpecException {
 		return new Extension(elementName, attributes, content);
@@ -803,10 +826,11 @@ public final class FeedDoc {
 	 * @param text
 	 *            the text content.
 	 * @return an immutable Generator object.
-	 * @throws AtomSpecException 
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public static Generator buildGenerator(List<Attribute> attributes,
-			String text) throws AtomSpecException {
+	public Generator buildGenerator(List<Attribute> attributes, String text)
+			throws AtomSpecException {
 		return new Generator(attributes, text);
 	}
 
@@ -817,9 +841,10 @@ public final class FeedDoc {
 	 * @param attributes
 	 *            additional attributes.
 	 * @return an immutable Icon object.
-	 * @throws AtomSpecException 
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public static Icon buildIcon(List<Attribute> attributes, String atomUri)
+	public Icon buildIcon(List<Attribute> attributes, String atomUri)
 			throws AtomSpecException {
 		return new Icon(attributes, atomUri);
 	}
@@ -831,9 +856,10 @@ public final class FeedDoc {
 	 * @param attributes
 	 *            additional attributes.
 	 * @return an immutable Id object.
-	 * @throws AtomSpecException 
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public static Id buildId(List<Attribute> attributes, String atomUri)
+	public Id buildId(List<Attribute> attributes, String atomUri)
 			throws AtomSpecException {
 		return new Id(attributes, atomUri);
 	}
@@ -851,7 +877,7 @@ public final class FeedDoc {
 	 *             "http://atomenabled.org/developers/syndication/atom-format-spec.php"
 	 *             >specification</a>.
 	 */
-	public static Link buildLink(List<Attribute> attributes, String content)
+	public Link buildLink(List<Attribute> attributes, String content)
 			throws AtomSpecException {
 		return new Link(attributes, content);
 	}
@@ -863,9 +889,10 @@ public final class FeedDoc {
 	 * @param attributes
 	 *            additional attributes.
 	 * @return an immutable Logo object.
-	 * @throws AtomSpecException 
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public static Logo buildLogo(List<Attribute> attributes, String atomUri)
+	public Logo buildLogo(List<Attribute> attributes, String atomUri)
 			throws AtomSpecException {
 		return new Logo(attributes, atomUri);
 	}
@@ -876,7 +903,7 @@ public final class FeedDoc {
 	 *            a human-readable name for the person
 	 * @return an immutable Name object.
 	 */
-	public static Name buildName(String name) {
+	public Name buildName(String name) {
 		return new Name(name);
 	}
 
@@ -884,12 +911,14 @@ public final class FeedDoc {
 	 * 
 	 * @param published
 	 *            the date formatted to [RFC3339]
-	 * @param attributes the attributes for the published object.
+	 * @param attributes
+	 *            the attributes for the published object.
 	 * @return an immutable Published object.
-	 * @throws AtomSpecException 
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public static Published buildPublished(Date published,
-			List<Attribute> attributes) throws AtomSpecException {
+	public Published buildPublished(Date published, List<Attribute> attributes)
+			throws AtomSpecException {
 		return new Published(published, attributes);
 	}
 
@@ -900,9 +929,10 @@ public final class FeedDoc {
 	 * @param attributes
 	 *            additional attributes.
 	 * @return an immutable Rights object.
-	 * @throws AtomSpecException 
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public static Rights buildRights(String rights, List<Attribute> attributes)
+	public Rights buildRights(String rights, List<Attribute> attributes)
 			throws AtomSpecException {
 		return new Rights(rights, attributes);
 	}
@@ -943,7 +973,7 @@ public final class FeedDoc {
 	 *             "http://atomenabled.org/developers/syndication/atom-format-spec.php"
 	 *             >specification</a>.
 	 */
-	public static Source buildSource(Id id, Title title, Updated updated,
+	public Source buildSource(Id id, Title title, Updated updated,
 			Rights rights, List<Author> authors, List<Category> categories,
 			List<Contributor> contributors, List<Link> links,
 			List<Attribute> attributes, List<Extension> extensions,
@@ -961,10 +991,11 @@ public final class FeedDoc {
 	 * @param attributes
 	 *            additional attributes.
 	 * @return an immutable Subtitle object.
-	 * @throws AtomSpecException 
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public static Subtitle buildSubtitle(String subtitle,
-			List<Attribute> attributes) throws AtomSpecException {
+	public Subtitle buildSubtitle(String subtitle, List<Attribute> attributes)
+			throws AtomSpecException {
 		return new Subtitle(subtitle, attributes);
 	}
 
@@ -975,10 +1006,11 @@ public final class FeedDoc {
 	 * @param attributes
 	 *            additional attributes.
 	 * @return an immutable Summary object.
-	 * @throws AtomSpecException 
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public static Summary buildSummary(String summary,
-			List<Attribute> attributes) throws AtomSpecException {
+	public Summary buildSummary(String summary, List<Attribute> attributes)
+			throws AtomSpecException {
 		return new Summary(summary, attributes);
 	}
 
@@ -989,9 +1021,10 @@ public final class FeedDoc {
 	 * @param attributes
 	 *            additional attributes.
 	 * @return an immutable Title object.
-	 * @throws AtomSpecException 
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public static Title buildTitle(String title, List<Attribute> attributes)
+	public Title buildTitle(String title, List<Attribute> attributes)
 			throws AtomSpecException {
 		return new Title(title, attributes);
 	}
@@ -1000,11 +1033,13 @@ public final class FeedDoc {
 	 * 
 	 * @param updated
 	 *            the date formatted to [RFC3339]
-	 * @param attributes the attributes for the updated object.
+	 * @param attributes
+	 *            the attributes for the updated object.
 	 * @return a immutable Updated object.
-	 * @throws AtomSpecException 
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public static Updated buildUpdated(Date updated, List<Attribute> attributes)
+	public Updated buildUpdated(Date updated, List<Attribute> attributes)
 			throws AtomSpecException {
 		return new Updated(updated, attributes);
 	}
@@ -1015,19 +1050,19 @@ public final class FeedDoc {
 	 *            the content of the uri according to Section 7 of [RFC3986]
 	 * @return and immutable URI object.
 	 */
-	public static URI buildURI(String uri) {
+	public URI buildURI(String uri) {
 		return new URI(uri);
 	}
 
 	// used to write feed output for several feed writing methods.
-	private static void writeFeedOutput(Feed feed, XMLStreamWriter writer,
+	private void writeFeedOutput(Feed feed, XMLStreamWriter writer,
 			String encoding, String version) throws XMLStreamException,
 			Exception {
 
 		// make sure the feed is sorted before it is written out to the file.
 		// this prevents the client code from having to
 		// maintain the sorting during usage
-		feed = FeedDoc.checkForAndApplyExtension(feed, FeedDoc.sort);
+		feed = checkForAndApplyExtension(feed, sort);
 
 		// add atom base and xml_language to the entry if they are not there.
 		List<Attribute> attributes = feed.getAttributes();
@@ -1037,18 +1072,17 @@ public final class FeedDoc {
 		if (getAttributeFromGroup(attributes, atomBase.getName()) == null) {
 			attributes.add(atomBase);
 		}
-		if (getAttributeFromGroup(attributes, lang_en.getName()) == null) {
-			attributes.add(lang_en);
+		if (getAttributeFromGroup(attributes, langEn.getName()) == null) {
+			attributes.add(langEn);
 		}
 
 		// rebuild the feed with the updated attributes
 		// and atomsphere generator element
-		feed = FeedDoc.buildFeed(feed.getId(), feed.getTitle(), feed
-				.getUpdated(), feed.getRights(), feed.getAuthors(), feed
-				.getCategories(), feed.getContributors(), feed.getLinks(),
-				attributes, feed.getExtensions(), FeedDoc
-						.getAtomsphereVersion(), feed.getSubtitle(), feed
-						.getIcon(), feed.getLogo(), feed.getEntries());
+		feed = buildFeed(feed.getId(), feed.getTitle(), feed.getUpdated(), feed
+				.getRights(), feed.getAuthors(), feed.getCategories(), feed
+				.getContributors(), feed.getLinks(), attributes, feed
+				.getExtensions(), getAtomsphereVersion(), feed.getSubtitle(),
+				feed.getIcon(), feed.getLogo(), feed.getEntries());
 
 		// write the xml header.
 		writer.writeStartDocument(encoding, version);
@@ -1058,7 +1092,7 @@ public final class FeedDoc {
 	}
 
 	// used internally by feed reader
-	static AtomPersonConstruct buildAtomPersonConstruct(Name name, URI uri,
+	AtomPersonConstruct buildAtomPersonConstruct(Name name, URI uri,
 			Email email, List<Attribute> attributes, List<Extension> extensions)
 			throws AtomSpecException {
 		return new AtomPersonConstruct(name, uri, email, attributes, extensions);
@@ -1067,7 +1101,7 @@ public final class FeedDoc {
 	// checks for and returns the Attribute from the String attribute (argument)
 	// in the list of attributes (argument)
 	// used by Category, Generator and Link.
-	static Attribute getAttributeFromGroup(List<Attribute> attributes,
+	Attribute getAttributeFromGroup(List<Attribute> attributes,
 			String attributeName) {
 		if (attributes != null) {
 			for (Attribute attr : attributes) {
@@ -1082,12 +1116,14 @@ public final class FeedDoc {
 	/**
 	 * Convenience method for getting the content type for this element.
 	 * Examines the "type" and "src" attributes if they exist in the list.
-	 * @param attributes the attributes to examine.
+	 * 
+	 * @param attributes
+	 *            the attributes to examine.
 	 * 
 	 * @return the content type for this element. One of TEXT,HTML,XHTML,OTHER
 	 *         or EXTERNAL
 	 */
-	public static ContentType getContentType(List<Attribute> attributes) {
+	public ContentType getContentType(List<Attribute> attributes) {
 		ContentType contentType = ContentType.TEXT; // default
 		if (attributes != null) {
 			for (Attribute attr : attributes) {
@@ -1134,7 +1170,7 @@ public final class FeedDoc {
 	 *             "http://atomenabled.org/developers/syndication/atom-format-spec.php"
 	 *             >specification</a>.
 	 */
-	public static Feed sortEntries(Feed feed, Comparator<String> comparator,
+	public Feed sortEntries(Feed feed, Comparator<String> comparator,
 			Class<?> elementClass) throws AtomSpecException {
 
 		if (feed.getEntries() != null) {
@@ -1157,9 +1193,8 @@ public final class FeedDoc {
 			// rebuild the top level feed attributes to include the sort
 			// if it isn't already there.
 			List<Attribute> localFeedAttrs = new LinkedList<Attribute>();
-			Attribute attrLocal = FeedDoc
-					.buildAttribute("xmlns:sort",
-							"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0");
+			Attribute attrLocal = buildAttribute("xmlns:sort",
+					"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0");
 			if (feed.getAttributes() == null) {
 				localFeedAttrs.add(attrLocal);
 			} else {
@@ -1176,22 +1211,22 @@ public final class FeedDoc {
 			// add or replace this extension element.
 
 			String elementName = null;
-			if (comparator == FeedDoc.SORT_ASC) {
+			if (comparator == SORT_ASC) {
 				elementName = "sort:asc";
 			} else {
 				elementName = "sort:desc";
 			}
 			Attribute sortElement = null;
 			if (elementClass.getSimpleName().equals("Updated")) {
-				sortElement = FeedDoc.buildAttribute("type", "updated");
+				sortElement = buildAttribute("type", "updated");
 			} else if (elementClass.getSimpleName().equals("Title")) {
-				sortElement = FeedDoc.buildAttribute("type", "title");
+				sortElement = buildAttribute("type", "title");
 			} else if (elementClass.getSimpleName().equals("Summary")) {
-				sortElement = FeedDoc.buildAttribute("type", "summary");
+				sortElement = buildAttribute("type", "summary");
 			}
 			List<Attribute> extAttrs = new LinkedList<Attribute>();
 			extAttrs.add(sortElement);
-			Extension localFeedExtension = FeedDoc.buildExtension(elementName,
+			Extension localFeedExtension = buildExtension(elementName,
 					extAttrs, null);
 
 			// rebuild the extensions
@@ -1215,11 +1250,11 @@ public final class FeedDoc {
 			}
 
 			// this is an immutable sorted copy of the feed.
-			return FeedDoc.buildFeed(feed.getId(), feed.getTitle(), feed
-					.getUpdated(), feed.getRights(), feed.getAuthors(), feed
-					.getCategories(), feed.getContributors(), feed.getLinks(),
-					localFeedAttrs, localFeedExtensions, feed.getGenerator(),
-					feed.getSubtitle(), feed.getIcon(), feed.getLogo(),
+			return buildFeed(feed.getId(), feed.getTitle(), feed.getUpdated(),
+					feed.getRights(), feed.getAuthors(), feed.getCategories(),
+					feed.getContributors(), feed.getLinks(), localFeedAttrs,
+					localFeedExtensions, feed.getGenerator(), feed
+							.getSubtitle(), feed.getIcon(), feed.getLogo(),
 					resortedEntries);
 		}
 		// return the feed in the original order.
@@ -1229,11 +1264,10 @@ public final class FeedDoc {
 	// Checks the xmlns (namespace) argument and applies the extension
 	// to the feed argument if it is recognized by the atomsphere library.
 	// used by FeedReader and FeedWriter
-	static Feed checkForAndApplyExtension(Feed feed, Attribute xmlns)
-			throws Exception {
+	Feed checkForAndApplyExtension(Feed feed, Attribute xmlns) throws Exception {
 
 		// if there aren't any attributes for the feed and thus no xmlns:sort
-		// attr
+		// attribute
 		// return the defaults.
 		if (feed.getAttributes() == null) {
 			return feed;
@@ -1250,7 +1284,7 @@ public final class FeedDoc {
 	}
 
 	// check for and apply the first sort extension.
-	private static Feed applySort(Feed feed) throws AtomSpecException {
+	private Feed applySort(Feed feed) throws AtomSpecException {
 		// only do the work if there are extensions.
 		if (feed.getExtensions() != null) {
 			// look for the first extension element if the namespace exists.
@@ -1260,15 +1294,14 @@ public final class FeedDoc {
 						if (attr.getName().equalsIgnoreCase("type")) {
 							String value = attr.getValue();
 							if (value.equals("updated")) {
-								return sortEntries(feed, FeedDoc.SORT_ASC,
+								return sortEntries(feed, SORT_ASC,
 										Updated.class);
 							}
 							if (value.equals("title")) {
-								return sortEntries(feed, FeedDoc.SORT_ASC,
-										Title.class);
+								return sortEntries(feed, SORT_ASC, Title.class);
 							}
 							if (value.equals("summary")) {
-								return sortEntries(feed, FeedDoc.SORT_ASC,
+								return sortEntries(feed, SORT_ASC,
 										Summary.class);
 							}
 						}
@@ -1278,15 +1311,14 @@ public final class FeedDoc {
 						if (attr.getName().equalsIgnoreCase("type")) {
 							String value = attr.getValue();
 							if (value.equals("updated")) {
-								return sortEntries(feed, FeedDoc.SORT_DESC,
+								return sortEntries(feed, SORT_DESC,
 										Updated.class);
 							}
 							if (value.equals("title")) {
-								return sortEntries(feed, FeedDoc.SORT_DESC,
-										Title.class);
+								return sortEntries(feed, SORT_DESC, Title.class);
 							}
 							if (value.equals("summary")) {
-								return sortEntries(feed, FeedDoc.SORT_DESC,
+								return sortEntries(feed, SORT_DESC,
 										Summary.class);
 							}
 						}
@@ -1298,7 +1330,7 @@ public final class FeedDoc {
 	}
 
 	// internal method to check for an undefined attribute
-	static boolean isUndefinedAttribute(Attribute attr) {
+	boolean isUndefinedAttribute(Attribute attr) {
 		String name = attr.getName();
 		return
 		// atomCommonAttribute
@@ -1324,10 +1356,46 @@ public final class FeedDoc {
 	}
 
 	// internal method to check for an atomCommonAttribute
-	static boolean isAtomCommonAttribute(Attribute attr) {
+	boolean isAtomCommonAttribute(Attribute attr) {
 		String name = attr.getName();
 		return name.equals("xml:base") || name.equals("xml:lang")
 				|| name.startsWith("xmlns:");
+	}
+
+	/**
+	 * @return the base namespace for the atom 1.0 spec
+	 *         http://www.w3.org/2005/Atom
+	 */
+	public Attribute getAtomBase() {
+		return atomBase;
+	}
+
+	/**
+	 * @return the base language for the library en-US.
+	 */
+	public Attribute getLangEn() {
+		return langEn;
+	}
+
+	/**
+	 * @return the default encoding for the library UTF-8.
+	 */
+	public String getEncoding() {
+		return encoding;
+	}
+
+	/**
+	 * @return the default xml version 1.0
+	 */
+	public String getXmlVersion() {
+		return xmlVersion;
+	}
+
+	/**
+	 * @return the atomsphere library version.
+	 */
+	public String getLibVersion() {
+		return libVersion;
 	}
 
 }

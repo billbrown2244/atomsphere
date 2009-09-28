@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ * Copyright (C) 2009 William R. Brown <wbrown@colorfulsoftware.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,7 +31,6 @@ import java.util.TreeMap;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
@@ -65,13 +64,15 @@ import com.colorfulsoftware.atom.FeedDoc.ContentType;
 //import javanet.staxutils.IndentingXMLStreamWriter;
 
 /**
- * This class tests the feed library.  See the source code for examples.
+ * This class tests the feed library. See the source code for examples.
+ * 
  * @author Bill Brown
- *
+ * 
  */
 public class FeedDocTest {
 
 	private Feed feed1;
+	private FeedDoc feedDoc;
 
 	private static Calendar theDate;
 	static {
@@ -124,7 +125,7 @@ public class FeedDocTest {
 			+ " <subtitle>A subtitle.</subtitle>"
 			+ " <link href=\"http://example.org/feed/\" rel=\"self\"/>"
 			+ " <link href=\"http://example.org/\"/>"
-			+ " <updated>2003-12-13T18:30:02Z</updated>" + " <author>"
+			+ " <updated xml:lang=\"en-US\">2003-12-13T18:30:02Z</updated>" + " <author>"
 			+ "   <name>John Doe</name>"
 			+ "   <email>johndoe@example.com</email>" + " </author>"
 			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
@@ -248,42 +249,44 @@ public class FeedDocTest {
 
 	/**
 	 * @throws Exception
+	 *             if there is an error creating the test data.
 	 */
 	@Before
 	public void setUp() throws Exception {
 		try {
-			Id id = FeedDoc.buildId(null,
+			feedDoc = new FeedDoc();
+			Id id = feedDoc.buildId(null,
 					"http://www.colorfulsoftware.com/atom.xml");
 
-			Updated updated = FeedDoc.buildUpdated(Calendar.getInstance()
+			Updated updated = feedDoc.buildUpdated(Calendar.getInstance()
 					.getTime(), null);
 
-			Title title = FeedDoc.buildTitle("test feed", null);
+			Title title = feedDoc.buildTitle("test feed", null);
 
-			Generator generator = FeedDoc.getAtomsphereVersion();
+			Generator generator = feedDoc.getAtomsphereVersion();
 
 			List<Author> authors = new LinkedList<Author>();
-			authors.add(FeedDoc.buildAuthor(FeedDoc.buildName("Bill Brown"),
+			authors.add(feedDoc.buildAuthor(feedDoc.buildName("Bill Brown"),
 					null, null, null, null));
 
-			feed1 = FeedDoc.buildFeed(id, title, updated, null, authors, null,
+			feed1 = feedDoc.buildFeed(id, title, updated, null, authors, null,
 					null, null, null, null, generator, null, null, null, null);
 
-			entry1 = FeedDoc.buildEntry(FeedDoc.buildId(null,
+			entry1 = feedDoc.buildEntry(feedDoc.buildId(null,
 					"http://www.colorfulsoftware.com/projects/atomsphere/"),
-					FeedDoc.buildTitle("test entry 1", null), FeedDoc
+					feedDoc.buildTitle("test entry 1", null), feedDoc
 							.buildUpdated(theDate.getTime(), null), null, null,
 					null, null, null, null, null, null, null, null, null);
 
-			entry2 = FeedDoc.buildEntry(FeedDoc.buildId(null,
+			entry2 = feedDoc.buildEntry(feedDoc.buildId(null,
 					"http://www.colorfulsoftware.com/projects/atomsphere/"),
-					FeedDoc.buildTitle("test entry 2", null), FeedDoc
+					feedDoc.buildTitle("test entry 2", null), feedDoc
 							.buildUpdated(theDate.getTime(), null), null, null,
 					null, null, null, null, null, null, null, null, null);
 
-			entry3 = FeedDoc.buildEntry(FeedDoc.buildId(null,
+			entry3 = feedDoc.buildEntry(feedDoc.buildId(null,
 					"http://www.colorfulsoftware.com/projects/atomsphere/"),
-					FeedDoc.buildTitle("test entry 3", null), FeedDoc
+					feedDoc.buildTitle("test entry 3", null), feedDoc
 							.buildUpdated(theDate.getTime(), null), null, null,
 					null, null, null, null, null, null, null, null, null);
 		} catch (Exception e) {
@@ -293,11 +296,12 @@ public class FeedDocTest {
 
 	/**
 	 * @throws Exception
+	 *             if there is an error cleaning up the test data.
 	 */
 	@After
 	public void tearDown() throws Exception {
-		// new File("out.xml").deleteOnExit();
-		// new File("out2.xml").deleteOnExit();
+		new File("target/out.xml").deleteOnExit();
+		new File("target/out2.xml").deleteOnExit();
 	}
 
 	/**
@@ -306,42 +310,45 @@ public class FeedDocTest {
 	@Test
 	public void testWriteFeedDocOutputStreamFeedStringString() {
 		try {
-			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
+			feed1 = feedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
-			FeedDoc.writeFeedDoc(new FileOutputStream(
-					"src/test/resources/out1.xml"), feed1, FeedDoc.encoding,
-					FeedDoc.xml_version);
-			Feed feed2 = FeedDoc.readFeedToBean(new File(
+			System.out.println("feed here: "+feed1);
+			feedDoc.writeFeedDoc(new FileOutputStream(
+					"src/test/resources/out1.xml"), feed1, feedDoc
+					.getEncoding(), feedDoc.getXmlVersion());
+			Feed feed2 = feedDoc.readFeedToBean(new File(
 					"src/test/resources/out1.xml"));
 			assertNotNull(feed2);
 		} catch (Exception e) {
 			e.printStackTrace();
-			assertTrue(e instanceof XMLStreamException);
+			System.out.println("e : "+e);
+			System.out.println("error : "+e.getMessage());
+			assertTrue(e instanceof AtomSpecException);
 		}
 
 		try {
-			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
+			feed1 = feedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
 			OutputStreamWriter writer = new OutputStreamWriter(
 					new FileOutputStream("target/out2.xml"), "UTF-8");
-			FeedDoc.writeFeedDoc(writer, feed1, FeedDoc.encoding,
-					FeedDoc.xml_version);
-			Feed feed2 = FeedDoc.readFeedToBean(new File("target/out2.xml"));
+			feedDoc.writeFeedDoc(writer, feed1, feedDoc.getEncoding(), feedDoc
+					.getXmlVersion());
+			Feed feed2 = feedDoc.readFeedToBean(new File("target/out2.xml"));
 			assertNotNull(feed2);
 		} catch (Exception e) {
 			e.printStackTrace();
-			assertTrue(e instanceof XMLStreamException);
+			assertTrue(e instanceof AtomSpecException);
 		}
 
 		/*
 		 * uncomment stax-utils dependency in the root pom.xml to see example in
-		 * action try { feed1 = FeedDoc.readFeedToBean(new java.net.URL(
+		 * action try { feed1 = feedDoc.readFeedToBean(new java.net.URL(
 		 * "http://www.rand.org/news/press/index.xml"));
-		 * FeedDoc.writeFeedDoc(new IndentingXMLStreamWriter(XMLOutputFactory
+		 * feedDoc.writeFeedDoc(new IndentingXMLStreamWriter(XMLOutputFactory
 		 * .newInstance().createXMLStreamWriter( new
 		 * FileOutputStream("target/out3.xml"), "UTF-8")), feed1,
-		 * FeedDoc.encoding, FeedDoc.xml_version); Feed feed2 =
-		 * FeedDoc.readFeedToBean(new File("target/out3.xml"));
+		 * feedDoc.encoding, feedDoc.xml_version); Feed feed2 =
+		 * feedDoc.readFeedToBean(new File("target/out3.xml"));
 		 * assertNotNull(feed2); } catch (Exception e) { e.printStackTrace();
 		 * assertTrue(e instanceof XMLStreamException); }
 		 */
@@ -353,13 +360,13 @@ public class FeedDocTest {
 	@Test
 	public void testWriteEntryDocOutputStreamEntryStringString() {
 		try {
-			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
+			feed1 = feedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
-			FeedDoc.writeEntryDoc(new FileOutputStream(
+			feedDoc.writeEntryDoc(new FileOutputStream(
 					"src/test/resources/out1.xml"), feed1.getEntries().get(
-					feed1.getEntries().firstKey()), FeedDoc.encoding,
-					FeedDoc.xml_version);
-			Entry entry1 = FeedDoc.readEntryToBean(new File(
+					feed1.getEntries().firstKey()), feedDoc.getEncoding(),
+					feedDoc.getXmlVersion());
+			Entry entry1 = feedDoc.readEntryToBean(new File(
 					"src/test/resources/out1.xml"));
 			assertNotNull(entry1);
 		} catch (Exception e) {
@@ -367,14 +374,14 @@ public class FeedDocTest {
 		}
 
 		try {
-			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
+			feed1 = feedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
 			OutputStreamWriter writer = new OutputStreamWriter(
 					new FileOutputStream("target/out2.xml"), "UTF-8");
-			FeedDoc.writeEntryDoc(writer, feed1.getEntries().get(
-					feed1.getEntries().firstKey()), FeedDoc.encoding,
-					FeedDoc.xml_version);
-			Entry entry1 = FeedDoc.readEntryToBean(new File("target/out2.xml"));
+			feedDoc.writeEntryDoc(writer, feed1.getEntries().get(
+					feed1.getEntries().firstKey()), feedDoc.getEncoding(),
+					feedDoc.getXmlVersion());
+			Entry entry1 = feedDoc.readEntryToBean(new File("target/out2.xml"));
 			assertNotNull(entry1);
 		} catch (Exception e) {
 			fail("should not get here.");
@@ -388,17 +395,17 @@ public class FeedDocTest {
 	public void testWriteFeedDocXMLStreamWriterFeedStringString() {
 		try {
 			// pretty print version.
-			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
+			feed1 = feedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
-			FeedDoc.writeFeedDoc(XMLOutputFactory.newInstance()
+			feedDoc.writeFeedDoc(XMLOutputFactory.newInstance()
 					.createXMLStreamWriter(
 							new FileOutputStream("target/out2.xml"),
-							FeedDoc.encoding), feed1, FeedDoc.encoding,
-					FeedDoc.xml_version);
-			Feed feed2 = FeedDoc.readFeedToBean(new File("target/out2.xml"));
+							feedDoc.getEncoding()), feed1, feedDoc
+					.getEncoding(), feedDoc.getXmlVersion());
+			Feed feed2 = feedDoc.readFeedToBean(new File("target/out2.xml"));
 			assertNotNull(feed2);
 		} catch (Exception e) {
-			assertTrue(e instanceof XMLStreamException);
+			assertTrue(e instanceof AtomSpecException);
 		}
 	}
 
@@ -408,32 +415,32 @@ public class FeedDocTest {
 	@Test
 	public void testReadFeedToStringFeedString() {
 		try {
-			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
+			feed1 = feedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
-			String feedStr = FeedDoc.readFeedToString(feed1,
+			String feedStr = feedDoc.readFeedToString(feed1,
 					"com.sun.xml.txw2.output.IndentingXMLStreamWriter");
 			assertNotNull(feedStr);
 		} catch (Exception e) {
-			assertTrue(e instanceof XMLStreamException);
+			assertTrue(e instanceof AtomSpecException);
 		}
 
 		try {
-			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
+			feed1 = feedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
-			String feedStr = FeedDoc.readFeedToString(feed1,
+			String feedStr = feedDoc.readFeedToString(feed1,
 					"javanet.staxutils.IndentingXMLStreamWriter");
 			assertNotNull(feedStr);
 		} catch (Exception e) {
-			assertTrue(e instanceof XMLStreamException);
+			assertTrue(e instanceof AtomSpecException);
 		}
 
 		try {
-			feed1 = FeedDoc.readFeedToBean(new java.net.URL(
+			feed1 = feedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
-			String feedStr = FeedDoc.readFeedToString(feed1, "bunk");
+			String feedStr = feedDoc.readFeedToString(feed1, "bunk");
 			assertNotNull(feedStr);
 		} catch (Exception e) {
-			assertTrue(e instanceof XMLStreamException);
+			assertTrue(e instanceof AtomSpecException);
 		}
 	}
 
@@ -443,44 +450,50 @@ public class FeedDocTest {
 	@Test
 	public void testReadFeedToStringFeed() {
 		try {
-			feed1 = FeedDoc.readFeedToBean(expectedFeed1);
-			String feed1Str = FeedDoc.readFeedToString(feed1);
+			feed1 = feedDoc.readFeedToBean(expectedFeed1);
+			System.out.println("updated orig = "+feed1.getUpdated().getAttribute("xml:lang"));
+			String feed1Str = feedDoc.readFeedToString(feed1);
+			System.out.println("feed1Str = "+feed1Str);
 			assertNotNull(feed1Str);
-			feed1 = FeedDoc.readFeedToBean(feed1Str);
+			feed1 = feedDoc.readFeedToBean(feed1Str);
 			assertNotNull(feed1);
 			assertNotNull(feed1.getId());
 			assertNotNull(feed1.getTitle());
-			assertNotNull(feed1.getUpdated());
+			Updated updated = feed1.getUpdated();
+			assertNotNull(updated);
+			System.out.println("updated = "+updated.getAttribute("xml:lang"));
+			assertNotNull(updated.getAttribute("xml:lang"));
+			assertNull(updated.getAttribute("bunky"));
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			assertTrue(e instanceof XMLStreamException);
+			assertTrue(e instanceof AtomSpecException);
 		}
 
 		// test the seven title variants.
 		try {
 
-			feed1 = FeedDoc.readFeedToBean(title1);
+			feed1 = feedDoc.readFeedToBean(title1);
 			assertNotNull(feed1.getTitle());
 			assertEquals(feed1.getTitle().getText(), "One bold foot forward");
-			assertNotNull(FeedDoc.readFeedToString(feed1));
+			assertNotNull(feedDoc.readFeedToString(feed1));
 
-			feed1 = FeedDoc.readFeedToBean(title2);
+			feed1 = feedDoc.readFeedToBean(title2);
 			assertNotNull(feed1.getTitle());
 			assertEquals(feed1.getTitle().getText(), "One bold foot forward");
-			assertNotNull(FeedDoc.readFeedToString(feed1));
+			assertNotNull(feedDoc.readFeedToString(feed1));
 
-			feed1 = FeedDoc.readFeedToBean(title3);
+			feed1 = feedDoc.readFeedToBean(title3);
 			assertNotNull(feed1.getTitle());
 			assertEquals(feed1.getTitle().getText(),
 					"One <strong>bold</strong> foot forward");
-			assertNotNull(FeedDoc.readFeedToString(feed1));
+			assertNotNull(feedDoc.readFeedToString(feed1));
 
-			feed1 = FeedDoc.readFeedToBean(title4);
+			feed1 = feedDoc.readFeedToBean(title4);
 			assertNotNull(feed1.getTitle());
 			assertEquals(feed1.getTitle().getText(),
 					"One &lt;strong&gt;bold&lt;/strong&gt; foot forward");
-			assertNotNull(FeedDoc.readFeedToString(feed1));
+			assertNotNull(feedDoc.readFeedToString(feed1));
 
 			/*
 			 * currently of the 3 implementations tested: sjsxp stax woodstox
@@ -491,30 +504,30 @@ public class FeedDocTest {
 					.createXMLStreamReader(new java.io.StringReader(title5));
 			FeedReader.checkForCDATA(reader);
 
-			feed1 = FeedDoc.readFeedToBean(title5);
+			feed1 = feedDoc.readFeedToBean(title5);
 			assertNotNull(feed1.getTitle());
 			assertEquals(feed1.getTitle().getText(),
 					"One &lt;strong&gt;bold&lt;/strong&gt; foot forward");
-			assertNotNull(FeedDoc.readFeedToString(feed1));
+			assertNotNull(feedDoc.readFeedToString(feed1));
 
-			feed1 = FeedDoc.readFeedToBean(title6);
+			feed1 = feedDoc.readFeedToBean(title6);
 			assertNotNull(feed1.getTitle());
 			System.out
 					.println("feed title from raw\n"
 							+ "One <strong>bold</strong> foot forward<title>can you see me</title>");
 			assertEquals(feed1.getTitle().getText(),
 					"One <strong>bold</strong> foot forward<title>can you see me</title>");
-			assertNotNull(FeedDoc.readFeedToString(feed1));
+			assertNotNull(feedDoc.readFeedToString(feed1));
 
-			feed1 = FeedDoc.readFeedToBean(title7);
+			feed1 = feedDoc.readFeedToBean(title7);
 			assertNotNull(feed1.getTitle());
 			assertEquals(feed1.getTitle().getText(),
 					"One <xh:strong>bold</xh:strong> foot forward ");
-			assertNotNull(FeedDoc.readFeedToString(feed1));
+			assertNotNull(feedDoc.readFeedToString(feed1));
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			assertTrue(e instanceof XMLStreamException);
+			assertTrue(e instanceof AtomSpecException);
 		}
 	}
 
@@ -524,7 +537,7 @@ public class FeedDocTest {
 	@Test
 	public void testReadEntryToString() {
 		try {
-			String entryStr = FeedDoc.readEntryToString(entry1);
+			String entryStr = feedDoc.readEntryToString(entry1);
 			assertTrue(entryStr != null);
 			assertEquals(entryStr, expectedEntry1);
 		} catch (Exception e) {
@@ -532,7 +545,7 @@ public class FeedDocTest {
 		}
 
 		try {
-			String entryStr = FeedDoc.readEntryToString(entry1,
+			String entryStr = feedDoc.readEntryToString(entry1,
 					"javanet.staxutils.IndentingXMLStreamWriter");
 			assertTrue(entryStr != null);
 		} catch (Exception e) {
@@ -541,7 +554,7 @@ public class FeedDocTest {
 
 		// test a bad writer.
 		try {
-			String entryStr = FeedDoc.readEntryToString(entry1,
+			String entryStr = feedDoc.readEntryToString(entry1,
 					"com.fake.BunkWriter");
 			assertTrue(entryStr != null);
 		} catch (Exception e) {
@@ -556,7 +569,7 @@ public class FeedDocTest {
 	public void testReadEntryToBeanString() {
 		Entry entry;
 		try {
-			entry = FeedDoc.readEntryToBean(brokenEntry1);
+			entry = feedDoc.readEntryToBean(brokenEntry1);
 			assertTrue(entry == null);
 			fail("should not get here;");
 		} catch (Exception e) {
@@ -566,7 +579,7 @@ public class FeedDocTest {
 		}
 
 		try {
-			entry = FeedDoc.readEntryToBean(brokenEntry2);
+			entry = feedDoc.readEntryToBean(brokenEntry2);
 			fail("should not get here;");
 		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
@@ -575,7 +588,7 @@ public class FeedDocTest {
 		}
 
 		try {
-			entry = FeedDoc.readEntryToBean(brokenEntry3);
+			entry = feedDoc.readEntryToBean(brokenEntry3);
 			fail("should not get here;");
 		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
@@ -584,7 +597,7 @@ public class FeedDocTest {
 		}
 
 		try {
-			entry = FeedDoc.readEntryToBean(brokenEntry4);
+			entry = feedDoc.readEntryToBean(brokenEntry4);
 			fail("should not get here;");
 		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
@@ -594,7 +607,7 @@ public class FeedDocTest {
 		}
 
 		try {
-			entry = FeedDoc.readEntryToBean(brokenEntry5);
+			entry = feedDoc.readEntryToBean(brokenEntry5);
 			fail("should not get here;");
 		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
@@ -604,14 +617,14 @@ public class FeedDocTest {
 		}
 
 		try {
-			entry = FeedDoc.readEntryToBean(expectedEntry1);
+			entry = feedDoc.readEntryToBean(expectedEntry1);
 			assertNotNull(entry);
 		} catch (Exception e) {
 			fail("should not get here;");
 		}
 
 		try {
-			entry = FeedDoc.readEntryToBean(new File(
+			entry = feedDoc.readEntryToBean(new File(
 					"src/test/resources/expectedEntry1.xml"));
 			assertNotNull(entry);
 		} catch (Exception e) {
@@ -619,11 +632,36 @@ public class FeedDocTest {
 		}
 
 		try {
-			entry = FeedDoc.readEntryToBean(new URL(
+			entry = feedDoc.readEntryToBean(new URL(
 					"http://www.earthbeats.net/drops.xml"));
 			assertNotNull(entry);
 		} catch (Exception e) {
 			fail("should not get here;");
+		}
+	}
+
+	/**
+	 * test the feed building dates.
+	 */
+	@Test
+	public void testBuildDate() {
+		try {
+			feedDoc.buildPublished(null, null);
+			fail("should not get here.");
+		} catch (AtomSpecException e) {
+			assertEquals(e.getMessage(),
+					"The date for the Atom Date Construct SHOULD not be null.");
+		}
+
+		try {
+			Attribute err = feedDoc.buildAttribute("href", "bunk");
+			List<Attribute> attrs = new LinkedList<Attribute>();
+			attrs.add(err);
+			feedDoc.buildPublished(null, attrs);
+			fail("should not get here.");
+		} catch (AtomSpecException e) {
+			assertEquals(e.getMessage(),
+					"Unsuppported attribute href for this Atom Date Construct.");
 		}
 	}
 
@@ -633,76 +671,75 @@ public class FeedDocTest {
 	@Test
 	public void testBuildFeed() {
 		try {
+			Generator generator = feedDoc.getAtomsphereVersion();
 
-			Generator generator = FeedDoc.getAtomsphereVersion();
-
-			Id id = FeedDoc.buildId(null,
+			Id id = feedDoc.buildId(null,
 					"http://www.colorfulsoftware.com/atom.xml");
 
-			Updated updated = FeedDoc.buildUpdated(Calendar.getInstance()
+			Updated updated = feedDoc.buildUpdated(Calendar.getInstance()
 					.getTime(), null);
 
-			Title title = FeedDoc.buildTitle("test feed", null);
+			Title title = feedDoc.buildTitle("test feed", null);
 
 			List<Contributor> contributors = new LinkedList<Contributor>();
-			Contributor contributor = FeedDoc.buildContributor(new Name(
-					"Mad Dog"), null, FeedDoc.buildEmail("info@maddog.net"),
+			Contributor contributor = feedDoc.buildContributor(new Name(
+					"Mad Dog"), null, feedDoc.buildEmail("info@maddog.net"),
 					null, null);
 			contributors.add(contributor);
 
-			Rights rights = FeedDoc.buildRights("GPL 1.0", null);
+			Rights rights = feedDoc.buildRights("GPL 1.0", null);
 
-			Icon icon = FeedDoc.buildIcon(null, "http://host/images/icon.png");
+			Icon icon = feedDoc.buildIcon(null, "http://host/images/icon.png");
 
-			Logo logo = FeedDoc.buildLogo(null, "http://host/images/logo.png");
+			Logo logo = feedDoc.buildLogo(null, "http://host/images/logo.png");
 
 			List<Attribute> catAttrs = new LinkedList<Attribute>();
-			catAttrs.add(FeedDoc.buildAttribute("term", "music"));
-			catAttrs.add(FeedDoc.buildAttribute("scheme",
+			catAttrs.add(feedDoc.buildAttribute("term", "music"));
+			catAttrs.add(feedDoc.buildAttribute("scheme",
 					"http://mtv.com/genere"));
-			catAttrs.add(FeedDoc.buildAttribute("label", "music"));
+			catAttrs.add(feedDoc.buildAttribute("label", "music"));
 			List<Category> categories = new LinkedList<Category>();
-			Category category = FeedDoc.buildCategory(catAttrs, null);
+			Category category = feedDoc.buildCategory(catAttrs, null);
 			categories.add(category);
 
 			List<Attribute> linkAttrs = new LinkedList<Attribute>();
-			linkAttrs.add(FeedDoc
+			linkAttrs.add(feedDoc
 					.buildAttribute("href", "http://www.yahoo.com"));
-			linkAttrs.add(FeedDoc.buildAttribute("rel", "self"));
-			linkAttrs.add(FeedDoc.buildAttribute("hreflang", "en-US"));
+			linkAttrs.add(feedDoc.buildAttribute("rel", "self"));
+			linkAttrs.add(feedDoc.buildAttribute("hreflang", "en-US"));
 			List<Link> links = new LinkedList<Link>();
-			Link link = FeedDoc.buildLink(linkAttrs, null);
+			Link link = feedDoc.buildLink(linkAttrs, null);
 			links.add(link);
 
-			Attribute extAttr = FeedDoc.buildAttribute("xmlns:xhtml",
+			Attribute extAttr = feedDoc.buildAttribute("xmlns:xhtml",
 					"http://www.w3.org/1999/xhtml");
 			List<Attribute> extAttrs = new LinkedList<Attribute>();
 			extAttrs.add(extAttr);
 
 			// the base feed attributes.
 			List<Attribute> feedAttrs = new LinkedList<Attribute>();
-			feedAttrs.add(FeedDoc.atomBase);
-			feedAttrs.add(FeedDoc.lang_en);
+			feedAttrs.add(feedDoc.getAtomBase());
+			feedAttrs.add(feedDoc.getLangEn());
 			feedAttrs.addAll(extAttrs);
 
 			List<Extension> extensions = new LinkedList<Extension>();
-			Extension extension = FeedDoc.buildExtension("xhtml:div", null,
+			Extension extension = feedDoc.buildExtension("xhtml:div", null,
 					"<span style='color:red;'>hello there</span>");
 			extensions.add(extension);
 
 			List<Author> authors = new LinkedList<Author>();
-			authors.add(FeedDoc.buildAuthor(FeedDoc.buildName("Bill Brown"),
+			authors.add(feedDoc.buildAuthor(feedDoc.buildName("Bill Brown"),
 					null, null, null, null));
-			Entry entry = FeedDoc
+			Entry entry = feedDoc
 					.buildEntry(
-							FeedDoc
+							feedDoc
 									.buildId(null,
 											"http://www.colorfulsoftware.com/atom.xml#entry1"),
-							FeedDoc.buildTitle("an example atom entry", null),
-							FeedDoc.buildUpdated(Calendar.getInstance()
+							feedDoc.buildTitle("an example atom entry", null),
+							feedDoc.buildUpdated(Calendar.getInstance()
 									.getTime(), null),
 							null,
-							FeedDoc
+							feedDoc
 									.buildContent(
 											"Hello World.  Welcome to the atomsphere feed builder for atom 1.0 builds.  I hope it is useful for you.",
 											null), authors, null, null, null,
@@ -711,14 +748,16 @@ public class FeedDocTest {
 			SortedMap<String, Entry> entries = new TreeMap<String, Entry>();
 			entries.put(entry.getUpdated().getText(), entry);
 
-			Feed feed = FeedDoc.buildFeed(id, title, updated, rights, authors,
+			Feed feed = feedDoc.buildFeed(id, title, updated, rights, authors,
 					categories, contributors, links, feedAttrs, extensions,
 					generator, null, icon, logo, entries);
 
 			assertNotNull(feed);
-
+			assertNotNull(feed.getAttribute("xml:lang"));
+			assertNull(feed.getAttribute("bunk"));
+			
 			// read and write a full feed.
-			feed = FeedDoc.readFeedToBean(mega);
+			feed = feedDoc.readFeedToBean(mega);
 			FeedWriter feedWriter = new FeedWriter();
 			XMLStreamWriter writer = XMLOutputFactory.newInstance()
 					.createXMLStreamWriter(
@@ -728,7 +767,7 @@ public class FeedDocTest {
 			writer.close();
 
 			// re read the written feed and check the data.
-			feed = FeedDoc.readFeedToBean(new File("target/dump1.xml"));
+			feed = feedDoc.readFeedToBean(new File("target/dump1.xml"));
 
 			assertNotNull(feed);
 			assertNotNull(feed.getCategories());
@@ -762,22 +801,22 @@ public class FeedDocTest {
 	@Test
 	public void testGetContentType() {
 		List<Attribute> attrs = new LinkedList<Attribute>();
-		attrs.add(FeedDoc.buildAttribute("src",
+		attrs.add(feedDoc.buildAttribute("src",
 				"http://www.colorfulsoftware.com/images/logo.gif"));
-		attrs.add(FeedDoc.buildAttribute("type", "image/gif"));
-		assertEquals(FeedDoc.getContentType(attrs), ContentType.EXTERNAL);
+		attrs.add(feedDoc.buildAttribute("type", "image/gif"));
+		assertEquals(feedDoc.getContentType(attrs), ContentType.EXTERNAL);
 		attrs = new LinkedList<Attribute>();
-		attrs.add(FeedDoc.buildAttribute("type", "image/gif"));
-		assertEquals(FeedDoc.getContentType(attrs), ContentType.OTHER);
+		attrs.add(feedDoc.buildAttribute("type", "image/gif"));
+		assertEquals(feedDoc.getContentType(attrs), ContentType.OTHER);
 		attrs = new LinkedList<Attribute>();
-		attrs.add(FeedDoc.buildAttribute("type", "text"));
-		assertEquals(FeedDoc.getContentType(attrs), ContentType.TEXT);
+		attrs.add(feedDoc.buildAttribute("type", "text"));
+		assertEquals(feedDoc.getContentType(attrs), ContentType.TEXT);
 		attrs = new LinkedList<Attribute>();
-		attrs.add(FeedDoc.buildAttribute("type", "html"));
-		assertEquals(FeedDoc.getContentType(attrs), ContentType.HTML);
+		attrs.add(feedDoc.buildAttribute("type", "html"));
+		assertEquals(feedDoc.getContentType(attrs), ContentType.HTML);
 		attrs = new LinkedList<Attribute>();
-		attrs.add(FeedDoc.buildAttribute("type", "xhtml"));
-		assertEquals(FeedDoc.getContentType(attrs), ContentType.XHTML);
+		attrs.add(feedDoc.buildAttribute("type", "xhtml"));
+		assertEquals(feedDoc.getContentType(attrs), ContentType.XHTML);
 	}
 
 	/**
@@ -793,7 +832,7 @@ public class FeedDocTest {
 			entries.put(entryStr1, entry1);
 			entries.put(entryStr2, entry2);
 			entries.put(entryStr3, entry3);
-			feed1 = FeedDoc.buildFeed(feed1.getId(), feed1.getTitle(), feed1
+			feed1 = feedDoc.buildFeed(feed1.getId(), feed1.getTitle(), feed1
 					.getUpdated(), feed1.getRights(), feed1.getAuthors(), feed1
 					.getCategories(), feed1.getContributors(),
 					feed1.getLinks(), feed1.getAttributes(), feed1
@@ -801,7 +840,7 @@ public class FeedDocTest {
 							.getSubtitle(), feed1.getIcon(), feed1.getLogo(),
 					entries);
 			assertEquals(Title.class.getSimpleName(), "Title");
-			feed1 = FeedDoc.sortEntries(feed1, FeedDoc.SORT_ASC, Title.class);
+			feed1 = feedDoc.sortEntries(feed1, feedDoc.SORT_ASC, Title.class);
 			for (Entry entry : feed1.getEntries().values()) {
 				assertNotNull(entry);
 			}
@@ -812,7 +851,7 @@ public class FeedDocTest {
 			entries2.remove(entries2.firstKey());
 			assertEquals(entries2.firstKey(), entryStr3);
 
-			feed1 = FeedDoc.sortEntries(feed1, FeedDoc.SORT_DESC, Title.class);
+			feed1 = feedDoc.sortEntries(feed1, feedDoc.SORT_DESC, Title.class);
 			for (Entry entry : feed1.getEntries().values()) {
 				assertNotNull(entry);
 			}
@@ -824,14 +863,14 @@ public class FeedDocTest {
 			assertEquals(entries2.firstKey(), entryStr1);
 
 			// test the null entries case.
-			feed1 = FeedDoc.buildFeed(feed1.getId(), feed1.getTitle(), feed1
+			feed1 = feedDoc.buildFeed(feed1.getId(), feed1.getTitle(), feed1
 					.getUpdated(), feed1.getRights(), feed1.getAuthors(), feed1
 					.getCategories(), feed1.getContributors(),
 					feed1.getLinks(), feed1.getAttributes(), feed1
 							.getExtensions(), feed1.getGenerator(), feed1
 							.getSubtitle(), feed1.getIcon(), feed1.getLogo(),
 					null);
-			feed1 = FeedDoc.sortEntries(feed1, FeedDoc.SORT_DESC, Title.class);
+			feed1 = feedDoc.sortEntries(feed1, feedDoc.SORT_DESC, Title.class);
 			assertNull(feed1.getEntries());
 
 		} catch (Exception e) {

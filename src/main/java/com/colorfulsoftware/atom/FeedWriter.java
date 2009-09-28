@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ * Copyright (C) 2009 William R. Brown <wbrown@colorfulsoftware.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -44,125 +44,155 @@ import javax.xml.stream.XMLStreamWriter;
  */
 class FeedWriter {
 
-	// used internally by FeedDoc to write feed to output streams.
-	void writeFeed(XMLStreamWriter writer, Feed feed) throws Exception {
+	private FeedDoc feedDoc = new FeedDoc();
 
-		// open the feed element
-		writer.writeStartElement("feed");
-		if (feed.getAttributes() != null) {
-			for (Attribute attr : feed.getAttributes()) {
-				writer.writeAttribute(attr.getName(), attr.getValue());
+	// used internally by FeedDoc to write feed to output streams.
+	void writeFeed(XMLStreamWriter writer, Feed feed) throws AtomSpecException {
+		try {
+			// open the feed element
+			writer.writeStartElement("feed");
+			// write the attributes.
+			writeAttributes(writer, feed.getAttributes());
+			// write the id (REQUIRED)
+			writeID(writer, feed.getId());
+			// write the updated date (REQUIRED)
+			writeUpdated(writer, feed.getUpdated());
+			// write the generator (should be required but isn't)
+			if (feed.getGenerator() != null) {
+				writeGenerator(writer, feed.getGenerator());
+			}
+			// write the title (REQUIRED)
+			writeTitle(writer, feed.getTitle());
+
+			// write the subtitle
+			if (feed.getSubtitle() != null) {
+				writeSubtitle(writer, feed.getSubtitle());
+			}
+
+			// write the author
+			if (feed.getAuthors() != null) {
+				writeAuthors(writer, feed.getAuthors());
+			}
+			// write the contributors
+			if (feed.getContributors() != null) {
+				writeContributors(writer, feed.getContributors());
+			}
+			// write the links
+			if (feed.getLinks() != null) {
+				writeLinks(writer, feed.getLinks());
+			}
+			// write the categories
+			if (feed.getCategories() != null) {
+				writeCategories(writer, feed.getCategories());
+			}
+			// write the icon
+			if (feed.getIcon() != null) {
+				writeIcon(writer, feed.getIcon());
+			}
+			// write the logo
+			if (feed.getLogo() != null) {
+				writeLogo(writer, feed.getLogo());
+			}
+			// write the rights
+			if (feed.getRights() != null) {
+				writeRights(writer, feed.getRights());
+			}
+			// write the extensions
+			if (feed.getExtensions() != null) {
+				writeExtensions(writer, feed.getExtensions());
+			}
+			// write the entries
+			if (feed.getEntries() != null) {
+				writeEntries(writer, feed.getEntries());
+			}
+
+			writer.writeEndElement();
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
+		}
+	}
+
+	private void writeAttributes(XMLStreamWriter writer,
+			List<Attribute> attributes) throws AtomSpecException {
+		if (attributes != null) {
+			for (Attribute attr : attributes) {
+				try {
+					writer.writeAttribute(attr.getName(), attr.getValue());
+				} catch (Exception e) {
+					throw new AtomSpecException(e.getMessage());
+				}
 			}
 		}
-		// write the id (REQUIRED)
-		writeID(writer, feed.getId());
-		// write the updated date (REQUIRED)
-		writeUpdated(writer, feed.getUpdated());
-		// write the generator (should be required but isn't)
-		if (feed.getGenerator() != null) {
-			writeGenerator(writer, feed.getGenerator());
-		}
-		// write the title (REQUIRED)
-		writeTitle(writer, feed.getTitle());
-
-		// write the subtitle
-		if (feed.getSubtitle() != null) {
-			writeSubtitle(writer, feed.getSubtitle());
-		}
-
-		// write the author
-		if (feed.getAuthors() != null) {
-			writeAuthors(writer, feed.getAuthors());
-		}
-		// write the contributors
-		if (feed.getContributors() != null) {
-			writeContributors(writer, feed.getContributors());
-		}
-		// write the links
-		if (feed.getLinks() != null) {
-			writeLinks(writer, feed.getLinks());
-		}
-		// write the categories
-		if (feed.getCategories() != null) {
-			writeCategories(writer, feed.getCategories());
-		}
-		// write the icon
-		if (feed.getIcon() != null) {
-			writeIcon(writer, feed.getIcon());
-		}
-		// write the logo
-		if (feed.getLogo() != null) {
-			writeLogo(writer, feed.getLogo());
-		}
-		// write the rights
-		if (feed.getRights() != null) {
-			writeRights(writer, feed.getRights());
-		}
-		// write the extensions
-		if (feed.getExtensions() != null) {
-			writeExtensions(writer, feed.getExtensions());
-		}
-		// write the entries
-		if (feed.getEntries() != null) {
-			writeEntries(writer, feed.getEntries());
-		}
-
-		writer.writeEndElement();
 	}
 
 	void writeSubtitle(XMLStreamWriter writer, Subtitle subtitle)
-			throws Exception {
+			throws AtomSpecException {
+		try {
+			writer.writeStartElement("subtitle");
+			writeAtomTextConstruct(writer, subtitle.getAttributes(), subtitle
+					.getDivWrapperStart(), subtitle.getDivWrapperEnd(),
+					subtitle.getText());
 
-		writer.writeStartElement("subtitle");
-
-		writeAtomTextConstruct(writer, subtitle.getAttributes(), subtitle
-				.getDivWrapperStart(), subtitle.getDivWrapperEnd(), subtitle
-				.getText());
-
-		writer.writeEndElement();
+			writer.writeEndElement();
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
+		}
 	}
 
 	void writeGenerator(XMLStreamWriter writer, Generator generator)
-			throws Exception {
-		writer.writeStartElement("generator");
-		if (generator.getAttributes() != null) {
-			for (Attribute attr : generator.getAttributes()) {
-				writer.writeAttribute(attr.getName(), attr.getValue());
-			}
+			throws AtomSpecException {
+		try {
+			writer.writeStartElement("generator");
+			// write the attributes.
+			writeAttributes(writer, generator.getAttributes());
 			writer.writeCharacters(generator.getText());
+			writer.writeEndElement();
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
 		}
-		writer.writeEndElement();
 	}
 
-	void writeID(XMLStreamWriter writer, Id id) throws Exception {
-		writer.writeStartElement("id");
-		if (id.getAttributes() != null) {
-			for (Attribute attr : id.getAttributes()) {
-				writer.writeAttribute(attr.getName(), attr.getValue());
-			}
+	void writeID(XMLStreamWriter writer, Id id) throws AtomSpecException {
+		try {
+			writer.writeStartElement("id");
+			// write the attributes.
+			writeAttributes(writer, id.getAttributes());
+			writer.writeCharacters(id.getAtomUri());
+			writer.writeEndElement();
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
 		}
-		writer.writeCharacters(id.getAtomUri());
-		writer.writeEndElement();
 	}
 
-	void writeUpdated(XMLStreamWriter writer, Updated updated) throws Exception {
-		writer.writeStartElement("updated");
-		writer.writeCharacters(updated.getText());
-		writer.writeEndElement();
+	void writeUpdated(XMLStreamWriter writer, Updated updated)
+			throws AtomSpecException {
+		try {
+			writer.writeStartElement("updated");
+			// write the attributes.
+			writeAttributes(writer, updated.getAttributes());
+			writer.writeCharacters(updated.getText());
+			writer.writeEndElement();
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
+		}
 	}
 
-	void writeTitle(XMLStreamWriter writer, Title title) throws Exception {
+	void writeTitle(XMLStreamWriter writer, Title title)
+			throws AtomSpecException {
+		try {
+			writer.writeStartElement("title");
+			writeAtomTextConstruct(writer, title.getAttributes(), title
+					.getDivWrapperStart(), title.getDivWrapperEnd(), title
+					.getText());
 
-		writer.writeStartElement("title");
-
-		writeAtomTextConstruct(writer, title.getAttributes(), title
-				.getDivWrapperStart(), title.getDivWrapperEnd(), title
-				.getText());
-
-		writer.writeEndElement();
+			writer.writeEndElement();
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
+		}
 	}
 
-	void writeXHTML(XMLStreamWriter writer, String text) throws Exception {
+	void writeXHTML(XMLStreamWriter writer, String text)
+			throws AtomSpecException {
 		try {
 
 			if (text == null || text.length() == 0) {
@@ -303,373 +333,399 @@ class FeedWriter {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new Exception("Content is not valid XHTML", e);
+			throw new AtomSpecException("Content is not valid XHTML: "
+					+ e.getLocalizedMessage());
 		}
 	}
 
 	void writeAuthors(XMLStreamWriter writer, List<Author> authors)
-			throws Exception {
-		// loop through and print out each author.
-		for (Author author : authors) {
-			writer.writeStartElement("author");
-			if (author.getAttributes() != null) {
-				for (Attribute attr : author.getAttributes()) {
-					writer.writeAttribute(attr.getName(), attr.getValue());
+			throws AtomSpecException {
+		try {
+			// loop through and print out each author.
+			for (Author author : authors) {
+				writer.writeStartElement("author");
+				// write the attributes.
+				writeAttributes(writer, author.getAttributes());
+				writeName(writer, author.getName());
+				if (author.getUri() != null) {
+					writeUri(writer, author.getUri());
 				}
+				if (author.getEmail() != null) {
+					writeEmail(writer, author.getEmail());
+				}
+				if (author.getExtensions() != null) {
+					writeExtensions(writer, author.getExtensions());
+				}
+				writer.writeEndElement();
 			}
-			writeName(writer, author.getName());
-			if (author.getUri() != null) {
-				writeUri(writer, author.getUri());
-			}
-			if (author.getEmail() != null) {
-				writeEmail(writer, author.getEmail());
-			}
-			if (author.getExtensions() != null) {
-				writeExtensions(writer, author.getExtensions());
-			}
-			writer.writeEndElement();
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
 		}
-
 	}
 
-	void writeName(XMLStreamWriter writer, Name name) throws Exception {
-		writer.writeStartElement("name");
-		writer.writeCharacters(name.getText());
-		writer.writeEndElement();
+	void writeName(XMLStreamWriter writer, Name name) throws AtomSpecException {
+		try {
+			writer.writeStartElement("name");
+			writer.writeCharacters(name.getText());
+			writer.writeEndElement();
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
+		}
 	}
 
-	void writeUri(XMLStreamWriter writer, URI uri) throws Exception {
-		writer.writeStartElement("uri");
-		writer.writeCharacters(uri.getText());
-		writer.writeEndElement();
+	void writeUri(XMLStreamWriter writer, URI uri) throws AtomSpecException {
+		try {
+			writer.writeStartElement("uri");
+			writer.writeCharacters(uri.getText());
+			writer.writeEndElement();
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
+		}
 	}
 
-	void writeEmail(XMLStreamWriter writer, Email email) throws Exception {
-		writer.writeStartElement("email");
-		writer.writeCharacters(email.getText());
-		writer.writeEndElement();
+	void writeEmail(XMLStreamWriter writer, Email email)
+			throws AtomSpecException {
+		try {
+			writer.writeStartElement("email");
+			writer.writeCharacters(email.getText());
+			writer.writeEndElement();
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
+		}
 	}
 
 	void writeContributors(XMLStreamWriter writer,
-			List<Contributor> contributors) throws Exception {
-		// loop through and print out each contributor.
-		for (Contributor contributor : contributors) {
-			writer.writeStartElement("contributor");
-			if (contributor.getAttributes() != null) {
-				for (Attribute attr : contributor.getAttributes()) {
-					writer.writeAttribute(attr.getName(), attr.getValue());
+			List<Contributor> contributors) throws AtomSpecException {
+		try {
+			// loop through and print out each contributor.
+			for (Contributor contributor : contributors) {
+				writer.writeStartElement("contributor");
+				// write the attributes.
+				writeAttributes(writer, contributor.getAttributes());
+				writeName(writer, contributor.getName());
+				if (contributor.getUri() != null) {
+					writeUri(writer, contributor.getUri());
 				}
+				if (contributor.getEmail() != null) {
+					writeEmail(writer, contributor.getEmail());
+				}
+				if (contributor.getExtensions() != null) {
+					writeExtensions(writer, contributor.getExtensions());
+				}
+				writer.writeEndElement();
 			}
-			writeName(writer, contributor.getName());
-			if (contributor.getUri() != null) {
-				writeUri(writer, contributor.getUri());
-			}
-			if (contributor.getEmail() != null) {
-				writeEmail(writer, contributor.getEmail());
-			}
-			if (contributor.getExtensions() != null) {
-				writeExtensions(writer, contributor.getExtensions());
-			}
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
+		}
+	}
+
+	void writeRights(XMLStreamWriter writer, Rights rights)
+			throws AtomSpecException {
+		try {
+			writer.writeStartElement("rights");
+			writeAtomTextConstruct(writer, rights.getAttributes(), rights
+					.getDivWrapperStart(), rights.getDivWrapperEnd(), rights
+					.getText());
+
 			writer.writeEndElement();
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
 		}
 	}
 
-	void writeRights(XMLStreamWriter writer, Rights rights) throws Exception {
-
-		writer.writeStartElement("rights");
-
-		writeAtomTextConstruct(writer, rights.getAttributes(), rights
-				.getDivWrapperStart(), rights.getDivWrapperEnd(), rights
-				.getText());
-
-		writer.writeEndElement();
-
+	void writeLogo(XMLStreamWriter writer, Logo logo) throws AtomSpecException {
+		try {
+			writer.writeStartElement("logo");
+			// write the attributes.
+			writeAttributes(writer, logo.getAttributes());
+			writer.writeCharacters(logo.getAtomUri());
+			writer.writeEndElement();
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
+		}
 	}
 
-	void writeLogo(XMLStreamWriter writer, Logo logo) throws Exception {
-		writer.writeStartElement("logo");
-		if (logo.getAttributes() != null) {
-			for (Attribute attr : logo.getAttributes()) {
-				writer.writeAttribute(attr.getName(), attr.getValue());
-			}
+	void writeIcon(XMLStreamWriter writer, Icon icon) throws AtomSpecException {
+		try {
+			writer.writeStartElement("icon");
+			// write the attributes.
+			writeAttributes(writer, icon.getAttributes());
+			writer.writeCharacters(icon.getAtomUri());
+			writer.writeEndElement();
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
 		}
-		writer.writeCharacters(logo.getAtomUri());
-		writer.writeEndElement();
-	}
-
-	void writeIcon(XMLStreamWriter writer, Icon icon) throws Exception {
-		writer.writeStartElement("icon");
-		if (icon.getAttributes() != null) {
-			for (Attribute attr : icon.getAttributes()) {
-				writer.writeAttribute(attr.getName(), attr.getValue());
-			}
-		}
-		writer.writeCharacters(icon.getAtomUri());
-		writer.writeEndElement();
 	}
 
 	void writeCategories(XMLStreamWriter writer, List<Category> categories)
-			throws Exception {
-
-		for (Category category : categories) {
-			writer.writeEmptyElement("category");
-			if (category.getAttributes() != null) {
-				for (Attribute attr : category.getAttributes()) {
-					writer.writeAttribute(attr.getName(), attr.getValue());
-				}
+			throws AtomSpecException {
+		try {
+			for (Category category : categories) {
+				writer.writeEmptyElement("category");
+				// write the attributes.
+				writeAttributes(writer, category.getAttributes());
 			}
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
 		}
 	}
 
-	void writeLinks(XMLStreamWriter writer, List<Link> links) throws Exception {
-
-		for (Link link : links) {
-			writer.writeEmptyElement("link");
-			if (link.getAttributes() != null) {
-				for (Attribute attr : link.getAttributes()) {
-					writer.writeAttribute(attr.getName(), attr.getValue());
-				}
+	void writeLinks(XMLStreamWriter writer, List<Link> links)
+			throws AtomSpecException {
+		try {
+			for (Link link : links) {
+				writer.writeEmptyElement("link");
+				// write the attributes.
+				writeAttributes(writer, link.getAttributes());
 			}
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
 		}
 	}
 
 	void writeExtensions(XMLStreamWriter writer, List<Extension> extensions)
-			throws Exception {
-		for (Extension extension : extensions) {
+			throws AtomSpecException {
+		try {
+			for (Extension extension : extensions) {
 
-			// if there is no content, then
-			// write an empty extension element.
-			if (extension.getContent() == null
-					|| extension.getContent().trim().equals("")) {
-				String elementName = extension.getElementName();
-				if (elementName.indexOf(":") == -1) {
-					writer.writeEmptyElement(elementName);
-				} else {
-					String prefix = elementName.substring(0, elementName
-							.indexOf(":"));
-					String localName = elementName.substring(elementName
-							.indexOf(":") + 1);
-					writer.writeEmptyElement(prefix, localName, "");
-				}
-				if (extension.getAttributes() != null) {
-					for (Attribute attr : extension.getAttributes()) {
-						writer.writeAttribute(attr.getName(), attr.getValue());
+				// if there is no content, then
+				// write an empty extension element.
+				if (extension.getContent() == null
+						|| extension.getContent().trim().equals("")) {
+					String elementName = extension.getElementName();
+					if (elementName.indexOf(":") == -1) {
+						writer.writeEmptyElement(elementName);
+					} else {
+						String prefix = elementName.substring(0, elementName
+								.indexOf(":"));
+						String localName = elementName.substring(elementName
+								.indexOf(":") + 1);
+						writer.writeEmptyElement(prefix, localName, "");
 					}
-				}
-			} else {
-				String elementName = extension.getElementName();
-				if (elementName.indexOf(":") == -1) {
-					writer.writeStartElement(elementName);
+					// write the attributes.
+					writeAttributes(writer, extension.getAttributes());
 				} else {
-					String prefix = elementName.substring(0, elementName
-							.indexOf(":"));
-					String localName = elementName.substring(elementName
-							.indexOf(":") + 1);
-					writer.writeStartElement(prefix, localName, "");
-				}
-				if (extension.getAttributes() != null) {
-					for (Attribute attr : extension.getAttributes()) {
-						writer.writeAttribute(attr.getName(), attr.getValue());
+					String elementName = extension.getElementName();
+					if (elementName.indexOf(":") == -1) {
+						writer.writeStartElement(elementName);
+					} else {
+						String prefix = elementName.substring(0, elementName
+								.indexOf(":"));
+						String localName = elementName.substring(elementName
+								.indexOf(":") + 1);
+						writer.writeStartElement(prefix, localName, "");
 					}
-				}
-				// add the content.
-				writer.writeCharacters(extension.getContent());
+					// write the attributes.
+					writeAttributes(writer, extension.getAttributes());
+					// add the content.
+					writer.writeCharacters(extension.getContent());
 
-				// close the element.
-				writer.writeEndElement();
+					// close the element.
+					writer.writeEndElement();
+				}
 			}
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
 		}
 	}
 
 	void writeEntries(XMLStreamWriter writer, SortedMap<String, Entry> entries)
-			throws Exception {
-
-		// print out the entries.
-		for (Entry entry : entries.values()) {
-			writer.writeStartElement("entry");
-			if (entry.getAttributes() != null) {
-				for (Attribute attr : entry.getAttributes()) {
-					writer.writeAttribute(attr.getName(), attr.getValue());
+			throws AtomSpecException {
+		try {
+			// print out the entries.
+			for (Entry entry : entries.values()) {
+				writer.writeStartElement("entry");
+				// write the attributes.
+				writeAttributes(writer, entry.getAttributes());
+				// write the id
+				writeID(writer, entry.getId());
+				// write the updated date
+				writeUpdated(writer, entry.getUpdated());
+				// write the title
+				writeTitle(writer, entry.getTitle());
+				// write the source
+				if (entry.getSource() != null) {
+					writeSource(writer, entry.getSource());
 				}
-			}
-			// write the id
-			writeID(writer, entry.getId());
-			// write the updated date
-			writeUpdated(writer, entry.getUpdated());
-			// write the title
-			writeTitle(writer, entry.getTitle());
-			// write the source
-			if (entry.getSource() != null) {
-				writeSource(writer, entry.getSource());
-			}
-			// write the author
-			if (entry.getAuthors() != null) {
-				writeAuthors(writer, entry.getAuthors());
-			}
-			// write the contributors
-			if (entry.getContributors() != null) {
-				writeContributors(writer, entry.getContributors());
-			}
-			// write the links
-			if (entry.getLinks() != null) {
-				writeLinks(writer, entry.getLinks());
-			}
-			// write the categories
-			if (entry.getCategories() != null) {
-				writeCategories(writer, entry.getCategories());
-			}
-			// write the published date
-			if (entry.getPublished() != null) {
-				writePublished(writer, entry.getPublished());
-			}
-			// write the rights
-			if (entry.getRights() != null) {
-				writeRights(writer, entry.getRights());
-			}
-			// write the extensions
-			if (entry.getExtensions() != null) {
-				writeExtensions(writer, entry.getExtensions());
-			}
-			// write the summary
-			if (entry.getSummary() != null) {
-				writeSummary(writer, entry.getSummary());
-			}
-			// write the content
-			if (entry.getContent() != null) {
-				writeContent(writer, entry.getContent());
-			}
+				// write the author
+				if (entry.getAuthors() != null) {
+					writeAuthors(writer, entry.getAuthors());
+				}
+				// write the contributors
+				if (entry.getContributors() != null) {
+					writeContributors(writer, entry.getContributors());
+				}
+				// write the links
+				if (entry.getLinks() != null) {
+					writeLinks(writer, entry.getLinks());
+				}
+				// write the categories
+				if (entry.getCategories() != null) {
+					writeCategories(writer, entry.getCategories());
+				}
+				// write the published date
+				if (entry.getPublished() != null) {
+					writePublished(writer, entry.getPublished());
+				}
+				// write the rights
+				if (entry.getRights() != null) {
+					writeRights(writer, entry.getRights());
+				}
+				// write the extensions
+				if (entry.getExtensions() != null) {
+					writeExtensions(writer, entry.getExtensions());
+				}
+				// write the summary
+				if (entry.getSummary() != null) {
+					writeSummary(writer, entry.getSummary());
+				}
+				// write the content
+				if (entry.getContent() != null) {
+					writeContent(writer, entry.getContent());
+				}
 
-			writer.writeEndElement();
+				writer.writeEndElement();
+			}
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
 		}
 	}
 
-	void writeSummary(XMLStreamWriter writer, Summary summary) throws Exception {
+	void writeSummary(XMLStreamWriter writer, Summary summary)
+			throws AtomSpecException {
+		try {
+			writer.writeStartElement("summary");
+			writeAtomTextConstruct(writer, summary.getAttributes(), summary
+					.getDivWrapperStart(), summary.getDivWrapperEnd(), summary
+					.getText());
 
-		writer.writeStartElement("summary");
-
-		writeAtomTextConstruct(writer, summary.getAttributes(), summary
-				.getDivWrapperStart(), summary.getDivWrapperEnd(), summary
-				.getText());
-
-		writer.writeEndElement();
+			writer.writeEndElement();
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
+		}
 	}
 
 	private void writeAtomTextConstruct(XMLStreamWriter writer,
 			List<Attribute> attributes, String startDivWrapper,
-			String endDivWrapper, String text) throws Exception {
-		// write the attributes if there are any
-		if (attributes != null) {
-			for (Attribute attr : attributes) {
-				writer.writeAttribute(attr.getName(), attr.getValue());
+			String endDivWrapper, String text) throws AtomSpecException {
+		try {
+			// write the attributes if there are any
+			writeAttributes(writer, attributes);
+			// check to see if we need to
+			// wrap the text in a an <xhtml:div> tag.
+			if (feedDoc.getContentType(attributes) == FeedDoc.ContentType.XHTML) {
+
+				writeXHTML(writer, startDivWrapper + text + endDivWrapper);
+
+				// check to see if we need to escape the data
+			} else if (feedDoc.getContentType(attributes) == FeedDoc.ContentType.HTML) {
+
+				writer.writeCharacters(text.replaceAll("&", "&amp;").replace(
+						"&lt;", "<").replace(">", "&gt;"));
+
+				// just write the text.
+			} else {
+				writer.writeCharacters(text);
 			}
-		}
-		// check to see if we need to
-		// wrap the text in a an <xhtml:div> tag.
-		if (FeedDoc.getContentType(attributes) == FeedDoc.ContentType.XHTML) {
-
-			writeXHTML(writer, startDivWrapper + text + endDivWrapper);
-
-			// check to see if we need to escape the data
-		} else if (FeedDoc.getContentType(attributes) == FeedDoc.ContentType.HTML) {
-
-			writer.writeCharacters(text.replaceAll("&", "&amp;").replace(
-					"&lt;", "<").replace(">", "&gt;"));
-
-			// just write the text.
-		} else {
-			writer.writeCharacters(text);
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
 		}
 	}
 
 	void writePublished(XMLStreamWriter writer, Published published)
-			throws Exception {
-		writer.writeStartElement("published");
-		writer.writeCharacters(published.getText());
-		writer.writeEndElement();
+			throws AtomSpecException {
+		try {
+			writer.writeStartElement("published");
+			// write the attributes.
+			writeAttributes(writer, published.getAttributes());
+			writer.writeCharacters(published.getText());
+			writer.writeEndElement();
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
+		}
 	}
 
-	void writeContent(XMLStreamWriter writer, Content content) throws Exception {
+	void writeContent(XMLStreamWriter writer, Content content)
+			throws AtomSpecException {
+		try {
+			// look for the src attribute to
+			// see if we need to build an empty tag.
+			if (feedDoc.getAttributeFromGroup(content.getAttributes(), "src") != null) {
+				writer.writeEmptyElement("content");
+				// write the attributes.
+				writeAttributes(writer, content.getAttributes());
+			} else {
+				writer.writeStartElement("content");
+				writeAtomTextConstruct(writer, content.getAttributes(), content
+						.getDivWrapperStart(), content.getDivWrapperEnd(),
+						content.getContent());
 
-		// look for the src attribute to
-		// see if we need to build an empty tag.
-		if (FeedDoc.getAttributeFromGroup(content.getAttributes(), "src") != null) {
-			writer.writeEmptyElement("content");
-			if (content.getAttributes() != null) {
-				for (Attribute attr : content.getAttributes()) {
-					writer.writeAttribute(attr.getName(), attr.getValue());
-				}
+				writer.writeEndElement();
 			}
-		} else {
-			writer.writeStartElement("content");
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
+		}
+	}
 
-			writeAtomTextConstruct(writer, content.getAttributes(), content
-					.getDivWrapperStart(), content.getDivWrapperEnd(), content
-					.getContent());
+	void writeSource(XMLStreamWriter writer, Source source)
+			throws AtomSpecException {
+		try {
+			// open the source element
+			writer.writeStartElement("source");
+			// write the attributes.
+			writeAttributes(writer, source.getAttributes());
+			// write the id
+			if (source.getId() != null) {
+				writeID(writer, source.getId());
+			}
+			// write the updated date
+			if (source.getUpdated() != null) {
+				writeUpdated(writer, source.getUpdated());
+			}
+			// write the generator
+			if (source.getGenerator() != null) {
+				writeGenerator(writer, source.getGenerator());
+			}
+			// write the title
+			if (source.getTitle() != null) {
+				writeTitle(writer, source.getTitle());
+			}
+			// write the author
+			if (source.getAuthors() != null) {
+				writeAuthors(writer, source.getAuthors());
+			}
+			// write the contributors
+			if (source.getContributors() != null) {
+				writeContributors(writer, source.getContributors());
+			}
+			// write the links
+			if (source.getLinks() != null) {
+				writeLinks(writer, source.getLinks());
+			}
+			// write the categories
+			if (source.getCategories() != null) {
+				writeCategories(writer, source.getCategories());
+			}
+			// write the icon
+			if (source.getIcon() != null) {
+				writeIcon(writer, source.getIcon());
+			}
+			// write the logo
+			if (source.getLogo() != null) {
+				writeLogo(writer, source.getLogo());
+			}
+			// write the rights
+			if (source.getRights() != null) {
+				writeRights(writer, source.getRights());
+			}
+			// write the extensions
+			if (source.getExtensions() != null) {
+				writeExtensions(writer, source.getExtensions());
+			}
 
 			writer.writeEndElement();
+		} catch (Exception e) {
+			throw new AtomSpecException(e.getMessage());
 		}
-
-	}
-
-	void writeSource(XMLStreamWriter writer, Source source) throws Exception {
-
-		// open the source element
-		writer.writeStartElement("source");
-		if (source.getAttributes() != null) {
-			for (Attribute attr : source.getAttributes()) {
-				writer.writeAttribute(attr.getName(), attr.getValue());
-			}
-		}
-		// write the id
-		if (source.getId() != null) {
-			writeID(writer, source.getId());
-		}
-		// write the updated date
-		if (source.getUpdated() != null) {
-			writeUpdated(writer, source.getUpdated());
-		}
-		// write the generator
-		if (source.getGenerator() != null) {
-			writeGenerator(writer, source.getGenerator());
-		}
-		// write the title
-		if (source.getTitle() != null) {
-			writeTitle(writer, source.getTitle());
-		}
-		// write the author
-		if (source.getAuthors() != null) {
-			writeAuthors(writer, source.getAuthors());
-		}
-		// write the contributors
-		if (source.getContributors() != null) {
-			writeContributors(writer, source.getContributors());
-		}
-		// write the links
-		if (source.getLinks() != null) {
-			writeLinks(writer, source.getLinks());
-		}
-		// write the categories
-		if (source.getCategories() != null) {
-			writeCategories(writer, source.getCategories());
-		}
-		// write the icon
-		if (source.getIcon() != null) {
-			writeIcon(writer, source.getIcon());
-		}
-		// write the logo
-		if (source.getLogo() != null) {
-			writeLogo(writer, source.getLogo());
-		}
-		// write the rights
-		if (source.getRights() != null) {
-			writeRights(writer, source.getRights());
-		}
-		// write the extensions
-		if (source.getExtensions() != null) {
-			writeExtensions(writer, source.getExtensions());
-		}
-
-		writer.writeEndElement();
-
 	}
 }

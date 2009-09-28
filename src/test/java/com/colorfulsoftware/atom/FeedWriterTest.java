@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ * Copyright (C) 2009 William R. Brown <wbrown@colorfulsoftware.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -45,11 +45,13 @@ import com.colorfulsoftware.atom.FeedWriter;
 
 /**
  * This class tests the feed writer.
+ * 
  * @author Bill Brown
- *
+ * 
  */
 public class FeedWriterTest {
 
+	private FeedDoc feedDoc;
 	private FeedWriter feedWriter;
 	private XMLStreamWriter writer;
 	private String queryStringXHTML = "<content type=\"xhtml\">"
@@ -218,9 +220,11 @@ public class FeedWriterTest {
 
 	/**
 	 * @throws Exception
+	 *             if there is an error creating the test data.
 	 */
 	@Before
 	public void setUp() throws Exception {
+		feedDoc = new FeedDoc();
 		feedWriter = new FeedWriter();
 		writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
 				new FileOutputStream("target/out.xml"));
@@ -228,6 +232,7 @@ public class FeedWriterTest {
 
 	/**
 	 * @throws Exception
+	 *             if there is an error cleaning up the test data.
 	 */
 	@After
 	public void tearDown() throws Exception {
@@ -251,10 +256,10 @@ public class FeedWriterTest {
 			feedWriter = new FeedWriter();
 			writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
 					new FileOutputStream("target/dump1.xml"));
-			Feed feed = FeedDoc.readFeedToBean(new URL(
+			Feed feed = feedDoc.readFeedToBean(new URL(
 					"http://www.earthbeats.net/drops.xml"));
 			feedWriter.writeFeed(writer, feed);
-					
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("could not read and write feed.");
@@ -274,13 +279,15 @@ public class FeedWriterTest {
 			// test query string attribute.
 			FeedWriter feedWriter2 = new FeedWriter();
 			XMLStreamWriter writer2 = XMLOutputFactory.newInstance()
-					.createXMLStreamWriter(new FileOutputStream("target/xhtml.xml"));
+					.createXMLStreamWriter(
+							new FileOutputStream("target/xhtml.xml"));
 			feedWriter2.writeXHTML(writer2, queryStringXHTML);
 			writer2.flush();
 			writer2.close();
 
 			XMLStreamReader reader = XMLInputFactory.newInstance()
-					.createXMLStreamReader(new FileInputStream("target/xhtml.xml"));
+					.createXMLStreamReader(
+							new FileInputStream("target/xhtml.xml"));
 			Content content = (new FeedReader()).readContent(reader);
 
 			assertTrue(content.getContent()

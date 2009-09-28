@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 William R. Brown <info@colorfulsoftware.com>
+ * Copyright (C) 2009 William R. Brown <wbrown@colorfulsoftware.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,11 +33,12 @@ import com.colorfulsoftware.atom.Link;
 
 /**
  * This class tests links.
+ * 
  * @author Bill Brown
- *
+ * 
  */
 public class LinkTest {
-
+	private FeedDoc feedDoc;
 	private Link link;
 	private Attribute xmlBase;
 	private Attribute xmlLang;
@@ -48,25 +49,30 @@ public class LinkTest {
 	private Attribute hreflang;
 	private Attribute title;
 	private Attribute length;
-	
+
 	/**
 	 * @throws Exception
+	 *             if there is an error creating the test data.
 	 */
 	@Before
 	public void setUp() throws Exception {
-		xmlBase = FeedDoc.buildAttribute("xml:base", "http://www.colorfulsoftware.com/projects/atomsphere/");
-		xmlLang = FeedDoc.lang_en;
-		local = FeedDoc.buildAttribute("xmlns:abcAttribute","theValue");
-		href = FeedDoc.buildAttribute("href","http://www.colorfulsoftware.com/");
-		rel = FeedDoc.buildAttribute("rel","alternate");
-		type = FeedDoc.buildAttribute("type","text/html");
-		hreflang = FeedDoc.buildAttribute("hreflang","en-US");
-		title = FeedDoc.buildAttribute("title","a cool site");
-		length = FeedDoc.buildAttribute("length","100");
+		feedDoc = new FeedDoc();
+		xmlBase = feedDoc.buildAttribute("xml:base",
+				"http://www.colorfulsoftware.com/projects/atomsphere/");
+		xmlLang = feedDoc.getLangEn();
+		local = feedDoc.buildAttribute("xmlns:abcAttribute", "theValue");
+		href = feedDoc.buildAttribute("href",
+				"http://www.colorfulsoftware.com/");
+		rel = feedDoc.buildAttribute("rel", "alternate");
+		type = feedDoc.buildAttribute("type", "text/html");
+		hreflang = feedDoc.buildAttribute("hreflang", "en-US");
+		title = feedDoc.buildAttribute("title", "a cool site");
+		length = feedDoc.buildAttribute("length", "100");
 	}
 
 	/**
 	 * @throws Exception
+	 *             if there is an error cleaning up the test data.
 	 */
 	@After
 	public void tearDown() throws Exception {
@@ -78,7 +84,7 @@ public class LinkTest {
 	@Test
 	public void testLink() {
 		List<Attribute> attributes = new LinkedList<Attribute>();
-		try{
+		try {
 			attributes.add(xmlBase);
 			attributes.add(xmlLang);
 			attributes.add(local);
@@ -88,17 +94,18 @@ public class LinkTest {
 			attributes.add(hreflang);
 			attributes.add(title);
 			attributes.add(length);
-			link = FeedDoc.buildLink(attributes,null);
+			link = feedDoc.buildLink(attributes, null);
 			assertTrue(link != null);
-			
-			attributes.add(FeedDoc.buildAttribute("src","http://www.colorfulsoftware.com"));
-			link = FeedDoc.buildLink(attributes,null);
+
+			attributes.add(feedDoc.buildAttribute("src",
+					"http://www.colorfulsoftware.com"));
+			link = feedDoc.buildLink(attributes, null);
 			fail("should not get here");
-			
-		}catch(Exception e){
+
+		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
-			assertEquals(e.getMessage(),"Unsuppported attribute src" 
-					+" for this link element.");
+			assertEquals(e.getMessage(), "Unsuppported attribute src"
+					+ " for this link element.");
 		}
 	}
 }
