@@ -139,6 +139,10 @@ public class Category implements Serializable {
 		return content;
 	}
 
+	/**
+	 * @param attrName the name of the attribute to get.
+	 * @return the Attribute object if attrName matches.
+	 */
 	public Attribute getAttribute(String attrName) {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {

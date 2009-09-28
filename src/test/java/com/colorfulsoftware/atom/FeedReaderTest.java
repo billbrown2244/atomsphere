@@ -46,6 +46,11 @@ import com.colorfulsoftware.atom.Source;
 import com.colorfulsoftware.atom.Summary;
 import com.colorfulsoftware.atom.Title;
 
+/**
+ * This class tests the FeedReader.
+ * @author Bill Brown
+ *
+ */
 public class FeedReaderTest {
 
 	private FeedReader feedReader;
@@ -159,6 +164,9 @@ public class FeedReaderTest {
 			+ "   <summary>Laptops and Accessories Retailer</summary>"
 			+ "</source>" + "  </entry></feed>";
 
+	/**
+	 * @throws Exception
+	 */
 	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() throws Exception {
@@ -180,10 +188,16 @@ public class FeedReaderTest {
 				new URL("http://www.earthbeats.net/drops.xml").openStream());
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	@After
 	public void tearDown() throws Exception {
 	}
 
+	/**
+	 * test the feed reading functionality.
+	 */
 	@Test
 	public void testReadFeed() {
 
@@ -206,11 +220,9 @@ public class FeedReaderTest {
 		}
 	}
 
-	@Test
-	public void testGetAttributes() {
-		// fail("Not yet implemented");
-	}
-
+	/**
+	 * test the extension reading functionality.
+	 */
 	@Test
 	public void testReadExtension() {
 		try {
@@ -228,11 +240,9 @@ public class FeedReaderTest {
 		}
 	}
 
-	@Test
-	public void testReadEntry() {
-		// fail("Not yet implemented");
-	}
-
+	/**
+	 * test the summary reading functionality.
+	 */
 	@Test
 	public void testReadSummary() {
 		try {
@@ -289,11 +299,10 @@ public class FeedReaderTest {
 		}
 	}
 
-	@Test
-	public void testContainsXHTML() {
-		// fail("Not yet implemented");
-	}
 
+	/**
+	 * test the source reading functionality.
+	 */
 	@Test
 	public void testReadSource() {
 		try {
@@ -321,16 +330,9 @@ public class FeedReaderTest {
 		}
 	}
 
-	@Test
-	public void testGetSimpleDateFormat() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testReadPublished() {
-		// fail("Not yet implemented");
-	}
-
+	/**
+	 * test the content reading functionality.
+	 */
 	@Test
 	public void testReadContent() {
 		try {
@@ -387,11 +389,9 @@ public class FeedReaderTest {
 		}
 	}
 
-	@Test
-	public void testReadUpdated() {
-		// fail("Not yet implemented");
-	}
-
+	/**
+	 * test the title reading functionality.
+	 */
 	@Test
 	public void testReadTitle() {
 		try {
@@ -424,65 +424,4 @@ public class FeedReaderTest {
 			fail("could not read title fragment.");
 		}
 	}
-
-	@Test
-	public void testReadXHTML() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testReadSubtitle() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testReadRights() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testReadLogo() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testReadLink() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testReadId() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testReadIcon() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testReadGenerator() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testReadContributor() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testReadCategory() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testReadAuthor() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testReadAtomPersonConstruct() {
-		// fail("Not yet implemented");
-	}
-
 }

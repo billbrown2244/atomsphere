@@ -64,6 +64,11 @@ import com.colorfulsoftware.atom.FeedDoc.ContentType;
 //uncomment stax-utils dependency in the root pom.xml to see exapmle usage.
 //import javanet.staxutils.IndentingXMLStreamWriter;
 
+/**
+ * This class tests the feed library.  See the source code for examples.
+ * @author Bill Brown
+ *
+ */
 public class FeedDocTest {
 
 	private Feed feed1;
@@ -241,6 +246,9 @@ public class FeedDocTest {
 			+ "<title>test entry 1</title>"
 			+ "<content type=\"noGood\">this is no good</content>" + "</entry>";
 
+	/**
+	 * @throws Exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		try {
@@ -283,12 +291,18 @@ public class FeedDocTest {
 		}
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	@After
 	public void tearDown() throws Exception {
 		// new File("out.xml").deleteOnExit();
 		// new File("out2.xml").deleteOnExit();
 	}
 
+	/**
+	 * test the output stream functionality.
+	 */
 	@Test
 	public void testWriteFeedDocOutputStreamFeedStringString() {
 		try {
@@ -333,6 +347,9 @@ public class FeedDocTest {
 		 */
 	}
 
+	/**
+	 * test the output stream functionality.
+	 */
 	@Test
 	public void testWriteEntryDocOutputStreamEntryStringString() {
 		try {
@@ -364,11 +381,9 @@ public class FeedDocTest {
 		}
 	}
 
-	@Test
-	public void testWriteFeedDocWriterFeedStringString() {
-		// fail("Not yet implemented");
-	}
-
+	/**
+	 * test the stream writer functionality.
+	 */
 	@Test
 	public void testWriteFeedDocXMLStreamWriterFeedStringString() {
 		try {
@@ -387,21 +402,9 @@ public class FeedDocTest {
 		}
 	}
 
-	@Test
-	public void testReadFeedToStringInputStream() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testReadFeedToStringFile() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testReadFeedToStringURL() {
-		// fail("Not yet implemented");
-	}
-
+	/**
+	 * test the string reading functionality.
+	 */
 	@Test
 	public void testReadFeedToStringFeedString() {
 		try {
@@ -434,6 +437,9 @@ public class FeedDocTest {
 		}
 	}
 
+	/**
+	 * test the string reading functionality.
+	 */
 	@Test
 	public void testReadFeedToStringFeed() {
 		try {
@@ -512,6 +518,9 @@ public class FeedDocTest {
 		}
 	}
 
+	/**
+	 * test the string reading functionality.
+	 */
 	@Test
 	public void testReadEntryToString() {
 		try {
@@ -540,6 +549,9 @@ public class FeedDocTest {
 		}
 	}
 
+	/**
+	 * test the string reading functionality.
+	 */
 	@Test
 	public void testReadEntryToBeanString() {
 		Entry entry;
@@ -615,21 +627,9 @@ public class FeedDocTest {
 		}
 	}
 
-	@Test
-	public void testReadFeedToBeanFile() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testReadFeedToBeanURL() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testReadFeedToBeanInputStream() {
-		// fail("Not yet implemented");
-	}
-
+	/**
+	 * test the feed building functionality.
+	 */
 	@Test
 	public void testBuildFeed() {
 		try {
@@ -756,126 +756,9 @@ public class FeedDocTest {
 		}
 	}
 
-	@Test
-	public void testBuildAttribute() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildAuthor() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildCategory() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildContent() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildContributor() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildEmail() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildEntry() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildExtension() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildGenerator() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildIcon() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildId() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildLink() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildLogo() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildName() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildPublished() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildRights() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildSource() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildSubtitle() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildSummary() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildTitle() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildUpdated() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildURI() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testBuildAtomPersonConstruct() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetAttributeFromGroup() {
-		// fail("Not yet implemented");
-	}
-
+	/**
+	 * test the getContentType functionality.
+	 */
 	@Test
 	public void testGetContentType() {
 		List<Attribute> attrs = new LinkedList<Attribute>();
@@ -897,6 +780,9 @@ public class FeedDocTest {
 		assertEquals(FeedDoc.getContentType(attrs), ContentType.XHTML);
 	}
 
+	/**
+	 * test sorting entries.
+	 */
 	@Test
 	public void testSortEntries() {
 		try {
@@ -951,16 +837,6 @@ public class FeedDocTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Test
-	public void testCheckForAndApplyExtension() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testMain() {
-		// fail("Not yet implemented");
 	}
 
 }

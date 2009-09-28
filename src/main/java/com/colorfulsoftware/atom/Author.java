@@ -51,30 +51,55 @@ public class Author implements Serializable {
 				extensions);
 	}
 
+	/**
+	 * @return the author's name eg. Bill Brown
+	 */
 	public Name getName() {
 		return person.getName();
 	}
 
+	/**
+	 * @return the author's web address eg. http://www.colorfulsoftware.com
+	 */
 	public URI getUri() {
 		return person.getUri();
 	}
 
+	/**
+	 * @return the author's email address eg. wbrown@colorfulsoftware.com
+	 */
 	public Email getEmail() {
 		return person.getEmail();
 	}
 
+	/**
+	 * @return a list of attributes
+	 */
 	public List<Attribute> getAttributes() {
 		return person.getAttributes();
 	}
 
+	/**
+	 * @return a list of extension elements
+	 */
 	public List<Extension> getExtensions() {
 		return person.getExtensions();
 	}
-	
+
+	/**
+	 * @param attrName
+	 *            the name of the attribute to get.
+	 * @return the Attribute object if attrName matches or null if not found.
+	 */
 	public Attribute getAttribute(String attrName) {
 		return person.getAttribute(attrName);
 	}
 
+	/**
+	 * @param extName
+	 *            the element name of the extension to get.
+	 * @return the Extension object if extName matches or null if not found.
+	 */
 	public Extension getExtension(String extName) {
 		return person.getExtension(extName);
 	}

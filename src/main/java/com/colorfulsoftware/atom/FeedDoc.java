@@ -58,7 +58,22 @@ public final class FeedDoc {
 	 * 
 	 */
 	public static enum ContentType {
-		TEXT, HTML, XHTML, OTHER, EXTERNAL
+		/**
+		 * text content
+		 */
+		TEXT, /**
+		 * html content
+		 */
+		HTML, /**
+		 * xhtml content
+		 */
+		XHTML, /**
+		 * other non text, html or xhtml content
+		 */
+		OTHER, /**
+		 * external content outside of the feed
+		 */
+		EXTERNAL
 	}
 
 	/**
@@ -675,6 +690,7 @@ public final class FeedDoc {
 	 * @param attributes
 	 *            additional attributes.
 	 * @return an immutable Content object.
+	 * @throws AtomSpecException 
 	 */
 	public static Content buildContent(String content,
 			List<Attribute> attributes) throws AtomSpecException {
@@ -771,6 +787,7 @@ public final class FeedDoc {
 	 * @param content
 	 *            the content of the extension element.
 	 * @return an immutable Extension object.
+	 * @throws AtomSpecException 
 	 */
 	public static Extension buildExtension(String elementName,
 			List<Attribute> attributes, String content)
@@ -786,6 +803,7 @@ public final class FeedDoc {
 	 * @param text
 	 *            the text content.
 	 * @return an immutable Generator object.
+	 * @throws AtomSpecException 
 	 */
 	public static Generator buildGenerator(List<Attribute> attributes,
 			String text) throws AtomSpecException {
@@ -799,6 +817,7 @@ public final class FeedDoc {
 	 * @param attributes
 	 *            additional attributes.
 	 * @return an immutable Icon object.
+	 * @throws AtomSpecException 
 	 */
 	public static Icon buildIcon(List<Attribute> attributes, String atomUri)
 			throws AtomSpecException {
@@ -812,6 +831,7 @@ public final class FeedDoc {
 	 * @param attributes
 	 *            additional attributes.
 	 * @return an immutable Id object.
+	 * @throws AtomSpecException 
 	 */
 	public static Id buildId(List<Attribute> attributes, String atomUri)
 			throws AtomSpecException {
@@ -843,6 +863,7 @@ public final class FeedDoc {
 	 * @param attributes
 	 *            additional attributes.
 	 * @return an immutable Logo object.
+	 * @throws AtomSpecException 
 	 */
 	public static Logo buildLogo(List<Attribute> attributes, String atomUri)
 			throws AtomSpecException {
@@ -863,7 +884,9 @@ public final class FeedDoc {
 	 * 
 	 * @param published
 	 *            the date formatted to [RFC3339]
+	 * @param attributes the attributes for the published object.
 	 * @return an immutable Published object.
+	 * @throws AtomSpecException 
 	 */
 	public static Published buildPublished(Date published,
 			List<Attribute> attributes) throws AtomSpecException {
@@ -877,6 +900,7 @@ public final class FeedDoc {
 	 * @param attributes
 	 *            additional attributes.
 	 * @return an immutable Rights object.
+	 * @throws AtomSpecException 
 	 */
 	public static Rights buildRights(String rights, List<Attribute> attributes)
 			throws AtomSpecException {
@@ -937,6 +961,7 @@ public final class FeedDoc {
 	 * @param attributes
 	 *            additional attributes.
 	 * @return an immutable Subtitle object.
+	 * @throws AtomSpecException 
 	 */
 	public static Subtitle buildSubtitle(String subtitle,
 			List<Attribute> attributes) throws AtomSpecException {
@@ -950,6 +975,7 @@ public final class FeedDoc {
 	 * @param attributes
 	 *            additional attributes.
 	 * @return an immutable Summary object.
+	 * @throws AtomSpecException 
 	 */
 	public static Summary buildSummary(String summary,
 			List<Attribute> attributes) throws AtomSpecException {
@@ -963,6 +989,7 @@ public final class FeedDoc {
 	 * @param attributes
 	 *            additional attributes.
 	 * @return an immutable Title object.
+	 * @throws AtomSpecException 
 	 */
 	public static Title buildTitle(String title, List<Attribute> attributes)
 			throws AtomSpecException {
@@ -973,7 +1000,9 @@ public final class FeedDoc {
 	 * 
 	 * @param updated
 	 *            the date formatted to [RFC3339]
+	 * @param attributes the attributes for the updated object.
 	 * @return a immutable Updated object.
+	 * @throws AtomSpecException 
 	 */
 	public static Updated buildUpdated(Date updated, List<Attribute> attributes)
 			throws AtomSpecException {
@@ -1053,6 +1082,7 @@ public final class FeedDoc {
 	/**
 	 * Convenience method for getting the content type for this element.
 	 * Examines the "type" and "src" attributes if they exist in the list.
+	 * @param attributes the attributes to examine.
 	 * 
 	 * @return the content type for this element. One of TEXT,HTML,XHTML,OTHER
 	 *         or EXTERNAL

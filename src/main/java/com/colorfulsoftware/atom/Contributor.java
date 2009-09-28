@@ -51,30 +51,55 @@ public class Contributor implements Serializable {
 				extensions);
 	}
 
+	/**
+	 * @return the name element.
+	 */
 	public Name getName() {
 		return person.getName();
 	}
 
+	/**
+	 * @return the uri element.
+	 */
 	public URI getUri() {
 		return person.getUri();
 	}
 
+	/**
+	 * @return the email element.
+	 */
 	public Email getEmail() {
 		return person.getEmail();
 	}
 
+	/**
+	 * @return the list of attributes
+	 */
 	public List<Attribute> getAttributes() {
 		return person.getAttributes();
 	}
 
+	/**
+	 * @return the list of extensions
+	 */
 	public List<Extension> getExtensions() {
 		return person.getExtensions();
 	}
 	
+	/**
+	 * @param attrName
+	 *            the name of the attribute to get.
+	 * @return the Attribute object if attrName matches or null if not found.
+	 */
 	public Attribute getAttribute(String attrName) {
 		return person.getAttribute(attrName);
 	}
 
+	/**
+	 * @param extName
+	 *            the element name of the extension to get.
+	 * @return the Extension object if extName matches or null if not found.
+	 */
 	public Extension getExtension(String extName) {
 		return person.getExtension(extName);
 	}

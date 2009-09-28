@@ -98,14 +98,25 @@ public class Extension implements Serializable {
 		return (this.attributes == null) ? null : attrsCopy;
 	}
 
+	/**
+	 * @return the content.
+	 */
 	public String getContent() {
 		return content;
 	}
 
+	/**
+	 * @return the extension element name. eg "atom:link" or "someExtension"
+	 */
 	public String getElementName() {
 		return elementName;
 	}
 
+	/**
+	 * @param attrName
+	 *            the name of the attribute to get.
+	 * @return the Attribute object if attrName matches or null if not found.
+	 */
 	public Attribute getAttribute(String attrName) {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {

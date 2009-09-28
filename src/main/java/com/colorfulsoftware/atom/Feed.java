@@ -109,7 +109,7 @@ public class Feed implements Serializable {
 		} else {
 
 			this.entries = new TreeMap<String, Entry>(entries.comparator());
-			for(String entryKey: entries.keySet()){
+			for (String entryKey : entries.keySet()) {
 				Entry entry = entries.get(entryKey);
 
 				// if there is no author element at the feed level
@@ -132,13 +132,18 @@ public class Feed implements Serializable {
 		}
 	}
 
+	/**
+	 * @return the map of entry elements. Sorted by updated descending by
+	 *         default. see FeedDoc.sortEntries(Feed feed, Comparator<String>
+	 *         comparator, Class<?> elementClass)
+	 */
 	public SortedMap<String, Entry> getEntries() {
 		if (entries == null) {
 			return null;
 		}
 		SortedMap<String, Entry> entriesCopy = new TreeMap<String, Entry>(
 				entries.comparator());
-		for(String entryKey: this.entries.keySet()){
+		for (String entryKey : this.entries.keySet()) {
 			Entry entry = entries.get(entryKey);
 			try {
 				entriesCopy.put(entryKey, new Entry(entry.getId(), entry
@@ -269,27 +274,60 @@ public class Feed implements Serializable {
 	public List<Extension> getExtensions() {
 		return source.getExtensions();
 	}
-	
+
+	/**
+	 * @param attrName
+	 *            the name of the attribute to get.
+	 * @return the Attribute object if attrName matches or null if not found.
+	 */
 	public Attribute getAttribute(String attrName) {
 		return source.getAttribute(attrName);
 	}
 
+	/**
+	 * @param name
+	 *            the name of the author.
+	 * @return the Author object object if name matches or null if not found.
+	 * @throws AtomSpecException
+	 */
 	public Author getAuthor(String name) throws AtomSpecException {
 		return source.getAuthor(name);
 	}
 
+	/**
+	 * @param termValue
+	 *            the term value.
+	 * @return the Category object if term matches or null if not found.
+	 * @throws AtomSpecException
+	 */
 	public Category getCategory(String termValue) throws AtomSpecException {
 		return source.getCategory(termValue);
 	}
 
+	/**
+	 * @param name
+	 *            the name of the contributor.
+	 * @return the Contributor object if the name matches or null if not found.
+	 * @throws AtomSpecException
+	 */
 	public Contributor getContributor(String name) throws AtomSpecException {
 		return source.getContributor(name);
 	}
 
+	/**
+	 * @param hrefVal the href attribute value to look for.
+	 * @return the Link object if href matches or null if not found. 
+	 * @throws AtomSpecException
+	 */
 	public Link getLink(String hrefVal) throws AtomSpecException {
 		return source.getLink(hrefVal);
 	}
 
+	/**
+	 * @param extName
+	 *            the element name of the extension to get.
+	 * @return the Extension object if extName matches or null if not found.
+	 */
 	public Extension getExtension(String extName) {
 		return source.getExtension(extName);
 	}

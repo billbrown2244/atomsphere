@@ -31,6 +31,10 @@ import com.colorfulsoftware.atom.Attribute;
 import com.colorfulsoftware.atom.FeedDoc;
 import com.colorfulsoftware.atom.Id;
 
+/**
+ * @author Bill Brown
+ *
+ */
 public class IdTest {
 
 	private Id id;
@@ -38,6 +42,9 @@ public class IdTest {
 	private Attribute xmlLang;
 	private Attribute local;
 	
+	/**
+	 * @throws Exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		xmlBase = FeedDoc.buildAttribute("xml:base", "http://www.colorfulsoftware.com/projects/atomsphere/");
@@ -45,10 +52,16 @@ public class IdTest {
 		local = FeedDoc.buildAttribute("xmlns:abcAttribute","theValue");
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	@After
 	public void tearDown() throws Exception {
 	}
 
+	/**
+	 * test the id building functionality.
+	 */
 	@Test
 	public void testId() {
 		List<Attribute> attributes = new LinkedList<Attribute>();
@@ -69,15 +82,4 @@ public class IdTest {
 					+"href for this element.");
 		}
 	}
-
-	@Test
-	public void testGetAtomUri() {
-		//fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetAttributes() {
-		//fail("Not yet implemented");
-	}
-
 }

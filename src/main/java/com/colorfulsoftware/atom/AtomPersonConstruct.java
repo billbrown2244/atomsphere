@@ -69,6 +69,7 @@ class AtomPersonConstruct implements Serializable {
 	 *            the email address of the person
 	 * @param attributes
 	 * @param extensions
+	 * @throws AtomSpecException 
 	 */
 	public AtomPersonConstruct(Name name, URI uri, Email email,
 			List<Attribute> attributes, List<Extension> extensions)

@@ -43,6 +43,11 @@ import com.colorfulsoftware.atom.FeedDoc;
 import com.colorfulsoftware.atom.FeedReader;
 import com.colorfulsoftware.atom.FeedWriter;
 
+/**
+ * This class tests the feed writer.
+ * @author Bill Brown
+ *
+ */
 public class FeedWriterTest {
 
 	private FeedWriter feedWriter;
@@ -211,6 +216,9 @@ public class FeedWriterTest {
 			+ "</xh:div>"
 			+ "</content>" + "</entry>";
 
+	/**
+	 * @throws Exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		feedWriter = new FeedWriter();
@@ -218,6 +226,9 @@ public class FeedWriterTest {
 				new FileOutputStream("target/out.xml"));
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	@After
 	public void tearDown() throws Exception {
 		if (writer != null) {
@@ -231,6 +242,9 @@ public class FeedWriterTest {
 		new File("target/dump1.xml").deleteOnExit();
 	}
 
+	/**
+	 * test the feed writing functionality.
+	 */
 	@Test
 	public void testWriteFeed() {
 		try {
@@ -247,31 +261,9 @@ public class FeedWriterTest {
 		}
 	}
 
-	@Test
-	public void testWriteSubtitle() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testWriteGenerator() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testWriteID() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testWriteUpdated() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testWriteTitle() {
-		// fail("Not yet implemented");
-	}
-
+	/**
+	 * test the xhtml writing functionality.
+	 */
 	@Test
 	public void testWriteXHTML() {
 		try {
@@ -303,61 +295,9 @@ public class FeedWriterTest {
 
 	}
 
-	@Test
-	public void testWriteAuthors() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testWriteName() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testWriteUri() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testWriteEmail() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testWriteContributors() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testWriteRights() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testWriteLogo() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testWriteIcon() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testWriteCategories() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testWriteLinks() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testWriteExtensions() {
-		// fail("Not yet implemented");
-	}
-
+	/**
+	 * test the entry writing functionality.
+	 */
 	@Test
 	public void testWriteEntries() {
 		try {
@@ -426,25 +366,4 @@ public class FeedWriterTest {
 			fail("could not write entries." + e.getLocalizedMessage());
 		}
 	}
-
-	@Test
-	public void testWriteSummary() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testWritePublished() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testWriteContent() {
-		// fail("Not yet implemented");
-	}
-
-	@Test
-	public void testWriteSource() {
-		// fail("Not yet implemented");
-	}
-
 }

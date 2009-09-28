@@ -31,6 +31,11 @@ import com.colorfulsoftware.atom.Attribute;
 import com.colorfulsoftware.atom.FeedDoc;
 import com.colorfulsoftware.atom.Link;
 
+/**
+ * This class tests links.
+ * @author Bill Brown
+ *
+ */
 public class LinkTest {
 
 	private Link link;
@@ -44,6 +49,9 @@ public class LinkTest {
 	private Attribute title;
 	private Attribute length;
 	
+	/**
+	 * @throws Exception
+	 */
 	@Before
 	public void setUp() throws Exception {
 		xmlBase = FeedDoc.buildAttribute("xml:base", "http://www.colorfulsoftware.com/projects/atomsphere/");
@@ -57,10 +65,16 @@ public class LinkTest {
 		length = FeedDoc.buildAttribute("length","100");
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	@After
 	public void tearDown() throws Exception {
 	}
 
+	/**
+	 * tests the link functionality.
+	 */
 	@Test
 	public void testLink() {
 		List<Attribute> attributes = new LinkedList<Attribute>();
@@ -87,45 +101,4 @@ public class LinkTest {
 					+" for this link element.");
 		}
 	}
-
-	@Test
-	public void testGetAttributes() {
-		//fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetHref() {
-		//fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetHreflang() {
-		//fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetLength() {
-		//fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetRel() {
-		//fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetTitle() {
-		//fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetType() {
-		//fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetContent() {
-		//fail("Not yet implemented");
-	}
-
 }

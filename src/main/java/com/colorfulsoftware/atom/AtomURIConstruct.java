@@ -36,8 +36,10 @@ class AtomURIConstruct implements Serializable {
 
 	/**
 	 * 
+	 * @param attributes 
 	 * @param atomUri
 	 *            the unique identifier for the document.
+	 * @throws AtomSpecException 
 	 */
 	public AtomURIConstruct(List<Attribute> attributes, String atomUri)
 			throws AtomSpecException {

@@ -219,26 +219,59 @@ public class Source implements Serializable {
 		return sourceAdaptor.getExtensions();
 	}
 	
+	/**
+	 * @param attrName
+	 *            the name of the attribute to get.
+	 * @return the Attribute object if attrName matches or null if not found.
+	 */
 	public Attribute getAttribute(String attrName) {
 		return sourceAdaptor.getAttribute(attrName);
 	}
 
+	/**
+	 * @param name
+	 *            the name of the author to get.
+	 * @return the Author object if the name matches or null if not found.
+	 * @throws AtomSpecException
+	 */
 	public Author getAuthor(String name) throws AtomSpecException {
 		return sourceAdaptor.getAuthor(name);
 	}
 
+	/**
+	 * @param termValue
+	 *            the term value.
+	 * @return the Category object if the term matches or null if not found.
+	 * @throws AtomSpecException
+	 */
 	public Category getCategory(String termValue) throws AtomSpecException {
 		return sourceAdaptor.getCategory(termValue);
 	}
 
+	/**
+	 * @param name
+	 *            the name of the author to get.
+	 * @return the Contributor object if the name matches or null if not found.
+	 * @throws AtomSpecException
+	 */
 	public Contributor getContributor(String name) throws AtomSpecException {
 		return sourceAdaptor.getContributor(name);
 	}
 
+	/**
+	 * @param hrefVal the href attribute value to look for.
+	 * @return the Link object if href matches or null if not found. 
+	 * @throws AtomSpecException
+	 */
 	public Link getLink(String hrefVal) throws AtomSpecException {
 		return sourceAdaptor.getLink(hrefVal);
 	}
 
+	/**
+	 * @param extName
+	 *            the element name of the extension to get.
+	 * @return the Extension object if extName matches or null if not found.
+	 */
 	public Extension getExtension(String extName) {
 		return sourceAdaptor.getExtension(extName);
 	}

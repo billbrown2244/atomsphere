@@ -21,15 +21,20 @@
 package com.colorfulsoftware.atom;
 
 /**
- * This is an exception for data that doesn't match the spec.
+ * This is an exception for data that doesn't match the specification.
+ * 
  * @author Bill Brown
- *
+ * 
  */
 public class AtomSpecException extends Exception {
 
-    private static final long serialVersionUID = -2552891517237912542L;
-    
-    public AtomSpecException(String message){
-        super(message);
-    }
+	private static final long serialVersionUID = -2552891517237912542L;
+
+	/**
+	 * @param message
+	 *            information about the specification violation.
+	 */
+	public AtomSpecException(String message) {
+		super(message);
+	}
 }

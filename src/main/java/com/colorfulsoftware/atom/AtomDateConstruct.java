@@ -40,8 +40,10 @@ class AtomDateConstruct implements Serializable {
 
 	/**
 	 * 
-	 * @param updated
+	 * @param dateTime the date
+	 * @param attributes the attributes for the date.
 	 *            the date formatted to [RFC3339]
+	 * @throws AtomSpecException 
 	 */
 	public AtomDateConstruct(Date dateTime, List<Attribute> attributes)
 			throws AtomSpecException {

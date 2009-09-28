@@ -90,8 +90,8 @@ public class Entry implements Serializable {
 					"atom:entry elements MUST contain exactly one atom:title element.");
 		}
 		// make sure updated is present
-		//it is actually checked further up in the reader because of how 
-		//we store entries.
+		// it is actually checked further up in the reader because of how
+		// we store entries.
 
 		if (content == null) {
 			this.content = null;
@@ -275,27 +275,59 @@ public class Entry implements Serializable {
 	public List<Extension> getExtensions() {
 		return entryAdaptor.getExtensions();
 	}
-	
+
+	/**
+	 * @param attrName
+	 *            the name of the attribute to get.
+	 * @return the Attribute object if attrName matches or null if not found.
+	 */
 	public Attribute getAttribute(String attrName) {
 		return entryAdaptor.getAttribute(attrName);
 	}
 
+	/**
+	 * @param name
+	 *            the name of the author to get.
+	 * @return the Author object if the name matches or null if not found.
+	 * @throws AtomSpecException
+	 */
 	public Author getAuthor(String name) throws AtomSpecException {
 		return entryAdaptor.getAuthor(name);
 	}
 
+	/**
+	 * @param termValue
+	 *            the term value.
+	 * @return the Category object if the term matches or null if not found.
+	 * @throws AtomSpecException
+	 */
 	public Category getCategory(String termValue) throws AtomSpecException {
 		return entryAdaptor.getCategory(termValue);
 	}
 
+	/**
+	 * @param name the name of the contributor
+	 * @return the Contributor object if name matches or null if not found.
+	 * @throws AtomSpecException
+	 */
 	public Contributor getContributor(String name) throws AtomSpecException {
 		return entryAdaptor.getContributor(name);
 	}
 
+	/**
+	 * @param hrefVal the href attribute value to look for.
+	 * @return the Link object if href matches or null if not found. 
+	 * @throws AtomSpecException
+	 */
 	public Link getLink(String hrefVal) throws AtomSpecException {
 		return entryAdaptor.getLink(hrefVal);
 	}
 
+	/**
+	 * @param extName
+	 *            the element name of the extension to get.
+	 * @return the Extension object if extName matches or null if not found.
+	 */
 	public Extension getExtension(String extName) {
 		return entryAdaptor.getExtension(extName);
 	}
