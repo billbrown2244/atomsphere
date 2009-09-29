@@ -59,34 +59,28 @@ class AtomTextConstruct implements Serializable {
 	// content elements do a different validation.
 	AtomTextConstruct(String text, List<Attribute> attributes,
 			boolean isContentElement) throws AtomSpecException {
-
+		FeedDoc feedDoc = new FeedDoc();
 		if (attributes == null) {
 			this.attributes = null;
 		} else {
+			this.attributes = new LinkedList<Attribute>();
 			// content elements have a slightly different validation.
 			if (isContentElement) {
-				this.attributes = new LinkedList<Attribute>();
 				for (Attribute attr : attributes) {
 					// check for unsupported attribute.
-					if (!new FeedDoc().isAtomCommonAttribute(attr)
-							&& !new FeedDoc().isUndefinedAttribute(attr)
-							&& !attr.getName().equals("type")
+					if (!feedDoc.isAttributeSupported(this, attr)
 							&& !attr.getName().equals("src")) {
 						throw new AtomSpecException("Unsuppported attribute "
-								+ attr.getName() + " in this content element ");
+								+ attr.getName()
+								+ " for this Atom Text Construct.");
 					}
 					this.attributes.add(new Attribute(attr.getName(), attr
 							.getValue()));
 				}
 			} else {
-				// add the attributes
-				this.attributes = new LinkedList<Attribute>();
-
 				for (Attribute attr : attributes) {
 					// check for unsupported attribute.
-					if (!new FeedDoc().isAtomCommonAttribute(attr)
-							&& !new FeedDoc().isUndefinedAttribute(attr)
-							&& !attr.getName().equals("type")) {
+					if (!feedDoc.isAttributeSupported(this, attr)) {
 						throw new AtomSpecException("Unsuppported attribute "
 								+ attr.getName()
 								+ " for this Atom Text Construct.");
@@ -112,7 +106,6 @@ class AtomTextConstruct implements Serializable {
 	AtomTextConstruct(String text, List<Attribute> attributes,
 			String divWrapperStart, String divWrapperEnd,
 			boolean isContentElement) throws AtomSpecException {
-
 		FeedDoc feedDoc = new FeedDoc();
 		this.text = text;
 		this.divWrapperStart = divWrapperStart;
@@ -121,14 +114,13 @@ class AtomTextConstruct implements Serializable {
 		if (attributes == null) {
 			this.attributes = null;
 		} else {
+			// add the attributes
+			this.attributes = new LinkedList<Attribute>();
 			// content elements have a slightly different validation.
 			if (isContentElement) {
-				this.attributes = new LinkedList<Attribute>();
 				for (Attribute attr : attributes) {
 					// check for unsupported attribute.
-					if (!feedDoc.isAtomCommonAttribute(attr)
-							&& !feedDoc.isUndefinedAttribute(attr)
-							&& !attr.getName().equals("type")
+					if (!feedDoc.isAttributeSupported(this, attr)
 							&& !attr.getName().equals("src")) {
 						throw new AtomSpecException("Unsuppported attribute "
 								+ attr.getName() + " in this content element ");
@@ -137,14 +129,10 @@ class AtomTextConstruct implements Serializable {
 							.getValue()));
 				}
 			} else {
-				// add the attributes
-				this.attributes = new LinkedList<Attribute>();
 
 				for (Attribute attr : attributes) {
 					// check for unsupported attribute.
-					if (!feedDoc.isAtomCommonAttribute(attr)
-							&& !feedDoc.isUndefinedAttribute(attr)
-							&& !attr.getName().equals("type")) {
+					if (!feedDoc.isAttributeSupported(this, attr)) {
 						throw new AtomSpecException("Unsuppported attribute "
 								+ attr.getName()
 								+ " for this Atom Text Construct.");
@@ -186,18 +174,15 @@ class AtomTextConstruct implements Serializable {
 	/**
 	 * 
 	 * @return the category attribute list.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Attribute> getAttributes() {
+	public List<Attribute> getAttributes() throws AtomSpecException {
 
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		if (this.attributes != null) {
 			for (Attribute attr : this.attributes) {
-				try {
-					attrsCopy
-							.add(new Attribute(attr.getName(), attr.getValue()));
-				} catch (AtomSpecException e) {
-					// this should not happen.
-				}
+				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
 			}
 		}
 		return (this.attributes == null) ? null : attrsCopy;
@@ -223,17 +208,15 @@ class AtomTextConstruct implements Serializable {
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Attribute getAttribute(String attrName) {
+	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
 				if (attribute.getName().equals(attrName)) {
-					try {
-						return new Attribute(attribute.getName(), attribute
-								.getValue());
-					} catch (AtomSpecException e) {
-						// this should not happen.
-					}
+					return new Attribute(attribute.getName(), attribute
+							.getValue());
 				}
 			}
 		}

@@ -22,6 +22,11 @@ package com.colorfulsoftware.atom;
 
 import java.io.Serializable;
 
+/**
+ * This class represents a text object.
+ * @author Bill Brown
+ *
+ */
 class AtomPlainText implements Serializable {
 
 	/**
@@ -29,16 +34,12 @@ class AtomPlainText implements Serializable {
 	 */
 	private static final long serialVersionUID = -601318756294822761L;
 	private final String text;
-    
-    /**
-     * 
-     * @param text the plain text.
-     */
-    public AtomPlainText(String text){
-        this.text = text;
-    }
 
-    public String getText() {
-        return text;
-    }
+	AtomPlainText(String text) {
+		this.text = text;
+	}
+
+	public String getText() {
+		return text;
+	}
 }

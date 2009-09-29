@@ -74,15 +74,19 @@ public class Author implements Serializable {
 
 	/**
 	 * @return a list of attributes
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Attribute> getAttributes() {
+	public List<Attribute> getAttributes() throws AtomSpecException {
 		return person.getAttributes();
 	}
 
 	/**
 	 * @return a list of extension elements
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Extension> getExtensions() {
+	public List<Extension> getExtensions() throws AtomSpecException {
 		return person.getExtensions();
 	}
 
@@ -90,8 +94,10 @@ public class Author implements Serializable {
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Attribute getAttribute(String attrName) {
+	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		return person.getAttribute(attrName);
 	}
 
@@ -99,8 +105,10 @@ public class Author implements Serializable {
 	 * @param extName
 	 *            the element name of the extension to get.
 	 * @return the Extension object if extName matches or null if not found.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Extension getExtension(String extName) {
+	public Extension getExtension(String extName) throws AtomSpecException {
 		return person.getExtension(extName);
 	}
 }

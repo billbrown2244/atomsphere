@@ -68,8 +68,10 @@ public class Summary implements Serializable {
 	/**
 	 * 
 	 * @return the attributes for this element.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Attribute> getAttributes() {
+	public List<Attribute> getAttributes() throws AtomSpecException {
 		return summary.getAttributes();
 	}
 
@@ -80,13 +82,15 @@ public class Summary implements Serializable {
 	String getDivWrapperEnd() {
 		return summary.getDivWrapperEnd();
 	}
-	
+
 	/**
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Attribute getAttribute(String attrName) {
+	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		return summary.getAttribute(attrName);
 	}
 }

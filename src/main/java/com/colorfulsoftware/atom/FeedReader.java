@@ -30,7 +30,6 @@ import java.util.TimeZone;
 import java.util.TreeMap;
 
 import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 /**
@@ -157,17 +156,16 @@ class FeedReader {
 		// because the sort extension does not enforce placement of the element
 		// do a check after the feed is built to determine if it needs to be
 		// sorted.
-		return feedDoc.checkForAndApplyExtension(feed, feedDoc.getSort());
+		return feedDoc.checkForAndApplyExtension(feed,feedDoc.buildAttribute("xmlns:sort",
+		"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
 	}
 
 	List<Attribute> getAttributes(XMLStreamReader reader) throws Exception {
-		System.out.println("reader start type: "+reader.getEventType());
 		List<Attribute> attributes = new LinkedList<Attribute>();
 
 		if (reader.getEventType() == XMLStreamConstants.START_DOCUMENT) {
 			feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
 			reader.next();
-			System.out.println("reader start next: "+reader.getEventType());
 		}
 
 		if (reader.getEventType() != XMLStreamConstants.START_ELEMENT) {
@@ -175,13 +173,14 @@ class FeedReader {
 		}
 
 		int eventSkip = 0;
+		//add the namespace attributes.
 		for (int i = 0; i < reader.getNamespaceCount(); i++) {
 			eventSkip++;
 			String attrName = "xmlns";
 			if (reader.getNamespacePrefix(i) != null) {
 				attrName += ":" + reader.getNamespacePrefix(i);
 			}
-
+			
 			attributes.add(feedDoc.buildAttribute(attrName, reader
 					.getNamespaceURI(i)));
 		}
@@ -595,7 +594,7 @@ class FeedReader {
 	}
 
 	String readXHTML(XMLStreamReader reader, String parentElement)
-			throws XMLStreamException, Exception {
+			throws Exception {
 		StringBuffer xhtml = new StringBuffer();
 		String elementName = null;
 

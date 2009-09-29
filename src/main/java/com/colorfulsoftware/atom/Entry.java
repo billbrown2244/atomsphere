@@ -72,10 +72,6 @@ public class Entry implements Serializable {
 			Published published, Summary summary, Source source)
 			throws AtomSpecException {
 
-		this.entryAdaptor = new AtomEntrySourceAdaptor(id, title, updated,
-				rights, authors, categories, contributors, links, attributes,
-				extensions);
-
 		// check for functional requirements here because
 		// they are all optional for a Source element.
 
@@ -93,6 +89,10 @@ public class Entry implements Serializable {
 		// it is actually checked further up in the reader because of how
 		// we store entries.
 
+		this.entryAdaptor = new AtomEntrySourceAdaptor(id, title, updated,
+				rights, authors, categories, contributors, links, attributes,
+				extensions);
+
 		if (content == null) {
 			this.content = null;
 		} else {
@@ -103,18 +103,6 @@ public class Entry implements Serializable {
 					if (attr.getName().equals("src") && summary == null) {
 						throw new AtomSpecException(
 								"atom:entry elements MUST contain an atom:summary element if the atom:entry contains an atom:content that has a \"src\" attribute (and is thus empty).");
-					}
-					// check for non text or html or xhtml or xml mime types.
-					if (attr.getName().equals("type")
-							&& !attr.getValue().equals("text")
-							&& !attr.getValue().equals("html")
-							&& !attr.getValue().equals("xhtml")
-							&& !attr.getValue().startsWith("text/")
-							&& !attr.getValue().endsWith("/xml")
-							&& !attr.getValue().endsWith("\\+xml")
-							&& summary == null) {
-						throw new AtomSpecException(
-								"atom:entry elements MUST contain an atom:summary element if the atom:entry contains content that is encoded in Base64; i.e., the \"type\" attribute of atom:content is a MIME media type [MIMEREG], but is not an XML media type [RFC3023], does not begin with \"text/\", and does not end with \"/xml\" or \"+xml\".");
 					}
 				}
 			}
@@ -137,142 +125,147 @@ public class Entry implements Serializable {
 	/**
 	 * 
 	 * @return the content for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Content getContent() {
-		try {
-			return (content == null) ? null : new Content(content);
-		} catch (Exception e) {
-			// we should never get here.
-			return null;
-		}
+	public Content getContent() throws AtomSpecException {
+		return (content == null) ? null : new Content(content);
 	}
 
 	/**
 	 * 
 	 * @return the published date for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Published getPublished() {
-		try {
-			return (published == null) ? null : new Published(published
-					.getDateTime(), published.getAttributes());
-		} catch (Exception e) {
-			// we should never get here.
-			return null;
-		}
+	public Published getPublished() throws AtomSpecException {
+		return (published == null) ? null : new Published(published
+				.getDateTime(), published.getAttributes());
 	}
 
 	/**
 	 * 
 	 * @return the source for this element.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Source getSource() {
-		try {
-			return (source == null) ? null : new Source(source.getId(), source
-					.getTitle(), source.getUpdated(), source.getRights(),
-					source.getAuthors(), source.getCategories(), source
-							.getContributors(), source.getLinks(), source
-							.getAttributes(), source.getExtensions(), source
-							.getGenerator(), source.getSubtitle(), source
-							.getIcon(), source.getLogo());
-		} catch (Exception e) {
-			// this should never happen because
-			// we check for errors on initial creation
-			// but if it does, print the stack trace
-			e.printStackTrace();
-			return null;
-		}
+	public Source getSource() throws AtomSpecException {
+		return (source == null) ? null : new Source(source.getId(), source
+				.getTitle(), source.getUpdated(), source.getRights(), source
+				.getAuthors(), source.getCategories(),
+				source.getContributors(), source.getLinks(), source
+						.getAttributes(), source.getExtensions(), source
+						.getGenerator(), source.getSubtitle(),
+				source.getIcon(), source.getLogo());
 	}
 
 	/**
 	 * 
 	 * @return the summary for this element.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Summary getSummary() {
-		try {
-			return (summary == null) ? null : new Summary(summary);
-		} catch (Exception e) {
-			// we should never get here.
-			return null;
-		}
+	public Summary getSummary() throws AtomSpecException {
+		return (summary == null) ? null : new Summary(summary);
 	}
 
 	/**
 	 * 
 	 * @return the unique identifier for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Id getId() {
+	public Id getId() throws AtomSpecException {
 		return entryAdaptor.getId();
 	}
 
 	/**
 	 * 
 	 * @return the title for this element.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Title getTitle() {
+	public Title getTitle() throws AtomSpecException {
 		return entryAdaptor.getTitle();
 	}
 
 	/**
 	 * 
 	 * @return the updated date for this element.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Updated getUpdated() {
+	public Updated getUpdated() throws AtomSpecException {
 		return entryAdaptor.getUpdated();
 	}
 
 	/**
 	 * 
 	 * @return the associated rights for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Rights getRights() {
+	public Rights getRights() throws AtomSpecException {
 		return entryAdaptor.getRights();
 	}
 
 	/**
 	 * 
 	 * @return the authors for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Author> getAuthors() {
+	public List<Author> getAuthors() throws AtomSpecException {
 		return entryAdaptor.getAuthors();
 	}
 
 	/**
 	 * 
 	 * @return the categories for this element.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Category> getCategories() {
+	public List<Category> getCategories() throws AtomSpecException {
 		return entryAdaptor.getCategories();
 	}
 
 	/**
 	 * 
 	 * @return the contributors for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Contributor> getContributors() {
+	public List<Contributor> getContributors() throws AtomSpecException {
 		return entryAdaptor.getContributors();
 	}
 
 	/**
 	 * 
 	 * @return the links for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Link> getLinks() {
+	public List<Link> getLinks() throws AtomSpecException {
 		return entryAdaptor.getLinks();
 	}
 
 	/**
 	 * 
 	 * @return the category attribute list.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Attribute> getAttributes() {
+	public List<Attribute> getAttributes() throws AtomSpecException {
 		return entryAdaptor.getAttributes();
 	}
 
 	/**
 	 * 
 	 * @return the extensions for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Extension> getExtensions() {
+	public List<Extension> getExtensions() throws AtomSpecException {
 		return entryAdaptor.getExtensions();
 	}
 
@@ -280,8 +273,10 @@ public class Entry implements Serializable {
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Attribute getAttribute(String attrName) {
+	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		return entryAdaptor.getAttribute(attrName);
 	}
 
@@ -333,8 +328,10 @@ public class Entry implements Serializable {
 	 * @param extName
 	 *            the element name of the extension to get.
 	 * @return the Extension object if extName matches or null if not found.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Extension getExtension(String extName) {
+	public Extension getExtension(String extName) throws AtomSpecException {
 		return entryAdaptor.getExtension(extName);
 	}
 }

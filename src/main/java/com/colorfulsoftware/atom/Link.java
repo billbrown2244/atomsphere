@@ -66,23 +66,13 @@ public class Link implements Serializable {
 	// use the factory method in the FeedDoc.
 	Link(List<Attribute> attributes, String content) throws AtomSpecException {
 		FeedDoc feedDoc = new FeedDoc();
-		System.out.println("attributes here: "+attributes);
 		if (attributes == null) {
 			this.attributes = new LinkedList<Attribute>();
 		} else {
 			this.attributes = new LinkedList<Attribute>();
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
-				System.out.println("attr here: "+attr);
-				
-				if (!feedDoc.isAtomCommonAttribute(attr)
-						&& !feedDoc.isUndefinedAttribute(attr)
-						&& !attr.getName().equals("href")
-						&& !attr.getName().equals("rel")
-						&& !attr.getName().equals("type")
-						&& !attr.getName().equals("hreflang")
-						&& !attr.getName().equals("title")
-						&& !attr.getName().equals("length")) {
+				if (!feedDoc.isAttributeSupported(this, attr)) {
 					throw new AtomSpecException("Unsuppported attribute "
 							+ attr.getName() + " for this link element.");
 				}
@@ -113,19 +103,15 @@ public class Link implements Serializable {
 	/**
 	 * 
 	 * @return the category attribute list.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Attribute> getAttributes() {
+	public List<Attribute> getAttributes() throws AtomSpecException {
 
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		if (this.attributes != null) {
 			for (Attribute attr : this.attributes) {
-				try {
-					attrsCopy
-							.add(new Attribute(attr.getName(), attr.getValue()));
-				} catch (AtomSpecException e) {
-					// this should not happen.
-					return null;
-				}
+				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
 			}
 		}
 		return (this.attributes == null) ? null : attrsCopy;
@@ -134,88 +120,70 @@ public class Link implements Serializable {
 	/**
 	 * 
 	 * @return the href contains the link's IRI
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Attribute getHref() {
-		try {
-			return (href == null) ? null : new Attribute(href.getName(), href
-					.getValue());
-		} catch (AtomSpecException e) {
-			// this should not happen.
-			return null;
-		}
+	public Attribute getHref() throws AtomSpecException {
+		return (href == null) ? null : new Attribute(href.getName(), href
+				.getValue());
 	}
 
 	/**
 	 * 
 	 * @return the hreflang describes the language of the resource pointed to by
 	 *         the href attribute.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Attribute getHreflang() {
-		try {
-			return (hreflang == null) ? null : new Attribute(
-					hreflang.getName(), hreflang.getValue());
-		} catch (AtomSpecException e) {
-			// this should not happen.
-			return null;
-		}
+	public Attribute getHreflang() throws AtomSpecException {
+		return (hreflang == null) ? null : new Attribute(hreflang.getName(),
+				hreflang.getValue());
 	}
 
 	/**
 	 * 
 	 * @return the length indicates an advisory length of the linked content in
 	 *         octets.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Attribute getLength() {
-		try {
-			return (length == null) ? null : new Attribute(length.getName(),
-					length.getValue());
-		} catch (AtomSpecException e) {
-			// this should not happen.
-			return null;
-		}
+	public Attribute getLength() throws AtomSpecException {
+		return (length == null) ? null : new Attribute(length.getName(), length
+				.getValue());
 	}
 
 	/**
 	 * 
 	 * @return the rel which matches either the "isegment-nz-nc" or the "IRI"
 	 *         production in [RFC3987]
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Attribute getRel() {
-		try {
-			return (rel == null) ? null : new Attribute(rel.getName(), rel
-					.getValue());
-		} catch (AtomSpecException e) {
-			// this should not happen.
-			return null;
-		}
+	public Attribute getRel() throws AtomSpecException {
+		return (rel == null) ? null : new Attribute(rel.getName(), rel
+				.getValue());
 	}
 
 	/**
 	 * 
 	 * @return the title conveys human-readable information about the link.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Attribute getTitle() {
-		try {
-			return (title == null) ? null : new Attribute(title.getName(),
-					title.getValue());
-		} catch (AtomSpecException e) {
-			// this should not happen.
-			return null;
-		}
+	public Attribute getTitle() throws AtomSpecException {
+		return (title == null) ? null : new Attribute(title.getName(), title
+				.getValue());
 	}
 
 	/**
 	 * 
 	 * @return the type which is an advisory media type
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Attribute getType() {
-		try {
-			return (type == null) ? null : new Attribute(type.getName(), type
-					.getValue());
-		} catch (AtomSpecException e) {
-			// this should not happen.
-			return null;
-		}
+	public Attribute getType() throws AtomSpecException {
+		return (type == null) ? null : new Attribute(type.getName(), type
+				.getValue());
 	}
 
 	/**
@@ -230,17 +198,15 @@ public class Link implements Serializable {
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Attribute getAttribute(String attrName) {
+	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
 				if (attribute.getName().equals(attrName)) {
-					try {
-						return new Attribute(attribute.getName(), attribute
-								.getValue());
-					} catch (AtomSpecException e) {
-						// this should not happen.
-					}
+					return new Attribute(attribute.getName(), attribute
+							.getValue());
 				}
 			}
 		}

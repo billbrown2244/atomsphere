@@ -54,9 +54,10 @@ public class Attribute implements Serializable {
 	private final String value;
 
 	// use the factory method in the FeedDoc.
-	Attribute(String name, String value) throws AtomSpecException{
-		if(this.name == null){
-			throw new AtomSpecException("Attributes SHOULD have a name and SHOULD NOT be blank.");
+	Attribute(String name, String value) throws AtomSpecException {
+		if (name == null) {
+			throw new AtomSpecException(
+					"Attributes SHOULD have a name and SHOULD NOT be blank.");
 		}
 		this.name = name;
 		this.value = value;

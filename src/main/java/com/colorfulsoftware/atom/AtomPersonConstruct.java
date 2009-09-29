@@ -59,22 +59,7 @@ class AtomPersonConstruct implements Serializable {
 
 	private final List<Extension> extensions;
 
-	/**
-	 * 
-	 * @param name
-	 *            the name of the person
-	 * @param uri
-	 *            the uri of the person
-	 * @param email
-	 *            the email address of the person
-	 * @param attributes
-	 *            for this author or contributor elements.
-	 * @param extensions
-	 *            for this author or contributor elements.
-	 * @throws AtomSpecException
-	 *             if the data is not formatted properly.
-	 */
-	public AtomPersonConstruct(Name name, URI uri, Email email,
+	AtomPersonConstruct(Name name, URI uri, Email email,
 			List<Attribute> attributes, List<Extension> extensions)
 			throws AtomSpecException {
 
@@ -97,8 +82,7 @@ class AtomPersonConstruct implements Serializable {
 			this.attributes = new LinkedList<Attribute>();
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
-				if (!feedDoc.isAtomCommonAttribute(attr)
-						&& !feedDoc.isUndefinedAttribute(attr)) {
+				if (!feedDoc.isAttributeSupported(this,attr)) {
 					throw new AtomSpecException("Unsuppported attribute "
 							+ attr.getName()
 							+ " for this Atom Person Construct.");
@@ -123,18 +107,15 @@ class AtomPersonConstruct implements Serializable {
 	/**
 	 * 
 	 * @return the category attribute list.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Attribute> getAttributes() {
+	public List<Attribute> getAttributes() throws AtomSpecException {
 
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		if (this.attributes != null) {
 			for (Attribute attr : this.attributes) {
-				try {
-					attrsCopy
-							.add(new Attribute(attr.getName(), attr.getValue()));
-				} catch (AtomSpecException e) {
-					// this should not happen.
-				}
+				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
 			}
 		}
 		return (this.attributes == null) ? null : attrsCopy;
@@ -167,20 +148,17 @@ class AtomPersonConstruct implements Serializable {
 	/**
 	 * 
 	 * @return the extensions for this element.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Extension> getExtensions() {
+	public List<Extension> getExtensions() throws AtomSpecException {
 		if (extensions == null) {
 			return null;
 		}
 		List<Extension> extsCopy = new LinkedList<Extension>();
 		for (Extension extension : this.extensions) {
-			try {
-				extsCopy.add(new Extension(extension.getElementName(),
-						extension.getAttributes(), extension.getContent()));
-			} catch (Exception e) {
-				// we should never get here.
-				return null;
-			}
+			extsCopy.add(new Extension(extension.getElementName(), extension
+					.getAttributes(), extension.getContent()));
 		}
 		return extsCopy;
 	}
@@ -189,17 +167,15 @@ class AtomPersonConstruct implements Serializable {
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Attribute getAttribute(String attrName) {
+	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
 				if (attribute.getName().equals(attrName)) {
-					try {
-						return new Attribute(attribute.getName(), attribute
-								.getValue());
-					} catch (AtomSpecException e) {
-						// this should not happen.
-					}
+					return new Attribute(attribute.getName(), attribute
+							.getValue());
 				}
 			}
 		}
@@ -210,19 +186,15 @@ class AtomPersonConstruct implements Serializable {
 	 * @param extName
 	 *            the element name of the extension to get.
 	 * @return the Extension object if extName matches or null if not found.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Extension getExtension(String extName) {
+	public Extension getExtension(String extName) throws AtomSpecException {
 		if (this.extensions != null) {
 			for (Extension extension : this.extensions) {
 				if (extension.getElementName().equals(extName)) {
-					try {
-						return new Extension(extension.getElementName(),
-								extension.getAttributes(), extension
-										.getContent());
-					} catch (Exception e) {
-						// we should never get here.
-						return null;
-					}
+					return new Extension(extension.getElementName(), extension
+							.getAttributes(), extension.getContent());
 				}
 			}
 		}

@@ -56,8 +56,7 @@ class AtomDateConstruct implements Serializable {
 			this.attributes = new LinkedList<Attribute>();
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
-				if (!feedDoc.isAtomCommonAttribute(attr)
-						&& !feedDoc.isUndefinedAttribute(attr)) {
+				if (!feedDoc.isAttributeSupported(this,attr)) {
 					throw new AtomSpecException("Unsuppported attribute "
 							+ attr.getName() + " for this Atom Date Construct.");
 				}
@@ -108,18 +107,14 @@ class AtomDateConstruct implements Serializable {
 	/**
 	 * 
 	 * @return the category attribute list.
+	 * @throws AtomSpecException
+	 *             if there is an issue with the data.
 	 */
-	public List<Attribute> getAttributes() {
-
+	public List<Attribute> getAttributes() throws AtomSpecException {
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		if (this.attributes != null) {
 			for (Attribute attr : this.attributes) {
-				try {
-					attrsCopy
-							.add(new Attribute(attr.getName(), attr.getValue()));
-				} catch (AtomSpecException e) {
-					// this should not happen.
-				}
+				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
 			}
 		}
 		return (this.attributes == null) ? null : attrsCopy;
@@ -129,17 +124,15 @@ class AtomDateConstruct implements Serializable {
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
+	 * @throws AtomSpecException
+	 *             if there is an issue with the data.
 	 */
-	public Attribute getAttribute(String attrName) {
+	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
 				if (attribute.getName().equals(attrName)) {
-					try {
-						return new Attribute(attribute.getName(), attribute
-								.getValue());
-					} catch (AtomSpecException e) {
-						// this should not happen.
-					}
+					return new Attribute(attribute.getName(), attribute
+							.getValue());
 				}
 			}
 		}

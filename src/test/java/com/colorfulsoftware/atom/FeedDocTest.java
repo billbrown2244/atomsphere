@@ -82,24 +82,31 @@ public class FeedDocTest {
 	}
 
 	private String mega = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
-			+ "<id testAttr=\"testVal\">http://colorfulsoftware.localhost/projects/atomsphere/atom.xml</id>"
-			+ "<updated fakeAttribute=\"fakeValue\">2007-03-08T20:52:40.70-06:00</updated>"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\" xmlns:local=\"http://purl.org/dc/elements/1.1/\">"
+			+ "<id local:something=\"testVal\">http://colorfulsoftware.localhost/projects/atomsphere/atom.xml</id>"
+			+ "<updated local:somethingElse=\"fakeValue\">2007-03-08T20:52:40.70-06:00</updated>"
 			+ "<generator uri=\"http://www.colorfulsoftware.com/projects/atomsphere\" version=\"1.0.20\">Atomsphere</generator>"
 			+ "<title type=\"xhtml\">Atomsphere a <b>great atom 1.0 parser </b></title>  <subtitle>a java atom feed library</subtitle>"
-			+ "<author testAttr=\"testVal\"><test:test xmlns:test=\"http://www.w3.org/1999/test\" /><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
+			+ "<author local:testAttr=\"testVal\"><test:test xmlns:test=\"http://www.w3.org/1999/test\" /><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 			+ "<contributor><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></contributor>"
-			+ "<contributor testAttr=\"testVal\"><test:test xmlns:test=\"http://www.w3.org/1999/test\" /><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></contributor>"
+			+ "<contributor local:testAttr=\"testVal\"><test:test xmlns:test=\"http://www.w3.org/1999/test\" /><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></contributor>"
 			+ "<category term=\"math\" scheme=\"http://www.colorfulsoftware.com/projects/atomsphere/\" label=\"math\" />"
 			+ "<category term=\"science\" scheme=\"http://www.colorfulsoftware.com/projects/atomsphere/\" label=\"science\"/>"
 			+ "<link href=\"http://www.colorfulsoftware.com/projects/atomsphere/atom.xml\" rel=\"self\" type=\"application/atom+xml\" hreflang=\"UTF-8\" title=\"cool site\" />"
-			+ "<icon testAttr=\"testVal\">http://www.minoritydirectory.net/images/logo.gif</icon>"
-			+ "<logo testAttr=\"testVal\">http://www.minoritydirectory.net/images/logo.gif</logo>"
+			+ "<icon local:testAttr=\"testVal\">http://www.minoritydirectory.net/images/logo.gif</icon>"
+			+ "<logo local:testAttr=\"testVal\">http://www.minoritydirectory.net/images/logo.gif</logo>"
 			+ "<rights>Copyright 2007</rights>"
 			+ "<entry><id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#About</id>"
 			+ "<updated>2007-03-02T13:00:00.699-06:00</updated><title>About</title><published>2007-02-26T12:34:01.330-06:00</published>"
 			+ "<summary>About the project</summary>"
+			+ "<author local:testAttr=\"testVal\"><test:test xmlns:test=\"http://www.w3.org/1999/test\" /><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
+			+ "<contributor><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></contributor>"
+			+ "<contributor local:testAttr=\"testVal\"><test:test xmlns:test=\"http://www.w3.org/1999/test\" /><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></contributor>"
+			+ "<category term=\"math\" scheme=\"http://www.colorfulsoftware.com/projects/atomsphere/\" label=\"math\" />"
+			+ "<category term=\"science\" scheme=\"http://www.colorfulsoftware.com/projects/atomsphere/\" label=\"science\"/>"
+			+ "<link href=\"http://www.colorfulsoftware.com/projects/atomsphere/atom.xml\" rel=\"self\" type=\"application/atom+xml\" hreflang=\"UTF-8\" title=\"cool site\" />"
 			+ "<content type=\"html\">&lt;ul&gt; &lt;li&gt;&lt;span class=\"boldText\"&gt;Atomsphere&lt;/span&gt; isa java library that allows you to create and modify atom 1.0 feeds.&lt;/li&gt; &lt;li&gt;It is distributed under the GNU GPL license and can be used in any manner complient with the license.&lt;/li&gt; &lt;li&gt;It is also packaged as a servlet-lib for use in web applications.&lt;/li&gt; &lt;li&gt;It is also packaged as a customtag library to display feeds on a webapage.&lt;/li&gt; &lt;li&gt;It also comes with an example webapp which demonstrates some example uses of the library.&lt;/li&gt; &lt;li&gt;It is written to be tied as closely as possible to the current atom specification found &lt;a href=\"http://www.atomenabled.org/developers/syndication/atom-format-spec.php\"&gt;here&lt;/a&gt;.&lt;/li&gt; &lt;/ul&gt;</content>"
+			+ "<local:element>someitng that is an extension</local:element>"
 			+ "</entry>"
 			+ "<entry><id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#Requirements</id>"
 			+ "<updated>2007-03-02T12:59:54.274-06:00</updated><title>Requirements</title><published>2007-02-26T12:58:53.197-06:00</published>"
@@ -125,8 +132,8 @@ public class FeedDocTest {
 			+ " <subtitle>A subtitle.</subtitle>"
 			+ " <link href=\"http://example.org/feed/\" rel=\"self\"/>"
 			+ " <link href=\"http://example.org/\"/>"
-			+ " <updated xml:lang=\"en-US\">2003-12-13T18:30:02Z</updated>" + " <author>"
-			+ "   <name>John Doe</name>"
+			+ " <updated xml:lang=\"en-US\">2003-12-13T18:30:02Z</updated>"
+			+ " <author>" + "   <name>John Doe</name>"
 			+ "   <email>johndoe@example.com</email>" + " </author>"
 			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
 			+ " <entry>" + "   <title>Atom-Powered Robots Run Amok</title>"
@@ -245,7 +252,14 @@ public class FeedDocTest {
 			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
 			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
 			+ "<title>test entry 1</title>"
-			+ "<content type=\"noGood\">this is no good</content>" + "</entry>";
+			+ "<content type=\"pdf\">this is no good</content>" + "</entry>";
+	
+	//unsupported attribute
+	private String brokenEntry6 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+		+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\" fakeAttribute=\"noGood\">"
+		+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
+		+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+		+ "<title>test entry 1</title>" + "</entry>";
 
 	/**
 	 * @throws Exception
@@ -312,7 +326,7 @@ public class FeedDocTest {
 		try {
 			feed1 = feedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
-			System.out.println("feed here: "+feed1);
+			System.out.println("feed here: " + feed1);
 			feedDoc.writeFeedDoc(new FileOutputStream(
 					"src/test/resources/out1.xml"), feed1, feedDoc
 					.getEncoding(), feedDoc.getXmlVersion());
@@ -321,8 +335,8 @@ public class FeedDocTest {
 			assertNotNull(feed2);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("e : "+e);
-			System.out.println("error : "+e.getMessage());
+			System.out.println("e : " + e);
+			System.out.println("error : " + e.getMessage());
 			assertTrue(e instanceof AtomSpecException);
 		}
 
@@ -370,6 +384,8 @@ public class FeedDocTest {
 					"src/test/resources/out1.xml"));
 			assertNotNull(entry1);
 		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("error: " + e.getLocalizedMessage());
 			fail("should not get here.");
 		}
 
@@ -451,9 +467,10 @@ public class FeedDocTest {
 	public void testReadFeedToStringFeed() {
 		try {
 			feed1 = feedDoc.readFeedToBean(expectedFeed1);
-			System.out.println("updated orig = "+feed1.getUpdated().getAttribute("xml:lang"));
+			System.out.println("updated orig = "
+					+ feed1.getUpdated().getAttribute("xml:lang"));
 			String feed1Str = feedDoc.readFeedToString(feed1);
-			System.out.println("feed1Str = "+feed1Str);
+			System.out.println("feed1Str = " + feed1Str);
 			assertNotNull(feed1Str);
 			feed1 = feedDoc.readFeedToBean(feed1Str);
 			assertNotNull(feed1);
@@ -461,7 +478,7 @@ public class FeedDocTest {
 			assertNotNull(feed1.getTitle());
 			Updated updated = feed1.getUpdated();
 			assertNotNull(updated);
-			System.out.println("updated = "+updated.getAttribute("xml:lang"));
+			System.out.println("updated = " + updated.getAttribute("xml:lang"));
 			assertNotNull(updated.getAttribute("xml:lang"));
 			assertNull(updated.getAttribute("bunky"));
 
@@ -515,6 +532,7 @@ public class FeedDocTest {
 			System.out
 					.println("feed title from raw\n"
 							+ "One <strong>bold</strong> foot forward<title>can you see me</title>");
+			System.out.println("feed get title text\n"+feed1.getTitle().getText());
 			assertEquals(feed1.getTitle().getText(),
 					"One <strong>bold</strong> foot forward<title>can you see me</title>");
 			assertNotNull(feedDoc.readFeedToString(feed1));
@@ -611,9 +629,17 @@ public class FeedDocTest {
 			fail("should not get here;");
 		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
-			assertEquals(
-					e.getMessage(),
-					"atom:entry elements MUST contain an atom:summary element if the atom:entry contains content that is encoded in Base64; i.e., the \"type\" attribute of atom:content is a MIME media type [MIMEREG], but is not an XML media type [RFC3023], does not begin with \"text/\", and does not end with \"/xml\" or \"+xml\".");
+			assertEquals(e.getMessage(),
+					"Unsuppported attribute type for this Atom Text Construct.");
+		}
+		
+		try {
+			entry = feedDoc.readEntryToBean(brokenEntry6);
+			fail("should not get here;");
+		} catch (Exception e) {
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(e.getMessage(),
+					"Unsuppported attribute fakeAttribute for this element.");
 		}
 
 		try {
@@ -755,7 +781,7 @@ public class FeedDocTest {
 			assertNotNull(feed);
 			assertNotNull(feed.getAttribute("xml:lang"));
 			assertNull(feed.getAttribute("bunk"));
-			
+
 			// read and write a full feed.
 			feed = feedDoc.readFeedToBean(mega);
 			FeedWriter feedWriter = new FeedWriter();
@@ -765,6 +791,21 @@ public class FeedDocTest {
 			feedWriter.writeFeed(writer, feed);
 			writer.flush();
 			writer.close();
+			
+			for(Entry ent: feed.getEntries().values()){
+				if(ent.getId().getAtomUri().equals("http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#About")){
+					assertNotNull(ent.getAuthor("Bill Brown"));
+					assertNull(ent.getAuthor("some other dude"));
+					assertNotNull(ent.getContributor("Bill Brown"));
+					assertNull(ent.getContributor("some other dude"));
+					assertNotNull(ent.getCategory("science"));
+					assertNull(ent.getCategory("nothing"));
+					assertNotNull(ent.getLink("http://www.colorfulsoftware.com/projects/atomsphere/atom.xml"));
+					assertNull(ent.getLink("http://www.fakeness.net"));
+					assertNotNull(ent.getExtension("local:element"));
+					assertNull(ent.getExtension("local:notthere"));		
+				}
+			}
 
 			// re read the written feed and check the data.
 			feed = feedDoc.readFeedToBean(new File("target/dump1.xml"));
@@ -800,23 +841,27 @@ public class FeedDocTest {
 	 */
 	@Test
 	public void testGetContentType() {
-		List<Attribute> attrs = new LinkedList<Attribute>();
-		attrs.add(feedDoc.buildAttribute("src",
-				"http://www.colorfulsoftware.com/images/logo.gif"));
-		attrs.add(feedDoc.buildAttribute("type", "image/gif"));
-		assertEquals(feedDoc.getContentType(attrs), ContentType.EXTERNAL);
-		attrs = new LinkedList<Attribute>();
-		attrs.add(feedDoc.buildAttribute("type", "image/gif"));
-		assertEquals(feedDoc.getContentType(attrs), ContentType.OTHER);
-		attrs = new LinkedList<Attribute>();
-		attrs.add(feedDoc.buildAttribute("type", "text"));
-		assertEquals(feedDoc.getContentType(attrs), ContentType.TEXT);
-		attrs = new LinkedList<Attribute>();
-		attrs.add(feedDoc.buildAttribute("type", "html"));
-		assertEquals(feedDoc.getContentType(attrs), ContentType.HTML);
-		attrs = new LinkedList<Attribute>();
-		attrs.add(feedDoc.buildAttribute("type", "xhtml"));
-		assertEquals(feedDoc.getContentType(attrs), ContentType.XHTML);
+		try {
+			List<Attribute> attrs = new LinkedList<Attribute>();
+			attrs.add(feedDoc.buildAttribute("src",
+					"http://www.colorfulsoftware.com/images/logo.gif"));
+			attrs.add(feedDoc.buildAttribute("type", "image/gif"));
+			assertEquals(feedDoc.getContentType(attrs), ContentType.EXTERNAL);
+			attrs = new LinkedList<Attribute>();
+			attrs.add(feedDoc.buildAttribute("type", "image/gif"));
+			assertEquals(feedDoc.getContentType(attrs), ContentType.OTHER);
+			attrs = new LinkedList<Attribute>();
+			attrs.add(feedDoc.buildAttribute("type", "text"));
+			assertEquals(feedDoc.getContentType(attrs), ContentType.TEXT);
+			attrs = new LinkedList<Attribute>();
+			attrs.add(feedDoc.buildAttribute("type", "html"));
+			assertEquals(feedDoc.getContentType(attrs), ContentType.HTML);
+			attrs = new LinkedList<Attribute>();
+			attrs.add(feedDoc.buildAttribute("type", "xhtml"));
+			assertEquals(feedDoc.getContentType(attrs), ContentType.XHTML);
+		} catch (AtomSpecException e) {
+			fail("this shouldn't happen");
+		}
 	}
 
 	/**

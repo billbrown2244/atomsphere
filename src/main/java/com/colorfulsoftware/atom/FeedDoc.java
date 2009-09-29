@@ -77,17 +77,6 @@ public final class FeedDoc {
 	}
 
 	/**
-	 * the default atom xml namespace attribute of "http://www.w3.org/2005/Atom"
-	 */
-	private final Attribute atomBase = buildAttribute("xmlns",
-			"http://www.w3.org/2005/Atom");
-
-	/**
-	 * the default library language attribute of "en-US"
-	 */
-	private final Attribute langEn = buildAttribute("xml:lang", "en-US");
-
-	/**
 	 * the default document encoding of "UTF-8"
 	 */
 	private String encoding = "UTF-8";
@@ -132,29 +121,14 @@ public final class FeedDoc {
 	 * @return the Atomsphere library version in the form of a generator
 	 *         element. This element is output for all feeds that are generated
 	 *         by Atomsphere.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Generator getAtomsphereVersion() {
-		try {
-			List<Attribute> attributes = new LinkedList<Attribute>();
-			attributes.add(buildAttribute("uri", libUri));
-			attributes.add(buildAttribute("version", libVersion));
-			return buildGenerator(attributes, "Atomsphere");
-		} catch (Exception e) {
-			// this shouldn't happen;
-			return null;
-		}
-	}
-
-	/**
-	 * the Atomsphere sort extension attribute. See the <a
-	 * href="http://www.colorfulsoftware.com/projects/atomsphere"> Project
-	 * Page</a> for more details
-	 */
-	private final Attribute sort = buildAttribute("xmlns:sort",
-			"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0");
-
-	Attribute getSort() {
-		return sort;
+	public Generator getAtomsphereVersion() throws AtomSpecException {
+		List<Attribute> attributes = new LinkedList<Attribute>();
+		attributes.add(buildAttribute("uri", libUri));
+		attributes.add(buildAttribute("version", libVersion));
+		return buildGenerator(attributes, "Atomsphere");
 	}
 
 	/**
@@ -434,11 +408,11 @@ public final class FeedDoc {
 		if (attributes == null) {
 			attributes = new LinkedList<Attribute>();
 		}
-		if (getAttributeFromGroup(attributes, atomBase.getName()) == null) {
-			attributes.add(atomBase);
+		if (getAttributeFromGroup(attributes, getAtomBase().getName()) == null) {
+			attributes.add(getAtomBase());
 		}
-		if (getAttributeFromGroup(attributes, langEn.getName()) == null) {
-			attributes.add(langEn);
+		if (getAttributeFromGroup(attributes, getLangEn().getName()) == null) {
+			attributes.add(getLangEn());
 		}
 
 		// rebuild the entry with the added attributes.
@@ -652,14 +626,12 @@ public final class FeedDoc {
 	 * @param value
 	 *            the attribute value.
 	 * @return an immutable Attribute object.
+	 * @throws AtomSpecException
+	 *             if the data is not valid.
 	 */
-	public Attribute buildAttribute(String name, String value) {
-		try {
-			return new Attribute(name, value);
-		} catch (AtomSpecException e) {
-			// this should not happen.
-			return null;
-		}
+	public Attribute buildAttribute(String name, String value)
+			throws AtomSpecException {
+		return new Attribute(name, value);
 	}
 
 	/**
@@ -1062,18 +1034,21 @@ public final class FeedDoc {
 		// make sure the feed is sorted before it is written out to the file.
 		// this prevents the client code from having to
 		// maintain the sorting during usage
-		feed = checkForAndApplyExtension(feed, sort);
+		feed = checkForAndApplyExtension(
+				feed,
+				buildAttribute("xmlns:sort",
+						"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
 
 		// add atom base and xml_language to the entry if they are not there.
 		List<Attribute> attributes = feed.getAttributes();
 		if (attributes == null) {
 			attributes = new LinkedList<Attribute>();
 		}
-		if (getAttributeFromGroup(attributes, atomBase.getName()) == null) {
-			attributes.add(atomBase);
+		if (getAttributeFromGroup(attributes, getAtomBase().getName()) == null) {
+			attributes.add(getAtomBase());
 		}
-		if (getAttributeFromGroup(attributes, langEn.getName()) == null) {
-			attributes.add(langEn);
+		if (getAttributeFromGroup(attributes, getLangEn().getName()) == null) {
+			attributes.add(getLangEn());
 		}
 
 		// rebuild the feed with the updated attributes
@@ -1106,7 +1081,11 @@ public final class FeedDoc {
 		if (attributes != null) {
 			for (Attribute attr : attributes) {
 				if (attr.getName().equalsIgnoreCase(attributeName)) {
-					return buildAttribute(attr.getName(), attr.getValue());
+					try {
+						return buildAttribute(attr.getName(), attr.getValue());
+					} catch (AtomSpecException e) {
+						// this shouldn't happen.
+					}
 				}
 			}
 		}
@@ -1329,37 +1308,57 @@ public final class FeedDoc {
 		return feed;
 	}
 
-	// internal method to check for an undefined attribute
-	boolean isUndefinedAttribute(Attribute attr) {
+	// internal method to check for an attribute that is not reserved
+	boolean isAttributeSupported(Object type, Attribute attr) {
 		String name = attr.getName();
-		return
-		// atomCommonAttribute
-		!name.equals("xml:base")
-				&& !name.equals("xml:lang")
-				// text constructs
-				&& !name.equals("type")
-				// out of line (external) content
-				&& !name.equals("src")
-				// category
-				&& !name.equals("term")
-				&& !name.equals("scheme")
-				&& !name.equals("label")
-				// generator
-				&& !name.equals("uri")
-				&& !name.equals("version")
-				// link
-				&& !name.equals("href") && !name.equals("rel")
-				&& !name.equals("type") && !name.equals("hreflang")
-				&& !name.equals("title") && !name.equals("length")
-				// another namespace
-				&& !name.startsWith("xmlns:");
-	}
+		String value = attr.getValue();
 
-	// internal method to check for an atomCommonAttribute
-	boolean isAtomCommonAttribute(Attribute attr) {
-		String name = attr.getName();
-		return name.equals("xml:base") || name.equals("xml:lang")
-				|| name.startsWith("xmlns:");
+		boolean atomCommonAttribute = name.equals("xml:base")
+				|| name.equals("xml:lang")
+				|| name.matches(".+:.+")
+				|| (name.equals("xmlns") && value
+						.equals("http://www.w3.org/2005/Atom"));
+
+		if (type instanceof AtomDateConstruct
+				|| type instanceof AtomEntrySourceAdaptor
+				|| type instanceof AtomPersonConstruct
+				|| type instanceof AtomURIConstruct) {
+			return atomCommonAttribute;
+		}
+
+		if (type instanceof AtomTextConstruct) {
+			return atomCommonAttribute
+					|| (name.equals("type") && (value.equals("text")
+							|| value.equals("html") || value.equals("xhtml")
+							|| value.startsWith("application/")
+							|| value.startsWith("audio/")
+							|| value.startsWith("example/")
+							|| value.startsWith("image/")
+							|| value.startsWith("message/")
+							|| value.startsWith("model/")
+							|| value.startsWith("multipart/")
+							|| value.startsWith("video/")
+							|| value.startsWith("text/")
+							|| value.endsWith("/xml") || value
+							.endsWith("\\+xml")));
+		}
+		if (type instanceof Category) {
+			return atomCommonAttribute || name.equals("term")
+					|| name.equals("scheme") || name.equals("label");
+		}
+
+		if (type instanceof Generator) {
+			return atomCommonAttribute || name.equals("uri")
+					|| name.equals("version");
+		}
+
+		if (type instanceof Link) {
+			return atomCommonAttribute || name.equals("href")
+					|| name.equals("rel") || name.equals("type")
+					|| name.equals("hreflang") || name.equals("title")
+					|| name.equals("length");
+		}
+		return false;
 	}
 
 	/**
@@ -1367,14 +1366,24 @@ public final class FeedDoc {
 	 *         http://www.w3.org/2005/Atom
 	 */
 	public Attribute getAtomBase() {
-		return atomBase;
+		try {
+			return buildAttribute("xmlns", "http://www.w3.org/2005/Atom");
+		} catch (AtomSpecException e) {
+			// this shouldn't happen.
+			return null;
+		}
 	}
 
 	/**
 	 * @return the base language for the library en-US.
 	 */
 	public Attribute getLangEn() {
-		return langEn;
+		try {
+			return buildAttribute("xml:lang", "en-US");
+		} catch (AtomSpecException e) {
+			// this shouldn't happen.
+			return null;
+		}
 	}
 
 	/**
@@ -1397,5 +1406,4 @@ public final class FeedDoc {
 	public String getLibVersion() {
 		return libVersion;
 	}
-
 }

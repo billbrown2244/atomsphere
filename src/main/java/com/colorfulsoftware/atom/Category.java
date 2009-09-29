@@ -65,11 +65,7 @@ public class Category implements Serializable {
 			this.attributes = new LinkedList<Attribute>();
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
-				if (!feedDoc.isAtomCommonAttribute(attr)
-						&& !feedDoc.isUndefinedAttribute(attr)
-						&& !attr.getName().equals("term")
-						&& !attr.getName().equals("scheme")
-						&& !attr.getName().equals("label")) {
+				if (!feedDoc.isAttributeSupported(this, attr)) {
 					throw new AtomSpecException("Unsuppported attribute "
 							+ attr.getName() + " in the atom:category element");
 				}
@@ -93,18 +89,15 @@ public class Category implements Serializable {
 	/**
 	 * 
 	 * @return the category attribute list.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Attribute> getAttributes() {
+	public List<Attribute> getAttributes() throws AtomSpecException {
 
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		if (this.attributes != null) {
 			for (Attribute attr : this.attributes) {
-				try {
-					attrsCopy
-							.add(new Attribute(attr.getName(), attr.getValue()));
-				} catch (AtomSpecException e) {
-					// this should not happen.
-				}
+				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
 			}
 		}
 		return (this.attributes == null) ? null : attrsCopy;
@@ -113,43 +106,34 @@ public class Category implements Serializable {
 	/**
 	 * 
 	 * @return the label attribute
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Attribute getLabel() {
-		try {
-			return (label == null) ? null : new Attribute(label.getName(),
-					label.getValue());
-		} catch (AtomSpecException e) {
-			// this should not happen.
-			return null;
-		}
+	public Attribute getLabel() throws AtomSpecException {
+		return (label == null) ? null : new Attribute(label.getName(), label
+				.getValue());
 	}
 
 	/**
 	 * 
 	 * @return the scheme attribute
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Attribute getScheme() {
-		try {
-			return (scheme == null) ? null : new Attribute(scheme.getName(),
-					scheme.getValue());
-		} catch (AtomSpecException e) {
-			// this should not happen.
-			return null;
-		}
+	public Attribute getScheme() throws AtomSpecException {
+		return (scheme == null) ? null : new Attribute(scheme.getName(), scheme
+				.getValue());
 	}
 
 	/**
 	 * 
 	 * @return the term attribute
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Attribute getTerm() {
-		try {
-			return (term == null) ? null : new Attribute(term.getName(), term
-					.getValue());
-		} catch (AtomSpecException e) {
-			// this should not happen.
-			return null;
-		}
+	public Attribute getTerm() throws AtomSpecException {
+		return (term == null) ? null : new Attribute(term.getName(), term
+				.getValue());
 	}
 
 	/**
@@ -164,17 +148,15 @@ public class Category implements Serializable {
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Attribute getAttribute(String attrName) {
+	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
 				if (attribute.getName().equals(attrName)) {
-					try {
-						return new Attribute(attribute.getName(), attribute
-								.getValue());
-					} catch (AtomSpecException e) {
-						// this should not happen.
-					}
+					return new Attribute(attribute.getName(), attribute
+							.getValue());
 				}
 			}
 		}

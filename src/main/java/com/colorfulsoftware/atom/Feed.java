@@ -136,8 +136,10 @@ public class Feed implements Serializable {
 	 * @return the map of entry elements. Sorted by updated descending by
 	 *         default. see FeedDoc.sortEntries(Feed feed, Comparator<String>
 	 *         comparator, Class<?> elementClass)
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public SortedMap<String, Entry> getEntries() {
+	public SortedMap<String, Entry> getEntries() throws AtomSpecException {
 		if (entries == null) {
 			return null;
 		}
@@ -145,20 +147,13 @@ public class Feed implements Serializable {
 				entries.comparator());
 		for (String entryKey : this.entries.keySet()) {
 			Entry entry = entries.get(entryKey);
-			try {
-				entriesCopy.put(entryKey, new Entry(entry.getId(), entry
-						.getTitle(), entry.getUpdated(), entry.getRights(),
-						entry.getContent(), entry.getAuthors(), entry
-								.getCategories(), entry.getContributors(),
-						entry.getLinks(), entry.getAttributes(), entry
-								.getExtensions(), entry.getPublished(), entry
-								.getSummary(), entry.getSource()));
-			} catch (Exception e) {
-				// this should never happen because
-				// we check for errors on initial creation
-				// but if it does, print the stack trace
-				e.printStackTrace();
-			}
+			entriesCopy.put(entryKey, new Entry(entry.getId(),
+					entry.getTitle(), entry.getUpdated(), entry.getRights(),
+					entry.getContent(), entry.getAuthors(), entry
+							.getCategories(), entry.getContributors(), entry
+							.getLinks(), entry.getAttributes(), entry
+							.getExtensions(), entry.getPublished(), entry
+							.getSummary(), entry.getSource()));
 		}
 		return entriesCopy;
 	}
@@ -166,112 +161,140 @@ public class Feed implements Serializable {
 	/**
 	 * 
 	 * @return the generator for this element.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Generator getGenerator() {
+	public Generator getGenerator() throws AtomSpecException {
 		return source.getGenerator();
 	}
 
 	/**
 	 * 
 	 * @return the icon for this element.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Icon getIcon() {
+	public Icon getIcon() throws AtomSpecException {
 		return source.getIcon();
 	}
 
 	/**
 	 * 
 	 * @return the logo for this element.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Logo getLogo() {
+	public Logo getLogo() throws AtomSpecException {
 		return source.getLogo();
 	}
 
 	/**
 	 * 
 	 * @return the subtitle for this element.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Subtitle getSubtitle() {
+	public Subtitle getSubtitle() throws AtomSpecException {
 		return source.getSubtitle();
 	}
 
 	/**
 	 * 
 	 * @return the unique identifier for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Id getId() {
+	public Id getId() throws AtomSpecException {
 		return source.getId();
 	}
 
 	/**
 	 * 
 	 * @return the title for this element.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Title getTitle() {
+	public Title getTitle() throws AtomSpecException {
 		return source.getTitle();
 	}
 
 	/**
 	 * 
 	 * @return the updated date for this element.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Updated getUpdated() {
+	public Updated getUpdated() throws AtomSpecException {
 		return source.getUpdated();
 	}
 
 	/**
 	 * 
 	 * @return the associated rights for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Rights getRights() {
+	public Rights getRights() throws AtomSpecException {
 		return source.getRights();
 	}
 
 	/**
 	 * 
 	 * @return the authors for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Author> getAuthors() {
+	public List<Author> getAuthors() throws AtomSpecException {
 		return source.getAuthors();
 	}
 
 	/**
 	 * 
 	 * @return the categories for this element.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Category> getCategories() {
+	public List<Category> getCategories() throws AtomSpecException {
 		return source.getCategories();
 	}
 
 	/**
 	 * 
 	 * @return the contributors for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Contributor> getContributors() {
+	public List<Contributor> getContributors() throws AtomSpecException {
 		return source.getContributors();
 	}
 
 	/**
 	 * 
 	 * @return the links for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Link> getLinks() {
+	public List<Link> getLinks() throws AtomSpecException {
 		return source.getLinks();
 	}
 
 	/**
 	 * 
 	 * @return the category attribute list.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Attribute> getAttributes() {
+	public List<Attribute> getAttributes() throws AtomSpecException {
 		return source.getAttributes();
 	}
 
 	/**
 	 * 
 	 * @return the extensions for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Extension> getExtensions() {
+	public List<Extension> getExtensions() throws AtomSpecException {
 		return source.getExtensions();
 	}
 
@@ -279,8 +302,10 @@ public class Feed implements Serializable {
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Attribute getAttribute(String attrName) {
+	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		return source.getAttribute(attrName);
 	}
 
@@ -332,8 +357,10 @@ public class Feed implements Serializable {
 	 * @param extName
 	 *            the element name of the extension to get.
 	 * @return the Extension object if extName matches or null if not found.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Extension getExtension(String extName) {
+	public Extension getExtension(String extName) throws AtomSpecException {
 		return source.getExtension(extName);
 	}
 }

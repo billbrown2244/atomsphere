@@ -59,17 +59,19 @@ class AtomEntrySourceAdaptor implements Serializable {
 
 	private final Rights rights;
 
-	public AtomEntrySourceAdaptor(Id id, Title title, Updated updated,
-			Rights rights, List<Author> authors, List<Category> categories,
+	AtomEntrySourceAdaptor(Id id, Title title, Updated updated, Rights rights,
+			List<Author> authors, List<Category> categories,
 			List<Contributor> contributors, List<Link> links,
 			List<Attribute> attributes, List<Extension> extensions)
 			throws AtomSpecException {
+
 		FeedDoc feedDoc = new FeedDoc();
-		this.id = (id == null) ? null : new Id(id.getAttributes(), id
-				.getAtomUri());
-		this.title = (title == null) ? null : new Title(title);
-		this.updated = (updated == null) ? null : new Updated(updated
-				.getDateTime(), updated.getAttributes());
+		// none of these first three will be null.
+		this.id = new Id(id.getAttributes(), id.getAtomUri());
+		this.title = new Title(title);
+		this.updated = new Updated(updated.getDateTime(), updated
+				.getAttributes());
+
 		this.rights = (rights == null) ? null : new Rights(rights);
 
 		if (authors == null) {
@@ -121,8 +123,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 			this.attributes = new LinkedList<Attribute>();
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
-				if (!feedDoc.isAtomCommonAttribute(attr)
-						&& !feedDoc.isUndefinedAttribute(attr)) {
+				if (!feedDoc.isAttributeSupported(this, attr)) {
 					throw new AtomSpecException("Unsuppported attribute "
 							+ attr.getName() + " for this element.");
 				}
@@ -145,18 +146,15 @@ class AtomEntrySourceAdaptor implements Serializable {
 	/**
 	 * 
 	 * @return the category attribute list.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Attribute> getAttributes() {
+	public List<Attribute> getAttributes() throws AtomSpecException {
 
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		if (this.attributes != null) {
 			for (Attribute attr : this.attributes) {
-				try {
-					attrsCopy
-							.add(new Attribute(attr.getName(), attr.getValue()));
-				} catch (AtomSpecException e) {
-					// this should not happen.
-				}
+				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
 			}
 		}
 		return (this.attributes == null) ? null : attrsCopy;
@@ -165,23 +163,18 @@ class AtomEntrySourceAdaptor implements Serializable {
 	/**
 	 * 
 	 * @return the authors for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Author> getAuthors() {
+	public List<Author> getAuthors() throws AtomSpecException {
 		if (authors == null) {
 			return null;
 		}
 		List<Author> authrosCopy = new LinkedList<Author>();
 		for (Author author : authors) {
-			try {
-				authrosCopy.add(new Author(author.getName(), author.getUri(),
-						author.getEmail(), author.getAttributes(), author
-								.getExtensions()));
-			} catch (Exception e) {
-				// this should never happen because
-				// we check for errors on initial creation
-				// but if it does, print the stack trace
-				e.printStackTrace();
-			}
+			authrosCopy.add(new Author(author.getName(), author.getUri(),
+					author.getEmail(), author.getAttributes(), author
+							.getExtensions()));
 		}
 		return authrosCopy;
 	}
@@ -189,22 +182,17 @@ class AtomEntrySourceAdaptor implements Serializable {
 	/**
 	 * 
 	 * @return the categories for this element.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Category> getCategories() {
+	public List<Category> getCategories() throws AtomSpecException {
 		if (categories == null) {
 			return null;
 		}
 		List<Category> catsCopy = new LinkedList<Category>();
 		for (Category category : this.categories) {
-			try {
-				catsCopy.add(new Category(category.getAttributes(), category
-						.getContent()));
-			} catch (Exception e) {
-				// this should never happen because
-				// we check for errors on initial creation
-				// but if it does, print the stack trace
-				e.printStackTrace();
-			}
+			catsCopy.add(new Category(category.getAttributes(), category
+					.getContent()));
 		}
 		return catsCopy;
 	}
@@ -212,24 +200,18 @@ class AtomEntrySourceAdaptor implements Serializable {
 	/**
 	 * 
 	 * @return the contributors for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Contributor> getContributors() {
+	public List<Contributor> getContributors() throws AtomSpecException {
 		if (contributors == null) {
 			return null;
 		}
 		List<Contributor> contsCopy = new LinkedList<Contributor>();
 		for (Contributor contributor : this.contributors) {
-			try {
-				contsCopy.add(new Contributor(contributor.getName(),
-						contributor.getUri(), contributor.getEmail(),
-						contributor.getAttributes(), contributor
-								.getExtensions()));
-			} catch (Exception e) {
-				// this should never happen because
-				// we check for errors on initial creation
-				// but if it does, print the stack trace
-				e.printStackTrace();
-			}
+			contsCopy.add(new Contributor(contributor.getName(), contributor
+					.getUri(), contributor.getEmail(), contributor
+					.getAttributes(), contributor.getExtensions()));
 		}
 		return contsCopy;
 	}
@@ -237,20 +219,17 @@ class AtomEntrySourceAdaptor implements Serializable {
 	/**
 	 * 
 	 * @return the extensions for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Extension> getExtensions() {
+	public List<Extension> getExtensions() throws AtomSpecException {
 		if (extensions == null) {
 			return null;
 		}
 		List<Extension> extsCopy = new LinkedList<Extension>();
 		for (Extension extension : this.extensions) {
-			try {
-				extsCopy.add(new Extension(extension.getElementName(),
-						extension.getAttributes(), extension.getContent()));
-			} catch (Exception e) {
-				// we should never get here.
-				return null;
-			}
+			extsCopy.add(new Extension(extension.getElementName(), extension
+					.getAttributes(), extension.getContent()));
 		}
 		return extsCopy;
 	}
@@ -258,22 +237,16 @@ class AtomEntrySourceAdaptor implements Serializable {
 	/**
 	 * 
 	 * @return the links for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public List<Link> getLinks() {
+	public List<Link> getLinks() throws AtomSpecException {
 		if (links == null) {
 			return null;
 		}
 		List<Link> linksCopy = new LinkedList<Link>();
 		for (Link link : this.links) {
-			try {
-				linksCopy
-						.add(new Link(link.getAttributes(), link.getContent()));
-			} catch (Exception e) {
-				// this should never happen because
-				// we check for errors on initial creation
-				// but if it does, print the stack trace
-				e.printStackTrace();
-			}
+			linksCopy.add(new Link(link.getAttributes(), link.getContent()));
 		}
 		return linksCopy;
 	}
@@ -281,73 +254,56 @@ class AtomEntrySourceAdaptor implements Serializable {
 	/**
 	 * 
 	 * @return the unique identifier for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Id getId() {
-		try {
-			return (id == null) ? null : new Id(id.getAttributes(), id
-					.getAtomUri());
-		} catch (Exception e) {
-			// we should never get here.
-			return null;
-		}
+	public Id getId() throws AtomSpecException {
+		return new Id(id.getAttributes(), id.getAtomUri());
 	}
 
 	/**
 	 * 
 	 * @return the associated rights for this entry.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Rights getRights() {
-		try {
-			return (rights == null) ? null : new Rights(rights.getText(),
-					rights.getAttributes());
-		} catch (Exception e) {
-			// we should never get here.
-			return null;
-		}
+	public Rights getRights() throws AtomSpecException {
+		return (rights == null) ? null : new Rights(rights);
 	}
 
 	/**
 	 * 
 	 * @return the title for this element.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Title getTitle() {
-		try {
-			return (title == null) ? null : new Title(title);
-		} catch (Exception e) {
-			// we should never get here.
-			return null;
-		}
+	public Title getTitle() throws AtomSpecException {
+		return new Title(title);
 	}
 
 	/**
 	 * 
 	 * @return the updated date for this element.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Updated getUpdated() {
-		try {
-			return (updated == null) ? null : new Updated(
-					updated.getDateTime(), updated.getAttributes());
-		} catch (Exception e) {
-			// we should never get here.
-			return null;
-		}
+	public Updated getUpdated() throws AtomSpecException {
+		return new Updated(updated.getDateTime(), updated.getAttributes());
 	}
 
 	/**
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Attribute getAttribute(String attrName) {
+	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
 				if (attribute.getName().equals(attrName)) {
-					try {
-						return new Attribute(attribute.getName(), attribute
-								.getValue());
-					} catch (AtomSpecException e) {
-						// this should not happen.
-					}
+					return new Attribute(attribute.getName(), attribute
+							.getValue());
 				}
 			}
 		}
@@ -442,19 +398,15 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * @param extName
 	 *            the element name of the extension to get.
 	 * @return the Extension object if extName matches or null if not found.
+	 * @throws AtomSpecException
+	 *             if the format of the data is not valid.
 	 */
-	public Extension getExtension(String extName) {
+	public Extension getExtension(String extName) throws AtomSpecException {
 		if (this.extensions != null) {
 			for (Extension extension : this.extensions) {
 				if (extension.getElementName().equals(extName)) {
-					try {
-						return new Extension(extension.getElementName(),
-								extension.getAttributes(), extension
-										.getContent());
-					} catch (Exception e) {
-						// we should never get here.
-						return null;
-					}
+					return new Extension(extension.getElementName(), extension
+							.getAttributes(), extension.getContent());
 				}
 			}
 		}

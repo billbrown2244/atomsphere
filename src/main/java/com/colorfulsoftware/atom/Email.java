@@ -39,9 +39,6 @@ import java.io.Serializable;
  */
 public class Email implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4534267548039292775L;
 	private final AtomPlainText email;
 
