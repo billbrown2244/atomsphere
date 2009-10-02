@@ -137,7 +137,7 @@ public class Feed implements Serializable {
 	 *         default. see FeedDoc.sortEntries(Feed feed, Comparator<String>
 	 *         comparator, Class<?> elementClass)
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public SortedMap<String, Entry> getEntries() throws AtomSpecException {
 		if (entries == null) {
@@ -162,7 +162,7 @@ public class Feed implements Serializable {
 	 * 
 	 * @return the generator for this element.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Generator getGenerator() throws AtomSpecException {
 		return source.getGenerator();
@@ -172,7 +172,7 @@ public class Feed implements Serializable {
 	 * 
 	 * @return the icon for this element.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Icon getIcon() throws AtomSpecException {
 		return source.getIcon();
@@ -182,7 +182,7 @@ public class Feed implements Serializable {
 	 * 
 	 * @return the logo for this element.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Logo getLogo() throws AtomSpecException {
 		return source.getLogo();
@@ -192,7 +192,7 @@ public class Feed implements Serializable {
 	 * 
 	 * @return the subtitle for this element.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Subtitle getSubtitle() throws AtomSpecException {
 		return source.getSubtitle();
@@ -202,7 +202,7 @@ public class Feed implements Serializable {
 	 * 
 	 * @return the unique identifier for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Id getId() throws AtomSpecException {
 		return source.getId();
@@ -212,7 +212,7 @@ public class Feed implements Serializable {
 	 * 
 	 * @return the title for this element.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Title getTitle() throws AtomSpecException {
 		return source.getTitle();
@@ -222,7 +222,7 @@ public class Feed implements Serializable {
 	 * 
 	 * @return the updated date for this element.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Updated getUpdated() throws AtomSpecException {
 		return source.getUpdated();
@@ -232,7 +232,7 @@ public class Feed implements Serializable {
 	 * 
 	 * @return the associated rights for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Rights getRights() throws AtomSpecException {
 		return source.getRights();
@@ -242,7 +242,7 @@ public class Feed implements Serializable {
 	 * 
 	 * @return the authors for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Author> getAuthors() throws AtomSpecException {
 		return source.getAuthors();
@@ -252,7 +252,7 @@ public class Feed implements Serializable {
 	 * 
 	 * @return the categories for this element.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Category> getCategories() throws AtomSpecException {
 		return source.getCategories();
@@ -262,7 +262,7 @@ public class Feed implements Serializable {
 	 * 
 	 * @return the contributors for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Contributor> getContributors() throws AtomSpecException {
 		return source.getContributors();
@@ -272,7 +272,7 @@ public class Feed implements Serializable {
 	 * 
 	 * @return the links for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Link> getLinks() throws AtomSpecException {
 		return source.getLinks();
@@ -282,7 +282,7 @@ public class Feed implements Serializable {
 	 * 
 	 * @return the category attribute list.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Attribute> getAttributes() throws AtomSpecException {
 		return source.getAttributes();
@@ -292,7 +292,7 @@ public class Feed implements Serializable {
 	 * 
 	 * @return the extensions for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Extension> getExtensions() throws AtomSpecException {
 		return source.getExtensions();
@@ -303,7 +303,7 @@ public class Feed implements Serializable {
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		return source.getAttribute(attrName);
@@ -314,7 +314,7 @@ public class Feed implements Serializable {
 	 *            the name of the author.
 	 * @return the Author object object if name matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Author getAuthor(String name) throws AtomSpecException {
 		return source.getAuthor(name);
@@ -325,7 +325,7 @@ public class Feed implements Serializable {
 	 *            the term value.
 	 * @return the Category object if term matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Category getCategory(String termValue) throws AtomSpecException {
 		return source.getCategory(termValue);
@@ -336,7 +336,7 @@ public class Feed implements Serializable {
 	 *            the name of the contributor.
 	 * @return the Contributor object if the name matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Contributor getContributor(String name) throws AtomSpecException {
 		return source.getContributor(name);
@@ -347,7 +347,7 @@ public class Feed implements Serializable {
 	 *            the href attribute value to look for.
 	 * @return the Link object if href matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Link getLink(String hrefVal) throws AtomSpecException {
 		return source.getLink(hrefVal);
@@ -358,7 +358,7 @@ public class Feed implements Serializable {
 	 *            the element name of the extension to get.
 	 * @return the Extension object if extName matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Extension getExtension(String extName) throws AtomSpecException {
 		return source.getExtension(extName);

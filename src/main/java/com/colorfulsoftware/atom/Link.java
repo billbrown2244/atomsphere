@@ -104,7 +104,7 @@ public class Link implements Serializable {
 	 * 
 	 * @return the category attribute list.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Attribute> getAttributes() throws AtomSpecException {
 
@@ -121,7 +121,7 @@ public class Link implements Serializable {
 	 * 
 	 * @return the href contains the link's IRI
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Attribute getHref() throws AtomSpecException {
 		return (href == null) ? null : new Attribute(href.getName(), href
@@ -133,7 +133,7 @@ public class Link implements Serializable {
 	 * @return the hreflang describes the language of the resource pointed to by
 	 *         the href attribute.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Attribute getHreflang() throws AtomSpecException {
 		return (hreflang == null) ? null : new Attribute(hreflang.getName(),
@@ -145,7 +145,7 @@ public class Link implements Serializable {
 	 * @return the length indicates an advisory length of the linked content in
 	 *         octets.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Attribute getLength() throws AtomSpecException {
 		return (length == null) ? null : new Attribute(length.getName(), length
@@ -157,7 +157,7 @@ public class Link implements Serializable {
 	 * @return the rel which matches either the "isegment-nz-nc" or the "IRI"
 	 *         production in [RFC3987]
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Attribute getRel() throws AtomSpecException {
 		return (rel == null) ? null : new Attribute(rel.getName(), rel
@@ -168,7 +168,7 @@ public class Link implements Serializable {
 	 * 
 	 * @return the title conveys human-readable information about the link.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Attribute getTitle() throws AtomSpecException {
 		return (title == null) ? null : new Attribute(title.getName(), title
@@ -179,7 +179,7 @@ public class Link implements Serializable {
 	 * 
 	 * @return the type which is an advisory media type
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Attribute getType() throws AtomSpecException {
 		return (type == null) ? null : new Attribute(type.getName(), type
@@ -199,7 +199,7 @@ public class Link implements Serializable {
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		if (this.attributes != null) {

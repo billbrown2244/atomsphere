@@ -126,7 +126,7 @@ public class Entry implements Serializable {
 	 * 
 	 * @return the content for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Content getContent() throws AtomSpecException {
 		return (content == null) ? null : new Content(content);
@@ -136,7 +136,7 @@ public class Entry implements Serializable {
 	 * 
 	 * @return the published date for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Published getPublished() throws AtomSpecException {
 		return (published == null) ? null : new Published(published
@@ -147,7 +147,7 @@ public class Entry implements Serializable {
 	 * 
 	 * @return the source for this element.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Source getSource() throws AtomSpecException {
 		return (source == null) ? null : new Source(source.getId(), source
@@ -163,7 +163,7 @@ public class Entry implements Serializable {
 	 * 
 	 * @return the summary for this element.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Summary getSummary() throws AtomSpecException {
 		return (summary == null) ? null : new Summary(summary);
@@ -173,7 +173,7 @@ public class Entry implements Serializable {
 	 * 
 	 * @return the unique identifier for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Id getId() throws AtomSpecException {
 		return entryAdaptor.getId();
@@ -183,7 +183,7 @@ public class Entry implements Serializable {
 	 * 
 	 * @return the title for this element.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Title getTitle() throws AtomSpecException {
 		return entryAdaptor.getTitle();
@@ -193,7 +193,7 @@ public class Entry implements Serializable {
 	 * 
 	 * @return the updated date for this element.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Updated getUpdated() throws AtomSpecException {
 		return entryAdaptor.getUpdated();
@@ -203,7 +203,7 @@ public class Entry implements Serializable {
 	 * 
 	 * @return the associated rights for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Rights getRights() throws AtomSpecException {
 		return entryAdaptor.getRights();
@@ -213,7 +213,7 @@ public class Entry implements Serializable {
 	 * 
 	 * @return the authors for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Author> getAuthors() throws AtomSpecException {
 		return entryAdaptor.getAuthors();
@@ -223,7 +223,7 @@ public class Entry implements Serializable {
 	 * 
 	 * @return the categories for this element.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Category> getCategories() throws AtomSpecException {
 		return entryAdaptor.getCategories();
@@ -233,7 +233,7 @@ public class Entry implements Serializable {
 	 * 
 	 * @return the contributors for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Contributor> getContributors() throws AtomSpecException {
 		return entryAdaptor.getContributors();
@@ -243,7 +243,7 @@ public class Entry implements Serializable {
 	 * 
 	 * @return the links for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Link> getLinks() throws AtomSpecException {
 		return entryAdaptor.getLinks();
@@ -253,7 +253,7 @@ public class Entry implements Serializable {
 	 * 
 	 * @return the category attribute list.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Attribute> getAttributes() throws AtomSpecException {
 		return entryAdaptor.getAttributes();
@@ -263,7 +263,7 @@ public class Entry implements Serializable {
 	 * 
 	 * @return the extensions for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Extension> getExtensions() throws AtomSpecException {
 		return entryAdaptor.getExtensions();
@@ -274,7 +274,7 @@ public class Entry implements Serializable {
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		return entryAdaptor.getAttribute(attrName);
@@ -285,7 +285,7 @@ public class Entry implements Serializable {
 	 *            the name of the author to get.
 	 * @return the Author object if the name matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Author getAuthor(String name) throws AtomSpecException {
 		return entryAdaptor.getAuthor(name);
@@ -296,7 +296,7 @@ public class Entry implements Serializable {
 	 *            the term value.
 	 * @return the Category object if the term matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Category getCategory(String termValue) throws AtomSpecException {
 		return entryAdaptor.getCategory(termValue);
@@ -307,7 +307,7 @@ public class Entry implements Serializable {
 	 *            the name of the contributor
 	 * @return the Contributor object if name matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Contributor getContributor(String name) throws AtomSpecException {
 		return entryAdaptor.getContributor(name);
@@ -318,7 +318,7 @@ public class Entry implements Serializable {
 	 *            the href attribute value to look for.
 	 * @return the Link object if href matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Link getLink(String hrefVal) throws AtomSpecException {
 		return entryAdaptor.getLink(hrefVal);
@@ -329,7 +329,7 @@ public class Entry implements Serializable {
 	 *            the element name of the extension to get.
 	 * @return the Extension object if extName matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Extension getExtension(String extName) throws AtomSpecException {
 		return entryAdaptor.getExtension(extName);

@@ -146,7 +146,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the category attribute list.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Attribute> getAttributes() throws AtomSpecException {
 
@@ -163,7 +163,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the authors for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Author> getAuthors() throws AtomSpecException {
 		if (authors == null) {
@@ -182,7 +182,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the categories for this element.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Category> getCategories() throws AtomSpecException {
 		if (categories == null) {
@@ -200,7 +200,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the contributors for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Contributor> getContributors() throws AtomSpecException {
 		if (contributors == null) {
@@ -219,7 +219,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the extensions for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Extension> getExtensions() throws AtomSpecException {
 		if (extensions == null) {
@@ -237,7 +237,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the links for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Link> getLinks() throws AtomSpecException {
 		if (links == null) {
@@ -254,7 +254,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the unique identifier for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Id getId() throws AtomSpecException {
 		return new Id(id.getAttributes(), id.getAtomUri());
@@ -264,7 +264,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the associated rights for this entry.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Rights getRights() throws AtomSpecException {
 		return (rights == null) ? null : new Rights(rights);
@@ -274,7 +274,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the title for this element.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Title getTitle() throws AtomSpecException {
 		return new Title(title);
@@ -284,7 +284,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the updated date for this element.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Updated getUpdated() throws AtomSpecException {
 		return new Updated(updated.getDateTime(), updated.getAttributes());
@@ -295,7 +295,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		if (this.attributes != null) {
@@ -314,7 +314,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 *            the name of the author to get.
 	 * @return the Author object if the name matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Author getAuthor(String name) throws AtomSpecException {
 		if (this.authors != null) {
@@ -336,7 +336,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 *            the term value.
 	 * @return the Category object if the term matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Category getCategory(String termValue) throws AtomSpecException {
 		if (this.categories != null) {
@@ -357,7 +357,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 *            the name of the contributor
 	 * @return the Contributor object if name matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Contributor getContributor(String name) throws AtomSpecException {
 		if (this.contributors != null) {
@@ -379,7 +379,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 *            the href attribute value to look for.
 	 * @return the Link object if href matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Link getLink(String hrefVal) throws AtomSpecException {
 		if (this.links != null) {
@@ -398,7 +398,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 *            the element name of the extension to get.
 	 * @return the Extension object if extName matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Extension getExtension(String extName) throws AtomSpecException {
 		if (this.extensions != null) {

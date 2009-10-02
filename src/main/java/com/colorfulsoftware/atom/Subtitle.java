@@ -69,7 +69,7 @@ public class Subtitle implements Serializable {
 	 * 
 	 * @return the attributes for this element.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public List<Attribute> getAttributes() throws AtomSpecException {
 		return subtitle.getAttributes();
@@ -88,7 +88,7 @@ public class Subtitle implements Serializable {
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		return subtitle.getAttribute(attrName);

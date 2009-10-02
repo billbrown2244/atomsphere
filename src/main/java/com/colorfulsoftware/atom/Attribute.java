@@ -41,21 +41,13 @@ import java.io.Serializable;
  */
 public class Attribute implements Serializable {
 
-	/*
-	 * atomCommonAttributes = attribute xml:base { atomUri }?, attribute
-	 * xml:lang { atomLanguageTag }?, undefinedAttribute*
-	 */
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5289914532308394264L;
 	private final String name;
 	private final String value;
 
 	// use the factory method in the FeedDoc.
 	Attribute(String name, String value) throws AtomSpecException {
-		if (name == null) {
+		if (name == null || name.equals("")) {
 			throw new AtomSpecException(
 					"Attributes SHOULD NOT be null and SHOULD NOT be blank.");
 		}

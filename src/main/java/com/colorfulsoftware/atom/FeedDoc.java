@@ -119,7 +119,7 @@ public final class FeedDoc {
 	 *         element. This element is output for all feeds that are generated
 	 *         by Atomsphere.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Generator getAtomsphereVersion() throws AtomSpecException {
 		List<Attribute> attributes = new LinkedList<Attribute>();
@@ -681,7 +681,7 @@ public final class FeedDoc {
 	 *            additional attributes.
 	 * @return an immutable Content object.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Content buildContent(String content, List<Attribute> attributes)
 			throws AtomSpecException {
@@ -779,7 +779,7 @@ public final class FeedDoc {
 	 *            the content of the extension element.
 	 * @return an immutable Extension object.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Extension buildExtension(String elementName,
 			List<Attribute> attributes, String content)
@@ -796,7 +796,7 @@ public final class FeedDoc {
 	 *            the text content.
 	 * @return an immutable Generator object.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Generator buildGenerator(List<Attribute> attributes, String text)
 			throws AtomSpecException {
@@ -811,7 +811,7 @@ public final class FeedDoc {
 	 *            additional attributes.
 	 * @return an immutable Icon object.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Icon buildIcon(List<Attribute> attributes, String atomUri)
 			throws AtomSpecException {
@@ -826,7 +826,7 @@ public final class FeedDoc {
 	 *            additional attributes.
 	 * @return an immutable Id object.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Id buildId(List<Attribute> attributes, String atomUri)
 			throws AtomSpecException {
@@ -859,7 +859,7 @@ public final class FeedDoc {
 	 *            additional attributes.
 	 * @return an immutable Logo object.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Logo buildLogo(List<Attribute> attributes, String atomUri)
 			throws AtomSpecException {
@@ -884,7 +884,7 @@ public final class FeedDoc {
 	 *            the attributes for the published object.
 	 * @return an immutable Published object.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Published buildPublished(Date published, List<Attribute> attributes)
 			throws AtomSpecException {
@@ -899,7 +899,7 @@ public final class FeedDoc {
 	 *            additional attributes.
 	 * @return an immutable Rights object.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Rights buildRights(String rights, List<Attribute> attributes)
 			throws AtomSpecException {
@@ -961,7 +961,7 @@ public final class FeedDoc {
 	 *            additional attributes.
 	 * @return an immutable Subtitle object.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Subtitle buildSubtitle(String subtitle, List<Attribute> attributes)
 			throws AtomSpecException {
@@ -976,7 +976,7 @@ public final class FeedDoc {
 	 *            additional attributes.
 	 * @return an immutable Summary object.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Summary buildSummary(String summary, List<Attribute> attributes)
 			throws AtomSpecException {
@@ -991,7 +991,7 @@ public final class FeedDoc {
 	 *            additional attributes.
 	 * @return an immutable Title object.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Title buildTitle(String title, List<Attribute> attributes)
 			throws AtomSpecException {
@@ -1006,7 +1006,7 @@ public final class FeedDoc {
 	 *            the attributes for the updated object.
 	 * @return a immutable Updated object.
 	 * @throws AtomSpecException
-	 *             if the format of the data is not valid.
+	 *             if the data is not valid.
 	 */
 	public Updated buildUpdated(Date updated, List<Attribute> attributes)
 			throws AtomSpecException {
