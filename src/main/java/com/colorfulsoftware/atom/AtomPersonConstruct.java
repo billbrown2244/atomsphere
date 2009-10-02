@@ -63,14 +63,12 @@ class AtomPersonConstruct implements Serializable {
 			List<Attribute> attributes, List<Extension> extensions)
 			throws AtomSpecException {
 
-		FeedDoc feedDoc = new FeedDoc();
 		// check to make sure there is a name element
 		if (name == null) {
 			throw new AtomSpecException(
 					"Person constructs MUST contain exactly one \"atom:name\" element.");
-		} else {
-			this.name = new Name(name.getText());
 		}
+		this.name = new Name(name.getText());
 
 		this.uri = (uri == null) ? null : new URI(uri.getText());
 
@@ -82,7 +80,7 @@ class AtomPersonConstruct implements Serializable {
 			this.attributes = new LinkedList<Attribute>();
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
-				if (!feedDoc.isAttributeSupported(this,attr)) {
+				if (!new AttributeSupport(attr).verify(this)) {
 					throw new AtomSpecException("Unsuppported attribute "
 							+ attr.getName()
 							+ " for this Atom Person Construct.");
@@ -134,7 +132,7 @@ class AtomPersonConstruct implements Serializable {
 	 * @return the name for this element.
 	 */
 	public Name getName() {
-		return (name == null) ? null : new Name(name.getText());
+		return new Name(name.getText());
 	}
 
 	/**

@@ -43,7 +43,7 @@ class AtomURIConstruct implements Serializable {
 			this.attributes = new LinkedList<Attribute>();
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
-				if (!new FeedDoc().isAttributeSupported(this,attr)) {
+				if (!new AttributeSupport(attr).verify(this)) {
 					throw new AtomSpecException("Unsuppported attribute "
 							+ attr.getName() + " for this element.");
 				}

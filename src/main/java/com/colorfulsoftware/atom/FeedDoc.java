@@ -77,11 +77,6 @@ public final class FeedDoc {
 	}
 
 	/**
-	 * the default document encoding of "UTF-8"
-	 */
-	private String encoding = "UTF-8";
-
-	/**
 	 * the default XML version of "1.0"
 	 */
 	private String xmlVersion = "1.0";
@@ -104,6 +99,8 @@ public final class FeedDoc {
 			e.printStackTrace();
 		}
 	}
+
+	private String encoding = "UTF-8";
 
 	/**
 	 * @param encoding
@@ -1306,59 +1303,6 @@ public final class FeedDoc {
 			}
 		}
 		return feed;
-	}
-
-	// internal method to check for an attribute that is not reserved
-	boolean isAttributeSupported(Object type, Attribute attr) {
-		String name = attr.getName();
-		String value = attr.getValue();
-
-		boolean atomCommonAttribute = name.equals("xml:base")
-				|| name.equals("xml:lang")
-				|| name.matches(".+:.+")
-				|| (name.equals("xmlns") && value
-						.equals("http://www.w3.org/2005/Atom"));
-
-		if (type instanceof AtomDateConstruct
-				|| type instanceof AtomEntrySourceAdaptor
-				|| type instanceof AtomPersonConstruct
-				|| type instanceof AtomURIConstruct) {
-			return atomCommonAttribute;
-		}
-
-		if (type instanceof AtomTextConstruct) {
-			return atomCommonAttribute
-					|| (name.equals("type") && (value.equals("text")
-							|| value.equals("html") || value.equals("xhtml")
-							|| value.startsWith("application/")
-							|| value.startsWith("audio/")
-							|| value.startsWith("example/")
-							|| value.startsWith("image/")
-							|| value.startsWith("message/")
-							|| value.startsWith("model/")
-							|| value.startsWith("multipart/")
-							|| value.startsWith("video/")
-							|| value.startsWith("text/")
-							|| value.endsWith("/xml") || value
-							.endsWith("\\+xml")));
-		}
-		if (type instanceof Category) {
-			return atomCommonAttribute || name.equals("term")
-					|| name.equals("scheme") || name.equals("label");
-		}
-
-		if (type instanceof Generator) {
-			return atomCommonAttribute || name.equals("uri")
-					|| name.equals("version");
-		}
-
-		if (type instanceof Link) {
-			return atomCommonAttribute || name.equals("href")
-					|| name.equals("rel") || name.equals("type")
-					|| name.equals("hreflang") || name.equals("title")
-					|| name.equals("length");
-		}
-		return false;
 	}
 
 	/**

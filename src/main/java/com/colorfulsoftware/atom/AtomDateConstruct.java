@@ -49,14 +49,13 @@ class AtomDateConstruct implements Serializable {
 	 */
 	public AtomDateConstruct(Date dateTime, List<Attribute> attributes)
 			throws AtomSpecException {
-		FeedDoc feedDoc = new FeedDoc();
 		if (attributes == null) {
 			this.attributes = null;
 		} else {
 			this.attributes = new LinkedList<Attribute>();
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
-				if (!feedDoc.isAttributeSupported(this,attr)) {
+				if (!new AttributeSupport(attr).verify(this)) {
 					throw new AtomSpecException("Unsuppported attribute "
 							+ attr.getName() + " for this Atom Date Construct.");
 				}
@@ -67,7 +66,7 @@ class AtomDateConstruct implements Serializable {
 
 		if (dateTime == null) {
 			throw new AtomSpecException(
-					"The date for the Atom Date Construct SHOULD not be null.");
+					"AtomDateConstruct Dates SHOULD NOT be null.");
 		} else {
 			this.dateTime = new Date(dateTime.getTime());
 		}

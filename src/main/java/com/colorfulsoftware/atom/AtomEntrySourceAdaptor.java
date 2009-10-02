@@ -65,7 +65,6 @@ class AtomEntrySourceAdaptor implements Serializable {
 			List<Attribute> attributes, List<Extension> extensions)
 			throws AtomSpecException {
 
-		FeedDoc feedDoc = new FeedDoc();
 		// none of these first three will be null.
 		this.id = new Id(id.getAttributes(), id.getAtomUri());
 		this.title = new Title(title);
@@ -123,7 +122,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 			this.attributes = new LinkedList<Attribute>();
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
-				if (!feedDoc.isAttributeSupported(this, attr)) {
+				if (!new AttributeSupport(attr).verify(this)) {
 					throw new AtomSpecException("Unsuppported attribute "
 							+ attr.getName() + " for this element.");
 				}

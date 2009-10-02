@@ -59,7 +59,7 @@ class AtomTextConstruct implements Serializable {
 	// content elements do a different validation.
 	AtomTextConstruct(String text, List<Attribute> attributes,
 			boolean isContentElement) throws AtomSpecException {
-		FeedDoc feedDoc = new FeedDoc();
+		
 		if (attributes == null) {
 			this.attributes = null;
 		} else {
@@ -68,7 +68,7 @@ class AtomTextConstruct implements Serializable {
 			if (isContentElement) {
 				for (Attribute attr : attributes) {
 					// check for unsupported attribute.
-					if (!feedDoc.isAttributeSupported(this, attr)
+					if (!new AttributeSupport(attr).verify(this)
 							&& !attr.getName().equals("src")) {
 						throw new AtomSpecException("Unsuppported attribute "
 								+ attr.getName()
@@ -80,8 +80,8 @@ class AtomTextConstruct implements Serializable {
 			} else {
 				for (Attribute attr : attributes) {
 					// check for unsupported attribute.
-					if (!feedDoc.isAttributeSupported(this, attr)) {
-						throw new AtomSpecException("Unsuppported attribute "
+					if (!new AttributeSupport(attr).verify(this)) {
+						throw new AtomSpecException("Unsupported attribute "
 								+ attr.getName()
 								+ " for this Atom Text Construct.");
 					}
@@ -103,10 +103,11 @@ class AtomTextConstruct implements Serializable {
 	}
 
 	// copy constructor
+	// all the exceptions should have been checked initially by the other
+	// constructor.
 	AtomTextConstruct(String text, List<Attribute> attributes,
 			String divWrapperStart, String divWrapperEnd,
 			boolean isContentElement) throws AtomSpecException {
-		FeedDoc feedDoc = new FeedDoc();
 		this.text = text;
 		this.divWrapperStart = divWrapperStart;
 		this.divWrapperEnd = divWrapperEnd;
@@ -116,30 +117,9 @@ class AtomTextConstruct implements Serializable {
 		} else {
 			// add the attributes
 			this.attributes = new LinkedList<Attribute>();
-			// content elements have a slightly different validation.
-			if (isContentElement) {
-				for (Attribute attr : attributes) {
-					// check for unsupported attribute.
-					if (!feedDoc.isAttributeSupported(this, attr)
-							&& !attr.getName().equals("src")) {
-						throw new AtomSpecException("Unsuppported attribute "
-								+ attr.getName() + " in this content element ");
-					}
-					this.attributes.add(new Attribute(attr.getName(), attr
-							.getValue()));
-				}
-			} else {
-
-				for (Attribute attr : attributes) {
-					// check for unsupported attribute.
-					if (!feedDoc.isAttributeSupported(this, attr)) {
-						throw new AtomSpecException("Unsuppported attribute "
-								+ attr.getName()
-								+ " for this Atom Text Construct.");
-					}
-					this.attributes.add(new Attribute(attr.getName(), attr
-							.getValue()));
-				}
+			for (Attribute attr : attributes) {
+				this.attributes.add(new Attribute(attr.getName(), attr
+						.getValue()));
 			}
 		}
 	}

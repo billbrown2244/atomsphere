@@ -217,6 +217,16 @@ public class FeedDocTest {
 			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
 			+ "</feed>";
 
+	private String brokeTitle1 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\"  xmlns:xh=\"http://www.w3.org/1999/xhtml\">"
+			+ "<title type=\"xhtml\" fakeAttr=\"bunk\"><xh:div>One <xh:strong>bold</xh:strong> foot forward </xh:div></title>"
+			+ " <updated>2003-12-13T18:30:02Z</updated>" + " <author>"
+			+ "   <name>John Doe</name>"
+			+ "   <email>johndoe@example.com</email>" + " </author>"
+			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
+			+ "</feed>";
+	// /
+
 	// mising id
 	private String brokenEntry1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
@@ -253,13 +263,13 @@ public class FeedDocTest {
 			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
 			+ "<title>test entry 1</title>"
 			+ "<content type=\"pdf\">this is no good</content>" + "</entry>";
-	
-	//unsupported attribute
+
+	// unsupported attribute
 	private String brokenEntry6 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-		+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\" fakeAttribute=\"noGood\">"
-		+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
-		+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
-		+ "<title>test entry 1</title>" + "</entry>";
+			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\" fakeAttribute=\"noGood\">"
+			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
+			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+			+ "<title>test entry 1</title>" + "</entry>";
 
 	/**
 	 * @throws Exception
@@ -282,6 +292,26 @@ public class FeedDocTest {
 			List<Author> authors = new LinkedList<Author>();
 			authors.add(feedDoc.buildAuthor(feedDoc.buildName("Bill Brown"),
 					null, null, null, null));
+
+			try {
+				feedDoc.buildAuthor(null, null, null, null, null);
+				fail("should not get here;");
+			} catch (Exception e) {
+				assertTrue(e instanceof AtomSpecException);
+				assertEquals(e.getMessage(),
+						"Person constructs MUST contain exactly one \"atom:name\" element.");
+			}
+
+			try {
+				List<Attribute> attrs = new LinkedList<Attribute>();
+				attrs.add(feedDoc.buildAttribute("goofy", "attrValue"));
+				feedDoc.buildAuthor(new Name("You"), null, null, attrs, null);
+				fail("should not get here;");
+			} catch (Exception e) {
+				assertTrue(e instanceof AtomSpecException);
+				assertEquals(e.getMessage(),
+						"Unsuppported attribute goofy for this Atom Person Construct.");
+			}
 
 			feed1 = feedDoc.buildFeed(id, title, updated, null, authors, null,
 					null, null, null, null, generator, null, null, null, null);
@@ -532,7 +562,8 @@ public class FeedDocTest {
 			System.out
 					.println("feed title from raw\n"
 							+ "One <strong>bold</strong> foot forward<title>can you see me</title>");
-			System.out.println("feed get title text\n"+feed1.getTitle().getText());
+			System.out.println("feed get title text\n"
+					+ feed1.getTitle().getText());
 			assertEquals(feed1.getTitle().getText(),
 					"One <strong>bold</strong> foot forward<title>can you see me</title>");
 			assertNotNull(feedDoc.readFeedToString(feed1));
@@ -541,8 +572,17 @@ public class FeedDocTest {
 			assertNotNull(feed1.getTitle());
 			assertEquals(feed1.getTitle().getText(),
 					"One <xh:strong>bold</xh:strong> foot forward ");
+			assertNotNull(feed1.getTitle().getAttribute("type"));
+			assertNull(feed1.getTitle().getAttribute("bunk"));
 			assertNotNull(feedDoc.readFeedToString(feed1));
 
+			try {
+				feed1 = feedDoc.readFeedToBean(brokeTitle1);
+			} catch (Exception e) {
+				assertTrue(e instanceof AtomSpecException);
+				assertEquals(e.getMessage(),
+						"Unsupported attribute fakeAttr for this Atom Text Construct.");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);
@@ -632,7 +672,7 @@ public class FeedDocTest {
 			assertEquals(e.getMessage(),
 					"Unsuppported attribute type for this Atom Text Construct.");
 		}
-		
+
 		try {
 			entry = feedDoc.readEntryToBean(brokenEntry6);
 			fail("should not get here;");
@@ -676,7 +716,7 @@ public class FeedDocTest {
 			fail("should not get here.");
 		} catch (AtomSpecException e) {
 			assertEquals(e.getMessage(),
-					"The date for the Atom Date Construct SHOULD not be null.");
+					"AtomDateConstruct Dates SHOULD NOT be null.");
 		}
 
 		try {
@@ -784,6 +824,9 @@ public class FeedDocTest {
 
 			// read and write a full feed.
 			feed = feedDoc.readFeedToBean(mega);
+			assertNotNull(feed.getId());
+			assertNotNull(feed.getId().getAttribute("local:something"));
+			assertNull(feed.getId().getAttribute("bunk"));
 			FeedWriter feedWriter = new FeedWriter();
 			XMLStreamWriter writer = XMLOutputFactory.newInstance()
 					.createXMLStreamWriter(
@@ -791,19 +834,31 @@ public class FeedDocTest {
 			feedWriter.writeFeed(writer, feed);
 			writer.flush();
 			writer.close();
-			
-			for(Entry ent: feed.getEntries().values()){
-				if(ent.getId().getAtomUri().equals("http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#About")){
-					assertNotNull(ent.getAuthor("Bill Brown"));
+
+			for (Entry ent : feed.getEntries().values()) {
+				if (ent
+						.getId()
+						.getAtomUri()
+						.equals(
+								"http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#About")) {
+					Author auth = ent.getAuthor("Bill Brown");
+					assertNotNull(auth);
+					assertNotNull(auth.getAttribute("local:testAttr"));
+					Attribute attr1 = auth.getAttribute("local:testAttr");
+					assertFalse(attr1.equals(auth.getAttribute("local:blank")));
+					assertNull(auth.getAttribute("local:blank"));
+					assertNotNull(auth.getExtension("test:test"));
+					assertNull(auth.getExtension("local:bunky"));
 					assertNull(ent.getAuthor("some other dude"));
 					assertNotNull(ent.getContributor("Bill Brown"));
 					assertNull(ent.getContributor("some other dude"));
 					assertNotNull(ent.getCategory("science"));
 					assertNull(ent.getCategory("nothing"));
-					assertNotNull(ent.getLink("http://www.colorfulsoftware.com/projects/atomsphere/atom.xml"));
+					assertNotNull(ent
+							.getLink("http://www.colorfulsoftware.com/projects/atomsphere/atom.xml"));
 					assertNull(ent.getLink("http://www.fakeness.net"));
 					assertNotNull(ent.getExtension("local:element"));
-					assertNull(ent.getExtension("local:notthere"));		
+					assertNull(ent.getExtension("local:notthere"));
 				}
 			}
 
@@ -833,6 +888,16 @@ public class FeedDocTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Issue building feed doc.");
+		}
+
+		// test a plain attribute
+		try {
+			feedDoc.buildAttribute(null, "null");
+			fail("should not get here.");
+		} catch (Exception e) {
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(e.getMessage(),
+					"Attributes SHOULD NOT be null and SHOULD NOT be blank.");
 		}
 	}
 

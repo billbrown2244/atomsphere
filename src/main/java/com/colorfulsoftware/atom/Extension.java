@@ -67,7 +67,7 @@ public class Extension implements Serializable {
 		// spec doesn't require it but elementName should be present
 		if (elementName == null) {
 			throw new AtomSpecException(
-					"channel elements SHOULD contain a title element.");
+					"Extension element names SHOULD NOT be null and SHOULD NOT be blank.");
 		}
 		this.elementName = elementName;
 		this.content = content;

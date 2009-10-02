@@ -58,7 +58,7 @@ public class Generator implements Serializable {
 		if (attributes != null) {
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
-				if (!feedDoc.isAttributeSupported(this, attr)) {
+				if (!new AttributeSupport(attr).verify(this)) {
 					throw new AtomSpecException("Unsuppported attribute "
 							+ attr.getName() + " in the atom:generator element");
 				}
