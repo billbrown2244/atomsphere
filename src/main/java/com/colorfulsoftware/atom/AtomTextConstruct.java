@@ -145,7 +145,7 @@ class AtomTextConstruct implements Serializable {
 	// Convenience for reversing the string.
 	private String reverseIt(String source) {
 		int i, len = source.length();
-		StringBuffer dest = new StringBuffer(len);
+		StringBuilder dest = new StringBuilder(len);
 		for (i = (len - 1); i >= 0; i--)
 			dest.append(source.charAt(i));
 		return dest.toString();
