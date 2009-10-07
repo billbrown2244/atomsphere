@@ -100,7 +100,7 @@ public final class FeedDoc {
 		}
 	}
 
-	private String encoding = "UTF-8";
+	private String encoding = System.getProperty("file.encoding");
 
 	/**
 	 * @param encoding
@@ -154,7 +154,8 @@ public final class FeedDoc {
 	 * @param feed
 	 *            the atom feed object containing the content of the feed
 	 * @param encoding
-	 *            the file encoding (default is UTF-8)
+	 *            the file encoding (default is
+	 *            System.getProperty("file.encoding"))
 	 * @param version
 	 *            the xml version (default is 1.0)
 	 * @throws Exception
@@ -173,7 +174,8 @@ public final class FeedDoc {
 	 * @param entry
 	 *            the atom entry object containing the content.
 	 * @param encoding
-	 *            the file encoding (default is UTF-8)
+	 *            the file encoding (default is
+	 *            System.getProperty("file.encoding"))
 	 * @param version
 	 *            the xml version (default is 1.0)
 	 * @throws Exception
@@ -192,11 +194,14 @@ public final class FeedDoc {
 	 * @param feed
 	 *            the atom feed object containing the content of the feed
 	 * @param encoding
-	 *            the file encoding (default is UTF-8)
+	 *            the file encoding (default is
+	 *            System.getProperty("file.encoding"))
 	 * @param version
 	 *            the xml version (default is 1.0)
 	 * @throws Exception
-	 *             thrown if the feed cannot be written to the output
+	 *             thrown if the atom document cannot be written to the output
+	 *             or if the writer output parameter's underlying encoding does
+	 *             not match the passed encoding parameter.
 	 */
 	public void writeFeedDoc(Writer output, Feed feed, String encoding,
 			String version) throws Exception {
@@ -211,11 +216,15 @@ public final class FeedDoc {
 	 * @param entry
 	 *            the atom entry object containing the content.
 	 * @param encoding
-	 *            the file encoding (default is UTF-8)
+	 *            the file encoding (default is
+	 *            System.getProperty("file.encoding"))
 	 * @param version
 	 *            the xml version (default is 1.0)
 	 * @throws Exception
 	 *             thrown if the atom document cannot be written to the output
+	 *             or if the writer output parameter's underlying encoding does
+	 *             not match the passed encoding parameter.
+	 * 
 	 */
 	public void writeEntryDoc(Writer output, Entry entry, String encoding,
 			String version) throws Exception {
@@ -240,7 +249,7 @@ public final class FeedDoc {
 	 * @param feed
 	 *            the atom feed object containing the content of the feed
 	 * @param encoding
-	 *            the file encoding (default is UTF-8)
+	 *            the file encoding (default is System.getProperty("file.encoding"))
 	 * @param version
 	 *            the xml version (default is 1.0)
 	 * @throws Exception
@@ -261,7 +270,7 @@ public final class FeedDoc {
 	 * @param entry
 	 *            the atom entry object containing the content of the entry
 	 * @param encoding
-	 *            the file encoding (default is UTF-8)
+	 *            the file encoding (default is System.getProperty("file.encoding"))
 	 * @param version
 	 *            the xml version (default is 1.0)
 	 * @throws Exception
@@ -1331,7 +1340,7 @@ public final class FeedDoc {
 	}
 
 	/**
-	 * @return the default encoding for the library UTF-8.
+	 * @return the default encoding for the library is System.getProperty("file.encoding").
 	 */
 	public String getEncoding() {
 		return encoding;
