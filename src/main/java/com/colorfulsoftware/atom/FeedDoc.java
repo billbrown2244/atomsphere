@@ -86,8 +86,12 @@ public final class FeedDoc {
 
 	/**
 	 * creates a new feed document.
+	 * 
+	 * @throws AtomSpecException
+	 *             if the library version information cannot be loaded from the
+	 *             environment.
 	 */
-	public FeedDoc() {
+	public FeedDoc() throws AtomSpecException {
 		try {
 			Properties props = new Properties();
 			props.load(FeedDoc.class
@@ -95,8 +99,9 @@ public final class FeedDoc {
 			libUri = props.getProperty("uri");
 			libVersion = props.getProperty("version");
 		} catch (Exception e) {
-			// should not happen.
-			e.printStackTrace();
+			throw new AtomSpecException(
+					"could not find library version informtaion: "
+							+ e.getLocalizedMessage());
 		}
 	}
 
@@ -107,8 +112,11 @@ public final class FeedDoc {
 	 *            the document encoding. eg: UTF-8
 	 * @param xmlVersion
 	 *            the document xml version eg: 1.0
+	 * @throws AtomSpecException
+	 *             if the library version information cannot be loaded from the
+	 *             environment.
 	 */
-	public FeedDoc(String encoding, String xmlVersion) {
+	public FeedDoc(String encoding, String xmlVersion) throws AtomSpecException {
 		this();
 		this.encoding = encoding;
 		this.xmlVersion = xmlVersion;
