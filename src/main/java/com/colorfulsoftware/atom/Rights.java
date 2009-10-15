@@ -49,10 +49,8 @@ public class Rights implements Serializable {
 		this.rights = new AtomTextConstruct(rights, attributes, false);
 	}
 
-	Rights(Rights rights) throws AtomSpecException {
-		this.rights = new AtomTextConstruct(rights.getText(), rights
-				.getAttributes(), rights.getDivWrapperStart(), rights
-				.getDivWrapperEnd(), false);
+	Rights(Rights rights) {
+		this.rights = new AtomTextConstruct(rights.rights);
 	}
 
 	/**
@@ -66,10 +64,8 @@ public class Rights implements Serializable {
 	/**
 	 * 
 	 * @return the attributes for this element.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public List<Attribute> getAttributes() throws AtomSpecException {
+	public List<Attribute> getAttributes() {
 		return rights.getAttributes();
 	}
 
@@ -85,10 +81,12 @@ public class Rights implements Serializable {
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Attribute getAttribute(String attrName) throws AtomSpecException {
+	public Attribute getAttribute(String attrName) {
 		return rights.getAttribute(attrName);
+	}
+	
+	AtomTextConstruct.ContentType getContentType(){
+		return rights.getContentType();
 	}
 }

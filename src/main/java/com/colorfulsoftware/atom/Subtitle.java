@@ -38,9 +38,6 @@ import java.util.List;
  */
 public class Subtitle implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1899291850703846655L;
 	private final AtomTextConstruct subtitle;
 
@@ -51,10 +48,8 @@ public class Subtitle implements Serializable {
 	}
 
 	// copy constructor
-	Subtitle(Subtitle subtitle) throws AtomSpecException {
-		this.subtitle = new AtomTextConstruct(subtitle.getText(), subtitle
-				.getAttributes(), subtitle.getDivWrapperStart(), subtitle
-				.getDivWrapperEnd(), false);
+	Subtitle(Subtitle subtitle) {
+		this.subtitle = new AtomTextConstruct(subtitle.subtitle);
 	}
 
 	/**
@@ -68,10 +63,8 @@ public class Subtitle implements Serializable {
 	/**
 	 * 
 	 * @return the attributes for this element.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public List<Attribute> getAttributes() throws AtomSpecException {
+	public List<Attribute> getAttributes() {
 		return subtitle.getAttributes();
 	}
 
@@ -87,10 +80,12 @@ public class Subtitle implements Serializable {
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Attribute getAttribute(String attrName) throws AtomSpecException {
+	public Attribute getAttribute(String attrName) {
 		return subtitle.getAttribute(attrName);
+	}
+	
+	AtomTextConstruct.ContentType getContentType(){
+		return subtitle.getContentType();
 	}
 }

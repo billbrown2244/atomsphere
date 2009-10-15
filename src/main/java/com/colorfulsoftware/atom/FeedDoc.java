@@ -53,30 +53,6 @@ import javax.xml.stream.XMLStreamWriter;
 public final class FeedDoc {
 
 	/**
-	 * 
-	 * An enumeration of the different types of supported content.
-	 * 
-	 */
-	public enum ContentType {
-		/**
-		 * text content
-		 */
-		TEXT, /**
-		 * html content
-		 */
-		HTML, /**
-		 * xhtml content
-		 */
-		XHTML, /**
-		 * other non text, html or xhtml content
-		 */
-		OTHER, /**
-		 * external content outside of the feed
-		 */
-		EXTERNAL
-	}
-
-	/**
 	 * the default XML version of "1.0"
 	 */
 	private String xmlVersion = "1.0";
@@ -87,22 +63,16 @@ public final class FeedDoc {
 	/**
 	 * creates a new feed document.
 	 * 
-	 * @throws AtomSpecException
+	 * @throws Exception
 	 *             if the library version information cannot be loaded from the
 	 *             environment.
 	 */
-	public FeedDoc() throws AtomSpecException {
-		try {
-			Properties props = new Properties();
-			props.load(FeedDoc.class
-					.getResourceAsStream("/atomsphere.properties"));
-			libUri = props.getProperty("uri");
-			libVersion = props.getProperty("version");
-		} catch (Exception e) {
-			throw new AtomSpecException(
-					"could not find library version informtaion: "
-							+ e.getLocalizedMessage());
-		}
+	public FeedDoc() throws Exception {
+		Properties props = new Properties();
+		props.load(FeedDoc.class.getResourceAsStream("/atomsphere.properties"));
+		libUri = props.getProperty("uri");
+		libVersion = props.getProperty("version");
+
 	}
 
 	private String encoding = System.getProperty("file.encoding");
@@ -112,11 +82,11 @@ public final class FeedDoc {
 	 *            the document encoding. eg: UTF-8
 	 * @param xmlVersion
 	 *            the document xml version eg: 1.0
-	 * @throws AtomSpecException
+	 * @throws Exception
 	 *             if the library version information cannot be loaded from the
 	 *             environment.
 	 */
-	public FeedDoc(String encoding, String xmlVersion) throws AtomSpecException {
+	public FeedDoc(String encoding, String xmlVersion) throws Exception {
 		this();
 		this.encoding = encoding;
 		this.xmlVersion = xmlVersion;
@@ -257,7 +227,8 @@ public final class FeedDoc {
 	 * @param feed
 	 *            the atom feed object containing the content of the feed
 	 * @param encoding
-	 *            the file encoding (default is System.getProperty("file.encoding"))
+	 *            the file encoding (default is
+	 *            System.getProperty("file.encoding"))
 	 * @param version
 	 *            the xml version (default is 1.0)
 	 * @throws Exception
@@ -278,7 +249,8 @@ public final class FeedDoc {
 	 * @param entry
 	 *            the atom entry object containing the content of the entry
 	 * @param encoding
-	 *            the file encoding (default is System.getProperty("file.encoding"))
+	 *            the file encoding (default is
+	 *            System.getProperty("file.encoding"))
 	 * @param version
 	 *            the xml version (default is 1.0)
 	 * @throws Exception
@@ -1106,46 +1078,7 @@ public final class FeedDoc {
 		return null;
 	}
 
-	/**
-	 * Convenience method for getting the content type for this element.
-	 * Examines the "type" and "src" attributes if they exist in the list.
-	 * 
-	 * @param attributes
-	 *            the attributes to examine.
-	 * 
-	 * @return the content type for this element. One of TEXT,HTML,XHTML,OTHER
-	 *         or EXTERNAL
-	 */
-	public ContentType getContentType(List<Attribute> attributes) {
-		ContentType contentType = ContentType.TEXT; // default
-		if (attributes != null) {
-			for (Attribute attr : attributes) {
-				if (attr.getName().equals("src")) {
-					return ContentType.EXTERNAL;
-				}
-
-				if (attr.getName().equals("type")
-						&& attr.getValue().equals("text")) {
-					contentType = ContentType.TEXT;
-					break;
-				} else if (attr.getName().equals("type")
-						&& attr.getValue().equals("html")) {
-					contentType = ContentType.HTML;
-					break;
-				} else if (attr.getName().equals("type")
-						&& attr.getValue().equals("xhtml")) {
-					contentType = ContentType.XHTML;
-				} else if (attr.getName().equals("type")
-						&& (!attr.getValue().equals("text")
-								&& !attr.getValue().equals("html") && !attr
-								.getValue().equals("xhtml"))) {
-					contentType = ContentType.OTHER;
-					break;
-				}
-			}
-		}
-		return contentType;
-	}
+	
 
 	/**
 	 * This method sorts the entries of the feed. The Updated, Title and Summary
@@ -1348,7 +1281,8 @@ public final class FeedDoc {
 	}
 
 	/**
-	 * @return the default encoding for the library is System.getProperty("file.encoding").
+	 * @return the default encoding for the library is
+	 *         System.getProperty("file.encoding").
 	 */
 	public String getEncoding() {
 		return encoding;

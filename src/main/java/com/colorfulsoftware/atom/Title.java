@@ -50,10 +50,8 @@ public class Title implements Serializable {
 	}
 
 	// copy constructor
-	Title(Title title) throws AtomSpecException {
-		this.title = new AtomTextConstruct(title.getText(), title
-				.getAttributes(), title.getDivWrapperStart(), title
-				.getDivWrapperEnd(), false);
+	Title(Title title) {
+		this.title = new AtomTextConstruct(title.title);
 	}
 
 	/**
@@ -67,10 +65,8 @@ public class Title implements Serializable {
 	/**
 	 * 
 	 * @return the attributes for this element.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public List<Attribute> getAttributes() throws AtomSpecException {
+	public List<Attribute> getAttributes() {
 		return title.getAttributes();
 	}
 
@@ -86,10 +82,12 @@ public class Title implements Serializable {
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Attribute getAttribute(String attrName) throws AtomSpecException {
+	public Attribute getAttribute(String attrName) {
 		return title.getAttribute(attrName);
+	}
+	
+	AtomTextConstruct.ContentType getContentType(){
+		return title.getContentType();
 	}
 }

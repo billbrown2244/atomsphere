@@ -55,6 +55,11 @@ public class Attribute implements Serializable {
 		this.value = value;
 	}
 
+	Attribute(Attribute attribute) {
+		this.name = attribute.getName();
+		this.value = attribute.getValue();
+	}
+
 	/**
 	 * 
 	 * @return the name of this attribute
@@ -75,10 +80,8 @@ public class Attribute implements Serializable {
 	public boolean equals(Object obj) {
 		if (obj instanceof Attribute) {
 			Attribute local = (Attribute) obj;
-			if (local.name != null && local.value != null) {
-				return local.name.equals(this.name)
-						&& local.value.equals(this.value);
-			}
+			return local.name.equals(this.name)
+					&& local.value.equals(this.value);
 		}
 		return false;
 	}

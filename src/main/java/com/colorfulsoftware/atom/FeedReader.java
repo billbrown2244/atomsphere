@@ -40,7 +40,7 @@ import javax.xml.stream.XMLStreamReader;
  */
 class FeedReader {
 
-	FeedDoc feedDoc = new FeedDoc();
+	FeedDoc feedDoc;
 
 	/**
 	 * This method transforms an xml stream into a Feed bean
@@ -52,7 +52,7 @@ class FeedReader {
 	 *             if the stream cannot be parsed.
 	 */
 	Feed readFeed(XMLStreamReader reader) throws Exception {
-
+		feedDoc = new FeedDoc();
 		List<Attribute> attributes = getAttributes(reader);
 		List<Author> authors = null;
 		List<Category> categories = null;

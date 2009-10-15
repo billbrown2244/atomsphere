@@ -59,7 +59,7 @@ class AtomTextConstruct implements Serializable {
 	// content elements do a different validation.
 	AtomTextConstruct(String text, List<Attribute> attributes,
 			boolean isContentElement) throws AtomSpecException {
-		
+
 		if (attributes == null) {
 			this.attributes = null;
 		} else {
@@ -74,8 +74,7 @@ class AtomTextConstruct implements Serializable {
 								+ attr.getName()
 								+ " for this Atom Text Construct.");
 					}
-					this.attributes.add(new Attribute(attr.getName(), attr
-							.getValue()));
+					this.attributes.add(new Attribute(attr));
 				}
 			} else {
 				for (Attribute attr : attributes) {
@@ -85,13 +84,12 @@ class AtomTextConstruct implements Serializable {
 								+ attr.getName()
 								+ " for this Atom Text Construct.");
 					}
-					this.attributes.add(new Attribute(attr.getName(), attr
-							.getValue()));
+					this.attributes.add(new Attribute(attr));
 				}
 			}
 		}
 
-		if (new FeedDoc().getContentType(this.attributes) == FeedDoc.ContentType.XHTML) {
+		if (getContentType() == ContentType.XHTML) {
 			this.divWrapperStart = getDivWrapperStart(text);
 			this.divWrapperEnd = getDivWrapperEnd(text);
 			this.text = getXhtmlText(text);
@@ -101,27 +99,67 @@ class AtomTextConstruct implements Serializable {
 			this.text = text;
 		}
 	}
-
-	// copy constructor
-	// all the exceptions should have been checked initially by the other
-	// constructor.
-	AtomTextConstruct(String text, List<Attribute> attributes,
-			String divWrapperStart, String divWrapperEnd,
-			boolean isContentElement) throws AtomSpecException {
-		this.text = text;
-		this.divWrapperStart = divWrapperStart;
-		this.divWrapperEnd = divWrapperEnd;
-
-		if (attributes == null) {
-			this.attributes = null;
-		} else {
-			// add the attributes
-			this.attributes = new LinkedList<Attribute>();
+	 
+	ContentType getContentType() {
+		ContentType contentType = ContentType.TEXT; // default
+		if (attributes != null) {
 			for (Attribute attr : attributes) {
-				this.attributes.add(new Attribute(attr.getName(), attr
-						.getValue()));
+				if (attr.getName().equals("src")) {
+					return ContentType.EXTERNAL;
+				}
+
+				if (attr.getName().equals("type")
+						&& attr.getValue().equals("text")) {
+					contentType = ContentType.TEXT;
+					break;
+				} else if (attr.getName().equals("type")
+						&& attr.getValue().equals("html")) {
+					contentType = ContentType.HTML;
+					break;
+				} else if (attr.getName().equals("type")
+						&& attr.getValue().equals("xhtml")) {
+					contentType = ContentType.XHTML;
+				} else if (attr.getName().equals("type")
+						&& (!attr.getValue().equals("text")
+								&& !attr.getValue().equals("html") && !attr
+								.getValue().equals("xhtml"))) {
+					contentType = ContentType.OTHER;
+					break;
+				}
 			}
 		}
+		return contentType;
+	}
+	
+	/**
+	 * 
+	 * An enumeration of the different types of supported content.
+	 * 
+	 */
+	public enum ContentType {
+		/**
+		 * text content
+		 */
+		TEXT, /**
+		 * html content
+		 */
+		HTML, /**
+		 * xhtml content
+		 */
+		XHTML, /**
+		 * other non text, html or xhtml content
+		 */
+		OTHER, /**
+		 * external content outside of the feed
+		 */
+		EXTERNAL
+	}
+
+	AtomTextConstruct(AtomTextConstruct atomTextConstruct) {
+		this.attributes = atomTextConstruct.getAttributes();
+		this.text = atomTextConstruct.getText();
+		this.divWrapperStart = atomTextConstruct.getDivWrapperStart();
+		this.divWrapperEnd = atomTextConstruct.getDivWrapperEnd();
 	}
 
 	private String getDivWrapperStart(String text) {
@@ -154,15 +192,13 @@ class AtomTextConstruct implements Serializable {
 	/**
 	 * 
 	 * @return the category attribute list.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public List<Attribute> getAttributes() throws AtomSpecException {
+	public List<Attribute> getAttributes() {
 
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		if (this.attributes != null) {
 			for (Attribute attr : this.attributes) {
-				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+				attrsCopy.add(new Attribute(attr));
 			}
 		}
 		return (this.attributes == null) ? null : attrsCopy;
@@ -188,15 +224,12 @@ class AtomTextConstruct implements Serializable {
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Attribute getAttribute(String attrName) throws AtomSpecException {
+	public Attribute getAttribute(String attrName) {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
 				if (attribute.getName().equals(attrName)) {
-					return new Attribute(attribute.getName(), attribute
-							.getValue());
+					return new Attribute(attribute);
 				}
 			}
 		}

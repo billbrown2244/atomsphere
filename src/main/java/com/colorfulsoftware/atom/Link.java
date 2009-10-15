@@ -100,18 +100,27 @@ public class Link implements Serializable {
 		this.content = content;
 	}
 
+	Link(Link link) {
+		this.attributes = link.getAttributes();
+		this.href = link.getHref();
+		this.rel = link.getRel();
+		this.type = link.getType();
+		this.hreflang = link.getHreflang();
+		this.title = link.getTitle();
+		this.length = link.getLength();
+		this.content = link.getContent();
+	}
+
 	/**
 	 * 
 	 * @return the category attribute list.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public List<Attribute> getAttributes() throws AtomSpecException {
+	public List<Attribute> getAttributes() {
 
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		if (this.attributes != null) {
 			for (Attribute attr : this.attributes) {
-				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+				attrsCopy.add(new Attribute(attr));
 			}
 		}
 		return (this.attributes == null) ? null : attrsCopy;
@@ -120,70 +129,52 @@ public class Link implements Serializable {
 	/**
 	 * 
 	 * @return the href contains the link's IRI
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Attribute getHref() throws AtomSpecException {
-		return (href == null) ? null : new Attribute(href.getName(), href
-				.getValue());
+	public Attribute getHref() {
+		return (href == null) ? null : new Attribute(href);
 	}
 
 	/**
 	 * 
 	 * @return the hreflang describes the language of the resource pointed to by
 	 *         the href attribute.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Attribute getHreflang() throws AtomSpecException {
-		return (hreflang == null) ? null : new Attribute(hreflang.getName(),
-				hreflang.getValue());
+	public Attribute getHreflang() {
+		return (hreflang == null) ? null : new Attribute(hreflang);
 	}
 
 	/**
 	 * 
 	 * @return the length indicates an advisory length of the linked content in
 	 *         octets.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Attribute getLength() throws AtomSpecException {
-		return (length == null) ? null : new Attribute(length.getName(), length
-				.getValue());
+	public Attribute getLength() {
+		return (length == null) ? null : new Attribute(length);
 	}
 
 	/**
 	 * 
 	 * @return the rel which matches either the "isegment-nz-nc" or the "IRI"
 	 *         production in [RFC3987]
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Attribute getRel() throws AtomSpecException {
-		return (rel == null) ? null : new Attribute(rel.getName(), rel
-				.getValue());
+	public Attribute getRel() {
+		return (rel == null) ? null : new Attribute(rel);
 	}
 
 	/**
 	 * 
 	 * @return the title conveys human-readable information about the link.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Attribute getTitle() throws AtomSpecException {
-		return (title == null) ? null : new Attribute(title.getName(), title
-				.getValue());
+	public Attribute getTitle() {
+		return (title == null) ? null : new Attribute(title);
 	}
 
 	/**
 	 * 
-	 * @return the type which is an advisory media type
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
+	 * @return the type which is an advisory media type.
 	 */
-	public Attribute getType() throws AtomSpecException {
-		return (type == null) ? null : new Attribute(type.getName(), type
-				.getValue());
+	public Attribute getType() {
+		return (type == null) ? null : new Attribute(type);
 	}
 
 	/**
@@ -198,15 +189,12 @@ public class Link implements Serializable {
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Attribute getAttribute(String attrName) throws AtomSpecException {
+	public Attribute getAttribute(String attrName) {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
 				if (attribute.getName().equals(attrName)) {
-					return new Attribute(attribute.getName(), attribute
-							.getValue());
+					return new Attribute(attribute);
 				}
 			}
 		}

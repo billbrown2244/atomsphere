@@ -52,6 +52,10 @@ public class Id implements Serializable {
 	Id(List<Attribute> attributes, String atomUri) throws AtomSpecException {
 		this.id = new AtomURIConstruct(attributes, atomUri);
 	}
+	
+	Id(Id id){
+		this.id = new AtomURIConstruct(id.id);
+	}
 
 	/**
 	 * 

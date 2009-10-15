@@ -82,17 +82,15 @@ public class Content implements Serializable {
 	}
 
 	// copy constructor
-	Content(Content content) throws AtomSpecException {
-		this.content = new AtomTextConstruct(content.getContent(), content
-				.getAttributes(), content.getDivWrapperStart(), content
-				.getDivWrapperEnd(), true);
+	Content(Content content) {
+		this.content = new AtomTextConstruct(content.content);
 	}
 
 	/**
 	 * 
 	 * @return the text content for this element.
 	 */
-	public String getContent(){
+	public String getContent() {
 		return content.getText();
 	}
 
@@ -123,5 +121,9 @@ public class Content implements Serializable {
 	 */
 	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		return content.getAttribute(attrName);
+	}
+
+	AtomTextConstruct.ContentType getContentType() {
+		return content.getContentType();
 	}
 }

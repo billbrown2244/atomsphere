@@ -49,6 +49,10 @@ public class Updated implements Serializable {
 	Updated(Date updated, List<Attribute> attributes) throws AtomSpecException {
 		this.updated = new AtomDateConstruct(updated, attributes);
 	}
+	
+	Updated(Updated updated){
+		this.updated = new AtomDateConstruct(updated.updated);
+	}
 
 	/**
 	 * 

@@ -29,25 +29,22 @@ import java.util.TimeZone;
 
 class AtomDateConstruct implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4497374180937974L;
 
 	private final List<Attribute> attributes;
 
 	private final Date dateTime;
 
-	/**
+	/*
 	 * 
-	 * @param dateTime
-	 *            the date
-	 * @param attributes
-	 *            the attributes for the date. the date formatted to [RFC3339]
-	 * @throws AtomSpecException
-	 *             if the date format is not valid.
+	 * @param dateTime the date
+	 * 
+	 * @param attributes the attributes for the date. the date formatted to
+	 * [RFC3339]
+	 * 
+	 * @throws AtomSpecException if the date format is not valid.
 	 */
-	public AtomDateConstruct(Date dateTime, List<Attribute> attributes)
+	AtomDateConstruct(Date dateTime, List<Attribute> attributes)
 			throws AtomSpecException {
 		if (attributes == null) {
 			this.attributes = null;
@@ -59,8 +56,7 @@ class AtomDateConstruct implements Serializable {
 					throw new AtomSpecException("Unsuppported attribute "
 							+ attr.getName() + " for this Atom Date Construct.");
 				}
-				this.attributes.add(new Attribute(attr.getName(), attr
-						.getValue()));
+				this.attributes.add(new Attribute(attr));
 			}
 		}
 
@@ -70,6 +66,11 @@ class AtomDateConstruct implements Serializable {
 		} else {
 			this.dateTime = new Date(dateTime.getTime());
 		}
+	}
+
+	AtomDateConstruct(AtomDateConstruct atomDateConstruct) {
+		this.attributes = atomDateConstruct.getAttributes();
+		this.dateTime = atomDateConstruct.getDateTime();
 	}
 
 	/**
@@ -106,14 +107,12 @@ class AtomDateConstruct implements Serializable {
 	/**
 	 * 
 	 * @return the category attribute list.
-	 * @throws AtomSpecException
-	 *             if there is an issue with the data.
 	 */
-	public List<Attribute> getAttributes() throws AtomSpecException {
+	public List<Attribute> getAttributes() {
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		if (this.attributes != null) {
-			for (Attribute attr : this.attributes) {
-				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+			for (Attribute attribute : this.attributes) {
+				attrsCopy.add(new Attribute(attribute));
 			}
 		}
 		return (this.attributes == null) ? null : attrsCopy;
@@ -123,15 +122,12 @@ class AtomDateConstruct implements Serializable {
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
-	 * @throws AtomSpecException
-	 *             if there is an issue with the data.
 	 */
-	public Attribute getAttribute(String attrName) throws AtomSpecException {
+	public Attribute getAttribute(String attrName) {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
 				if (attribute.getName().equals(attrName)) {
-					return new Attribute(attribute.getName(), attribute
-							.getValue());
+					return new Attribute(attribute);
 				}
 			}
 		}

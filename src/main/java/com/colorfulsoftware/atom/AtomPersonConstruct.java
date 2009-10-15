@@ -85,8 +85,7 @@ class AtomPersonConstruct implements Serializable {
 							+ attr.getName()
 							+ " for this Atom Person Construct.");
 				}
-				this.attributes.add(new Attribute(attr.getName(), attr
-						.getValue()));
+				this.attributes.add(new Attribute(attr));
 			}
 		}
 
@@ -95,25 +94,30 @@ class AtomPersonConstruct implements Serializable {
 		} else {
 			this.extensions = new LinkedList<Extension>();
 			for (Extension extension : extensions) {
-				this.extensions.add(new Extension(extension.getElementName(),
-						extension.getAttributes(), extension.getContent()));
+				this.extensions.add(new Extension(extension));
 			}
 		}
 
 	}
 
+	public AtomPersonConstruct(AtomPersonConstruct person) {
+		this.attributes = person.getAttributes();
+		this.name = person.getName();
+		this.uri = person.getUri();
+		this.email = person.getEmail();
+		this.extensions = person.getExtensions();
+	}
+
 	/**
 	 * 
 	 * @return the category attribute list.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public List<Attribute> getAttributes() throws AtomSpecException {
+	public List<Attribute> getAttributes() {
 
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		if (this.attributes != null) {
 			for (Attribute attr : this.attributes) {
-				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+				attrsCopy.add(new Attribute(attr));
 			}
 		}
 		return (this.attributes == null) ? null : attrsCopy;
@@ -146,17 +150,14 @@ class AtomPersonConstruct implements Serializable {
 	/**
 	 * 
 	 * @return the extensions for this element.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public List<Extension> getExtensions() throws AtomSpecException {
+	public List<Extension> getExtensions() {
 		if (extensions == null) {
 			return null;
 		}
 		List<Extension> extsCopy = new LinkedList<Extension>();
 		for (Extension extension : this.extensions) {
-			extsCopy.add(new Extension(extension.getElementName(), extension
-					.getAttributes(), extension.getContent()));
+			extsCopy.add(new Extension(extension));
 		}
 		return extsCopy;
 	}
@@ -165,15 +166,12 @@ class AtomPersonConstruct implements Serializable {
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Attribute getAttribute(String attrName) throws AtomSpecException {
+	public Attribute getAttribute(String attrName) {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
 				if (attribute.getName().equals(attrName)) {
-					return new Attribute(attribute.getName(), attribute
-							.getValue());
+					return new Attribute(attribute);
 				}
 			}
 		}
@@ -184,15 +182,12 @@ class AtomPersonConstruct implements Serializable {
 	 * @param extName
 	 *            the element name of the extension to get.
 	 * @return the Extension object if extName matches or null if not found.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Extension getExtension(String extName) throws AtomSpecException {
+	public Extension getExtension(String extName) {
 		if (this.extensions != null) {
 			for (Extension extension : this.extensions) {
 				if (extension.getElementName().equals(extName)) {
-					return new Extension(extension.getElementName(), extension
-							.getAttributes(), extension.getContent());
+					return new Extension(extension);
 				}
 			}
 		}

@@ -51,6 +51,10 @@ public class Contributor implements Serializable {
 				extensions);
 	}
 
+	Contributor(Contributor contributor) {
+		this.person = new AtomPersonConstruct(contributor.person);
+	}
+
 	/**
 	 * @return the name element.
 	 */

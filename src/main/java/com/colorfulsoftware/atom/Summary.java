@@ -51,10 +51,8 @@ public class Summary implements Serializable {
 	}
 
 	// copy constructor
-	Summary(Summary summary) throws AtomSpecException {
-		this.summary = new AtomTextConstruct(summary.getText(), summary
-				.getAttributes(), summary.getDivWrapperStart(), summary
-				.getDivWrapperEnd(), false);
+	Summary(Summary summary) {
+		this.summary = new AtomTextConstruct(summary.summary);
 	}
 
 	/**
@@ -92,5 +90,9 @@ public class Summary implements Serializable {
 	 */
 	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		return summary.getAttribute(attrName);
+	}
+	
+	AtomTextConstruct.ContentType getContentType(){
+		return summary.getContentType();
 	}
 }

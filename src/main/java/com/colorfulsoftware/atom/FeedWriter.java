@@ -44,8 +44,6 @@ import javax.xml.stream.XMLStreamWriter;
  */
 class FeedWriter {
 
-	private FeedDoc feedDoc = new FeedDoc();
-
 	// used internally by FeedDoc to write feed to output streams.
 	void writeFeed(XMLStreamWriter writer, Feed feed) throws AtomSpecException {
 		try {
@@ -131,7 +129,7 @@ class FeedWriter {
 			writer.writeStartElement("subtitle");
 			writeAtomTextConstruct(writer, subtitle.getAttributes(), subtitle
 					.getDivWrapperStart(), subtitle.getDivWrapperEnd(),
-					subtitle.getText());
+					subtitle.getText(), subtitle.getContentType());
 
 			writer.writeEndElement();
 		} catch (Exception e) {
@@ -183,7 +181,7 @@ class FeedWriter {
 			writer.writeStartElement("title");
 			writeAtomTextConstruct(writer, title.getAttributes(), title
 					.getDivWrapperStart(), title.getDivWrapperEnd(), title
-					.getText());
+					.getText(), title.getContentType());
 
 			writer.writeEndElement();
 		} catch (Exception e) {
@@ -425,7 +423,7 @@ class FeedWriter {
 			writer.writeStartElement("rights");
 			writeAtomTextConstruct(writer, rights.getAttributes(), rights
 					.getDivWrapperStart(), rights.getDivWrapperEnd(), rights
-					.getText());
+					.getText(), rights.getContentType());
 
 			writer.writeEndElement();
 		} catch (Exception e) {
@@ -597,7 +595,7 @@ class FeedWriter {
 			writer.writeStartElement("summary");
 			writeAtomTextConstruct(writer, summary.getAttributes(), summary
 					.getDivWrapperStart(), summary.getDivWrapperEnd(), summary
-					.getText());
+					.getText(), summary.getContentType());
 
 			writer.writeEndElement();
 		} catch (Exception e) {
@@ -607,18 +605,19 @@ class FeedWriter {
 
 	private void writeAtomTextConstruct(XMLStreamWriter writer,
 			List<Attribute> attributes, String startDivWrapper,
-			String endDivWrapper, String text) throws AtomSpecException {
+			String endDivWrapper, String text,
+			AtomTextConstruct.ContentType contentType) throws AtomSpecException {
 		try {
 			// write the attributes if there are any
 			writeAttributes(writer, attributes);
 			// check to see if we need to
 			// wrap the text in a an <xhtml:div> tag.
-			if (feedDoc.getContentType(attributes) == FeedDoc.ContentType.XHTML) {
+			if (contentType == AtomTextConstruct.ContentType.XHTML) {
 
 				writeXHTML(writer, startDivWrapper + text + endDivWrapper);
 
 				// check to see if we need to escape the data
-			} else if (feedDoc.getContentType(attributes) == FeedDoc.ContentType.HTML) {
+			} else if (contentType == AtomTextConstruct.ContentType.HTML) {
 
 				writer.writeCharacters(text.replaceAll("&", "&amp;").replace(
 						"&lt;", "<").replace(">", "&gt;"));
@@ -650,7 +649,7 @@ class FeedWriter {
 		try {
 			// look for the src attribute to
 			// see if we need to build an empty tag.
-			if (feedDoc.getAttributeFromGroup(content.getAttributes(), "src") != null) {
+			if (content.getAttribute("src") != null) {
 				writer.writeEmptyElement("content");
 				// write the attributes.
 				writeAttributes(writer, content.getAttributes());
@@ -658,7 +657,7 @@ class FeedWriter {
 				writer.writeStartElement("content");
 				writeAtomTextConstruct(writer, content.getAttributes(), content
 						.getDivWrapperStart(), content.getDivWrapperEnd(),
-						content.getContent());
+						content.getContent(), content.getContentType());
 
 				writer.writeEndElement();
 			}
