@@ -58,7 +58,6 @@ import com.colorfulsoftware.atom.Name;
 import com.colorfulsoftware.atom.Rights;
 import com.colorfulsoftware.atom.Title;
 import com.colorfulsoftware.atom.Updated;
-import com.colorfulsoftware.atom.FeedDoc.ContentType;
 
 //uncomment stax-utils dependency in the root pom.xml to see exapmle usage.
 //import javanet.staxutils.IndentingXMLStreamWriter;
@@ -908,23 +907,39 @@ public class FeedDocTest {
 	public void testGetContentType() {
 		try {
 			List<Attribute> attrs = new LinkedList<Attribute>();
-			attrs.add(feedDoc.buildAttribute("src",
-					"http://www.colorfulsoftware.com/images/logo.gif"));
 			attrs.add(feedDoc.buildAttribute("type", "image/gif"));
-			assertEquals(feedDoc.getContentType(attrs), ContentType.EXTERNAL);
-			attrs = new LinkedList<Attribute>();
-			attrs.add(feedDoc.buildAttribute("type", "image/gif"));
-			assertEquals(feedDoc.getContentType(attrs), ContentType.OTHER);
+			
+			Title title = feedDoc.buildTitle(null, attrs);
+			assertEquals(title.getContentType(),
+					AtomTextConstruct.ContentType.OTHER);
+			
 			attrs = new LinkedList<Attribute>();
 			attrs.add(feedDoc.buildAttribute("type", "text"));
-			assertEquals(feedDoc.getContentType(attrs), ContentType.TEXT);
+			title = feedDoc.buildTitle(null, attrs);
+			assertEquals(title.getContentType(),
+					AtomTextConstruct.ContentType.TEXT);
+			
 			attrs = new LinkedList<Attribute>();
 			attrs.add(feedDoc.buildAttribute("type", "html"));
-			assertEquals(feedDoc.getContentType(attrs), ContentType.HTML);
+			title = feedDoc.buildTitle(null, attrs);
+			assertEquals(title.getContentType(),
+					AtomTextConstruct.ContentType.HTML);
+			
 			attrs = new LinkedList<Attribute>();
 			attrs.add(feedDoc.buildAttribute("type", "xhtml"));
-			assertEquals(feedDoc.getContentType(attrs), ContentType.XHTML);
+			title = feedDoc.buildTitle(null, attrs);
+			assertEquals(title.getContentType(),
+					AtomTextConstruct.ContentType.XHTML);
+			
+			attrs = new LinkedList<Attribute>();
+			attrs.add(feedDoc.buildAttribute("src",
+			"http://www.colorfulsoftware.com/images/logo.gif"));
+			Content content = feedDoc.buildContent(null,attrs);
+			assertEquals(content.getContentType(),
+					AtomTextConstruct.ContentType.EXTERNAL);
+			
 		} catch (AtomSpecException e) {
+			e.printStackTrace();
 			fail("this shouldn't happen");
 		}
 	}

@@ -65,7 +65,6 @@ public class Link implements Serializable {
 
 	// use the factory method in the FeedDoc.
 	Link(List<Attribute> attributes, String content) throws AtomSpecException {
-		FeedDoc feedDoc = new FeedDoc();
 		if (attributes == null) {
 			this.attributes = new LinkedList<Attribute>();
 		} else {
@@ -76,26 +75,24 @@ public class Link implements Serializable {
 					throw new AtomSpecException("Unsuppported attribute "
 							+ attr.getName() + " for this link element.");
 				}
-				this.attributes.add(new Attribute(attr.getName(), attr
-						.getValue()));
+				this.attributes.add(new Attribute(attr));
 			}
 		}
 
-		if ((this.href = feedDoc.getAttributeFromGroup(this.attributes, "href")) == null) {
+		if ((this.href = getAttribute("href")) == null) {
 			throw new AtomSpecException(
 					"atom:link elements MUST have an href attribute, whose value MUST be a IRI reference");
 		}
 
-		this.rel = feedDoc.getAttributeFromGroup(this.attributes, "rel");
+		this.rel = getAttribute("rel");
 
-		this.type = feedDoc.getAttributeFromGroup(this.attributes, "type");
+		this.type = getAttribute("type");
 
-		this.hreflang = feedDoc.getAttributeFromGroup(this.attributes,
-				"hreflang");
+		this.hreflang = getAttribute("hreflang");
 
-		this.title = feedDoc.getAttributeFromGroup(this.attributes, "title");
+		this.title = getAttribute("title");
 
-		this.length = feedDoc.getAttributeFromGroup(this.attributes, "length");
+		this.length = getAttribute("length");
 
 		this.content = content;
 	}

@@ -55,6 +55,7 @@ class AtomTextConstruct implements Serializable {
 	private final String text;
 	private final String divWrapperStart;
 	private final String divWrapperEnd;
+	private ContentType contentType;
 
 	// content elements do a different validation.
 	AtomTextConstruct(String text, List<Attribute> attributes,
@@ -89,7 +90,44 @@ class AtomTextConstruct implements Serializable {
 			}
 		}
 
-		if (getContentType() == ContentType.XHTML) {
+		// get the content type
+		Attribute attr = getAttribute("src");
+		if (attr != null) {
+			contentType = ContentType.EXTERNAL;
+		}
+
+		attr = getAttribute("type");
+		if (attr != null
+				&& (attr.getValue().equals(
+						"text"))) {
+			contentType = ContentType.TEXT;
+		}
+
+		if (attr != null
+				&& (attr.getValue().equals(
+						"html"))) {
+			contentType = ContentType.HTML;
+		}
+		if (attr != null
+				&& ((!attr.getValue().equals(
+						"text")
+						&& !attr.getValue().equals("html") && !attr.getValue()
+						.equals("xhtml")))) {
+			contentType = ContentType.OTHER;
+		}
+		if (attr != null
+				&& (attr.getValue().equals(
+						"xhtml"))) {
+			contentType = ContentType.XHTML;
+		}
+		if(contentType == null){
+			contentType = ContentType.TEXT;
+		}
+
+		// do we need to wrap the xhtml in a div.
+		System.out.println("contnetType: "+contentType);
+		System.out.println("text"+text);
+		if (contentType == ContentType.XHTML) {
 			this.divWrapperStart = getDivWrapperStart(text);
 			this.divWrapperEnd = getDivWrapperEnd(text);
 			this.text = getXhtmlText(text);
@@ -99,38 +137,19 @@ class AtomTextConstruct implements Serializable {
 			this.text = text;
 		}
 	}
-	 
-	ContentType getContentType() {
-		ContentType contentType = ContentType.TEXT; // default
-		if (attributes != null) {
-			for (Attribute attr : attributes) {
-				if (attr.getName().equals("src")) {
-					return ContentType.EXTERNAL;
-				}
 
-				if (attr.getName().equals("type")
-						&& attr.getValue().equals("text")) {
-					contentType = ContentType.TEXT;
-					break;
-				} else if (attr.getName().equals("type")
-						&& attr.getValue().equals("html")) {
-					contentType = ContentType.HTML;
-					break;
-				} else if (attr.getName().equals("type")
-						&& attr.getValue().equals("xhtml")) {
-					contentType = ContentType.XHTML;
-				} else if (attr.getName().equals("type")
-						&& (!attr.getValue().equals("text")
-								&& !attr.getValue().equals("html") && !attr
-								.getValue().equals("xhtml"))) {
-					contentType = ContentType.OTHER;
-					break;
-				}
-			}
-		}
+	AtomTextConstruct(AtomTextConstruct atomTextConstruct) {
+		this.attributes = atomTextConstruct.getAttributes();
+		this.text = atomTextConstruct.getText();
+		this.divWrapperStart = atomTextConstruct.getDivWrapperStart();
+		this.divWrapperEnd = atomTextConstruct.getDivWrapperEnd();
+		this.contentType = atomTextConstruct.getContentType();
+	}
+
+	ContentType getContentType() {
 		return contentType;
 	}
-	
+
 	/**
 	 * 
 	 * An enumeration of the different types of supported content.
@@ -155,24 +174,23 @@ class AtomTextConstruct implements Serializable {
 		EXTERNAL
 	}
 
-	AtomTextConstruct(AtomTextConstruct atomTextConstruct) {
-		this.attributes = atomTextConstruct.getAttributes();
-		this.text = atomTextConstruct.getText();
-		this.divWrapperStart = atomTextConstruct.getDivWrapperStart();
-		this.divWrapperEnd = atomTextConstruct.getDivWrapperEnd();
-	}
-
 	private String getDivWrapperStart(String text) {
-		return text.substring(0, text.indexOf(">") + 1);
+		return (text == null)?null:text.substring(0, text.indexOf(">") + 1);
 	}
 
 	private String getDivWrapperEnd(String text) {
+		if(text == null){
+			return null;
+		}
 		text = reverseIt(text);
 		text = text.substring(0, text.indexOf("<") + 1);
 		return reverseIt(text);
 	}
 
 	private String getXhtmlText(String text) {
+		if(text == null){
+			return null;
+		}
 		// strip the wrapper start and end tags.
 		text = text.substring(text.indexOf(">") + 1);
 		text = reverseIt(text);

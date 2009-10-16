@@ -53,7 +53,6 @@ public class Generator implements Serializable {
 
 	// use the factory method in the FeedDoc.
 	Generator(List<Attribute> attributes, String text) throws AtomSpecException {
-		FeedDoc feedDoc = new FeedDoc();
 		this.attributes = new LinkedList<Attribute>();
 		if (attributes != null) {
 			for (Attribute attr : attributes) {
@@ -67,25 +66,29 @@ public class Generator implements Serializable {
 			}
 		}
 
-		this.uri = feedDoc.getAttributeFromGroup(this.attributes, "uri");
+		this.uri = getAttribute("uri");
 
-		this.version = feedDoc
-				.getAttributeFromGroup(this.attributes, "version");
+		this.version = getAttribute("version");
 		this.text = text;
+	}
+
+	Generator(Generator generator) {
+		this.attributes = generator.getAttributes();
+		this.uri = generator.getUri();
+		this.version = generator.getVersion();
+		this.text = generator.getText();
 	}
 
 	/**
 	 * 
 	 * @return the category attribute list.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public List<Attribute> getAttributes() throws AtomSpecException {
+	public List<Attribute> getAttributes() {
 
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		if (this.attributes != null) {
 			for (Attribute attr : this.attributes) {
-				attrsCopy.add(new Attribute(attr.getName(), attr.getValue()));
+				attrsCopy.add(new Attribute(attr));
 			}
 		}
 		return (this.attributes == null) ? null : attrsCopy;
@@ -94,23 +97,17 @@ public class Generator implements Serializable {
 	/**
 	 * 
 	 * @return the label attribute
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Attribute getUri() throws AtomSpecException {
-		return (uri == null) ? null : new Attribute(uri.getName(), uri
-				.getValue());
+	public Attribute getUri() {
+		return (uri == null) ? null : new Attribute(uri);
 	}
 
 	/**
 	 * 
 	 * @return the scheme attribute
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Attribute getVersion() throws AtomSpecException {
-		return (version == null) ? null : new Attribute(version.getName(),
-				version.getValue());
+	public Attribute getVersion() {
+		return (version == null) ? null : new Attribute(version);
 	}
 
 	/**
@@ -125,15 +122,12 @@ public class Generator implements Serializable {
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Attribute getAttribute(String attrName) throws AtomSpecException {
+	public Attribute getAttribute(String attrName) {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
 				if (attribute.getName().equals(attrName)) {
-					return new Attribute(attribute.getName(), attribute
-							.getValue());
+					return new Attribute(attribute);
 				}
 			}
 		}

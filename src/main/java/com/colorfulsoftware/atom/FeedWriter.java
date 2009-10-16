@@ -612,6 +612,7 @@ class FeedWriter {
 			writeAttributes(writer, attributes);
 			// check to see if we need to
 			// wrap the text in a an <xhtml:div> tag.
+			System.out.println("contentType In Writer:"+contentType);
 			if (contentType == AtomTextConstruct.ContentType.XHTML) {
 
 				writeXHTML(writer, startDivWrapper + text + endDivWrapper);

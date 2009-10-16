@@ -321,6 +321,8 @@ public class FeedWriterTest {
 			new FeedWriter().writeEntries(writer, entries);
 			writer.flush();
 			writer.close();
+			System.out.println("theXML: \n"+theXMLString.toString());
+			System.out.println("entryResult: \n"+entry1Result);
 			assertEquals(theXMLString.toString(), entry1Result);
 
 			entries = new FeedReader().readEntry(XMLInputFactory.newInstance()
