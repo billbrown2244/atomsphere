@@ -59,23 +59,21 @@ public class Category implements Serializable {
 			throws AtomSpecException {
 
 		if (attributes == null) {
-			this.attributes = null;
+			throw new AtomSpecException(
+					"Category elements MUST have a \"term\" attribute.");
 		} else {
 			this.attributes = new LinkedList<Attribute>();
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
 				if (!new AttributeSupport(attr).verify(this)) {
-					throw new AtomSpecException("Unsuppported attribute "
-							+ attr.getName() + " in the atom:category element");
+					throw new AtomSpecException("Unsupported attribute "
+							+ attr.getName() + " in the atom:category element.");
 				}
 				this.attributes.add(new Attribute(attr));
 			}
 		}
 
-		if ((this.term = getAttribute("term")) == null) {
-			throw new AtomSpecException(
-					"Category elements MUST have a \"term\" attribute.");
-		}
+		this.term = getAttribute("term");
 
 		this.scheme = getAttribute("scheme");
 
@@ -99,12 +97,10 @@ public class Category implements Serializable {
 	public List<Attribute> getAttributes() {
 
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
-		if (this.attributes != null) {
-			for (Attribute attr : this.attributes) {
-				attrsCopy.add(new Attribute(attr));
-			}
+		for (Attribute attr : this.attributes) {
+			attrsCopy.add(new Attribute(attr));
 		}
-		return (this.attributes == null) ? null : attrsCopy;
+		return attrsCopy;
 	}
 
 	/**
@@ -128,7 +124,7 @@ public class Category implements Serializable {
 	 * @return the term attribute
 	 */
 	public Attribute getTerm() {
-		return (term == null) ? null : new Attribute(term);
+		return new Attribute(term);
 	}
 
 	/**
@@ -145,11 +141,9 @@ public class Category implements Serializable {
 	 * @return the Attribute object if attrName matches or null if not found.
 	 */
 	public Attribute getAttribute(String attrName) {
-		if (this.attributes != null) {
-			for (Attribute attribute : this.attributes) {
-				if (attribute.getName().equals(attrName)) {
-					return new Attribute(attribute);
-				}
+		for (Attribute attribute : this.attributes) {
+			if (attribute.getName().equals(attrName)) {
+				return new Attribute(attribute);
 			}
 		}
 		return null;

@@ -81,7 +81,7 @@ class AtomPersonConstruct implements Serializable {
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
 				if (!new AttributeSupport(attr).verify(this)) {
-					throw new AtomSpecException("Unsuppported attribute "
+					throw new AtomSpecException("Unsupported attribute "
 							+ attr.getName()
 							+ " for this Atom Person Construct.");
 				}

@@ -51,6 +51,10 @@ public class Logo implements Serializable {
 	Logo(List<Attribute> attributes, String atomUri) throws AtomSpecException {
 		this.logo = new AtomURIConstruct(attributes, atomUri);
 	}
+	
+	Logo(Logo logo){
+		this.logo = new AtomURIConstruct(logo.logo);
+	}
 
 	/**
 	 * 

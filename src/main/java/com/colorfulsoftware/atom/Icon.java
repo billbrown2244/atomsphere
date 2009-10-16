@@ -51,6 +51,10 @@ public class Icon implements Serializable {
 	Icon(List<Attribute> attributes, String atomUri) throws AtomSpecException {
 		this.icon = new AtomURIConstruct(attributes, atomUri);
 	}
+	
+	Icon(Icon icon){
+		this.icon = new AtomURIConstruct(icon.icon);
+	}
 
 	/**
 	 * 

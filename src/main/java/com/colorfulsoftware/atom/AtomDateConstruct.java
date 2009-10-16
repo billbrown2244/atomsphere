@@ -22,6 +22,7 @@ package com.colorfulsoftware.atom;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,6 +35,8 @@ class AtomDateConstruct implements Serializable {
 	private final List<Attribute> attributes;
 
 	private final Date dateTime;
+	
+	private final String text;
 
 	/*
 	 * 
@@ -53,7 +56,7 @@ class AtomDateConstruct implements Serializable {
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
 				if (!new AttributeSupport(attr).verify(this)) {
-					throw new AtomSpecException("Unsuppported attribute "
+					throw new AtomSpecException("Unsupported attribute "
 							+ attr.getName() + " for this Atom Date Construct.");
 				}
 				this.attributes.add(new Attribute(attr));
@@ -66,11 +69,29 @@ class AtomDateConstruct implements Serializable {
 		} else {
 			this.dateTime = new Date(dateTime.getTime());
 		}
+		
+		// example 2006-04-28T12:50:43.337-05:00
+		final String timeZoneOffset;
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(dateTime);
+		TimeZone timeZone = cal.getTimeZone();
+		int hours = (((timeZone.getRawOffset() / 1000) / 60) / 60);
+		if (hours >= 0) {
+			timeZoneOffset = TimeZone.getTimeZone("GMT" + "+" + hours).getID()
+					.substring(3);
+		} else {
+			timeZoneOffset = TimeZone
+					.getTimeZone("GMT" + "-" + Math.abs(hours)).getID()
+					.substring(3);
+		}
+		this.text = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'"
+				+ timeZoneOffset + "\'").format(dateTime);
 	}
 
 	AtomDateConstruct(AtomDateConstruct atomDateConstruct) {
 		this.attributes = atomDateConstruct.getAttributes();
 		this.dateTime = atomDateConstruct.getDateTime();
+		this.text = atomDateConstruct.getText();
 	}
 
 	/**
@@ -87,21 +108,7 @@ class AtomDateConstruct implements Serializable {
 	 *         2006-04-28T12:50:43.337-05:00
 	 */
 	public String getText() {
-
-		// example 2006-04-28T12:50:43.337-05:00
-		final String timeZoneOffset;
-		TimeZone timeZone = TimeZone.getDefault();
-		int hours = (((timeZone.getRawOffset() / 1000) / 60) / 60);
-		if (hours >= 0) {
-			timeZoneOffset = TimeZone.getTimeZone("GMT" + "+" + hours).getID()
-					.substring(3);
-		} else {
-			timeZoneOffset = TimeZone
-					.getTimeZone("GMT" + "-" + Math.abs(hours)).getID()
-					.substring(3);
-		}
-		return new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'"
-				+ timeZoneOffset + "\'").format(dateTime);
+		return text;
 	}
 
 	/**

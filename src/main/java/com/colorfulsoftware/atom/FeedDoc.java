@@ -17,10 +17,12 @@
  */
 package com.colorfulsoftware.atom;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
@@ -50,7 +52,14 @@ import javax.xml.stream.XMLStreamWriter;
  * @author Bill Brown
  * 
  */
-public final class FeedDoc {
+public final class FeedDoc implements Serializable {
+
+	private static final long serialVersionUID = -8371262728450556870L;
+
+	/**
+	 * the default document encoding of "UTF-8"
+	 */
+	private String encoding = System.getProperty("file.encoding");
 
 	/**
 	 * the default XML version of "1.0"
@@ -74,8 +83,6 @@ public final class FeedDoc {
 		libVersion = props.getProperty("version");
 
 	}
-
-	private String encoding = System.getProperty("file.encoding");
 
 	/**
 	 * @param encoding
@@ -429,9 +436,19 @@ public final class FeedDoc {
 	 *             if the string cannot be parsed into a Feed element.
 	 */
 	public Feed readFeedToBean(String xmlString) throws Exception {
+		// try to grab the encoding first:
+		if (xmlString.contains("encoding=\"")) {
+			String localEncoding = xmlString.substring(xmlString
+					.indexOf("encoding=\"") + 10);
+			localEncoding = localEncoding.substring(0, localEncoding
+					.indexOf('"'));
+			encoding = localEncoding;
+
+		}
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 		XMLStreamReader reader = inputFactory
-				.createXMLStreamReader(new java.io.StringReader(xmlString));
+				.createXMLStreamReader(new ByteArrayInputStream(xmlString
+						.getBytes(encoding)));
 		return new FeedReader().readFeed(reader);
 	}
 
@@ -445,9 +462,19 @@ public final class FeedDoc {
 	 *             if the string cannot be parsed into a Entry element.
 	 */
 	public Entry readEntryToBean(String xmlString) throws Exception {
+		// try to grab the encoding first:
+		if (xmlString.contains("encoding=\"")) {
+			String localEncoding = xmlString.substring(xmlString
+					.indexOf("encoding=\"") + 10);
+			localEncoding = localEncoding.substring(0, localEncoding
+					.indexOf('"'));
+			encoding = localEncoding;
+
+		}
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 		XMLStreamReader reader = inputFactory
-				.createXMLStreamReader(new java.io.StringReader(xmlString));
+				.createXMLStreamReader(new ByteArrayInputStream(xmlString
+						.getBytes(encoding)));
 		SortedMap<String, Entry> entries = new FeedReader().readEntry(reader,
 				null);
 		// readEntry() only reads at most one entry.
@@ -467,8 +494,8 @@ public final class FeedDoc {
 	 */
 	public Feed readFeedToBean(File file) throws Exception {
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-		XMLStreamReader reader = inputFactory
-				.createXMLStreamReader(new FileInputStream(file));
+		XMLStreamReader reader = inputFactory.createXMLStreamReader(
+				new FileInputStream(file), encoding);
 		return new FeedReader().readFeed(reader);
 	}
 
@@ -483,8 +510,8 @@ public final class FeedDoc {
 	 */
 	public Entry readEntryToBean(File file) throws Exception {
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-		XMLStreamReader reader = inputFactory
-				.createXMLStreamReader(new FileInputStream(file));
+		XMLStreamReader reader = inputFactory.createXMLStreamReader(
+				new FileInputStream(file), encoding);
 		SortedMap<String, Entry> entries = new FeedReader().readEntry(reader,
 				null);
 		// readEntry() only reads at most one entry.
@@ -530,8 +557,8 @@ public final class FeedDoc {
 	 */
 	public Feed readFeedToBean(InputStream inputStream) throws Exception {
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-		XMLStreamReader reader = inputFactory
-				.createXMLStreamReader(inputStream);
+		XMLStreamReader reader = inputFactory.createXMLStreamReader(
+				inputStream, encoding);
 		return new FeedReader().readFeed(reader);
 	}
 
@@ -546,8 +573,8 @@ public final class FeedDoc {
 	 */
 	public Entry readEntryToBean(InputStream inputStream) throws Exception {
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-		XMLStreamReader reader = inputFactory
-				.createXMLStreamReader(inputStream);
+		XMLStreamReader reader = inputFactory.createXMLStreamReader(
+				inputStream, encoding);
 		SortedMap<String, Entry> entries = new FeedReader().readEntry(reader,
 				null);
 		// readEntry() only reads at most one entry.
@@ -1077,8 +1104,6 @@ public final class FeedDoc {
 		}
 		return null;
 	}
-
-	
 
 	/**
 	 * This method sorts the entries of the feed. The Updated, Title and Summary

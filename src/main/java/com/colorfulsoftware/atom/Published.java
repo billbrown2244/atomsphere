@@ -51,6 +51,9 @@ public class Published implements Serializable {
 		this.published = new AtomDateConstruct(published, attributes);
 	}
 
+	Published(Published published){
+		this.published = new AtomDateConstruct(published.published);
+	}
 	/**
 	 * 
 	 * @return the date timestamp for this element.

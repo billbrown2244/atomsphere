@@ -17,6 +17,8 @@
  */
 package com.colorfulsoftware.atom;
 
+import java.io.Serializable;
+
 /**
  * This class verifies if a given attribute is supported by its containing
  * element.
@@ -24,7 +26,9 @@ package com.colorfulsoftware.atom;
  * @author Bill Brown
  * 
  */
-public class AttributeSupport {
+public class AttributeSupport implements Serializable {
+	
+	private static final long serialVersionUID = -5670802769839692012L;
 	/**
 	 * the default document encoding of "UTF-8"
 	 */

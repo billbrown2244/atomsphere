@@ -66,23 +66,25 @@ public class Link implements Serializable {
 	// use the factory method in the FeedDoc.
 	Link(List<Attribute> attributes, String content) throws AtomSpecException {
 		if (attributes == null) {
-			this.attributes = new LinkedList<Attribute>();
+			throw new AtomSpecException(
+					"atom:link elements MUST have an href attribute, whose value MUST be a IRI reference.");
 		} else {
 			this.attributes = new LinkedList<Attribute>();
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
 				if (!new AttributeSupport(attr).verify(this)) {
-					throw new AtomSpecException("Unsuppported attribute "
+					throw new AtomSpecException("Unsupported attribute "
 							+ attr.getName() + " for this link element.");
 				}
 				this.attributes.add(new Attribute(attr));
 			}
+			if (getAttribute("href") == null) {
+				throw new AtomSpecException(
+						"atom:link elements MUST have an href attribute, whose value MUST be a IRI reference.");
+			}
 		}
 
-		if ((this.href = getAttribute("href")) == null) {
-			throw new AtomSpecException(
-					"atom:link elements MUST have an href attribute, whose value MUST be a IRI reference");
-		}
+		this.href = getAttribute("href");
 
 		this.rel = getAttribute("rel");
 
@@ -128,7 +130,7 @@ public class Link implements Serializable {
 	 * @return the href contains the link's IRI
 	 */
 	public Attribute getHref() {
-		return (href == null) ? null : new Attribute(href);
+		return new Attribute(href);
 	}
 
 	/**

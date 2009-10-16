@@ -23,6 +23,7 @@ import java.beans.XMLDecoder;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.Map;
@@ -52,8 +53,9 @@ import com.colorfulsoftware.atom.Title;
  * @author Bill Brown
  * 
  */
-public class FeedReaderTest {
+public class FeedReaderTest implements Serializable {
 
+	private static final long serialVersionUID = -3640838936391729081L;
 	private FeedReader feedReader;
 	private XMLStreamReader reader, reader2, reader3, reader4;
 	private Map<String, String> configFile;

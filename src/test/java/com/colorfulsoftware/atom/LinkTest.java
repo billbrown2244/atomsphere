@@ -19,6 +19,7 @@ package com.colorfulsoftware.atom;
 
 import static org.junit.Assert.*;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,7 +38,9 @@ import com.colorfulsoftware.atom.Link;
  * @author Bill Brown
  * 
  */
-public class LinkTest {
+public class LinkTest implements Serializable {
+
+	private static final long serialVersionUID = -6874756389584774058L;
 	private FeedDoc feedDoc;
 	private Link link;
 	private Attribute xmlBase;
@@ -104,7 +107,7 @@ public class LinkTest {
 
 		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
-			assertEquals(e.getMessage(), "Unsuppported attribute src"
+			assertEquals(e.getMessage(), "Unsupported attribute src"
 					+ " for this link element.");
 		}
 	}

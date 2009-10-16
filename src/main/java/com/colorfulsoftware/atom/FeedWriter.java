@@ -31,6 +31,7 @@
  */
 package com.colorfulsoftware.atom;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.SortedMap;
 
@@ -42,7 +43,9 @@ import javax.xml.stream.XMLStreamWriter;
  * @author Bill Brown
  * 
  */
-class FeedWriter {
+class FeedWriter implements Serializable {
+
+	private static final long serialVersionUID = 1698105180717850473L;
 
 	// used internally by FeedDoc to write feed to output streams.
 	void writeFeed(XMLStreamWriter writer, Feed feed) throws AtomSpecException {
@@ -612,7 +615,7 @@ class FeedWriter {
 			writeAttributes(writer, attributes);
 			// check to see if we need to
 			// wrap the text in a an <xhtml:div> tag.
-			System.out.println("contentType In Writer:"+contentType);
+			System.out.println("contentType In Writer:" + contentType);
 			if (contentType == AtomTextConstruct.ContentType.XHTML) {
 
 				writeXHTML(writer, startDivWrapper + text + endDivWrapper);

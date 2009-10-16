@@ -71,7 +71,7 @@ class AtomTextConstruct implements Serializable {
 					// check for unsupported attribute.
 					if (!new AttributeSupport(attr).verify(this)
 							&& !attr.getName().equals("src")) {
-						throw new AtomSpecException("Unsuppported attribute "
+						throw new AtomSpecException("Unsupported attribute "
 								+ attr.getName()
 								+ " for this Atom Text Construct.");
 					}

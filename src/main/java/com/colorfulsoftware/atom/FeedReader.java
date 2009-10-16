@@ -22,6 +22,7 @@
  */
 package com.colorfulsoftware.atom;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +31,7 @@ import java.util.TimeZone;
 import java.util.TreeMap;
 
 import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 /**
@@ -38,7 +40,9 @@ import javax.xml.stream.XMLStreamReader;
  * @author Bill Brown
  * 
  */
-class FeedReader {
+class FeedReader implements Serializable {
+
+	private static final long serialVersionUID = -2510954590037544812L;
 
 	FeedDoc feedDoc;
 
@@ -53,7 +57,7 @@ class FeedReader {
 	 */
 	Feed readFeed(XMLStreamReader reader) throws Exception {
 		feedDoc = new FeedDoc();
-		List<Attribute> attributes = getAttributes(reader);
+		List<Attribute> attributes = null;
 		List<Author> authors = null;
 		List<Category> categories = null;
 		List<Contributor> contributors = null;
@@ -73,9 +77,11 @@ class FeedReader {
 		while (reader.hasNext()) {
 			switch (reader.next()) {
 
-			case XMLStreamConstants.START_DOCUMENT:
-				feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
-				break;
+			// so far: neither the stax-api or geronimo stax implementations
+			// can see this :(
+			// case XMLStreamConstants.START_DOCUMENT:
+			// feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
+			// break;
 
 			case XMLStreamConstants.START_ELEMENT:
 				elementName = getElementName(reader);
@@ -130,22 +136,22 @@ class FeedReader {
 			case XMLStreamConstants.END_ELEMENT:
 				reader.next();
 				break;
-			case XMLStreamConstants.ATTRIBUTE:
-			case XMLStreamConstants.CDATA:
-			case XMLStreamConstants.CHARACTERS:
-			case XMLStreamConstants.COMMENT:
-			case XMLStreamConstants.DTD:
-			case XMLStreamConstants.END_DOCUMENT:
-			case XMLStreamConstants.ENTITY_DECLARATION:
-			case XMLStreamConstants.ENTITY_REFERENCE:
-			case XMLStreamConstants.NAMESPACE:
-			case XMLStreamConstants.NOTATION_DECLARATION:
-			case XMLStreamConstants.PROCESSING_INSTRUCTION:
-			case XMLStreamConstants.SPACE:
-				break;
+			// so far: neither the stax-api or geronimo stax implementations
+			// can see this :(
+			// case XMLStreamConstants.ATTRIBUTE:
+			// case XMLStreamConstants.CDATA:
+			// case XMLStreamConstants.CHARACTERS:
+			// case XMLStreamConstants.COMMENT:
+			// case XMLStreamConstants.DTD:
+			// case XMLStreamConstants.END_DOCUMENT:
+			// case XMLStreamConstants.ENTITY_DECLARATION:
+			// case XMLStreamConstants.ENTITY_REFERENCE:
+			// case XMLStreamConstants.NAMESPACE:
+			// case XMLStreamConstants.NOTATION_DECLARATION:
+			// case XMLStreamConstants.PROCESSING_INSTRUCTION:
+			// case XMLStreamConstants.SPACE:
 			default:
-				throw new Exception("unknown event in the xml file = "
-						+ reader.getEventType());
+				break;
 			}
 		}
 
@@ -156,8 +162,12 @@ class FeedReader {
 		// because the sort extension does not enforce placement of the element
 		// do a check after the feed is built to determine if it needs to be
 		// sorted.
-		return feedDoc.checkForAndApplyExtension(feed,feedDoc.buildAttribute("xmlns:sort",
-		"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
+		return feedDoc
+				.checkForAndApplyExtension(
+						feed,
+						feedDoc
+								.buildAttribute("xmlns:sort",
+										"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
 	}
 
 	List<Attribute> getAttributes(XMLStreamReader reader) throws Exception {
@@ -168,19 +178,15 @@ class FeedReader {
 			reader.next();
 		}
 
-		if (reader.getEventType() != XMLStreamConstants.START_ELEMENT) {
-			return null;
-		}
-
 		int eventSkip = 0;
-		//add the namespace attributes.
+		// add the namespace attributes.
 		for (int i = 0; i < reader.getNamespaceCount(); i++) {
 			eventSkip++;
 			String attrName = "xmlns";
 			if (reader.getNamespacePrefix(i) != null) {
 				attrName += ":" + reader.getNamespacePrefix(i);
 			}
-			
+
 			attributes.add(feedDoc.buildAttribute(attrName, reader
 					.getNamespaceURI(i)));
 		}
@@ -205,46 +211,27 @@ class FeedReader {
 
 	List<Extension> readExtension(XMLStreamReader reader,
 			List<Extension> extensions, String elementName) throws Exception {
-
 		if (extensions == null) {
 			extensions = new LinkedList<Extension>();
 		}
 
-		StringBuffer extText = new StringBuffer();
+		StringBuilder extText = new StringBuilder();
 		List<Attribute> attributes = getAttributes(reader);
 
+		String elementNameOrig = elementName;
+		boolean breakOut = false;
 		while (reader.hasNext()) {
-			boolean breakOut = false;
-			String elementNamePrev = null;
 			switch (reader.next()) {
 			case XMLStreamConstants.START_ELEMENT:
 				elementName = getElementName(reader);
-				if ((elementNamePrev != null)
-						&& (!elementName.equals(elementNamePrev))) {
-					List<Extension> subExtn = readExtension(reader, null,
-							elementName);
-					Extension extn = subExtn.get(0);
-					if (extn != null) {
-						StringBuffer extnStr = new StringBuffer();
-						extnStr.append("<" + extn.getElementName());
-						List<Attribute> extnAttrs = extn.getAttributes();
-						// add the attributes
-						if (extnAttrs != null && extnAttrs.size() > 0) {
-							for (Attribute attr : extnAttrs) {
-								extnStr.append(" " + attr.getName() + "=\""
-										+ attr.getValue() + "\"");
-							}
-						}
-						extnStr.append(">");
-						extnStr.append(extn.getContent());
-						extnStr.append("</" + extn.getElementName() + ">");
-					}
+				if (!elementName.equals(elementNameOrig)) {
+					extText.append(readEncodedHTML(reader, elementName));
 				}
 				break;
 
 			case XMLStreamConstants.END_ELEMENT:
 				String elementNameEnd = getElementName(reader);
-				if (elementNameEnd.equals(elementName)) {
+				if (elementNameEnd.equals(elementNameOrig)) {
 					breakOut = true;
 				}
 				break;
@@ -290,9 +277,9 @@ class FeedReader {
 			boolean breakOut = false;
 			switch (reader.next()) {
 
-			case XMLStreamConstants.START_DOCUMENT:
-				feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
-				break;
+			// case XMLStreamConstants.START_DOCUMENT:
+			// feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
+			// break;
 
 			case XMLStreamConstants.START_ELEMENT:
 				elementName = getElementName(reader);
@@ -372,6 +359,9 @@ class FeedReader {
 		String prefix = reader.getPrefix();
 		if (prefix != null && !prefix.equals("")) {
 			elementName = prefix + ":" + reader.getLocalName();
+			if (elementName.equals(prefix + ":")) {
+				return "";
+			}
 		} else {
 			elementName = reader.getLocalName();
 		}
@@ -591,6 +581,56 @@ class FeedReader {
 				break;
 			}
 		}
+	}
+
+	String readEncodedHTML(XMLStreamReader reader, String parentElement)
+			throws XMLStreamException, Exception {
+		StringBuilder xhtml = new StringBuilder();
+		String elementName = null;
+		boolean breakOut = false;
+		while (reader.hasNext()) {
+			switch (reader.next()) {
+
+			case XMLStreamConstants.START_ELEMENT:
+				elementName = getElementName(reader);
+				xhtml.append("<" + elementName);
+				List<Attribute> attributes = getAttributes(reader);
+				// add the attributes
+				if (attributes != null && attributes.size() > 0) {
+					for (Attribute attr : attributes) {
+						xhtml.append(" " + attr.getName() + "=\""
+								+ attr.getValue() + "\"");
+					}
+				}
+				xhtml.append(">");
+				break;
+
+			case XMLStreamConstants.END_ELEMENT:
+				elementName = getElementName(reader);
+				if (elementName.equals(parentElement)) {
+					breakOut = true;
+				} else {
+					xhtml.append("</" + elementName + ">");
+				}
+				break;
+
+			// so far: neither the stax-api or geronimo stax implementations
+			// can see this :(
+			// case XMLStreamConstants.CDATA:
+			// xhtml.append("<![CDATA[" + reader.getText() + "]]>");
+			// break;
+
+			default:
+				// escape the necessary characters.
+				String escapedTxt = reader.getText().replaceAll("&", "&amp;")
+						.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+				xhtml.append(escapedTxt);
+			}
+			if (breakOut) {
+				break;
+			}
+		}
+		return xhtml.toString();
 	}
 
 	String readXHTML(XMLStreamReader reader, String parentElement)

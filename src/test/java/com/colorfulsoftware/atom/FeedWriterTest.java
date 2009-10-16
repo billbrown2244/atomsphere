@@ -27,6 +27,7 @@ import javax.xml.stream.XMLStreamWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
@@ -49,8 +50,9 @@ import com.colorfulsoftware.atom.FeedWriter;
  * @author Bill Brown
  * 
  */
-public class FeedWriterTest {
+public class FeedWriterTest implements Serializable {
 
+	private static final long serialVersionUID = -3870326144308394456L;
 	private FeedDoc feedDoc;
 	private FeedWriter feedWriter;
 	private XMLStreamWriter writer;
@@ -321,8 +323,8 @@ public class FeedWriterTest {
 			new FeedWriter().writeEntries(writer, entries);
 			writer.flush();
 			writer.close();
-			System.out.println("theXML: \n"+theXMLString.toString());
-			System.out.println("entryResult: \n"+entry1Result);
+			System.out.println("theXML: \n" + theXMLString.toString());
+			System.out.println("entryResult: \n" + entry1Result);
 			assertEquals(theXMLString.toString(), entry1Result);
 
 			entries = new FeedReader().readEntry(XMLInputFactory.newInstance()

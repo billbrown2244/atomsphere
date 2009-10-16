@@ -77,35 +77,33 @@ public class Feed implements Serializable {
 			List<Attribute> attributes, List<Extension> extensions,
 			Generator generator, Subtitle subtitle, Icon icon, Logo logo,
 			SortedMap<String, Entry> entries) throws AtomSpecException {
-		this.source = new Source(id, title, updated, rights, authors,
-				categories, contributors, links, attributes, extensions,
-				generator, subtitle, icon, logo);
 
 		// make sure id is present
-		if (source.getId() == null) {
+		if (id == null) {
 			throw new AtomSpecException(
 					"atom:feed elements MUST contain exactly one atom:id element.");
 		}
 		// make sure title is present
-		if (source.getTitle() == null) {
+		if (title == null) {
 			throw new AtomSpecException(
 					"atom:feed elements MUST contain exactly one atom:title element.");
 		}
 		// make sure updated is present
-		if (source.getUpdated() == null) {
+		if (updated == null) {
 			throw new AtomSpecException(
 					"atom:feed elements MUST contain exactly one atom:updated element.");
 		}
-		// check for the author requirement
-		if (source.getAuthors() == null) {
-			if (this.entries == null) {
-				throw new AtomSpecException(
-						"atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
-			}
-		}
+
+		source = new Source(id, title, updated, rights, authors, categories,
+				contributors, links, attributes, extensions, generator,
+				subtitle, icon, logo);
 
 		if (entries == null) {
 			this.entries = null;
+			if (source.getAuthors() == null) {
+				throw new AtomSpecException(
+						"atom:feed elements MUST contain one or more atom:author elements, unless the atom:entry contains an atom:source element that contains an atom:author element or, in an Atom Feed Document, the atom:feed element contains an atom:author element itself.");
+			}
 		} else {
 
 			this.entries = new TreeMap<String, Entry>(entries.comparator());
@@ -117,17 +115,11 @@ public class Feed implements Serializable {
 				if (source.getAuthors() == null) {
 					if (entry.getAuthors() == null) {
 						throw new AtomSpecException(
-								"atom:entry elements MUST contain one or more atom:author elements, unless the atom:entry contains an atom:source element that contains an atom:author element or, in an Atom Feed Document, the atom:feed element contains an atom:author element itself.");
+								"atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
 					}
 				}
 
-				this.entries.put(entryKey, new Entry(entry.getId(), entry
-						.getTitle(), entry.getUpdated(), entry.getRights(),
-						entry.getContent(), entry.getAuthors(), entry
-								.getCategories(), entry.getContributors(),
-						entry.getLinks(), entry.getAttributes(), entry
-								.getExtensions(), entry.getPublished(), entry
-								.getSummary(), entry.getSource()));
+				this.entries.put(entryKey, new Entry(entry));
 			}
 		}
 	}

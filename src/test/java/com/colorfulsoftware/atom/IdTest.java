@@ -19,6 +19,7 @@ package com.colorfulsoftware.atom;
 
 import static org.junit.Assert.*;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,7 +36,9 @@ import com.colorfulsoftware.atom.Id;
  * @author Bill Brown
  * 
  */
-public class IdTest {
+public class IdTest implements Serializable {
+
+	private static final long serialVersionUID = 315700003232965189L;
 	private FeedDoc feedDoc;
 	private Id id;
 	private Attribute xmlBase;
@@ -85,7 +88,7 @@ public class IdTest {
 
 		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
-			assertEquals(e.getMessage(), "Unsuppported attribute "
+			assertEquals(e.getMessage(), "Unsupported attribute "
 					+ "href for this element.");
 		}
 	}

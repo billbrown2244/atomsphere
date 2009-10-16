@@ -66,7 +66,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 			throws AtomSpecException {
 
 		// none of these first three will be null.
-		this.id = new Id(id.getAttributes(), id.getAtomUri());
+		this.id = new Id(id);
 		this.title = new Title(title);
 		this.updated = new Updated(updated);
 
@@ -115,7 +115,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
 				if (!new AttributeSupport(attr).verify(this)) {
-					throw new AtomSpecException("Unsuppported attribute "
+					throw new AtomSpecException("Unsupported attribute "
 							+ attr.getName() + " for this element.");
 				}
 				this.attributes.add(new Attribute(attr));

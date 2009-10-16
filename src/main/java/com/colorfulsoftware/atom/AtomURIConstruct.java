@@ -27,9 +27,6 @@ import java.util.List;
 
 class AtomURIConstruct implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6063992140422293183L;
 	private final List<Attribute> attributes;
 	private final String atomUri;
@@ -44,7 +41,7 @@ class AtomURIConstruct implements Serializable {
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
 				if (!new AttributeSupport(attr).verify(this)) {
-					throw new AtomSpecException("Unsuppported attribute "
+					throw new AtomSpecException("Unsupported attribute "
 							+ attr.getName() + " for this element.");
 				}
 				this.attributes.add(new Attribute(attr));

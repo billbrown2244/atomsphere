@@ -122,150 +122,123 @@ public class Entry implements Serializable {
 		this.summary = (summary == null) ? null : new Summary(summary);
 	}
 
+	Entry(Entry entry) {
+		this.entryAdaptor = new AtomEntrySourceAdaptor(entry.entryAdaptor);
+		this.content = entry.getContent();
+		this.published = entry.getPublished();
+		this.source = entry.getSource();
+		this.summary = entry.getSummary();
+	}
+
 	/**
 	 * 
 	 * @return the content for this entry.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Content getContent() throws AtomSpecException {
+	public Content getContent() {
 		return (content == null) ? null : new Content(content);
 	}
 
 	/**
 	 * 
 	 * @return the published date for this entry.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Published getPublished() throws AtomSpecException {
-		return (published == null) ? null : new Published(published
-				.getDateTime(), published.getAttributes());
+	public Published getPublished() {
+		return (published == null) ? null : new Published(published);
 	}
 
 	/**
 	 * 
 	 * @return the source for this element.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Source getSource() throws AtomSpecException {
-		return (source == null) ? null : new Source(source.getId(), source
-				.getTitle(), source.getUpdated(), source.getRights(), source
-				.getAuthors(), source.getCategories(),
-				source.getContributors(), source.getLinks(), source
-						.getAttributes(), source.getExtensions(), source
-						.getGenerator(), source.getSubtitle(),
-				source.getIcon(), source.getLogo());
+	public Source getSource() {
+		return (source == null) ? null : new Source(source);
 	}
 
 	/**
 	 * 
 	 * @return the summary for this element.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Summary getSummary() throws AtomSpecException {
+	public Summary getSummary() {
 		return (summary == null) ? null : new Summary(summary);
 	}
 
 	/**
 	 * 
 	 * @return the unique identifier for this entry.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Id getId() throws AtomSpecException {
+	public Id getId() {
 		return entryAdaptor.getId();
 	}
 
 	/**
 	 * 
 	 * @return the title for this element.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Title getTitle() throws AtomSpecException {
+	public Title getTitle() {
 		return entryAdaptor.getTitle();
 	}
 
 	/**
 	 * 
 	 * @return the updated date for this element.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Updated getUpdated() throws AtomSpecException {
+	public Updated getUpdated() {
 		return entryAdaptor.getUpdated();
 	}
 
 	/**
 	 * 
 	 * @return the associated rights for this entry.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Rights getRights() throws AtomSpecException {
+	public Rights getRights() {
 		return entryAdaptor.getRights();
 	}
 
 	/**
 	 * 
 	 * @return the authors for this entry.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public List<Author> getAuthors() throws AtomSpecException {
+	public List<Author> getAuthors() {
 		return entryAdaptor.getAuthors();
 	}
 
 	/**
 	 * 
 	 * @return the categories for this element.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public List<Category> getCategories() throws AtomSpecException {
+	public List<Category> getCategories() {
 		return entryAdaptor.getCategories();
 	}
 
 	/**
 	 * 
 	 * @return the contributors for this entry.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public List<Contributor> getContributors() throws AtomSpecException {
+	public List<Contributor> getContributors() {
 		return entryAdaptor.getContributors();
 	}
 
 	/**
 	 * 
 	 * @return the links for this entry.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public List<Link> getLinks() throws AtomSpecException {
+	public List<Link> getLinks() {
 		return entryAdaptor.getLinks();
 	}
 
 	/**
 	 * 
 	 * @return the category attribute list.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public List<Attribute> getAttributes() throws AtomSpecException {
+	public List<Attribute> getAttributes() {
 		return entryAdaptor.getAttributes();
 	}
 
 	/**
 	 * 
 	 * @return the extensions for this entry.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public List<Extension> getExtensions() throws AtomSpecException {
+	public List<Extension> getExtensions() {
 		return entryAdaptor.getExtensions();
 	}
 
@@ -273,10 +246,8 @@ public class Entry implements Serializable {
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Attribute getAttribute(String attrName) throws AtomSpecException {
+	public Attribute getAttribute(String attrName) {
 		return entryAdaptor.getAttribute(attrName);
 	}
 
@@ -284,10 +255,8 @@ public class Entry implements Serializable {
 	 * @param name
 	 *            the name of the author to get.
 	 * @return the Author object if the name matches or null if not found.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Author getAuthor(String name) throws AtomSpecException {
+	public Author getAuthor(String name) {
 		return entryAdaptor.getAuthor(name);
 	}
 
@@ -295,10 +264,8 @@ public class Entry implements Serializable {
 	 * @param termValue
 	 *            the term value.
 	 * @return the Category object if the term matches or null if not found.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Category getCategory(String termValue) throws AtomSpecException {
+	public Category getCategory(String termValue) {
 		return entryAdaptor.getCategory(termValue);
 	}
 
@@ -306,10 +273,8 @@ public class Entry implements Serializable {
 	 * @param name
 	 *            the name of the contributor
 	 * @return the Contributor object if name matches or null if not found.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Contributor getContributor(String name) throws AtomSpecException {
+	public Contributor getContributor(String name) {
 		return entryAdaptor.getContributor(name);
 	}
 
@@ -317,10 +282,8 @@ public class Entry implements Serializable {
 	 * @param hrefVal
 	 *            the href attribute value to look for.
 	 * @return the Link object if href matches or null if not found.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Link getLink(String hrefVal) throws AtomSpecException {
+	public Link getLink(String hrefVal) {
 		return entryAdaptor.getLink(hrefVal);
 	}
 
@@ -328,10 +291,8 @@ public class Entry implements Serializable {
 	 * @param extName
 	 *            the element name of the extension to get.
 	 * @return the Extension object if extName matches or null if not found.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Extension getExtension(String extName) throws AtomSpecException {
+	public Extension getExtension(String extName) {
 		return entryAdaptor.getExtension(extName);
 	}
 }
