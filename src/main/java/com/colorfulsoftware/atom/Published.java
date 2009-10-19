@@ -46,14 +46,15 @@ public class Published implements Serializable {
 	private final AtomDateConstruct published;
 
 	// use the factory method in the FeedDoc.
-	Published(Date published, List<Attribute> attributes)
+	Published(List<Attribute> attributes, String published)
 			throws AtomSpecException {
-		this.published = new AtomDateConstruct(published, attributes);
+		this.published = new AtomDateConstruct(attributes, published);
 	}
 
-	Published(Published published){
+	Published(Published published) {
 		this.published = new AtomDateConstruct(published.published);
 	}
+
 	/**
 	 * 
 	 * @return the date timestamp for this element.

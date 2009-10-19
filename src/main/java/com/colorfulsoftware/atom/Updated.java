@@ -46,11 +46,12 @@ public class Updated implements Serializable {
 	private final AtomDateConstruct updated;
 
 	// use the factory method in the FeedDoc.
-	Updated(Date updated, List<Attribute> attributes) throws AtomSpecException {
-		this.updated = new AtomDateConstruct(updated, attributes);
+	Updated(List<Attribute> attributes, String updated)
+			throws AtomSpecException {
+		this.updated = new AtomDateConstruct(attributes, updated);
 	}
-	
-	Updated(Updated updated){
+
+	Updated(Updated updated) {
 		this.updated = new AtomDateConstruct(updated.updated);
 	}
 

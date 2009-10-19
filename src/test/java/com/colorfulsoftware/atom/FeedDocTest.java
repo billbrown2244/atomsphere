@@ -200,58 +200,58 @@ public class FeedDocTest implements Serializable {
 			+ "   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>"
 			+ "   <updated>2003-12-13T18:30:02Z</updated>"
 			+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
-	
+
 	private String badFeed3 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-		+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/\">"
-		+ "<generator uri=\"http://www.colorfulsoftware.com/projects/atomsphere\" version=\"1.0.20\" nono=\"nono\">Atomsphere</generator>"
-		+ " <title>Example Feed</title>"
-		+ " <subtitle>A subtitle.</subtitle>"
-		+ " <link href=\"http://example.org/feed/\" rel=\"self\"/>"
-		+ " <link href=\"http://example.org/\"/>"
-		+ " <local:test xmlns=\"http://purl.org/dc/elements/1.1/\">things</local:test>"
-		+ " <updated xml:lang=\"en-US\">2003-12-13T18:30:02Z</updated>"
-		+ " <author>" + "   <name>John Doe</name>"
-		+ "   <email>johndoe@example.com</email>" + " </author>"
-		+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
-		+ " <entry>" + "   <title>Atom-Powered Robots Run Amok</title>"
-		+ "   <link href=\"http://example.org/2003/12/13/atom03\"/>"
-		+ "   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>"
-		+ "   <updated>2003-12-13T18:30:02Z</updated>"
-		+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
-	
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/\">"
+			+ "<generator uri=\"http://www.colorfulsoftware.com/projects/atomsphere\" version=\"1.0.20\" nono=\"nono\">Atomsphere</generator>"
+			+ " <title>Example Feed</title>"
+			+ " <subtitle>A subtitle.</subtitle>"
+			+ " <link href=\"http://example.org/feed/\" rel=\"self\"/>"
+			+ " <link href=\"http://example.org/\"/>"
+			+ " <local:test xmlns=\"http://purl.org/dc/elements/1.1/\">things</local:test>"
+			+ " <updated xml:lang=\"en-US\">2003-12-13T18:30:02Z</updated>"
+			+ " <author>" + "   <name>John Doe</name>"
+			+ "   <email>johndoe@example.com</email>" + " </author>"
+			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
+			+ " <entry>" + "   <title>Atom-Powered Robots Run Amok</title>"
+			+ "   <link href=\"http://example.org/2003/12/13/atom03\"/>"
+			+ "   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>"
+			+ "   <updated>2003-12-13T18:30:02Z</updated>"
+			+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
+
 	private String badFeed4 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-		+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/\">"
-		+ " <title>Example Feed</title>"
-		+ " <subtitle>A subtitle.</subtitle>"
-		+ " <link rel=\"self\"/>"
-		+ " <link href=\"http://example.org/\"/>"
-		+ " <local:test xmlns=\"http://purl.org/dc/elements/1.1/\">things</local:test>"
-		+ " <updated xml:lang=\"en-US\">2003-12-13T18:30:02Z</updated>"
-		+ " <author>" + "   <name>John Doe</name>"
-		+ "   <email>johndoe@example.com</email>" + " </author>"
-		+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
-		+ " <entry>" + "   <title>Atom-Powered Robots Run Amok</title>"
-		+ "   <link href=\"http://example.org/2003/12/13/atom03\"/>"
-		+ "   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>"
-		+ "   <updated>2003-12-13T18:30:02Z</updated>"
-		+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
-	
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/\">"
+			+ " <title>Example Feed</title>"
+			+ " <subtitle>A subtitle.</subtitle>"
+			+ " <link rel=\"self\"/>"
+			+ " <link href=\"http://example.org/\"/>"
+			+ " <local:test xmlns=\"http://purl.org/dc/elements/1.1/\">things</local:test>"
+			+ " <updated xml:lang=\"en-US\">2003-12-13T18:30:02Z</updated>"
+			+ " <author>" + "   <name>John Doe</name>"
+			+ "   <email>johndoe@example.com</email>" + " </author>"
+			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
+			+ " <entry>" + "   <title>Atom-Powered Robots Run Amok</title>"
+			+ "   <link href=\"http://example.org/2003/12/13/atom03\"/>"
+			+ "   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>"
+			+ "   <updated>2003-12-13T18:30:02Z</updated>"
+			+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
+
 	private String badFeed5 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-		+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/\">"
-		+ " <title>Example Feed</title>"
-		+ " <subtitle>A subtitle.</subtitle>"
-		+ " <link />"
-		+ " <link href=\"http://example.org/\"/>"
-		+ " <local:test xmlns=\"http://purl.org/dc/elements/1.1/\">things</local:test>"
-		+ " <updated xml:lang=\"en-US\">2003-12-13T18:30:02Z</updated>"
-		+ " <author>" + "   <name>John Doe</name>"
-		+ "   <email>johndoe@example.com</email>" + " </author>"
-		+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
-		+ " <entry>" + "   <title>Atom-Powered Robots Run Amok</title>"
-		+ "   <link href=\"http://example.org/2003/12/13/atom03\"/>"
-		+ "   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>"
-		+ "   <updated>2003-12-13T18:30:02Z</updated>"
-		+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/\">"
+			+ " <title>Example Feed</title>"
+			+ " <subtitle>A subtitle.</subtitle>"
+			+ " <link />"
+			+ " <link href=\"http://example.org/\"/>"
+			+ " <local:test xmlns=\"http://purl.org/dc/elements/1.1/\">things</local:test>"
+			+ " <updated xml:lang=\"en-US\">2003-12-13T18:30:02Z</updated>"
+			+ " <author>" + "   <name>John Doe</name>"
+			+ "   <email>johndoe@example.com</email>" + " </author>"
+			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
+			+ " <entry>" + "   <title>Atom-Powered Robots Run Amok</title>"
+			+ "   <link href=\"http://example.org/2003/12/13/atom03\"/>"
+			+ "   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>"
+			+ "   <updated>2003-12-13T18:30:02Z</updated>"
+			+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
 
 	private Entry entry1, entry2, entry3;
 
@@ -410,8 +410,8 @@ public class FeedDocTest implements Serializable {
 			Id id = feedDoc.buildId(null,
 					"http://www.colorfulsoftware.com/atom.xml");
 
-			Updated updated = feedDoc.buildUpdated(Calendar.getInstance()
-					.getTime(), null);
+			Updated updated = feedDoc.buildUpdated(null, Calendar.getInstance()
+					.getTime().toString());
 
 			Title title = feedDoc.buildTitle("test feed", null);
 
@@ -447,20 +447,23 @@ public class FeedDocTest implements Serializable {
 			entry1 = feedDoc.buildEntry(feedDoc.buildId(null,
 					"http://www.colorfulsoftware.com/projects/atomsphere/"),
 					feedDoc.buildTitle("test entry 1", null), feedDoc
-							.buildUpdated(theDate.getTime(), null), null, null,
-					null, null, null, null, null, null, null, null, null);
+							.buildUpdated(null, theDate.getTime().toString()),
+					null, null, null, null, null, null, null, null, null, null,
+					null);
 
 			entry2 = feedDoc.buildEntry(feedDoc.buildId(null,
 					"http://www.colorfulsoftware.com/projects/atomsphere/"),
 					feedDoc.buildTitle("test entry 2", null), feedDoc
-							.buildUpdated(theDate.getTime(), null), null, null,
-					null, null, null, null, null, null, null, null, null);
+							.buildUpdated(null, theDate.getTime().toString()),
+					null, null, null, null, null, null, null, null, null, null,
+					null);
 
 			entry3 = feedDoc.buildEntry(feedDoc.buildId(null,
 					"http://www.colorfulsoftware.com/projects/atomsphere/"),
 					feedDoc.buildTitle("test entry 3", null), feedDoc
-							.buildUpdated(theDate.getTime(), null), null, null,
-					null, null, null, null, null, null, null, null, null);
+							.buildUpdated(null, theDate.getTime().toString()),
+					null, null, null, null, null, null, null, null, null, null,
+					null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -665,32 +668,37 @@ public class FeedDocTest implements Serializable {
 			e.printStackTrace();
 			assertTrue(e instanceof javax.xml.stream.XMLStreamException);
 		}
-		
-		try {//bad generator
+
+		try {// bad generator
 			feed1 = feedDoc.readFeedToBean(badFeed3);
 			fail("should not get here.");
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);
-			assertEquals(e.getMessage(),"Unsupported attribute nono in the atom:generator element.");
+			assertEquals(e.getMessage(),
+					"Unsupported attribute nono in the atom:generator element.");
 		}
-		
-		try {//bad link no href
+
+		try {// bad link no href
 			feed1 = feedDoc.readFeedToBean(badFeed4);
 			fail("should not get here.");
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);
-			assertEquals(e.getMessage(),"atom:link elements MUST have an href attribute, whose value MUST be a IRI reference.");
+			assertEquals(
+					e.getMessage(),
+					"atom:link elements MUST have an href attribute, whose value MUST be a IRI reference.");
 		}
-		
-		try {//bad link empty
+
+		try {// bad link empty
 			feed1 = feedDoc.readFeedToBean(badFeed5);
 			fail("should not get here.");
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);
-			assertEquals(e.getMessage(),"atom:link elements MUST have an href attribute, whose value MUST be a IRI reference.");
+			assertEquals(
+					e.getMessage(),
+					"atom:link elements MUST have an href attribute, whose value MUST be a IRI reference.");
 		}
 
 		// test the seven title variants.
@@ -924,7 +932,7 @@ public class FeedDocTest implements Serializable {
 			Attribute err = feedDoc.buildAttribute("href", "bunk");
 			List<Attribute> attrs = new LinkedList<Attribute>();
 			attrs.add(err);
-			feedDoc.buildPublished(null, attrs);
+			feedDoc.buildPublished(attrs, null);
 			fail("should not get here.");
 		} catch (AtomSpecException e) {
 			assertEquals(e.getMessage(),
@@ -934,12 +942,30 @@ public class FeedDocTest implements Serializable {
 		try {
 			// roll the date back to a different timezone
 			TimeZone.setDefault(TimeZone.getTimeZone("Etc/GMT-10"));
-			Published pub = feedDoc.buildPublished(Calendar.getInstance()
-					.getTime(), null);
+			Published pub = feedDoc.buildPublished(null, Calendar.getInstance()
+					.getTime().toString());
 			assertTrue(pub.getText() != null);
 			TimeZone.setDefault(null);
 		} catch (AtomSpecException e) {
 			fail("should not get here.");
+		}
+		
+		try {
+			// test bad date string
+			Published pub = feedDoc.buildPublished(null, "2009-10-15T11:11:30.52Z");
+			assertTrue(pub.getText() != null);
+			assertTrue(pub.getText().equals("2009-10-15T11:11:30.52Z"));
+		} catch (AtomSpecException e) {
+			fail("should not get here.");
+		}
+		
+		try {
+			// test bad date string
+			feedDoc.buildPublished(null, "abcdefg");
+			fail("should not get here.");
+		} catch (AtomSpecException e) {
+			System.out.println("emesg: "+e.getLocalizedMessage());
+			assertEquals(e.getMessage(),"error trying to create the date element with string: abcdefg");
 		}
 	}
 
@@ -954,8 +980,8 @@ public class FeedDocTest implements Serializable {
 			Id id = feedDoc.buildId(null,
 					"http://www.colorfulsoftware.com/atom.xml");
 
-			Updated updated = feedDoc.buildUpdated(Calendar.getInstance()
-					.getTime(), null);
+			Updated updated = feedDoc.buildUpdated(null, Calendar.getInstance()
+					.getTime().toString());
 
 			Title title = feedDoc.buildTitle("test feed", null);
 
@@ -1014,8 +1040,8 @@ public class FeedDocTest implements Serializable {
 									.buildId(null,
 											"http://www.colorfulsoftware.com/atom.xml#entry1"),
 							feedDoc.buildTitle("an example atom entry", null),
-							feedDoc.buildUpdated(Calendar.getInstance()
-									.getTime(), null),
+							feedDoc.buildUpdated(null, Calendar.getInstance()
+									.getTime().toString()),
 							null,
 							feedDoc
 									.buildContent(
@@ -1040,7 +1066,8 @@ public class FeedDocTest implements Serializable {
 			assertNull(feed.getGenerator().getAttribute("notHere"));
 			assertNotNull(feed.getAuthor("Bill Brown"));
 			assertNotNull(feed.getContributor("Bill Brown"));
-			assertNotNull(feed.getLink("http://www.colorfulsoftware.com/projects/atomsphere/atom.xml"));
+			assertNotNull(feed
+					.getLink("http://www.colorfulsoftware.com/projects/atomsphere/atom.xml"));
 			assertNotNull(feed.getId().getAttribute("local:something"));
 			assertNull(feed.getId().getAttribute("bunk"));
 			assertNull(feed.getCategory("math").getAttribute("anythingWrong"));
@@ -1050,8 +1077,7 @@ public class FeedDocTest implements Serializable {
 			assertNull(feed.getRights().getAttribute("sayWhat"));
 			assertNotNull(feed.getUpdated().getDateTime());
 			assertNull(feed.getSubtitle().getAttribute("sayWhat"));
-			
-			
+
 			FeedWriter feedWriter = new FeedWriter();
 			XMLStreamWriter writer = XMLOutputFactory.newInstance()
 					.createXMLStreamWriter(
@@ -1087,7 +1113,7 @@ public class FeedDocTest implements Serializable {
 					assertNull(ent.getExtension("local:notthere"));
 					assertNotNull(ent.getPublished().getAttribute("xmlns"));
 					assertNull(ent.getSummary().getAttribute("sayWhat"));
-					
+
 					Contributor cont = ent.getContributor("Bill Brown");
 					assertNotNull(cont);
 					assertNotNull(cont.getExtension("test:test"));
@@ -1157,8 +1183,8 @@ public class FeedDocTest implements Serializable {
 		try {
 			id = feedDoc.buildId(null, "http://www.test.com");
 			title = feedDoc.buildTitle("title", null);
-			updated = feedDoc.buildUpdated(Calendar.getInstance().getTime(),
-					null);
+			updated = feedDoc.buildUpdated(null, Calendar.getInstance()
+					.getTime().toString());
 			entries = new TreeMap<String, Entry>();
 			entries.put(updated.getText(), feedDoc.buildEntry(id, title,
 					updated, null, null, null, null, null, null, null, null,

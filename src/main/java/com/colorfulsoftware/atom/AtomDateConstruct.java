@@ -22,7 +22,6 @@ package com.colorfulsoftware.atom;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,7 +34,7 @@ class AtomDateConstruct implements Serializable {
 	private final List<Attribute> attributes;
 
 	private final Date dateTime;
-	
+
 	private final String text;
 
 	/*
@@ -45,9 +44,30 @@ class AtomDateConstruct implements Serializable {
 	 * @param attributes the attributes for the date. the date formatted to
 	 * [RFC3339]
 	 * 
+	 * Internet Date/Time Format
+	 * 
+	 * 
+	 * The following profile of ISO 8601 [ISO8601] dates SHOULD be used in new
+	 * protocols on the Internet. This is specified using the syntax description
+	 * notation defined in [ABNF].
+	 * 
+	 * date-fullyear = 4DIGIT date-month = 2DIGIT ; 01-12 date-mday = 2DIGIT ;
+	 * 01-28, 01-29, 01-30, 01-31 based on ; month/year time-hour = 2DIGIT ;
+	 * 00-23 time-minute = 2DIGIT ; 00-59 time-second = 2DIGIT ; 00-58, 00-59,
+	 * 00-60 based on leap second ; rules time-secfrac = "." 1*DIGIT
+	 * time-numoffset = ("+" / "-") time-hour ":" time-minute time-offset = "Z"
+	 * / time-numoffset
+	 * 
+	 * partial-time = time-hour ":" time-minute ":" time-second [time-secfrac]
+	 * full-date = date-fullyear "-" date-month "-" date-mday full-time =
+	 * partial-time time-offset
+	 * 
+	 * date-time = full-date "T" full-time
+	 * 
+	 * 
 	 * @throws AtomSpecException if the date format is not valid.
 	 */
-	AtomDateConstruct(List<Attribute> attributes, Date dateTime)
+	AtomDateConstruct(List<Attribute> attributes, String dateTime)
 			throws AtomSpecException {
 		if (attributes == null) {
 			this.attributes = null;
@@ -67,25 +87,76 @@ class AtomDateConstruct implements Serializable {
 			throw new AtomSpecException(
 					"AtomDateConstruct Dates SHOULD NOT be null.");
 		} else {
-			this.dateTime = new Date(dateTime.getTime());
+
+			Date local = null;
+			String timeZoneOffset = null;
+
+			int hours = (((TimeZone.getDefault().getRawOffset() / 1000) / 60) / 60);
+			if (hours >= 0) {
+				timeZoneOffset = TimeZone.getTimeZone("GMT" + "+" + hours)
+						.getID().substring(3);
+			} else {
+				timeZoneOffset = TimeZone.getTimeZone(
+						"GMT" + "-" + Math.abs(hours)).getID().substring(3);
+			}
+			// this is the preferred default format.
+			SimpleDateFormat sdf = new SimpleDateFormat(
+					"yyyy-MM-dd\'T\'HH:mm:ss.SS\'" + timeZoneOffset + "\'");
+
+			boolean valid = true;
+			try {
+				// example: 2006-04-28T12:50:43.337-05:00
+				local = sdf.parse(dateTime);
+			} catch (Exception e1) {
+				valid = false;
+			}
+
+			if (!valid) {
+				try {
+					// example: 2009-10-15T11:11:30.52Z
+					sdf = new SimpleDateFormat(
+							"yyyy-MM-dd\'T\'HH:mm:ss.SS\'Z\'");
+					local = sdf.parse(dateTime);
+					valid = true;
+				} catch (Exception e2) {
+					valid = false;
+				}
+			}
+
+			if (!valid) {
+				try {
+					// example: 2009-10-15T11:11:30Z
+					sdf = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss\'Z\'");
+					local = sdf.parse(dateTime);
+					valid = true;
+				} catch (Exception e3) {
+					valid = false;
+				}
+			}
+
+			if (!valid) {
+				try {
+					// example: Mon Oct 19 10:52:18 CDT 2009
+					// or: Tue Oct 20 02:48:09 GMT+10:00 2009
+					sdf = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
+					local = sdf.parse(dateTime);
+					valid = true;
+				} catch (Exception e4) {
+					valid = false;
+				}
+			}
+
+			if (!valid) {
+				throw new AtomSpecException(
+						"error trying to create the date element with string: "
+								+ dateTime);
+			}
+
+			;
+
+			this.text = sdf.format(this.dateTime = new Date(local.getTime()));
+
 		}
-		
-		// example 2006-04-28T12:50:43.337-05:00
-		final String timeZoneOffset;
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(dateTime);
-		TimeZone timeZone = cal.getTimeZone();
-		int hours = (((timeZone.getRawOffset() / 1000) / 60) / 60);
-		if (hours >= 0) {
-			timeZoneOffset = TimeZone.getTimeZone("GMT" + "+" + hours).getID()
-					.substring(3);
-		} else {
-			timeZoneOffset = TimeZone
-					.getTimeZone("GMT" + "-" + Math.abs(hours)).getID()
-					.substring(3);
-		}
-		this.text = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'"
-				+ timeZoneOffset + "\'").format(dateTime);
 	}
 
 	AtomDateConstruct(AtomDateConstruct atomDateConstruct) {

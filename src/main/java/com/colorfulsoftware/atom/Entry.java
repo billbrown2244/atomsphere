@@ -110,15 +110,8 @@ public class Entry implements Serializable {
 			this.content = new Content(content);
 		}
 
-		this.published = (published == null) ? null : new Published(published
-				.getDateTime(), published.getAttributes());
-		this.source = (source == null) ? null : new Source(source.getId(),
-				source.getTitle(), source.getUpdated(), source.getRights(),
-				source.getAuthors(), source.getCategories(), source
-						.getContributors(), source.getLinks(), source
-						.getAttributes(), source.getExtensions(), source
-						.getGenerator(), source.getSubtitle(),
-				source.getIcon(), source.getLogo());
+		this.published = (published == null) ? null : new Published(published);
+		this.source = (source == null) ? null : new Source(source);
 		this.summary = (summary == null) ? null : new Summary(summary);
 	}
 

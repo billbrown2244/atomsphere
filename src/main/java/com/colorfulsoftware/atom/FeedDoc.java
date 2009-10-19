@@ -28,7 +28,6 @@ import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -894,10 +893,10 @@ public final class FeedDoc implements Serializable {
 
 	/**
 	 * 
+	 * @param attributes
+	 *            the attributes for the published object
 	 * @param published
 	 *            the date formatted to [RFC3339]
-	 * @param attributes
-	 *            the attributes for the published object.
 	 * @return an immutable Published object.
 	 * @throws AtomSpecException
 	 *             if the data is not valid.
@@ -1014,19 +1013,18 @@ public final class FeedDoc implements Serializable {
 		return new Title(title, attributes);
 	}
 
-	/**
-	 * 
-	 * @param updated
-	 *            the date formatted to [RFC3339]
+	/** 
 	 * @param attributes
 	 *            the attributes for the updated object.
+	 * @param updated
+	 *            the date formatted to [RFC3339]
 	 * @return a immutable Updated object.
 	 * @throws AtomSpecException
 	 *             if the data is not valid.
 	 */
-	public Updated buildUpdated(Date updated, List<Attribute> attributes)
+	public Updated buildUpdated(List<Attribute> attributes, String updated)
 			throws AtomSpecException {
-		return new Updated(updated, attributes);
+		return new Updated(attributes, updated);
 	}
 
 	/**

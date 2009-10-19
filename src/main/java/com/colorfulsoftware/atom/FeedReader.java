@@ -23,11 +23,9 @@
 package com.colorfulsoftware.atom;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedMap;
-import java.util.TimeZone;
 import java.util.TreeMap;
 
 import javax.xml.stream.XMLStreamConstants;
@@ -478,16 +476,7 @@ class FeedReader implements Serializable {
 	}
 
 	Published readPublished(XMLStreamReader reader) throws Exception {
-		List<Attribute> attributes = ;
-		String dateText = reader.getElementText();
-		try {
-			return feedDoc.buildPublished(dateText, getAttributes(reader));
-		} catch (Exception e) {
-			SimpleDateFormat simpleDateFmt2 = new SimpleDateFormat(
-					getSimpleDateFormat().toPattern().substring(0, 19));
-			return feedDoc.buildPublished(simpleDateFmt2.parse(dateText
-					.substring(0, 19)), attributes);
-		}
+		return feedDoc.buildPublished(getAttributes(reader),reader.getElementText());
 	}
 
 	Content readContent(XMLStreamReader reader) throws Exception {
@@ -503,17 +492,7 @@ class FeedReader implements Serializable {
 	}
 
 	Updated readUpdated(XMLStreamReader reader) throws Exception {
-		List<Attribute> attributes = getAttributes(reader);
-		String dateText = reader.getElementText();
-		try {
-			return feedDoc.buildUpdated(getSimpleDateFormat().parse(dateText),
-					attributes);
-		} catch (Exception e) {
-			SimpleDateFormat simpleDateFmt2 = new SimpleDateFormat(
-					getSimpleDateFormat().toPattern().substring(0, 19));
-			return feedDoc.buildUpdated(simpleDateFmt2.parse(dateText
-					.substring(0, 19)), attributes);
-		}
+		return feedDoc.buildUpdated(getAttributes(reader),reader.getElementText());
 	}
 
 	Title readTitle(XMLStreamReader reader) throws Exception {
