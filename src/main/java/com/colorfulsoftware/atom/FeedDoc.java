@@ -902,9 +902,9 @@ public final class FeedDoc implements Serializable {
 	 * @throws AtomSpecException
 	 *             if the data is not valid.
 	 */
-	public Published buildPublished(Date published, List<Attribute> attributes)
+	public Published buildPublished(List<Attribute> attributes, String published)
 			throws AtomSpecException {
-		return new Published(published, attributes);
+		return new Published(attributes, published);
 	}
 
 	/**

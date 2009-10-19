@@ -97,36 +97,27 @@ class AtomTextConstruct implements Serializable {
 		}
 
 		attr = getAttribute("type");
-		if (attr != null
-				&& (attr.getValue().equals(
-						"text"))) {
+		if (attr != null && (attr.getValue().equals("text"))) {
 			contentType = ContentType.TEXT;
 		}
 
-		if (attr != null
-				&& (attr.getValue().equals(
-						"html"))) {
+		if (attr != null && (attr.getValue().equals("html"))) {
 			contentType = ContentType.HTML;
 		}
 		if (attr != null
-				&& ((!attr.getValue().equals(
-						"text")
+				&& ((!attr.getValue().equals("text")
 						&& !attr.getValue().equals("html") && !attr.getValue()
 						.equals("xhtml")))) {
 			contentType = ContentType.OTHER;
 		}
-		if (attr != null
-				&& (attr.getValue().equals(
-						"xhtml"))) {
+		if (attr != null && (attr.getValue().equals("xhtml"))) {
 			contentType = ContentType.XHTML;
 		}
-		if(contentType == null){
+		if (contentType == null) {
 			contentType = ContentType.TEXT;
 		}
 
 		// do we need to wrap the xhtml in a div.
-		System.out.println("contnetType: "+contentType);
-		System.out.println("text"+text);
 		if (contentType == ContentType.XHTML) {
 			this.divWrapperStart = getDivWrapperStart(text);
 			this.divWrapperEnd = getDivWrapperEnd(text);
@@ -175,11 +166,11 @@ class AtomTextConstruct implements Serializable {
 	}
 
 	private String getDivWrapperStart(String text) {
-		return (text == null)?null:text.substring(0, text.indexOf(">") + 1);
+		return (text == null) ? null : text.substring(0, text.indexOf(">") + 1);
 	}
 
 	private String getDivWrapperEnd(String text) {
-		if(text == null){
+		if (text == null) {
 			return null;
 		}
 		text = reverseIt(text);
@@ -188,7 +179,7 @@ class AtomTextConstruct implements Serializable {
 	}
 
 	private String getXhtmlText(String text) {
-		if(text == null){
+		if (text == null) {
 			return null;
 		}
 		// strip the wrapper start and end tags.

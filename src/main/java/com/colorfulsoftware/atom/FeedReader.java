@@ -477,28 +477,11 @@ class FeedReader implements Serializable {
 				generator, subtitle, icon, logo);
 	}
 
-	SimpleDateFormat getSimpleDateFormat() {
-		String timeZoneOffset = null;
-		TimeZone timeZone = TimeZone.getDefault();
-		int hours = (((timeZone.getRawOffset() / 1000) / 60) / 60);
-		if (hours >= 0) {
-			timeZoneOffset = TimeZone.getTimeZone("GMT" + "+" + hours).getID()
-					.substring(3);
-		} else {
-			timeZoneOffset = TimeZone
-					.getTimeZone("GMT" + "-" + Math.abs(hours)).getID()
-					.substring(3);
-		}
-		return new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'"
-				+ timeZoneOffset + "\'");
-	}
-
 	Published readPublished(XMLStreamReader reader) throws Exception {
-		List<Attribute> attributes = getAttributes(reader);
+		List<Attribute> attributes = ;
 		String dateText = reader.getElementText();
 		try {
-			return feedDoc.buildPublished(
-					getSimpleDateFormat().parse(dateText), attributes);
+			return feedDoc.buildPublished(dateText, getAttributes(reader));
 		} catch (Exception e) {
 			SimpleDateFormat simpleDateFmt2 = new SimpleDateFormat(
 					getSimpleDateFormat().toPattern().substring(0, 19));

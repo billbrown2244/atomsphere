@@ -47,7 +47,7 @@ class AtomDateConstruct implements Serializable {
 	 * 
 	 * @throws AtomSpecException if the date format is not valid.
 	 */
-	AtomDateConstruct(Date dateTime, List<Attribute> attributes)
+	AtomDateConstruct(List<Attribute> attributes, Date dateTime)
 			throws AtomSpecException {
 		if (attributes == null) {
 			this.attributes = null;
