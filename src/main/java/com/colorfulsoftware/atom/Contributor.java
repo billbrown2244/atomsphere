@@ -115,4 +115,12 @@ public class Contributor implements Serializable {
 	public Extension getExtension(String extName) throws AtomSpecException {
 		return person.getExtension(extName);
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("<contributor");
+		sb.append(person.toString());
+		sb.append("</contributor>");
+		return sb.toString();
+	}
 }

@@ -92,4 +92,12 @@ public class Updated implements Serializable {
 	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		return updated.getAttribute(attrName);
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("<updated");
+		sb.append(updated.toString());
+		sb.append("</updated>");
+		return sb.toString();
+	}
 }

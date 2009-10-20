@@ -54,10 +54,10 @@ class FeedReader implements Serializable {
 	 *             if the stream cannot be parsed.
 	 */
 	Feed readFeed(XMLStreamReader reader) throws Exception {
-		if(feedDoc == null){
+		if (feedDoc == null) {
 			feedDoc = new FeedDoc();
 		}
-		List<Attribute> attributes = null;
+		List<Attribute> attributes = getAttributes(reader);
 		List<Author> authors = null;
 		List<Category> categories = null;
 		List<Contributor> contributors = null;
@@ -77,17 +77,10 @@ class FeedReader implements Serializable {
 		while (reader.hasNext()) {
 			switch (reader.next()) {
 
-			case XMLStreamConstants.START_DOCUMENT:
-				feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
-				break;
-
 			case XMLStreamConstants.START_ELEMENT:
 				elementName = getElementName(reader);
-				// call each feed elements read method depending on the name
-				if (elementName.equals("feed")
-						|| elementName.equals("atom:feed")) {
-					attributes = getAttributes(reader);
-				} else if (elementName.equals("author")
+
+					 if (elementName.equals("author")
 						|| elementName.equals("atom:author")) {
 					authors = readAuthor(reader, authors);
 				} else if (elementName.equals("category")
@@ -173,10 +166,15 @@ class FeedReader implements Serializable {
 			throws Exception {
 		List<Attribute> attributes = new LinkedList<Attribute>();
 
-		int eventSkip = 0;
+		// this is here to accommodate initially calling sub elements from the
+		// FeedReader
+		if (reader.getEventType() == XMLStreamConstants.START_DOCUMENT) {
+			feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
+			reader.next();
+		}
+
 		// add the namespace attributes.
 		for (int i = 0; i < reader.getNamespaceCount(); i++) {
-			eventSkip++;
 			String attrName = "xmlns";
 			if (reader.getNamespacePrefix(i) != null) {
 				attrName += ":" + reader.getNamespacePrefix(i);
@@ -186,10 +184,9 @@ class FeedReader implements Serializable {
 				attributes.add(feedDoc.buildAttribute(attrName, reader
 						.getNamespaceURI(i)));
 			}
-			
+
 		}
 		for (int i = 0; i < reader.getAttributeCount(); i++) {
-			eventSkip++;
 			String attrName = null;
 			if (reader.getAttributeName(i).getPrefix() != null
 					&& !reader.getAttributeName(i).getPrefix().equals("")) {
@@ -249,10 +246,10 @@ class FeedReader implements Serializable {
 	SortedMap<String, Entry> readEntry(XMLStreamReader reader,
 			SortedMap<String, Entry> entries) throws Exception {
 		System.out.println("entered entry:");
-		if(feedDoc == null){
+		if (feedDoc == null) {
 			feedDoc = new FeedDoc();
 		}
-		
+
 		if (entries == null) {
 			entries = new TreeMap<String, Entry>();
 		}
@@ -262,7 +259,7 @@ class FeedReader implements Serializable {
 		Updated updated = null;
 		Rights rights = null;
 		Content content = null;
-		List<Attribute> attributes = null;
+		List<Attribute> attributes = getAttributes(reader);
 		List<Author> authors = null;
 		List<Category> categories = null;
 		List<Contributor> contributors = null;
@@ -277,19 +274,18 @@ class FeedReader implements Serializable {
 			boolean breakOut = false;
 			switch (reader.next()) {
 
-			case XMLStreamConstants.START_DOCUMENT:
-				feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
-				break;
-
 			case XMLStreamConstants.START_ELEMENT:
 				// call each feed elements read method depending on the name
 				elementName = getElementName(reader);
-				System.out.println("elementName: "+elementName);
-				if (elementName.equals("entry")
-						|| elementName.equals("atom:entry")) {
-					attributes = getAttributes(reader);
-				} else if (elementName.equals("id")
-						|| elementName.equals("atom:id")) {
+				System.out.println("elementName: " + elementName);
+				// this may be called with a <feed> wrapping entries so we
+				// need to check for the feed here as wellentry.
+				// if (elementName.equals("entry")
+				// || elementName.equals("atom:entry")) {
+				// attributes = getAttributes(reader);
+				// System.out.println("seen entry.");
+				// } else
+				if (elementName.equals("id") || elementName.equals("atom:id")) {
 					id = readId(reader);
 				} else if (elementName.equals("author")
 						|| elementName.equals("atom:author")) {
@@ -324,16 +320,30 @@ class FeedReader implements Serializable {
 				} else if (elementName.equals("updated")
 						|| elementName.equals("atom:updated")) {
 					updated = readUpdated(reader);
-					System.out.println("updated after: "+updated);
+					System.out.println("updated after: " + updated);
+					// this may be called with a <feed> wrapping entries so we
+					// need to skip all top level feed elements until we get to
+					// the entry.
+				} else if (elementName.equals("feed")
+						|| elementName.equals("atom:feed")
+						|| elementName.equals("generator")
+						|| elementName.equals("atom:generator")
+						|| elementName.equals("subtitle")
+						|| elementName.equals("atom:subtitle")
+						|| elementName.equals("icon")
+						|| elementName.equals("atom:icon")
+						|| elementName.equals("logo")
+						|| elementName.equals("atom:logo")) {
+					break;
 				} else {// extension
-					System.out.println("reading extension: "+elementName);
+					System.out.println("reading extension: " + elementName);
 					extensions = readExtension(reader, extensions, elementName);
 				}
 				break;
 
 			case XMLStreamConstants.END_ELEMENT:
 				elementName = getElementName(reader);
-				System.out.println("endElementName: "+elementName);
+				System.out.println("endElementName: " + elementName);
 				if (elementName.equals("entry")
 						|| elementName.equals("atom:entry")) {
 					breakOut = true;
@@ -348,12 +358,12 @@ class FeedReader implements Serializable {
 		}
 
 		// throw an error if the updated entry is not available here.
-		System.out.println("updated after 2: "+updated);
+		System.out.println("updated after 2: " + updated);
 		if (updated == null) {
 			throw new AtomSpecException(
 					"atom:entry elements MUST contain exactly one atom:updated element.");
 		}
-		System.out.println("updated text: "+updated.getText());
+		System.out.println("updated text: " + updated.getText());
 		entries.put(updated.getText(), feedDoc.buildEntry(id, title, updated,
 				rights, content, authors, categories, contributors, links,
 				attributes, extensions, published, summary, source));

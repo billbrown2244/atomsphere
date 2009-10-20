@@ -56,4 +56,9 @@ public class Name implements Serializable {
 		return name.getText();
 	}
 
+	@Override
+	public String toString() {
+		return "<name>" + name.getText() + "</name>";
+	}
+
 }

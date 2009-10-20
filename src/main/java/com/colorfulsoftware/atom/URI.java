@@ -55,4 +55,9 @@ public class URI implements Serializable {
 	public String getText() {
 		return uri.getText();
 	}
+	
+	@Override
+	public String toString() {
+		return "<uri>" + uri.getText() + "</uri>";
+	}
 }

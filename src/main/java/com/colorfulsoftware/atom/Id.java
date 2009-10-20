@@ -52,8 +52,8 @@ public class Id implements Serializable {
 	Id(List<Attribute> attributes, String atomUri) throws AtomSpecException {
 		this.id = new AtomURIConstruct(attributes, atomUri);
 	}
-	
-	Id(Id id){
+
+	Id(Id id) {
 		this.id = new AtomURIConstruct(id.id);
 	}
 
@@ -84,5 +84,13 @@ public class Id implements Serializable {
 	 */
 	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		return id.getAttribute(attrName);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("<id");
+		sb.append(id.toString());
+		sb.append("</id>");
+		return sb.toString();
 	}
 }

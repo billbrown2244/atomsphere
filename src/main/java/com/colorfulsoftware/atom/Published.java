@@ -92,4 +92,12 @@ public class Published implements Serializable {
 	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		return published.getAttribute(attrName);
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("<published");
+		sb.append(published.toString());
+		sb.append("</published>");
+		return sb.toString();
+	}
 }

@@ -1013,7 +1013,7 @@ public final class FeedDoc implements Serializable {
 		return new Title(title, attributes);
 	}
 
-	/** 
+	/**
 	 * @param attributes
 	 *            the attributes for the updated object.
 	 * @param updated

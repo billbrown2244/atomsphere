@@ -75,13 +75,10 @@ public class Source implements Serializable {
 		this.sourceAdaptor = new AtomEntrySourceAdaptor(id, title, updated,
 				rights, authors, categories, contributors, links, attributes,
 				extensions);
-		this.generator = (generator == null) ? null : new Generator(generator
-				.getAttributes(), generator.getText());
+		this.generator = (generator == null) ? null : new Generator(generator);
 		this.subtitle = (subtitle == null) ? null : new Subtitle(subtitle);
-		this.icon = (icon == null) ? null : new Icon(icon.getAttributes(), icon
-				.getAtomUri());
-		this.logo = (logo == null) ? null : new Logo(logo.getAttributes(), logo
-				.getAtomUri());
+		this.icon = (icon == null) ? null : new Icon(icon);
+		this.logo = (logo == null) ? null : new Logo(logo);
 	}
 
 	Source(Source source) {
@@ -256,5 +253,30 @@ public class Source implements Serializable {
 	 */
 	public Extension getExtension(String extName) {
 		return sourceAdaptor.getExtension(extName);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("<source");
+		sb.append(sourceAdaptor.toString());
+
+		if (generator != null) {
+			sb.append(generator.toString());
+		}
+
+		if (subtitle != null) {
+			sb.append(subtitle.toString());
+		}
+
+		if (icon != null) {
+			sb.append(icon.toString());
+		}
+
+		if (logo != null) {
+			sb.append(logo.toString());
+		}
+
+		sb.append("</source>");
+		return sb.toString();
 	}
 }

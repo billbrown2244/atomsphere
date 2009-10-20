@@ -95,4 +95,18 @@ class AtomURIConstruct implements Serializable {
 		}
 		return null;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		if (attributes != null) {
+			for (Attribute attribute : attributes) {
+				sb.append(attribute.toString());
+			}
+		}
+		// close the parent element
+		sb.append(">" + atomUri);
+
+		return sb.toString();
+	}
 }

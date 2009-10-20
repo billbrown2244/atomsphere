@@ -27,7 +27,7 @@ import java.io.Serializable;
  * 
  */
 public class AttributeSupport implements Serializable {
-	
+
 	private static final long serialVersionUID = -5670802769839692012L;
 	/**
 	 * the default document encoding of "UTF-8"

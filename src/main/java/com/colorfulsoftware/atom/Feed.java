@@ -67,7 +67,11 @@ public class Feed implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 8576480736811385690L;
-	private final Source source;
+	private final AtomEntrySourceAdaptor sourceAdaptor;
+	private final Generator generator;
+	private final Icon icon;
+	private final Logo logo;
+	private final Subtitle subtitle;
 	private final SortedMap<String, Entry> entries;
 
 	// use the factory method in the FeedDoc.
@@ -94,13 +98,18 @@ public class Feed implements Serializable {
 					"atom:feed elements MUST contain exactly one atom:updated element.");
 		}
 
-		source = new Source(id, title, updated, rights, authors, categories,
-				contributors, links, attributes, extensions, generator,
-				subtitle, icon, logo);
+		this.sourceAdaptor = new AtomEntrySourceAdaptor(id, title, updated,
+				rights, authors, categories, contributors, links, attributes,
+				extensions);
+
+		this.generator = (generator == null) ? null : new Generator(generator);
+		this.subtitle = (subtitle == null) ? null : new Subtitle(subtitle);
+		this.icon = (icon == null) ? null : new Icon(icon);
+		this.logo = (logo == null) ? null : new Logo(logo);
 
 		if (entries == null) {
 			this.entries = null;
-			if (source.getAuthors() == null) {
+			if (sourceAdaptor.getAuthors() == null) {
 				throw new AtomSpecException(
 						"atom:feed elements MUST contain one or more atom:author elements, unless the atom:entry contains an atom:source element that contains an atom:author element or, in an Atom Feed Document, the atom:feed element contains an atom:author element itself.");
 			}
@@ -112,7 +121,7 @@ public class Feed implements Serializable {
 
 				// if there is no author element at the feed level
 				// check to make sure the entry has an author element
-				if (source.getAuthors() == null) {
+				if (sourceAdaptor.getAuthors() == null) {
 					if (entry.getAuthors() == null) {
 						throw new AtomSpecException(
 								"atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
@@ -153,41 +162,33 @@ public class Feed implements Serializable {
 	/**
 	 * 
 	 * @return the generator for this element.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Generator getGenerator() throws AtomSpecException {
-		return source.getGenerator();
+	public Generator getGenerator() {
+		return (generator == null) ? null : new Generator(generator);
 	}
 
 	/**
 	 * 
 	 * @return the icon for this element.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Icon getIcon() throws AtomSpecException {
-		return source.getIcon();
+	public Icon getIcon() {
+		return (icon == null) ? null : new Icon(icon);
 	}
 
 	/**
 	 * 
 	 * @return the logo for this element.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Logo getLogo() throws AtomSpecException {
-		return source.getLogo();
+	public Logo getLogo() {
+		return (logo == null) ? null : new Logo(logo);
 	}
 
 	/**
 	 * 
 	 * @return the subtitle for this element.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Subtitle getSubtitle() throws AtomSpecException {
-		return source.getSubtitle();
+	public Subtitle getSubtitle() {
+		return (subtitle == null) ? null : new Subtitle(subtitle);
 	}
 
 	/**
@@ -197,7 +198,7 @@ public class Feed implements Serializable {
 	 *             if the data is not valid.
 	 */
 	public Id getId() throws AtomSpecException {
-		return source.getId();
+		return sourceAdaptor.getId();
 	}
 
 	/**
@@ -207,7 +208,7 @@ public class Feed implements Serializable {
 	 *             if the data is not valid.
 	 */
 	public Title getTitle() throws AtomSpecException {
-		return source.getTitle();
+		return sourceAdaptor.getTitle();
 	}
 
 	/**
@@ -217,7 +218,7 @@ public class Feed implements Serializable {
 	 *             if the data is not valid.
 	 */
 	public Updated getUpdated() throws AtomSpecException {
-		return source.getUpdated();
+		return sourceAdaptor.getUpdated();
 	}
 
 	/**
@@ -227,7 +228,7 @@ public class Feed implements Serializable {
 	 *             if the data is not valid.
 	 */
 	public Rights getRights() throws AtomSpecException {
-		return source.getRights();
+		return sourceAdaptor.getRights();
 	}
 
 	/**
@@ -237,7 +238,7 @@ public class Feed implements Serializable {
 	 *             if the data is not valid.
 	 */
 	public List<Author> getAuthors() throws AtomSpecException {
-		return source.getAuthors();
+		return sourceAdaptor.getAuthors();
 	}
 
 	/**
@@ -247,7 +248,7 @@ public class Feed implements Serializable {
 	 *             if the data is not valid.
 	 */
 	public List<Category> getCategories() throws AtomSpecException {
-		return source.getCategories();
+		return sourceAdaptor.getCategories();
 	}
 
 	/**
@@ -257,7 +258,7 @@ public class Feed implements Serializable {
 	 *             if the data is not valid.
 	 */
 	public List<Contributor> getContributors() throws AtomSpecException {
-		return source.getContributors();
+		return sourceAdaptor.getContributors();
 	}
 
 	/**
@@ -267,7 +268,7 @@ public class Feed implements Serializable {
 	 *             if the data is not valid.
 	 */
 	public List<Link> getLinks() throws AtomSpecException {
-		return source.getLinks();
+		return sourceAdaptor.getLinks();
 	}
 
 	/**
@@ -277,7 +278,7 @@ public class Feed implements Serializable {
 	 *             if the data is not valid.
 	 */
 	public List<Attribute> getAttributes() throws AtomSpecException {
-		return source.getAttributes();
+		return sourceAdaptor.getAttributes();
 	}
 
 	/**
@@ -287,7 +288,7 @@ public class Feed implements Serializable {
 	 *             if the data is not valid.
 	 */
 	public List<Extension> getExtensions() throws AtomSpecException {
-		return source.getExtensions();
+		return sourceAdaptor.getExtensions();
 	}
 
 	/**
@@ -298,7 +299,7 @@ public class Feed implements Serializable {
 	 *             if the data is not valid.
 	 */
 	public Attribute getAttribute(String attrName) throws AtomSpecException {
-		return source.getAttribute(attrName);
+		return sourceAdaptor.getAttribute(attrName);
 	}
 
 	/**
@@ -309,7 +310,7 @@ public class Feed implements Serializable {
 	 *             if the data is not valid.
 	 */
 	public Author getAuthor(String name) throws AtomSpecException {
-		return source.getAuthor(name);
+		return sourceAdaptor.getAuthor(name);
 	}
 
 	/**
@@ -320,7 +321,7 @@ public class Feed implements Serializable {
 	 *             if the data is not valid.
 	 */
 	public Category getCategory(String termValue) throws AtomSpecException {
-		return source.getCategory(termValue);
+		return sourceAdaptor.getCategory(termValue);
 	}
 
 	/**
@@ -331,7 +332,7 @@ public class Feed implements Serializable {
 	 *             if the data is not valid.
 	 */
 	public Contributor getContributor(String name) throws AtomSpecException {
-		return source.getContributor(name);
+		return sourceAdaptor.getContributor(name);
 	}
 
 	/**
@@ -342,7 +343,7 @@ public class Feed implements Serializable {
 	 *             if the data is not valid.
 	 */
 	public Link getLink(String hrefVal) throws AtomSpecException {
-		return source.getLink(hrefVal);
+		return sourceAdaptor.getLink(hrefVal);
 	}
 
 	/**
@@ -353,6 +354,37 @@ public class Feed implements Serializable {
 	 *             if the data is not valid.
 	 */
 	public Extension getExtension(String extName) throws AtomSpecException {
-		return source.getExtension(extName);
+		return sourceAdaptor.getExtension(extName);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("<feed");
+		sb.append(sourceAdaptor.toString());
+
+		if (generator != null) {
+			sb.append(generator.toString());
+		}
+
+		if (subtitle != null) {
+			sb.append(subtitle.toString());
+		}
+
+		if (icon != null) {
+			sb.append(icon.toString());
+		}
+
+		if (logo != null) {
+			sb.append(logo.toString());
+		}
+		
+		if (entries != null) {
+			for (Entry entry : entries.values()) {
+				sb.append(entry.toString());
+			}
+		}
+
+		sb.append("</feed>");
+		return sb.toString();
 	}
 }

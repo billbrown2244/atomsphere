@@ -53,13 +53,17 @@ public class Generator implements Serializable {
 
 	// use the factory method in the FeedDoc.
 	Generator(List<Attribute> attributes, String text) throws AtomSpecException {
-		this.attributes = new LinkedList<Attribute>();
-		if (attributes != null) {
+
+		if (attributes == null) {
+			this.attributes = null;
+		} else {
+			this.attributes = new LinkedList<Attribute>();
 			for (Attribute attr : attributes) {
 				// check for unsupported attribute.
 				if (!new AttributeSupport(attr).verify(this)) {
 					throw new AtomSpecException("Unsupported attribute "
-							+ attr.getName() + " in the atom:generator element.");
+							+ attr.getName()
+							+ " in the atom:generator element.");
 				}
 				this.attributes.add(new Attribute(attr.getName(), attr
 						.getValue()));
@@ -132,5 +136,23 @@ public class Generator implements Serializable {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("<generator");
+		if (attributes != null) {
+			for (Attribute attribute : attributes) {
+				sb.append(attribute.toString());
+			}
+		}
+		// if there is content add it.
+		if (text == null || text.equals("")) {
+			sb.append(" />");
+		} else {
+			sb.append(" >" + text + "</generator>");
+		}
+
+		return sb.toString();
 	}
 }

@@ -21,8 +21,10 @@ import static org.junit.Assert.*;
 
 import java.beans.XMLDecoder;
 import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.net.URL;
@@ -235,6 +237,13 @@ public class FeedReaderTest implements Serializable {
 					new StringReader(extension1));
 			Feed feed = feedReader.readFeed(reader);
 			assertNotNull(feed.getExtensions());
+			assertNotNull(feed.getEntries());
+			BufferedWriter out = new BufferedWriter(new FileWriter("target/dump2.xml"));
+			out.write(feed.toString());
+			out.flush();
+			out.close();
+			System.out.println("feed\n"+feed.toString());
+			System.out.println("entension1\n"+extension1);
 			for (Entry entry : feed.getEntries().values()) {
 				assertNotNull(entry.getExtensions());
 			}

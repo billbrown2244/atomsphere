@@ -19,8 +19,10 @@ package com.colorfulsoftware.atom;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.net.URL;
@@ -84,23 +86,23 @@ public class FeedDocTest implements Serializable {
 	}
 
 	private String mega = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\" xmlns:local=\"http://purl.org/dc/elements/1.1/\">"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\" xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">"
 			+ "<id local:something=\"testVal\">http://colorfulsoftware.localhost/projects/atomsphere/atom.xml</id>"
 			+ "<updated local:somethingElse=\"fakeValue\">2007-03-08T20:52:40.70-06:00</updated>"
-			+ "<generator uri=\"http://www.colorfulsoftware.com/projects/atomsphere\" version=\"1.0.20\">Atomsphere</generator>"
-			+ "<title type=\"xhtml\">Atomsphere a <b>great atom 1.0 parser </b></title>  <subtitle>a java atom feed library</subtitle>"
+			+ "<generator uri=\"http://www.colorfulsoftware.com/projects/atomsphere\" version=\"1.0.2.0\">Atomsphere</generator>"
+			+ "<title type=\"xhtml\"><div xmlns=\"http://www.w3.org/1999/xhtml\">Atomsphere a <b>great atom 1.0 parser </b></div></title>  <subtitle>a java atom feed library</subtitle>"
 			+ "<author local:testAttr=\"testVal\"><test:test xmlns:test=\"http://www.w3.org/1999/test\" /><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 			+ "<contributor><name>Other Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></contributor>"
 			+ "<contributor local:testAttr=\"testVal\"><test:test xmlns:test=\"http://www.w3.org/1999/test\" /><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></contributor>"
 			+ "<category term=\"math\" scheme=\"http://www.colorfulsoftware.com/projects/atomsphere/\" label=\"math\" />"
 			+ "<category term=\"science\" scheme=\"http://www.colorfulsoftware.com/projects/atomsphere/\" label=\"science\"/>"
 			+ "<category term=\"thing\" />"
-			+ "<link href=\"http://www.colorfulsoftware.com/projects/atomsphere/atom.xml\" rel=\"self\" type=\"application/atom+xml\" hreflang=\"UTF-8\" title=\"cool site\" />"
+			+ "<link href=\"http://www.colorfulsoftware.com/projects/atomsphere/atom.xml\" rel=\"self\" type=\"application/atom+xml\" hreflang=\"en-us\" title=\"cool site\" />"
 			+ "<icon local:testAttr=\"testVal\">http://www.minoritydirectory.net/images/logo.gif</icon>"
 			+ "<logo local:testAttr=\"testVal\">http://www.minoritydirectory.net/images/logo.gif</logo>"
 			+ "<rights xmlns=\"http://www.w3.org/2005/Atom\">Copyright 2007</rights>"
 			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\"><id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#About</id>"
-			+ "<updated>2007-03-02T13:00:00.699-06:00</updated><title>About</title><published xmlns=\"http://www.w3.org/2005/Atom\">2007-02-26T12:34:01.330-06:00</published>"
+			+ "<updated>2009-03-02T13:00:00.699-06:00</updated><title>About</title><published xmlns=\"http://www.w3.org/2005/Atom\">2007-02-26T12:34:01.330-06:00</published>"
 			+ "<summary>About the project</summary>"
 			+ "<author local:testAttr=\"testVal\"><test:test xmlns:test=\"http://www.w3.org/1999/test\" /><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 			+ "<contributor><name>Other Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></contributor>"
@@ -108,12 +110,12 @@ public class FeedDocTest implements Serializable {
 			+ "<rights xmlns=\"http://www.w3.org/2005/Atom\">Copyright 2007</rights>"
 			+ "<category term=\"math\" scheme=\"http://www.colorfulsoftware.com/projects/atomsphere/\" label=\"math\" />"
 			+ "<category term=\"science\" scheme=\"http://www.colorfulsoftware.com/projects/atomsphere/\" label=\"science\"/>"
-			+ "<link href=\"http://www.colorfulsoftware.com/projects/atomsphere/atom.xml\" rel=\"self\" type=\"application/atom+xml\" hreflang=\"UTF-8\" title=\"cool site\" />"
+			+ "<link href=\"http://www.colorfulsoftware.com/projects/atomsphere/atom.xml\" rel=\"alternate\" type=\"application/atom+xml\" hreflang=\"en-us\" title=\"cool site\" />"
 			+ "<content type=\"html\">&lt;ul&gt; &lt;li&gt;&lt;span class=\"boldText\"&gt;Atomsphere&lt;/span&gt; isa java library that allows you to create and modify atom 1.0 feeds.&lt;/li&gt; &lt;li&gt;It is distributed under the GNU GPL license and can be used in any manner complient with the license.&lt;/li&gt; &lt;li&gt;It is also packaged as a servlet-lib for use in web applications.&lt;/li&gt; &lt;li&gt;It is also packaged as a customtag library to display feeds on a webapage.&lt;/li&gt; &lt;li&gt;It also comes with an example webapp which demonstrates some example uses of the library.&lt;/li&gt; &lt;li&gt;It is written to be tied as closely as possible to the current atom specification found &lt;a href=\"http://www.atomenabled.org/developers/syndication/atom-format-spec.php\"&gt;here&lt;/a&gt;.&lt;/li&gt; &lt;/ul&gt;</content>"
-			+ "<local:element>someitng that is an extension</local:element>"
+			+ "<local:element xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">someitng that is an extension</local:element>"
 			+ "</entry>"
 			+ "<entry><id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#Requirements</id>"
-			+ "<updated>2007-03-02T12:59:54.274-06:00</updated><title>Requirements</title><published>2007-02-26T12:58:53.197-06:00</published>"
+			+ "<updated>2008-03-02T12:59:54.274-06:00</updated><title>Requirements</title><published>2007-02-26T12:58:53.197-06:00</published>"
 			+ "<summary>Requirements for using the libraries</summary>"
 			+ "<content type=\"html\">&lt;br /&gt;the project is usable with jdk 1.4.2 and above&lt;br /&gt; &amp;nbsp;&lt;br /&gt; needed for using the library&lt;br /&gt; &lt;ul&gt; &lt;li&gt;&lt;a href=\"https://sjsxp.dev.java.net/\"&gt;jsr173&lt;/a&gt; (STAX api jar) - see the &lt;a href=\"http://jcp.org/aboutJava/communityprocess/final/jsr173/index.html\"&gt;API&lt;/a&gt;.&lt;/li&gt; &lt;li&gt;&lt;a href=\"https://sjsxp.dev.java.net/\"&gt;sjsxp&lt;/a&gt; (STAX implementation) - others implementations may work but have not been tested.&lt;/li&gt; &lt;li&gt;&lt;a href=\"https://stax-utils.dev.java.net/\"&gt;stax-utils&lt;/a&gt; (for pretty printing)&lt;/li&gt; &lt;/ul&gt; needed for using the atomsphere-taglib&lt;br /&gt; &lt;ul&gt; &lt;li&gt;the atomsphere library&lt;/li&gt; &lt;li&gt;Any J2EE Servlet Container&lt;/li&gt; &lt;/ul&gt; needed for using the atomsphere-weblib&lt;br /&gt; &lt;ul&gt; &lt;li&gt;the atomsphere library&lt;/li&gt; &lt;li&gt;Any J2EE Servlet Container&lt;/li&gt; &lt;/ul&gt; needed for using the example atomsphere-webapp&lt;br /&gt; &lt;ul&gt; &lt;li&gt;Any J2EE Servlet Container&lt;/li&gt;&lt;/ul&gt;</content>"
 			+ "</entry>"
@@ -153,12 +155,12 @@ public class FeedDocTest implements Serializable {
 			+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
 
 	private String expectedFeed2 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/\">"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">"
 			+ " <title>Example Feed</title>"
 			+ " <subtitle>A subtitle.</subtitle>"
 			+ " <link href=\"http://example.org/feed/\" rel=\"self\"/>"
 			+ " <link href=\"http://example.org/\"/>"
-			+ " <local:test xmlns=\"http://purl.org/dc/elements/1.1/\">things</local:test>"
+			+ " <local:test xmlns=\"http://purl.org/dc/elements/1.1/fakeNamespace\">things</local:test>"
 			+ " <updated xml:lang=\"en-US\">2003-12-13T18:30:02Z</updated>"
 			+ " <author>" + "   <name>John Doe</name>"
 			+ "   <email>johndoe@example.com</email>" + " </author>"
@@ -170,7 +172,7 @@ public class FeedDocTest implements Serializable {
 			+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
 
 	private String badFeed1 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/\">"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">"
 			+ " <title>Example Feed</title>"
 			+ " <subtitle>A subtitle.</subtitle>"
 			+ " <link href=\"http://example.org/feed/\" rel=\"self\"/>"
@@ -186,7 +188,7 @@ public class FeedDocTest implements Serializable {
 			+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
 
 	private String badFeed2 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/\">"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">"
 			+ " <title>Example Feed</title>"
 			+ " <subtitle>A subtitle.</subtitle>"
 			+ " <link href=\"http://example.org/feed/\" rel=\"self\"/>"
@@ -202,13 +204,13 @@ public class FeedDocTest implements Serializable {
 			+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
 
 	private String badFeed3 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/\">"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">"
 			+ "<generator uri=\"http://www.colorfulsoftware.com/projects/atomsphere\" version=\"1.0.20\" nono=\"nono\">Atomsphere</generator>"
 			+ " <title>Example Feed</title>"
 			+ " <subtitle>A subtitle.</subtitle>"
 			+ " <link href=\"http://example.org/feed/\" rel=\"self\"/>"
 			+ " <link href=\"http://example.org/\"/>"
-			+ " <local:test xmlns=\"http://purl.org/dc/elements/1.1/\">things</local:test>"
+			+ " <local:test xmlns=\"http://purl.org/dc/elements/1.1/fakeNamespace\">things</local:test>"
 			+ " <updated xml:lang=\"en-US\">2003-12-13T18:30:02Z</updated>"
 			+ " <author>" + "   <name>John Doe</name>"
 			+ "   <email>johndoe@example.com</email>" + " </author>"
@@ -220,12 +222,12 @@ public class FeedDocTest implements Serializable {
 			+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
 
 	private String badFeed4 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/\">"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">"
 			+ " <title>Example Feed</title>"
 			+ " <subtitle>A subtitle.</subtitle>"
 			+ " <link rel=\"self\"/>"
 			+ " <link href=\"http://example.org/\"/>"
-			+ " <local:test xmlns=\"http://purl.org/dc/elements/1.1/\">things</local:test>"
+			+ " <local:test xmlns=\"http://purl.org/dc/elements/1.1/fakeNamespace\">things</local:test>"
 			+ " <updated xml:lang=\"en-US\">2003-12-13T18:30:02Z</updated>"
 			+ " <author>" + "   <name>John Doe</name>"
 			+ "   <email>johndoe@example.com</email>" + " </author>"
@@ -237,12 +239,12 @@ public class FeedDocTest implements Serializable {
 			+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
 
 	private String badFeed5 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/\">"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">"
 			+ " <title>Example Feed</title>"
 			+ " <subtitle>A subtitle.</subtitle>"
 			+ " <link />"
 			+ " <link href=\"http://example.org/\"/>"
-			+ " <local:test xmlns=\"http://purl.org/dc/elements/1.1/\">things</local:test>"
+			+ " <local:test xmlns=\"http://purl.org/dc/elements/1.1/fakeNamespace\">things</local:test>"
 			+ " <updated xml:lang=\"en-US\">2003-12-13T18:30:02Z</updated>"
 			+ " <author>" + "   <name>John Doe</name>"
 			+ "   <email>johndoe@example.com</email>" + " </author>"
@@ -786,8 +788,8 @@ public class FeedDocTest implements Serializable {
 			assertTrue(e instanceof AtomSpecException);
 		}
 	}
-	
-	//debugging to see if we hit any CDATA sections.
+
+	// debugging to see if we hit any CDATA sections.
 	boolean checkForCDATA(XMLStreamReader reader) throws Exception {
 		while (reader.hasNext()) {
 			int next = reader.next();
@@ -990,23 +992,25 @@ public class FeedDocTest implements Serializable {
 		} catch (AtomSpecException e) {
 			fail("should not get here.");
 		}
-		
+
 		try {
 			// test bad date string
-			Published pub = feedDoc.buildPublished(null, "2009-10-15T11:11:30.52Z");
+			Published pub = feedDoc.buildPublished(null,
+					"2009-10-15T11:11:30.52Z");
 			assertTrue(pub.getText() != null);
 			assertTrue(pub.getText().equals("2009-10-15T11:11:30.52Z"));
 		} catch (AtomSpecException e) {
 			fail("should not get here.");
 		}
-		
+
 		try {
 			// test bad date string
 			feedDoc.buildPublished(null, "abcdefg");
 			fail("should not get here.");
 		} catch (AtomSpecException e) {
-			System.out.println("emesg: "+e.getLocalizedMessage());
-			assertEquals(e.getMessage(),"error trying to create the date element with string: abcdefg");
+			System.out.println("emesg: " + e.getLocalizedMessage());
+			assertEquals(e.getMessage(),
+					"error trying to create the date element with string: abcdefg");
 		}
 	}
 
@@ -1103,6 +1107,10 @@ public class FeedDocTest implements Serializable {
 
 			// read and write a full feed.
 			feed = feedDoc.readFeedToBean(mega);
+			BufferedWriter out = new BufferedWriter(new FileWriter("target/mega.xml"));
+			out.write(feed.toString());
+			out.flush();
+			out.close();
 			assertNotNull(feed.getId());
 			assertNull(feed.getGenerator().getAttribute("notHere"));
 			assertNotNull(feed.getAuthor("Bill Brown"));
@@ -1127,7 +1135,12 @@ public class FeedDocTest implements Serializable {
 			writer.flush();
 			writer.close();
 
+			int fileName = 1;
 			for (Entry ent : feed.getEntries().values()) {
+				out = new BufferedWriter(new FileWriter("target/"+(fileName++)+".xml"));
+				out.write(ent.toString());
+				out.flush();
+				out.close();
 				if (ent
 						.getId()
 						.getAtomUri()

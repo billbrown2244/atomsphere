@@ -199,4 +199,20 @@ public class Link implements Serializable {
 		}
 		return null;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("<link");
+		for (Attribute attribute : attributes) {
+			sb.append(attribute.toString());
+		}
+
+		if (content == null || content.equals("")) {
+			sb.append(" />");
+		} else {
+			sb.append(" >" + content + "</link>");
+		}
+
+		return sb.toString();
+	}
 }

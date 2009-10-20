@@ -24,8 +24,9 @@ import java.io.Serializable;
 
 /**
  * This class represents a text object.
+ * 
  * @author Bill Brown
- *
+ * 
  */
 class AtomPlainText implements Serializable {
 

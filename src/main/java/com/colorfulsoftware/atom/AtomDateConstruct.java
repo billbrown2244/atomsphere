@@ -211,4 +211,18 @@ class AtomDateConstruct implements Serializable {
 		}
 		return null;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		if (attributes != null) {
+			for (Attribute attribute : attributes) {
+				sb.append(attribute.toString());
+			}
+		}
+		// close the parent element
+		// and add the date string
+		sb.append(" >" + text);
+		return sb.toString();
+	}
 }

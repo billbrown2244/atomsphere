@@ -24,6 +24,8 @@ package com.colorfulsoftware.atom;
 import java.io.Serializable;
 import java.util.List;
 
+import com.colorfulsoftware.atom.AtomTextConstruct.ContentType;
+
 /**
  * This class represents an Atom 1.0 title element.
  * 
@@ -86,8 +88,21 @@ public class Title implements Serializable {
 	public Attribute getAttribute(String attrName) {
 		return title.getAttribute(attrName);
 	}
-	
-	AtomTextConstruct.ContentType getContentType(){
+
+	AtomTextConstruct.ContentType getContentType() {
 		return title.getContentType();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("<title");
+		sb.append(title.toString());
+		if (title.getContentType() == ContentType.EXTERNAL) {
+			sb.append(" />");
+		} else {
+			sb.append("</title>");
+		}
+
+		return sb.toString();
 	}
 }

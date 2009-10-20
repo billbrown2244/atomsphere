@@ -24,6 +24,8 @@ package com.colorfulsoftware.atom;
 import java.io.Serializable;
 import java.util.List;
 
+import com.colorfulsoftware.atom.AtomTextConstruct.ContentType;
+
 /**
  * This class represents an Atom 1.0 rights element.
  * 
@@ -85,8 +87,21 @@ public class Rights implements Serializable {
 	public Attribute getAttribute(String attrName) {
 		return rights.getAttribute(attrName);
 	}
-	
-	AtomTextConstruct.ContentType getContentType(){
+
+	AtomTextConstruct.ContentType getContentType() {
 		return rights.getContentType();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("<rights");
+		sb.append(rights.toString());
+		if (rights.getContentType() == ContentType.EXTERNAL) {
+			sb.append(" />");
+		} else {
+			sb.append("</rights>");
+		}
+
+		return sb.toString();
 	}
 }

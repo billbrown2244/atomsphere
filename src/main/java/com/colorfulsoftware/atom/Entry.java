@@ -288,4 +288,26 @@ public class Entry implements Serializable {
 	public Extension getExtension(String extName) {
 		return entryAdaptor.getExtension(extName);
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("<entry");
+		sb.append(entryAdaptor.toString());
+
+		if (published != null) {
+			sb.append(published.toString());
+		}
+		if (summary != null) {
+			sb.append(summary.toString());
+		}
+		if (source != null) {
+			sb.append(source.toString());
+		}
+		if (content != null) {
+			sb.append(content.toString());
+		}
+
+		sb.append("</entry>");
+		return sb.toString();
+	}
 }

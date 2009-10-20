@@ -244,4 +244,25 @@ class AtomTextConstruct implements Serializable {
 		}
 		return null;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		if (attributes != null) {
+			for (Attribute attribute : attributes) {
+				sb.append(attribute.toString());
+			}
+		}
+		// if there is content add it.
+		if (contentType != ContentType.EXTERNAL) {
+			sb.append(" >");
+			if (contentType == ContentType.XHTML) {
+				sb.append(divWrapperStart + text + divWrapperEnd);
+			} else {
+				sb.append(text);
+			}
+		}
+
+		return sb.toString();
+	}
 }

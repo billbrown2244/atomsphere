@@ -51,8 +51,8 @@ public class Icon implements Serializable {
 	Icon(List<Attribute> attributes, String atomUri) throws AtomSpecException {
 		this.icon = new AtomURIConstruct(attributes, atomUri);
 	}
-	
-	Icon(Icon icon){
+
+	Icon(Icon icon) {
 		this.icon = new AtomURIConstruct(icon.icon);
 	}
 
@@ -83,5 +83,13 @@ public class Icon implements Serializable {
 	 */
 	public Attribute getAttribute(String attrName) throws AtomSpecException {
 		return icon.getAttribute(attrName);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("<icon");
+		sb.append(icon.toString());
+		sb.append("</icon>");
+		return sb.toString();
 	}
 }

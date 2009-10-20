@@ -54,4 +54,9 @@ public class Email implements Serializable {
 	public String getText() {
 		return email.getText();
 	}
+
+	@Override
+	public String toString() {
+		return "<email>" + email.getText() + "</email>";
+	}
 }

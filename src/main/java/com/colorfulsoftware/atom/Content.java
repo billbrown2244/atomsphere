@@ -23,6 +23,8 @@ package com.colorfulsoftware.atom;
 import java.io.Serializable;
 import java.util.List;
 
+import com.colorfulsoftware.atom.AtomTextConstruct.ContentType;
+
 /**
  * This class represents an Atom 1.0 content element.
  * 
@@ -125,5 +127,18 @@ public class Content implements Serializable {
 
 	AtomTextConstruct.ContentType getContentType() {
 		return content.getContentType();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("<content");
+		sb.append(content.toString());
+		if (content.getContentType() == ContentType.EXTERNAL) {
+			sb.append(" />");
+		} else {
+			sb.append("</content>");
+		}
+
+		return sb.toString();
 	}
 }

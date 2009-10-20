@@ -24,6 +24,8 @@ package com.colorfulsoftware.atom;
 import java.io.Serializable;
 import java.util.List;
 
+import com.colorfulsoftware.atom.AtomTextConstruct.ContentType;
+
 /**
  * This class represents an Atom 1.0 subtitle element.
  * 
@@ -84,8 +86,21 @@ public class Subtitle implements Serializable {
 	public Attribute getAttribute(String attrName) {
 		return subtitle.getAttribute(attrName);
 	}
-	
-	AtomTextConstruct.ContentType getContentType(){
+
+	AtomTextConstruct.ContentType getContentType() {
 		return subtitle.getContentType();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("<subtitle");
+		sb.append(subtitle.toString());
+		if (subtitle.getContentType() == ContentType.EXTERNAL) {
+			sb.append(" />");
+		} else {
+			sb.append("</subtitle>");
+		}
+
+		return sb.toString();
 	}
 }

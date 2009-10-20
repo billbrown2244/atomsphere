@@ -107,4 +107,12 @@ public class Author implements Serializable {
 	public Extension getExtension(String extName) {
 		return person.getExtension(extName);
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("<author");
+		sb.append(person.toString());
+		sb.append("</author>");
+		return sb.toString();
+	}
 }
