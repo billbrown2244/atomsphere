@@ -326,6 +326,7 @@ class FeedReader implements Serializable {
 					updated = readUpdated(reader);
 					System.out.println("updated after: "+updated);
 				} else {// extension
+					System.out.println("reading extension: "+elementName);
 					extensions = readExtension(reader, extensions, elementName);
 				}
 				break;
