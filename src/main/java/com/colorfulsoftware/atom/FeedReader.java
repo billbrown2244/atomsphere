@@ -54,7 +54,9 @@ class FeedReader implements Serializable {
 	 *             if the stream cannot be parsed.
 	 */
 	Feed readFeed(XMLStreamReader reader) throws Exception {
-		feedDoc = new FeedDoc();
+		if(feedDoc == null){
+			feedDoc = new FeedDoc();
+		}
 		List<Attribute> attributes = null;
 		List<Author> authors = null;
 		List<Category> categories = null;
@@ -75,11 +77,9 @@ class FeedReader implements Serializable {
 		while (reader.hasNext()) {
 			switch (reader.next()) {
 
-			// so far: neither the stax-api or geronimo stax implementations
-			// can see this :(
-			// case XMLStreamConstants.START_DOCUMENT:
-			// feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
-			// break;
+			case XMLStreamConstants.START_DOCUMENT:
+				feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
+				break;
 
 			case XMLStreamConstants.START_ELEMENT:
 				elementName = getElementName(reader);
@@ -125,6 +125,7 @@ class FeedReader implements Serializable {
 					updated = readUpdated(reader);
 				} else if (elementName.equals("entry")
 						|| elementName.equals("atom:entry")) {
+					System.out.println("found entry in feeLevel:");
 					entries = readEntry(reader, entries);
 				} else {// extension
 					extensions = readExtension(reader, extensions, elementName);
@@ -168,13 +169,9 @@ class FeedReader implements Serializable {
 										"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
 	}
 
-	List<Attribute> getAttributes(XMLStreamReader reader) throws Exception {
+	private List<Attribute> getAttributes(XMLStreamReader reader)
+			throws Exception {
 		List<Attribute> attributes = new LinkedList<Attribute>();
-
-		if (reader.getEventType() == XMLStreamConstants.START_DOCUMENT) {
-			feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
-			reader.next();
-		}
 
 		int eventSkip = 0;
 		// add the namespace attributes.
@@ -185,8 +182,11 @@ class FeedReader implements Serializable {
 				attrName += ":" + reader.getNamespacePrefix(i);
 			}
 
-			attributes.add(feedDoc.buildAttribute(attrName, reader
-					.getNamespaceURI(i)));
+			if (reader.getNamespaceURI(i) != null) {
+				attributes.add(feedDoc.buildAttribute(attrName, reader
+						.getNamespaceURI(i)));
+			}
+			
 		}
 		for (int i = 0; i < reader.getAttributeCount(); i++) {
 			eventSkip++;
@@ -248,7 +248,11 @@ class FeedReader implements Serializable {
 
 	SortedMap<String, Entry> readEntry(XMLStreamReader reader,
 			SortedMap<String, Entry> entries) throws Exception {
-
+		System.out.println("entered entry:");
+		if(feedDoc == null){
+			feedDoc = new FeedDoc();
+		}
+		
 		if (entries == null) {
 			entries = new TreeMap<String, Entry>();
 		}
@@ -269,20 +273,23 @@ class FeedReader implements Serializable {
 		Source source = null;
 		String elementName = null;
 
-		attributes = getAttributes(reader);
-
 		while (reader.hasNext()) {
 			boolean breakOut = false;
 			switch (reader.next()) {
 
-			// case XMLStreamConstants.START_DOCUMENT:
-			// feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
-			// break;
+			case XMLStreamConstants.START_DOCUMENT:
+				feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
+				break;
 
 			case XMLStreamConstants.START_ELEMENT:
-				elementName = getElementName(reader);
 				// call each feed elements read method depending on the name
-				if (elementName.equals("id") || elementName.equals("atom:id")) {
+				elementName = getElementName(reader);
+				System.out.println("elementName: "+elementName);
+				if (elementName.equals("entry")
+						|| elementName.equals("atom:entry")) {
+					attributes = getAttributes(reader);
+				} else if (elementName.equals("id")
+						|| elementName.equals("atom:id")) {
 					id = readId(reader);
 				} else if (elementName.equals("author")
 						|| elementName.equals("atom:author")) {
@@ -317,6 +324,7 @@ class FeedReader implements Serializable {
 				} else if (elementName.equals("updated")
 						|| elementName.equals("atom:updated")) {
 					updated = readUpdated(reader);
+					System.out.println("updated after: "+updated);
 				} else {// extension
 					extensions = readExtension(reader, extensions, elementName);
 				}
@@ -324,6 +332,7 @@ class FeedReader implements Serializable {
 
 			case XMLStreamConstants.END_ELEMENT:
 				elementName = getElementName(reader);
+				System.out.println("endElementName: "+elementName);
 				if (elementName.equals("entry")
 						|| elementName.equals("atom:entry")) {
 					breakOut = true;
@@ -338,10 +347,12 @@ class FeedReader implements Serializable {
 		}
 
 		// throw an error if the updated entry is not available here.
+		System.out.println("updated after 2: "+updated);
 		if (updated == null) {
 			throw new AtomSpecException(
 					"atom:entry elements MUST contain exactly one atom:updated element.");
 		}
+		System.out.println("updated text: "+updated.getText());
 		entries.put(updated.getText(), feedDoc.buildEntry(id, title, updated,
 				rights, content, authors, categories, contributors, links,
 				attributes, extensions, published, summary, source));
@@ -382,7 +393,7 @@ class FeedReader implements Serializable {
 	}
 
 	// used for xhtml.
-	boolean containsXHTML(List<Attribute> attributes) {
+	private boolean containsXHTML(List<Attribute> attributes) {
 		Attribute xhtml = feedDoc.getAttributeFromGroup(attributes, "type");
 		return ((xhtml != null) && (xhtml.getValue().equals("xhtml") || xhtml
 				.getValue().equals("html")));
@@ -476,7 +487,8 @@ class FeedReader implements Serializable {
 	}
 
 	Published readPublished(XMLStreamReader reader) throws Exception {
-		return feedDoc.buildPublished(getAttributes(reader),reader.getElementText());
+		return feedDoc.buildPublished(getAttributes(reader), reader
+				.getElementText());
 	}
 
 	Content readContent(XMLStreamReader reader) throws Exception {
@@ -492,7 +504,8 @@ class FeedReader implements Serializable {
 	}
 
 	Updated readUpdated(XMLStreamReader reader) throws Exception {
-		return feedDoc.buildUpdated(getAttributes(reader),reader.getElementText());
+		return feedDoc.buildUpdated(getAttributes(reader), reader
+				.getElementText());
 	}
 
 	Title readTitle(XMLStreamReader reader) throws Exception {
@@ -507,45 +520,7 @@ class FeedReader implements Serializable {
 		return feedDoc.buildTitle(title, attributes);
 	}
 
-	public static void checkForCDATA(XMLStreamReader reader) throws Exception {
-		while (reader.hasNext()) {
-			int next = reader.next();
-			switch (next) {
-			case XMLStreamConstants.START_DOCUMENT:
-				break;
-			case XMLStreamConstants.START_ELEMENT:
-				break;
-			case XMLStreamConstants.END_ELEMENT:
-				break;
-			case XMLStreamConstants.ATTRIBUTE:
-				break;
-			case XMLStreamConstants.CDATA:
-				break;
-			case XMLStreamConstants.CHARACTERS:
-				break;
-			case XMLStreamConstants.COMMENT:
-				break;
-			case XMLStreamConstants.DTD:
-				break;
-			case XMLStreamConstants.END_DOCUMENT:
-				break;
-			case XMLStreamConstants.ENTITY_DECLARATION:
-				break;
-			case XMLStreamConstants.ENTITY_REFERENCE:
-				break;
-			case XMLStreamConstants.NAMESPACE:
-				break;
-			case XMLStreamConstants.NOTATION_DECLARATION:
-				break;
-			case XMLStreamConstants.PROCESSING_INSTRUCTION:
-				break;
-			case XMLStreamConstants.SPACE:
-				break;
-			}
-		}
-	}
-
-	String readEncodedHTML(XMLStreamReader reader, String parentElement)
+	private String readEncodedHTML(XMLStreamReader reader, String parentElement)
 			throws XMLStreamException, Exception {
 		StringBuilder xhtml = new StringBuilder();
 		String elementName = null;
@@ -595,7 +570,7 @@ class FeedReader implements Serializable {
 		return xhtml.toString();
 	}
 
-	String readXHTML(XMLStreamReader reader, String parentElement)
+	private String readXHTML(XMLStreamReader reader, String parentElement)
 			throws Exception {
 		StringBuffer xhtml = new StringBuffer();
 		String elementName = null;
@@ -630,9 +605,11 @@ class FeedReader implements Serializable {
 				}
 				break;
 
-			case XMLStreamConstants.CDATA:
-				xhtml.append("<![CDATA[" + reader.getText() + "]]>");
-				break;
+			// so far no parsers seem to be able to detect CDATA :(. Maybe it's
+			// not necessary?
+			// case XMLStreamConstants.CDATA:
+			// xhtml.append("<![CDATA[" + reader.getText() + "]]>");
+			// break;
 
 			default:
 				// escape the necessary characters.

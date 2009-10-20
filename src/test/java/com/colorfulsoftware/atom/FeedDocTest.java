@@ -33,6 +33,7 @@ import java.util.TreeMap;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
@@ -49,7 +50,6 @@ import com.colorfulsoftware.atom.Entry;
 import com.colorfulsoftware.atom.Extension;
 import com.colorfulsoftware.atom.Feed;
 import com.colorfulsoftware.atom.FeedDoc;
-import com.colorfulsoftware.atom.FeedReader;
 import com.colorfulsoftware.atom.FeedWriter;
 import com.colorfulsoftware.atom.Generator;
 import com.colorfulsoftware.atom.Icon;
@@ -133,7 +133,7 @@ public class FeedDocTest implements Serializable {
 	private String badEntry1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\" id=\"notCool\">"
 			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
-			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+			+ "<updated>2008-01-02T00:00:00.00-06:00</updated>"
 			+ "<title>test entry 1</title>" + "</entry>";
 
 	private String expectedFeed1 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
@@ -359,28 +359,28 @@ public class FeedDocTest implements Serializable {
 	private String brokenEntry1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
 			// + "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
-			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+			+ "<updated>2008-01-03T00:00:00.00-06:00</updated>"
 			+ "<title>test entry 1</title>" + "</entry>";
 
 	// missing title
 	private String brokenEntry2 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
 			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
-			+ "<updated>2008-01-01T00:00:00.00-06:00</updated></entry>";
+			+ "<updated>2008-01-04T00:00:00.00-06:00</updated></entry>";
 	// + "<title>test entry 1</title>" + "</entry>";
 
 	// missing updated
 	private String brokenEntry3 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
 			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
-			// + "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+			// + "<updated>2008-01-05T00:00:00.00-06:00</updated>"
 			+ "<title>test entry 1</title>" + "</entry>";
 
 	// missing summary attribute for empty content element
 	private String brokenEntry4 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
 			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
-			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+			+ "<updated>2008-01-06T00:00:00.00-06:00</updated>"
 			+ "<title>test entry 1</title>"
 			+ "<content src=\"missingSummaryAttr\" />" + "</entry>";
 
@@ -388,7 +388,7 @@ public class FeedDocTest implements Serializable {
 	private String brokenEntry5 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
 			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
-			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+			+ "<updated>2008-01-07T00:00:00.00-06:00</updated>"
 			+ "<title>test entry 1</title>"
 			+ "<content type=\"pdf\">this is no good</content>" + "</entry>";
 
@@ -396,7 +396,7 @@ public class FeedDocTest implements Serializable {
 	private String brokenEntry6 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\" fakeAttribute=\"noGood\">"
 			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
-			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+			+ "<updated>2008-01-08T00:00:00.00-06:00</updated>"
 			+ "<title>test entry 1</title>" + "</entry>";
 
 	/**
@@ -733,7 +733,7 @@ public class FeedDocTest implements Serializable {
 			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 			XMLStreamReader reader = inputFactory
 					.createXMLStreamReader(new java.io.StringReader(title5));
-			FeedReader.checkForCDATA(reader);
+			assertFalse(checkForCDATA(reader));
 
 			feed1 = feedDoc.readFeedToBean(title5);
 			assertNotNull(feed1.getTitle());
@@ -785,6 +785,46 @@ public class FeedDocTest implements Serializable {
 			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);
 		}
+	}
+	
+	//debugging to see if we hit any CDATA sections.
+	boolean checkForCDATA(XMLStreamReader reader) throws Exception {
+		while (reader.hasNext()) {
+			int next = reader.next();
+			switch (next) {
+			case XMLStreamConstants.START_DOCUMENT:
+				break;
+			case XMLStreamConstants.START_ELEMENT:
+				break;
+			case XMLStreamConstants.END_ELEMENT:
+				break;
+			case XMLStreamConstants.ATTRIBUTE:
+				break;
+			case XMLStreamConstants.CDATA:
+				return true;
+			case XMLStreamConstants.CHARACTERS:
+				break;
+			case XMLStreamConstants.COMMENT:
+				break;
+			case XMLStreamConstants.DTD:
+				break;
+			case XMLStreamConstants.END_DOCUMENT:
+				break;
+			case XMLStreamConstants.ENTITY_DECLARATION:
+				break;
+			case XMLStreamConstants.ENTITY_REFERENCE:
+				break;
+			case XMLStreamConstants.NAMESPACE:
+				break;
+			case XMLStreamConstants.NOTATION_DECLARATION:
+				break;
+			case XMLStreamConstants.PROCESSING_INSTRUCTION:
+				break;
+			case XMLStreamConstants.SPACE:
+				break;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -911,6 +951,7 @@ public class FeedDocTest implements Serializable {
 					"http://www.earthbeats.net/drops.xml"));
 			assertNotNull(entry);
 		} catch (Exception e) {
+			e.printStackTrace();
 			fail("should not get here;");
 		}
 	}
