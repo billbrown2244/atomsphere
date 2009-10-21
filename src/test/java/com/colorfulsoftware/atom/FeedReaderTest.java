@@ -242,8 +242,6 @@ public class FeedReaderTest implements Serializable {
 			out.write(feed.toString());
 			out.flush();
 			out.close();
-			System.out.println("feed\n"+feed.toString());
-			System.out.println("entension1\n"+extension1);
 			for (Entry entry : feed.getEntries().values()) {
 				assertNotNull(entry.getExtensions());
 			}

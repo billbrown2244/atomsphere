@@ -377,7 +377,7 @@ public class Feed implements Serializable {
 		if (logo != null) {
 			sb.append(logo.toString());
 		}
-		
+
 		if (entries != null) {
 			for (Entry entry : entries.values()) {
 				sb.append(entry.toString());

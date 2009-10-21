@@ -80,7 +80,7 @@ class FeedReader implements Serializable {
 			case XMLStreamConstants.START_ELEMENT:
 				elementName = getElementName(reader);
 
-					 if (elementName.equals("author")
+				if (elementName.equals("author")
 						|| elementName.equals("atom:author")) {
 					authors = readAuthor(reader, authors);
 				} else if (elementName.equals("category")
@@ -118,7 +118,6 @@ class FeedReader implements Serializable {
 					updated = readUpdated(reader);
 				} else if (elementName.equals("entry")
 						|| elementName.equals("atom:entry")) {
-					System.out.println("found entry in feeLevel:");
 					entries = readEntry(reader, entries);
 				} else {// extension
 					extensions = readExtension(reader, extensions, elementName);
@@ -245,7 +244,6 @@ class FeedReader implements Serializable {
 
 	SortedMap<String, Entry> readEntry(XMLStreamReader reader,
 			SortedMap<String, Entry> entries) throws Exception {
-		System.out.println("entered entry:");
 		if (feedDoc == null) {
 			feedDoc = new FeedDoc();
 		}
@@ -275,16 +273,7 @@ class FeedReader implements Serializable {
 			switch (reader.next()) {
 
 			case XMLStreamConstants.START_ELEMENT:
-				// call each feed elements read method depending on the name
 				elementName = getElementName(reader);
-				System.out.println("elementName: " + elementName);
-				// this may be called with a <feed> wrapping entries so we
-				// need to check for the feed here as wellentry.
-				// if (elementName.equals("entry")
-				// || elementName.equals("atom:entry")) {
-				// attributes = getAttributes(reader);
-				// System.out.println("seen entry.");
-				// } else
 				if (elementName.equals("id") || elementName.equals("atom:id")) {
 					id = readId(reader);
 				} else if (elementName.equals("author")
@@ -320,7 +309,6 @@ class FeedReader implements Serializable {
 				} else if (elementName.equals("updated")
 						|| elementName.equals("atom:updated")) {
 					updated = readUpdated(reader);
-					System.out.println("updated after: " + updated);
 					// this may be called with a <feed> wrapping entries so we
 					// need to skip all top level feed elements until we get to
 					// the entry.
@@ -336,14 +324,12 @@ class FeedReader implements Serializable {
 						|| elementName.equals("atom:logo")) {
 					break;
 				} else {// extension
-					System.out.println("reading extension: " + elementName);
 					extensions = readExtension(reader, extensions, elementName);
 				}
 				break;
 
 			case XMLStreamConstants.END_ELEMENT:
 				elementName = getElementName(reader);
-				System.out.println("endElementName: " + elementName);
 				if (elementName.equals("entry")
 						|| elementName.equals("atom:entry")) {
 					breakOut = true;
@@ -358,12 +344,10 @@ class FeedReader implements Serializable {
 		}
 
 		// throw an error if the updated entry is not available here.
-		System.out.println("updated after 2: " + updated);
 		if (updated == null) {
 			throw new AtomSpecException(
 					"atom:entry elements MUST contain exactly one atom:updated element.");
 		}
-		System.out.println("updated text: " + updated.getText());
 		entries.put(updated.getText(), feedDoc.buildEntry(id, title, updated,
 				rights, content, authors, categories, contributors, links,
 				attributes, extensions, published, summary, source));

@@ -89,7 +89,7 @@ public class FeedDocTest implements Serializable {
 			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\" xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">"
 			+ "<id local:something=\"testVal\">http://colorfulsoftware.localhost/projects/atomsphere/atom.xml</id>"
 			+ "<updated local:somethingElse=\"fakeValue\">2007-03-08T20:52:40.70-06:00</updated>"
-			+ "<generator uri=\"http://www.colorfulsoftware.com/projects/atomsphere\" version=\"1.0.2.0\">Atomsphere</generator>"
+			+ "<generator uri=\"http://www.colorfulsoftware.com/projects/atomsphere\" version=\"1.0.2.0\"></generator>"
 			+ "<title type=\"xhtml\"><div xmlns=\"http://www.w3.org/1999/xhtml\">Atomsphere a <b>great atom 1.0 parser </b></div></title>  <subtitle>a java atom feed library</subtitle>"
 			+ "<author local:testAttr=\"testVal\"><test:test xmlns:test=\"http://www.w3.org/1999/test\" /><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 			+ "<contributor><name>Other Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></contributor>"
@@ -97,7 +97,10 @@ public class FeedDocTest implements Serializable {
 			+ "<category term=\"math\" scheme=\"http://www.colorfulsoftware.com/projects/atomsphere/\" label=\"math\" />"
 			+ "<category term=\"science\" scheme=\"http://www.colorfulsoftware.com/projects/atomsphere/\" label=\"science\"/>"
 			+ "<category term=\"thing\" />"
+			+ "<category term=\"undefined\"></category>"
+			+ "<category term=\"undefined\">This is valid.  See http://www.atomenabled.org/developers/syndication/atom-format-spec.php The \"atom:category\" element conveys information about a category associated with an entry or feed. This specification assigns no meaning to the content (if any) of this element. (#Other Extensibility section</category>"
 			+ "<link href=\"http://www.colorfulsoftware.com/projects/atomsphere/atom.xml\" rel=\"self\" type=\"application/atom+xml\" hreflang=\"en-us\" title=\"cool site\" />"
+			+ "<link href=\"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0/sort.rnc\" rel=\"alternate\" type=\"application/atom+xml\" hreflang=\"en-us\" title=\"relax ng\" >This is also valid.  See http://www.atomenabled.org/developers/syndication/atom-format-spec.php The \"atom:link\" element defines a reference from an entry or feed to a Web resource. This specification assigns no meaning to the content (if any) of this element. (#Other Extensibility section)</link>"
 			+ "<icon local:testAttr=\"testVal\">http://www.minoritydirectory.net/images/logo.gif</icon>"
 			+ "<logo local:testAttr=\"testVal\">http://www.minoritydirectory.net/images/logo.gif</logo>"
 			+ "<rights xmlns=\"http://www.w3.org/2005/Atom\">Copyright 2007</rights>"
@@ -114,6 +117,23 @@ public class FeedDocTest implements Serializable {
 			+ "<content type=\"html\">&lt;ul&gt; &lt;li&gt;&lt;span class=\"boldText\"&gt;Atomsphere&lt;/span&gt; isa java library that allows you to create and modify atom 1.0 feeds.&lt;/li&gt; &lt;li&gt;It is distributed under the GNU GPL license and can be used in any manner complient with the license.&lt;/li&gt; &lt;li&gt;It is also packaged as a servlet-lib for use in web applications.&lt;/li&gt; &lt;li&gt;It is also packaged as a customtag library to display feeds on a webapage.&lt;/li&gt; &lt;li&gt;It also comes with an example webapp which demonstrates some example uses of the library.&lt;/li&gt; &lt;li&gt;It is written to be tied as closely as possible to the current atom specification found &lt;a href=\"http://www.atomenabled.org/developers/syndication/atom-format-spec.php\"&gt;here&lt;/a&gt;.&lt;/li&gt; &lt;/ul&gt;</content>"
 			+ "<local:element xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">someitng that is an extension</local:element>"
 			+ "</entry>"
+			+ "<entry xmlns:sort=\"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0\" >"
+			+ "<source><id>http://www.minoritydirectory.net/latest.xml</id>"
+			+ "<updated>2009-10-20T08:23:27.830-06:00</updated>"
+			+ "<generator>What up doh?</generator>"
+			+ "<title>Latest Updates...</title><author><name>The Minority Directory</name></author>"
+			+ "<link href=\"http://www.minoritydirectory.net/latest.xml\" rel=\"self\" />"
+			+ "<icon>http://www.minoritydirectory.net/images/favicon.ico</icon>"
+			+ "<logo>http://www.minoritydirectory.net/images/logo.gif</logo>"
+			+ "<sort:desc type=\"updated\" />"
+			+ "</source><id>http://www.minoritydirectory.net/Virtual+Quest+llc</id>"
+			+ "<updated>2009-10-14T15:25:39.00-06:00</updated>"
+			+ "<title type=\"html\">&lt;a href=\"http://www.minoritydirectory.net/businessservices\" title=\"See Full Listing...\" >Virtual Quest llc&lt;/a></title>"
+			+ "<author><name>Virtual Quest llc</name></author>"
+			+ "<link href=\"http://www.minoritydirectory.net/businessservices\" rel=\"alternate\" />"
+			+ "<summary type=\"html\">&lt;br />&lt;span class=\"certifications\">Certifications:&lt;/span> &lt;a href=\"http://www.nmsdc.org/nmsdc/\" title=\"The National Minority Supplier Development Council\">MBE&lt;/a> &lt;br />Solutions group for web, windows and software development</summary>"
+			+ "</entry>"
+			+ "<entry><id>http://abc.net</id><title>dude man</title><updated>2007-03-08T20:52:40.70-06:00</updated><summary>Yah Man</summary><content src=\"http://www.jamaicafunk.net\" /></entry>"
 			+ "<entry><id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#Requirements</id>"
 			+ "<updated>2008-03-02T12:59:54.274-06:00</updated><title>Requirements</title><published>2007-02-26T12:58:53.197-06:00</published>"
 			+ "<summary>Requirements for using the libraries</summary>"
@@ -657,7 +677,6 @@ public class FeedDocTest implements Serializable {
 			feed1 = feedDoc.readFeedToBean(badFeed1);
 			fail("should not get here.");
 		} catch (Exception e) {
-			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);
 			assertEquals(e.getMessage(),
 					"Extension element names SHOULD NOT be null and SHOULD NOT be blank.");
@@ -667,7 +686,6 @@ public class FeedDocTest implements Serializable {
 			feed1 = feedDoc.readFeedToBean(badFeed2);
 			fail("should not get here.");
 		} catch (Exception e) {
-			e.printStackTrace();
 			assertTrue(e instanceof javax.xml.stream.XMLStreamException);
 		}
 
@@ -675,7 +693,6 @@ public class FeedDocTest implements Serializable {
 			feed1 = feedDoc.readFeedToBean(badFeed3);
 			fail("should not get here.");
 		} catch (Exception e) {
-			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);
 			assertEquals(e.getMessage(),
 					"Unsupported attribute nono in the atom:generator element.");
@@ -685,7 +702,6 @@ public class FeedDocTest implements Serializable {
 			feed1 = feedDoc.readFeedToBean(badFeed4);
 			fail("should not get here.");
 		} catch (Exception e) {
-			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);
 			assertEquals(
 					e.getMessage(),
@@ -696,7 +712,6 @@ public class FeedDocTest implements Serializable {
 			feed1 = feedDoc.readFeedToBean(badFeed5);
 			fail("should not get here.");
 		} catch (Exception e) {
-			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);
 			assertEquals(
 					e.getMessage(),
@@ -1008,7 +1023,6 @@ public class FeedDocTest implements Serializable {
 			feedDoc.buildPublished(null, "abcdefg");
 			fail("should not get here.");
 		} catch (AtomSpecException e) {
-			System.out.println("emesg: " + e.getLocalizedMessage());
 			assertEquals(e.getMessage(),
 					"error trying to create the date element with string: abcdefg");
 		}
@@ -1107,7 +1121,8 @@ public class FeedDocTest implements Serializable {
 
 			// read and write a full feed.
 			feed = feedDoc.readFeedToBean(mega);
-			BufferedWriter out = new BufferedWriter(new FileWriter("target/mega.xml"));
+			BufferedWriter out = new BufferedWriter(new FileWriter(
+					"target/mega.xml"));
 			out.write(feed.toString());
 			out.flush();
 			out.close();
@@ -1137,7 +1152,8 @@ public class FeedDocTest implements Serializable {
 
 			int fileName = 1;
 			for (Entry ent : feed.getEntries().values()) {
-				out = new BufferedWriter(new FileWriter("target/"+(fileName++)+".xml"));
+				out = new BufferedWriter(new FileWriter("target/"
+						+ (fileName++) + ".xml"));
 				out.write(ent.toString());
 				out.flush();
 				out.close();
@@ -1198,7 +1214,8 @@ public class FeedDocTest implements Serializable {
 			List<Category> cats = feed.getCategories();
 			for (Category cat : cats) {
 				assertNotNull(cat.getTerm());
-				if (!cat.getTerm().getValue().equals("thing")) {
+				if (!cat.getTerm().getValue().equals("thing")
+						&& !cat.getTerm().getValue().equals("undefined")) {
 					assertNotNull(cat.getLabel());
 					assertNotNull(cat.getScheme());
 				}
