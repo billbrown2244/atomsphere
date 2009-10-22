@@ -74,7 +74,8 @@ public class Generator implements Serializable {
 
 		this.version = getAttribute("version");
 
-		if (attributes == null && text == null) {
+		// specification customization
+		if (attributes == null && (text == null || text.equals(""))) {
 			throw new AtomSpecException(
 					"generator elements SHOULD have either a uri or version attribute or non empty content.");
 		}

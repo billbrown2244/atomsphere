@@ -24,9 +24,11 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -59,10 +61,10 @@ public class FeedWriterTest implements Serializable {
 	private String queryStringXHTML = "<content type=\"xhtml\">"
 			+ "<div xmlns=\"http://www.w3.org/1999/xhtml\"> "
 			+ "this is a querystring test <a href=\"http://www.google.com?"
-			+ "q=test%20text&a=hello\">link</a>.</div></content>";
+			+ "q=test%20text&amp;a=hello\">link</a>.</div></content>";
 	private String xhtml1 = "this is a test "
 			+ "<a href=\"http://www.google.com?"
-			+ "q=test%20text&a=hello\">link</a>.  "
+			+ "q=test%20text&amp;a=hello\">link</a>.  "
 			+ "Can we put arbitrary xhtml here?"
 			+ "<hr />I can't say for sure. <span>hello</span>";
 	private String xhtml2 = "<h4 >Installation (atomsphere library)</h4>"
@@ -291,11 +293,14 @@ public class FeedWriterTest implements Serializable {
 					.createXMLStreamReader(
 							new FileInputStream("target/xhtml.xml"));
 			Content content = (new FeedReader()).readContent(reader);
-
-			assertTrue(content.getContent()
-					.indexOf(
-							"href=\"http://www.google.com?"
-									+ "q=test%20text&a=hello\"") > 0);
+			BufferedWriter out = new BufferedWriter(new FileWriter(
+					"target/content.xml"));
+			out.write(content.toString());
+			out.flush();
+			out.close();
+			assertTrue(content.getContent().indexOf(
+					"href=\"http://www.google.com?"
+							+ "q=test%20text&amp;a=hello\"") > 0);
 
 		} catch (Exception e) {
 			e.printStackTrace();

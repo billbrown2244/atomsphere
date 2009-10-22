@@ -115,13 +115,16 @@ public class FeedDocTest implements Serializable {
 			+ "<category term=\"science\" scheme=\"http://www.colorfulsoftware.com/projects/atomsphere/\" label=\"science\"/>"
 			+ "<link href=\"http://www.colorfulsoftware.com/projects/atomsphere/atom.xml\" rel=\"alternate\" type=\"application/atom+xml\" hreflang=\"en-us\" title=\"cool site\" />"
 			+ "<content type=\"html\">&lt;ul&gt; &lt;li&gt;&lt;span class=\"boldText\"&gt;Atomsphere&lt;/span&gt; isa java library that allows you to create and modify atom 1.0 feeds.&lt;/li&gt; &lt;li&gt;It is distributed under the GNU GPL license and can be used in any manner complient with the license.&lt;/li&gt; &lt;li&gt;It is also packaged as a servlet-lib for use in web applications.&lt;/li&gt; &lt;li&gt;It is also packaged as a customtag library to display feeds on a webapage.&lt;/li&gt; &lt;li&gt;It also comes with an example webapp which demonstrates some example uses of the library.&lt;/li&gt; &lt;li&gt;It is written to be tied as closely as possible to the current atom specification found &lt;a href=\"http://www.atomenabled.org/developers/syndication/atom-format-spec.php\"&gt;here&lt;/a&gt;.&lt;/li&gt; &lt;/ul&gt;</content>"
-			+ "<local:element xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">someitng that is an extension</local:element>"
+			+ "<local:element xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">something that is an extension.</local:element>"
 			+ "</entry>"
-			+ "<entry xmlns:sort=\"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0\" >"
-			+ "<source><id>http://www.minoritydirectory.net/latest.xml</id>"
+			+ "<entry>"
+			+ "<source xmlns:sort=\"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0\"><id>http://www.minoritydirectory.net/latest.xml</id>"
 			+ "<updated>2009-10-20T08:23:27.830-06:00</updated>"
 			+ "<generator>What up doh?</generator>"
-			+ "<title>Latest Updates...</title><author><name>The Minority Directory</name></author>"
+			+ "<category term=\"purpose\" label=\"Organization Listings for Minorities in the USA\" />"
+			+ "<title>Latest Updates...</title><subtitle>A much needed resource.</subtitle>"
+			+ "<rights>Free Speech</rights>"
+			+ "<author><name>The Minority Directory</name></author><contributor><name>The People</name></contributor>"
 			+ "<link href=\"http://www.minoritydirectory.net/latest.xml\" rel=\"self\" />"
 			+ "<icon>http://www.minoritydirectory.net/images/favicon.ico</icon>"
 			+ "<logo>http://www.minoritydirectory.net/images/logo.gif</logo>"
@@ -191,10 +194,21 @@ public class FeedDocTest implements Serializable {
 			+ "   <updated>2003-12-13T18:30:02Z</updated>"
 			+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
 
+	private String expectedEntryExt = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
+			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+			+ "<author><name>anyone</name></author>"
+			+ "<title>test entry 1</title>"
+			+ "<link href=\"http://www.somewhere.com\" rel=\"alternate\" />"
+			+ "<rights type=\"xhtml\"><div xmlns=\"http://www.w3.org/1999/xhtml\">A marked up <br /> rights.This is <span style=\"color:blue;\">blue text :). <hr id=\"unique\" class=\"phat\" /> <a href=\"http://maps.google.com?q=something&amp;b=somethingElse\">a fake map link</a></span>. </div></rights>"
+			+ "<local:element xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">something that is an extension <local:embedded with=\"attribute\" /> Is this ok?</local:element>"
+			+ "</entry>";
+
 	private String badFeed1 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">"
 			+ " <title>Example Feed</title>"
-			+ " <subtitle>A subtitle.</subtitle>"
+			+ " <subtitle type=\"xhtml\"><div>A marked up <br /> subtitle.</div></subtitle>"
 			+ " <link href=\"http://example.org/feed/\" rel=\"self\"/>"
 			+ " <link href=\"http://example.org/\"/>" + " <local:></local:>"
 			+ " <updated xml:lang=\"en-US\">2003-12-13T18:30:02Z</updated>"
@@ -601,7 +615,8 @@ public class FeedDocTest implements Serializable {
 			Feed feed2 = feedDoc.readFeedToBean(new File("target/out2.xml"));
 			assertNotNull(feed2);
 		} catch (Exception e) {
-			assertTrue(e instanceof AtomSpecException);
+			e.printStackTrace();
+			fail("should not get here.");
 		}
 	}
 
@@ -1182,6 +1197,7 @@ public class FeedDocTest implements Serializable {
 					assertNotNull(ent.getExtension("local:element"));
 					assertNull(ent.getExtension("local:notthere"));
 					assertNotNull(ent.getPublished().getAttribute("xmlns"));
+					assertNotNull(ent.getPublished().getDateTime());
 					assertNull(ent.getSummary().getAttribute("sayWhat"));
 
 					Contributor cont = ent.getContributor("Bill Brown");
@@ -1203,6 +1219,18 @@ public class FeedDocTest implements Serializable {
 					assertNull(ent.getLink("http://www.fakeness.net"));
 					assertNotNull(ent.getExtension("local:element"));
 					assertNull(ent.getExtension("local:notthere"));
+				}
+
+				// test the source attribute
+				if (ent.getSource() != null) {
+					Source source = ent.getSource();
+					assertNotNull(source.getAttribute("xmlns:sort"));
+					assertNotNull(source.getAuthor("The Minority Directory"));
+					assertNotNull(source.getContributor("The People"));
+					assertNotNull(source.getCategory("purpose"));
+					assertNotNull(source
+							.getLink("http://www.minoritydirectory.net/latest.xml"));
+					assertNotNull(source.getExtension("sort:desc"));
 				}
 			}
 
@@ -1359,6 +1387,58 @@ public class FeedDocTest implements Serializable {
 		} catch (AtomSpecException e) {
 			e.printStackTrace();
 			fail("this shouldn't happen");
+		}
+	}
+
+	/**
+	 * test failure of an empty generator
+	 */
+	@Test
+	public void testGenerator() {
+		try {
+			feedDoc.buildGenerator(null, "");
+			fail("should not get here.");
+		} catch (Exception e) {
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(
+					e.getMessage(),
+					"generator elements SHOULD have either a uri or version attribute or non empty content.");
+		}
+	}
+
+	/**
+	 * test failure of an empty generator
+	 */
+	@Test
+	public void testExtension() {
+		try {
+			Entry ent = feedDoc.readEntryToBean(expectedEntryExt);
+			BufferedWriter out = new BufferedWriter(new FileWriter(
+					"target/extension.xml"));
+			out.write(ent.toString());
+			out.flush();
+			out.close();
+			Extension ext = ent.getExtension("local:element");
+			assertNotNull(ext);
+			Attribute attr = ext.getAttribute("xmlns:local");
+			assertNotNull(attr);
+			
+			FeedWriter feedWriter2 = new FeedWriter();
+			XMLStreamWriter writer2 = XMLOutputFactory.newInstance()
+					.createXMLStreamWriter(
+							new FileOutputStream("target/extension2.xml"));
+			SortedMap<String, Entry> entries = new TreeMap<String, Entry>();
+			entries.put("key",ent);
+			feedWriter2.writeEntries(writer2, entries);
+			writer2.flush();
+			writer2.close();
+			fail();
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(
+					e.getMessage(),
+					"generator elements SHOULD have either a uri or version attribute or non empty content.");
 		}
 	}
 

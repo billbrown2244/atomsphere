@@ -64,7 +64,7 @@ public class Extension implements Serializable {
 	Extension(String elementName, List<Attribute> attributes, String content)
 			throws AtomSpecException {
 
-		// spec doesn't require it but elementName should be present
+		// specification customization
 		if (elementName == null || elementName.equals("")) {
 			throw new AtomSpecException(
 					"Extension element names SHOULD NOT be null and SHOULD NOT be blank.");

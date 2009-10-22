@@ -238,7 +238,8 @@ public class FeedReaderTest implements Serializable {
 			Feed feed = feedReader.readFeed(reader);
 			assertNotNull(feed.getExtensions());
 			assertNotNull(feed.getEntries());
-			BufferedWriter out = new BufferedWriter(new FileWriter("target/dump2.xml"));
+			BufferedWriter out = new BufferedWriter(new FileWriter(
+					"target/dump2.xml"));
 			out.write(feed.toString());
 			out.flush();
 			out.close();

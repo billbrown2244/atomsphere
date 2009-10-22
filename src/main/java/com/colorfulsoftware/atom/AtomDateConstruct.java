@@ -83,6 +83,7 @@ class AtomDateConstruct implements Serializable {
 			}
 		}
 
+		// specification customization
 		if (dateTime == null) {
 			throw new AtomSpecException(
 					"AtomDateConstruct Dates SHOULD NOT be null.");

@@ -47,6 +47,7 @@ public class Attribute implements Serializable {
 
 	// use the factory method in the FeedDoc.
 	Attribute(String name, String value) throws AtomSpecException {
+		// specification customization
 		if (name == null || name.equals("")) {
 			throw new AtomSpecException(
 					"Attributes SHOULD NOT be null and SHOULD NOT be blank.");

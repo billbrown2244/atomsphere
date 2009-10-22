@@ -24,8 +24,6 @@ package com.colorfulsoftware.atom;
 import java.io.Serializable;
 import java.util.List;
 
-import com.colorfulsoftware.atom.AtomTextConstruct.ContentType;
-
 /**
  * This class represents an Atom 1.0 summary element.
  * 
@@ -100,14 +98,6 @@ public class Summary implements Serializable {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder("<summary");
-		sb.append(summary.toString());
-		if (summary.getContentType() == ContentType.EXTERNAL) {
-			sb.append(" />");
-		} else {
-			sb.append("</summary>");
-		}
-
-		return sb.toString();
+		return "<summary" + summary.toString() + "</summary>";
 	}
 }
