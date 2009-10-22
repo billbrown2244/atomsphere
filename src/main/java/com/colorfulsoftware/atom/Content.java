@@ -109,6 +109,10 @@ public class Content implements Serializable {
 	String getDivWrapperStart() {
 		return content.getDivWrapperStart();
 	}
+	
+	Attribute getDivWrapperStartAttr() {
+		return content.getDivWrapperStartAttr();
+	}
 
 	String getDivWrapperEnd() {
 		return content.getDivWrapperEnd();

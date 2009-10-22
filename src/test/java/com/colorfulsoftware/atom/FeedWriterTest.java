@@ -245,10 +245,10 @@ public class FeedWriterTest implements Serializable {
 			writer.close();
 		}
 
-		new File("target/out.xml").deleteOnExit();
-		new File("target/out2.xml").deleteOnExit();
-		new File("target/xhtml.xml").deleteOnExit();
-		new File("target/dump1.xml").deleteOnExit();
+		//new File("target/out.xml").deleteOnExit();
+		//new File("target/out2.xml").deleteOnExit();
+		//new File("target/xhtml.xml").deleteOnExit();
+		//new File("target/dump1.xml").deleteOnExit();
 	}
 
 	/**
@@ -288,10 +288,16 @@ public class FeedWriterTest implements Serializable {
 			feedWriter2.writeXHTML(writer2, queryStringXHTML);
 			writer2.flush();
 			writer2.close();
+			
+			BufferedWriter fout = new BufferedWriter(new FileWriter(
+			"target/xhtmlRegular.xml"));
+			fout.write(queryStringXHTML);
+			fout.flush();
+			fout.close();
 
 			XMLStreamReader reader = XMLInputFactory.newInstance()
 					.createXMLStreamReader(
-							new FileInputStream("target/xhtml.xml"));
+							new FileInputStream("target/xhtmlRegular.xml"));
 			Content content = (new FeedReader()).readContent(reader);
 			BufferedWriter out = new BufferedWriter(new FileWriter(
 					"target/content.xml"));
@@ -328,6 +334,8 @@ public class FeedWriterTest implements Serializable {
 			new FeedWriter().writeEntries(writer, entries);
 			writer.flush();
 			writer.close();
+			System.out.println("theXMLString\n"+theXMLString.toString());
+			System.out.println("entry1Result\n"+entry1Result);
 			assertEquals(theXMLString.toString(), entry1Result);
 
 			entries = new FeedReader().readEntry(XMLInputFactory.newInstance()

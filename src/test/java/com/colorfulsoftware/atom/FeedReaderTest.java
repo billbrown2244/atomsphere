@@ -169,6 +169,8 @@ public class FeedReaderTest implements Serializable {
 			+ "   <summary>Laptops and Accessories Retailer</summary>"
 			+ "</source>" + "  </entry></feed>";
 
+	String rights1 = "<rights type=\"xhtml\"><div xmlns=\"http://www.w3.org/1999/xhtml\">A marked up <br /> rights.This is <span style=\"color:blue;\">blue text :). <hr id=\"unique\" class=\"phat\" /> <a href=\"http://maps.google.com?q=something&amp;b=somethingElse\">a fake map link</a></span>. </div></rights>";
+
 	/**
 	 * @throws Exception
 	 *             if there is an error creating the test data.
@@ -349,23 +351,22 @@ public class FeedReaderTest implements Serializable {
 	@Test
 	public void testReadRights() {
 		try {
-			reader = XMLInputFactory
-					.newInstance()
-					.createXMLStreamReader(
-							new StringReader(
-									"<rights type=\"xhtml\"><div xmlns=\"http://www.w3.org/1999/xhtml\">A marked up <br /> rights.This is <span style=\"color:blue;\">blue text :). <hr id=\"unique\" class=\"phat\" /> <a href=\"http://maps.google.com?q=something&amp;b=somethingElse\">a fake map link</a></span>. </div></rights>"));
+			reader = XMLInputFactory.newInstance().createXMLStreamReader(
+					new StringReader(rights1));
 			Rights rights = feedReader.readRights(reader);
 			BufferedWriter out = new BufferedWriter(new FileWriter(
 					"target/rights.xml"));
 			out.write(rights.toString());
 			out.flush();
 			out.close();
-		
+
 			FeedWriter feedWriter = new FeedWriter();
-			XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
-					new FileOutputStream("target/rights2.xml"));
+			XMLStreamWriter writer = XMLOutputFactory.newInstance()
+					.createXMLStreamWriter(
+							new FileOutputStream("target/rights2.xml"));
 			feedWriter.writeRights(writer, rights);
-			
+			writer.flush();
+			writer.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("could not read and write feed.");

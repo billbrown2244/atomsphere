@@ -170,7 +170,15 @@ class FeedReader implements Serializable {
 			feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
 			reader.next();
 		}
+		
+		//here for reading fragments that don't have attributes.
+		if (reader.getEventType() != XMLStreamConstants.START_ELEMENT) {
+			return null;
+		}
 
+		//make sure all the attribute values are properly xml encoded/escaped
+		//with value.replaceAll("&amp;","&").replaceAll("&", "&amp;")
+		
 		// add the namespace attributes.
 		for (int i = 0; i < reader.getNamespaceCount(); i++) {
 			String attrName = "xmlns";
@@ -180,7 +188,8 @@ class FeedReader implements Serializable {
 
 			if (reader.getNamespaceURI(i) != null) {
 				attributes.add(feedDoc.buildAttribute(attrName, reader
-						.getNamespaceURI(i)));
+						.getNamespaceURI(i).replaceAll("&amp;",
+						"&").replaceAll("&", "&amp;")));
 			}
 
 		}
@@ -195,7 +204,8 @@ class FeedReader implements Serializable {
 			}
 
 			attributes.add(feedDoc.buildAttribute(attrName, reader
-					.getAttributeValue(i)));
+					.getAttributeValue(i).replaceAll("&amp;",
+					"&").replaceAll("&", "&amp;")));
 		}
 
 		// return null if no attributes were created.
@@ -576,9 +586,9 @@ class FeedReader implements Serializable {
 				// add the attributes
 				if (attributes != null && attributes.size() > 0) {
 					for (Attribute attr : attributes) {
-						System.out.println("attr value"+attr.getValue());
-						xhtml.append(" " + attr.getName() + "=\""
-								+ attr.getValue() + "\"");
+						String attrVal = attr.getValue();
+						xhtml.append(" " + attr.getName() + "=\"" + attrVal
+								+ "\"");
 					}
 				}
 				xhtml.append(">");
@@ -602,8 +612,10 @@ class FeedReader implements Serializable {
 
 			default:
 				// escape the necessary characters.
-				String escapedTxt = reader.getText().replaceAll("&", "&amp;")
-						.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+				String escapedTxt = reader.getText().replaceAll("&amp;", "&")
+						.replaceAll("&", "&amp;").replaceAll("&lt;", "<")
+						.replaceAll("<", "&lt;").replaceAll("&gt;", ">")
+						.replaceAll(">", "&gt;");
 				xhtml.append(escapedTxt);
 			}
 			if (breakOut) {

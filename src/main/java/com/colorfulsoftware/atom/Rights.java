@@ -73,6 +73,10 @@ public class Rights implements Serializable {
 		return rights.getDivWrapperStart();
 	}
 
+	Attribute getDivWrapperStartAttr() {
+		return rights.getDivWrapperStartAttr();
+	}
+	
 	String getDivWrapperEnd() {
 		return rights.getDivWrapperEnd();
 	}

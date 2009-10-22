@@ -124,7 +124,8 @@ class FeedWriter implements Serializable {
 			throws Exception {
 		writer.writeStartElement("subtitle");
 		writeAtomTextConstruct(writer, subtitle.getAttributes(), subtitle
-				.getDivWrapperStart(), subtitle.getDivWrapperEnd(), subtitle
+				.getDivWrapperStart(), subtitle
+				.getDivWrapperStartAttr(), subtitle
 				.getText(), subtitle.getContentType());
 
 		writer.writeEndElement();
@@ -158,140 +159,100 @@ class FeedWriter implements Serializable {
 	void writeTitle(XMLStreamWriter writer, Title title) throws Exception {
 		writer.writeStartElement("title");
 		writeAtomTextConstruct(writer, title.getAttributes(), title
-				.getDivWrapperStart(), title.getDivWrapperEnd(), title
+				.getDivWrapperStart(), title.getDivWrapperStartAttr(), title
 				.getText(), title.getContentType());
 
 		writer.writeEndElement();
 	}
 
 	void writeXHTML(XMLStreamWriter writer, String text) throws Exception {
+		System.out.println("textBefore:\n" + text);
+		String txt = text.replaceAll("&lt;", "<").replaceAll("&gt;", ">")
+				.replaceAll("&amp;", "&");
+		System.out.println("textAfter:\n" + txt);
+		writer.writeCharacters(txt);
 
-		if (text == null || text.length() == 0) {
-			return;
-		}
-
-		if (text.indexOf('<') == -1) {
-
-			writer.writeCharacters(text.replace("&lt;", "<").replace("&gt;",
-					">").replaceAll("&amp;", "&"));
-
-		} else {
-
-			if (text.startsWith("</")) {
-				// write the end element
-				writer.writeEndElement();
-				// search for the next element
-				text = text.substring(text.indexOf('>') + 1);
-				writeXHTML(writer, text);
-
-			} else {
-
-				// write up until the
-				// opening of the next element
-				// except if this is an end tag.
-				String localWrite = null;
-				if (!text.startsWith("/")) {
-					localWrite = text.substring(0, text.indexOf('<'));
-					writer.writeCharacters(localWrite.replace("&lt;", "<")
-							.replace("&gt;", ">").replaceAll("&amp;", "&"));
-					text = text.substring(text.indexOf('<') + 1);
-				}
-
-				// if we reach another < before > then this
-				// is not a start element.
-				/*
-				 * if ((text.indexOf(">") > text.indexOf("<")) &&
-				 * !text.startsWith("/")) {
-				 * 
-				 * writer.writeCharacters(localWrite.replace("&lt;", "<")
-				 * .replace("&gt;", ">").replaceAll("&amp;", "&")); text =
-				 * text.substring(localWrite.length() - 1);
-				 * 
-				 * writeXHTML(writer, text);
-				 * 
-				 * } else {
-				 */
-				// get the start element
-				String startElement = text.substring(0, text.indexOf('>'))
-						.trim();
-
-				// check for end element.
-				if (startElement.startsWith("/")) {
-					// write the end element
-					writer.writeEndElement();
-					// search for the next element
-					text = text.substring(text.indexOf('>') + 1);
-					writeXHTML(writer, text);
-
-				} else {
-					System.out.println("startELement: "+startElement);
-					// check for empty element
-					if (startElement.indexOf('/') == startElement.length() - 1) {
-						// check for attributes
-						String[] attributes = startElement.split(" ");
-						if (attributes.length > 1) {
-							// if the name has a prefix, just
-							// write it as part of the local name.
-							writer.writeEmptyElement(attributes[0]);
-							for (int i = 1; i < attributes.length; i++) {
-								if (attributes[i].indexOf("=") != -1) {
-									// we nee to put everything
-									// to the right of the first '='
-									// sign
-									// in the value part because we
-									// could
-									// have
-									// a query string with multiple '='
-									// signs.
-									String attrName = attributes[i].substring(
-											0, attributes[i].indexOf('='));
-									String attrValue = attributes[i].substring(
-											attributes[i].indexOf('=') + 2,
-											attributes[i].lastIndexOf("\""));
-									writer.writeAttribute(attrName, attrValue);
-								}
-							}
-						} else {
-							// if the name has a prefix, just
-							// write it as part of the local name.
-							writer.writeEmptyElement(startElement);
-						}
-						
-					} else {// this is regular start element
-
-						// check for attributes
-						String[] attributes = startElement.split(" ");
-
-						if (attributes.length > 1) {
-							// if the name has a prefix,
-							// just write it as part of the local name.
-
-							writer.writeStartElement(attributes[0]);
-							for (int i = 1; i < attributes.length; i++) {
-								if (attributes[i].indexOf("=") != -1) {
-									String attrName = attributes[i].substring(
-											0, attributes[i].indexOf('='));
-									String attrValue = attributes[i].substring(
-											attributes[i].indexOf('=') + 2,
-											attributes[i].lastIndexOf("\""));
-									writer.writeAttribute(attrName, attrValue);
-								}
-							}
-							startElement = attributes[0];
-						} else {
-							// if the name has a prefix,
-							// just write it as part of the local name.
-							writer.writeStartElement(attributes[0]);
-						}
-					}
-					text = text.substring(text.indexOf('>') + 1);
-
-					// search for the next element
-					writeXHTML(writer, text);
-				}
-				// }
-			}
-		}
+		/*
+		 * if (text == null || text.length() == 0) { return; }
+		 * 
+		 * if (text.indexOf('<') == -1) {
+		 * 
+		 * writer.writeCharacters(text.replace("&lt;", "<").replace("&gt;",
+		 * ">").replaceAll("&amp;", "&"));
+		 * 
+		 * } else {
+		 * 
+		 * if (text.startsWith("</")) { // write the end element
+		 * writer.writeEndElement(); // search for the next element text =
+		 * text.substring(text.indexOf('>') + 1); writeXHTML(writer, text);
+		 * 
+		 * } else {
+		 * 
+		 * // write up until the // opening of the next element // except if
+		 * this is an end tag. String localWrite = null; if
+		 * (!text.startsWith("/")) { localWrite = text.substring(0,
+		 * text.indexOf('<')); writer.writeCharacters(localWrite.replace("&lt;",
+		 * "<") .replace("&gt;", ">").replaceAll("&amp;", "&")); text =
+		 * text.substring(text.indexOf('<') + 1); }
+		 * 
+		 * // if we reach another < before > then this // is not a start
+		 * element. /* if ((text.indexOf(">") > text.indexOf("<")) &&
+		 * !text.startsWith("/")) {
+		 * 
+		 * writer.writeCharacters(localWrite.replace("&lt;", "<")
+		 * .replace("&gt;", ">").replaceAll("&amp;", "&")); text =
+		 * text.substring(localWrite.length() - 1);
+		 * 
+		 * writeXHTML(writer, text);
+		 * 
+		 * } else {
+		 * 
+		 * // get the start element String startElement = text.substring(0,
+		 * text.indexOf('>')) .trim();
+		 * 
+		 * // check for end element. if (startElement.startsWith("/")) { //
+		 * write the end element writer.writeEndElement(); // search for the
+		 * next element text = text.substring(text.indexOf('>') + 1);
+		 * writeXHTML(writer, text);
+		 * 
+		 * } else { System.out.println("startELement: "+startElement); // check
+		 * for empty element if (startElement.indexOf('/') ==
+		 * startElement.length() - 1) { // check for attributes String[]
+		 * attributes = startElement.split(" "); if (attributes.length > 1) { //
+		 * if the name has a prefix, just // write it as part of the local name.
+		 * writer.writeEmptyElement(attributes[0]); for (int i = 1; i <
+		 * attributes.length; i++) { if (attributes[i].indexOf("=") != -1) { //
+		 * we nee to put everything // to the right of the first '=' // sign //
+		 * in the value part because we // could // have // a query string with
+		 * multiple '=' // signs. String attrName = attributes[i].substring( 0,
+		 * attributes[i].indexOf('=')); String attrValue =
+		 * attributes[i].substring( attributes[i].indexOf('=') + 2,
+		 * attributes[i].lastIndexOf("\"")); writer.writeAttribute(attrName,
+		 * attrValue); } } } else { // if the name has a prefix, just // write
+		 * it as part of the local name. writer.writeEmptyElement(startElement);
+		 * }
+		 * 
+		 * } else {// this is regular start element
+		 * 
+		 * // check for attributes String[] attributes =
+		 * startElement.split(" ");
+		 * 
+		 * if (attributes.length > 1) { // if the name has a prefix, // just
+		 * write it as part of the local name.
+		 * 
+		 * writer.writeStartElement(attributes[0]); for (int i = 1; i <
+		 * attributes.length; i++) { if (attributes[i].indexOf("=") != -1) {
+		 * String attrName = attributes[i].substring( 0,
+		 * attributes[i].indexOf('=')); String attrValue =
+		 * attributes[i].substring( attributes[i].indexOf('=') + 2,
+		 * attributes[i].lastIndexOf("\"")); writer.writeAttribute(attrName,
+		 * attrValue); } } startElement = attributes[0]; } else { // if the name
+		 * has a prefix, // just write it as part of the local name.
+		 * writer.writeStartElement(attributes[0]); } } text =
+		 * text.substring(text.indexOf('>') + 1);
+		 * 
+		 * // search for the next element writeXHTML(writer, text); } // } } }
+		 */
 	}
 
 	void writeAuthors(XMLStreamWriter writer, List<Author> authors)
@@ -357,7 +318,7 @@ class FeedWriter implements Serializable {
 	void writeRights(XMLStreamWriter writer, Rights rights) throws Exception {
 		writer.writeStartElement("rights");
 		writeAtomTextConstruct(writer, rights.getAttributes(), rights
-				.getDivWrapperStart(), rights.getDivWrapperEnd(), rights
+				.getDivWrapperStart(), rights.getDivWrapperStartAttr(), rights
 				.getText(), rights.getContentType());
 
 		writer.writeEndElement();
@@ -499,29 +460,33 @@ class FeedWriter implements Serializable {
 	void writeSummary(XMLStreamWriter writer, Summary summary) throws Exception {
 		writer.writeStartElement("summary");
 		writeAtomTextConstruct(writer, summary.getAttributes(), summary
-				.getDivWrapperStart(), summary.getDivWrapperEnd(), summary
+				.getDivWrapperStart(), summary.getDivWrapperStartAttr(), summary
 				.getText(), summary.getContentType());
 
 		writer.writeEndElement();
 	}
 
 	private void writeAtomTextConstruct(XMLStreamWriter writer,
-			List<Attribute> attributes, String startDivWrapper,
-			String endDivWrapper, String text,
+			List<Attribute> attributes, String divWrapperName,
+			Attribute divWrapperAttribute, String text,
 			AtomTextConstruct.ContentType contentType) throws Exception {
 		// write the attributes if there are any
 		writeAttributes(writer, attributes);
 		// check to see if we need to
 		// wrap the text in a an <xhtml:div> tag.
 		if (contentType == AtomTextConstruct.ContentType.XHTML) {
-
-			writeXHTML(writer, startDivWrapper + text + endDivWrapper);
-
+			writer.writeStartElement(divWrapperName);
+			if (divWrapperAttribute != null) {
+				writer.writeAttribute(divWrapperAttribute.getName(),
+						divWrapperAttribute.getValue());
+			}
+			writeXHTML(writer, text);
+			writer.writeEndElement();
 			// check to see if we need to escape the data
 		} else if (contentType == AtomTextConstruct.ContentType.HTML) {
 
-			writer.writeCharacters(text.replaceAll("&", "&amp;").replace(
-					"&lt;", "<").replace(">", "&gt;"));
+			writer.writeCharacters(text);// .replaceAll("&", "&amp;").replace(
+			// "&lt;", "<").replace(">", "&gt;"));
 
 			// just write the text.
 		} else {
@@ -548,7 +513,7 @@ class FeedWriter implements Serializable {
 		} else {
 			writer.writeStartElement("content");
 			writeAtomTextConstruct(writer, content.getAttributes(), content
-					.getDivWrapperStart(), content.getDivWrapperEnd(), content
+					.getDivWrapperStart(), content.getDivWrapperStartAttr(), content
 					.getContent(), content.getContentType());
 
 			writer.writeEndElement();

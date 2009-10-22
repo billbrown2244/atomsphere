@@ -1432,7 +1432,6 @@ public class FeedDocTest implements Serializable {
 			feedWriter2.writeEntries(writer2, entries);
 			writer2.flush();
 			writer2.close();
-			fail();
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);

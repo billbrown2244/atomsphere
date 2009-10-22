@@ -54,6 +54,7 @@ class AtomTextConstruct implements Serializable {
 	private final List<Attribute> attributes;
 	private final String text;
 	private final String divWrapperStart;
+	private final Attribute divWrapperStartAttr;
 	private final String divWrapperEnd;
 	private ContentType contentType;
 
@@ -119,11 +120,22 @@ class AtomTextConstruct implements Serializable {
 
 		// do we need to wrap the xhtml in a div.
 		if (contentType == ContentType.XHTML) {
-			this.divWrapperStart = getDivWrapperStart(text);
+			this.divWrapperStart = getDivWrapperStart(text).replaceAll("<", "")
+					.replace(">", "");
+			String[] wrapperAttrs = this.divWrapperStart.split(" ");
+			if (wrapperAttrs.length > 1) {
+				String[] attribute = wrapperAttrs[1].substring(0,
+						wrapperAttrs[1].length() - 1).split("=");
+				this.divWrapperStartAttr = new Attribute(attribute[0],
+						attribute[1]);
+			} else {
+				this.divWrapperStartAttr = null;
+			}
 			this.divWrapperEnd = getDivWrapperEnd(text);
 			this.text = getXhtmlText(text);
 		} else {
 			this.divWrapperStart = null;
+			this.divWrapperStartAttr = null;
 			this.divWrapperEnd = null;
 			this.text = text;
 		}
@@ -133,6 +145,7 @@ class AtomTextConstruct implements Serializable {
 		this.attributes = atomTextConstruct.getAttributes();
 		this.text = atomTextConstruct.getText();
 		this.divWrapperStart = atomTextConstruct.getDivWrapperStart();
+		this.divWrapperStartAttr = atomTextConstruct.getDivWrapperStartAttr();
 		this.divWrapperEnd = atomTextConstruct.getDivWrapperEnd();
 		this.contentType = atomTextConstruct.getContentType();
 	}
@@ -223,6 +236,10 @@ class AtomTextConstruct implements Serializable {
 
 	String getDivWrapperStart() {
 		return divWrapperStart;
+	}
+
+	Attribute getDivWrapperStartAttr() {
+		return divWrapperStartAttr;
 	}
 
 	String getDivWrapperEnd() {
