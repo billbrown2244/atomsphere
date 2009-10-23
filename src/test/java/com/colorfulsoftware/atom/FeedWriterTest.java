@@ -25,7 +25,6 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -327,6 +326,10 @@ public class FeedWriterTest implements Serializable {
 							new StringReader(entry1)), null);
 			assertTrue(entries != null);
 			assertTrue(entries.size() == 1);
+			
+			for(Entry entry: entries.values()){
+				System.out.println("entry:\n"+entry);
+			}
 
 			StringWriter theXMLString = new StringWriter();
 			XMLStreamWriter writer = XMLOutputFactory.newInstance()
@@ -349,6 +352,8 @@ public class FeedWriterTest implements Serializable {
 			new FeedWriter().writeEntries(writer, entries);
 			writer.flush();
 			writer.close();
+			System.out.println("theXMLString\n"+theXMLString.toString());
+			System.out.println("entry1Result\n"+entry2Result);
 			assertEquals(theXMLString.toString(), entry2Result);
 
 			entries = new FeedReader().readEntry(XMLInputFactory.newInstance()
