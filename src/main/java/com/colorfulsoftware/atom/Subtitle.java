@@ -68,16 +68,12 @@ public class Subtitle implements Serializable {
 		return subtitle.getAttributes();
 	}
 
-	String getDivWrapperStart() {
-		return subtitle.getDivWrapperStart();
+	String getDivStartName() {
+		return subtitle.getDivStartName();
 	}
 	
-	Attribute getDivWrapperStartAttr() {
-		return subtitle.getDivWrapperStartAttr();
-	}
-
-	String getDivWrapperEnd() {
-		return subtitle.getDivWrapperEnd();
+	Attribute getDivStartAttribute() {
+		return subtitle.getDivStartAttribute();
 	}
 
 	/**

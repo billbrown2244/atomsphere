@@ -124,8 +124,8 @@ class FeedWriter implements Serializable {
 			throws Exception {
 		writer.writeStartElement("subtitle");
 		writeAtomTextConstruct(writer, subtitle.getAttributes(), subtitle
-				.getDivWrapperStart(), subtitle
-				.getDivWrapperStartAttr(), subtitle
+				.getDivStartName(), subtitle
+				.getDivStartAttribute(), subtitle
 				.getText(), subtitle.getContentType());
 
 		writer.writeEndElement();
@@ -159,7 +159,7 @@ class FeedWriter implements Serializable {
 	void writeTitle(XMLStreamWriter writer, Title title) throws Exception {
 		writer.writeStartElement("title");
 		writeAtomTextConstruct(writer, title.getAttributes(), title
-				.getDivWrapperStart(), title.getDivWrapperStartAttr(), title
+				.getDivStartName(), title.getDivStartAttribute(), title
 				.getText(), title.getContentType());
 
 		writer.writeEndElement();
@@ -318,7 +318,7 @@ class FeedWriter implements Serializable {
 	void writeRights(XMLStreamWriter writer, Rights rights) throws Exception {
 		writer.writeStartElement("rights");
 		writeAtomTextConstruct(writer, rights.getAttributes(), rights
-				.getDivWrapperStart(), rights.getDivWrapperStartAttr(), rights
+				.getDivStartName(), rights.getDivStartAttribute(), rights
 				.getText(), rights.getContentType());
 
 		writer.writeEndElement();
@@ -460,25 +460,25 @@ class FeedWriter implements Serializable {
 	void writeSummary(XMLStreamWriter writer, Summary summary) throws Exception {
 		writer.writeStartElement("summary");
 		writeAtomTextConstruct(writer, summary.getAttributes(), summary
-				.getDivWrapperStart(), summary.getDivWrapperStartAttr(), summary
+				.getDivStartName(), summary.getDivStartAttribute(), summary
 				.getText(), summary.getContentType());
 
 		writer.writeEndElement();
 	}
 
 	private void writeAtomTextConstruct(XMLStreamWriter writer,
-			List<Attribute> attributes, String divWrapperName,
-			Attribute divWrapperAttribute, String text,
+			List<Attribute> attributes, String divStartName,
+			Attribute divStartAttribute, String text,
 			AtomTextConstruct.ContentType contentType) throws Exception {
 		// write the attributes if there are any
 		writeAttributes(writer, attributes);
 		// check to see if we need to
 		// wrap the text in a an <xhtml:div> tag.
 		if (contentType == AtomTextConstruct.ContentType.XHTML) {
-			writer.writeStartElement(divWrapperName);
-			if (divWrapperAttribute != null) {
-				writer.writeAttribute(divWrapperAttribute.getName(),
-						divWrapperAttribute.getValue());
+			writer.writeStartElement(divStartName);
+			if (divStartAttribute != null) {
+				writer.writeAttribute(divStartAttribute.getName(),
+						divStartAttribute.getValue());
 			}
 			writeXHTML(writer, text);
 			writer.writeEndElement();
@@ -513,7 +513,7 @@ class FeedWriter implements Serializable {
 		} else {
 			writer.writeStartElement("content");
 			writeAtomTextConstruct(writer, content.getAttributes(), content
-					.getDivWrapperStart(), content.getDivWrapperStartAttr(), content
+					.getDivStartName(), content.getDivStartAttribute(), content
 					.getContent(), content.getContentType());
 
 			writer.writeEndElement();

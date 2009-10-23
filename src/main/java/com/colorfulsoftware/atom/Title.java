@@ -70,16 +70,12 @@ public class Title implements Serializable {
 		return title.getAttributes();
 	}
 
-	String getDivWrapperStart() {
-		return title.getDivWrapperStart();
+	String getDivStartName() {
+		return title.getDivStartName();
 	}
 
-	Attribute getDivWrapperStartAttr() {
-		return title.getDivWrapperStartAttr();
-	}
-	
-	String getDivWrapperEnd() {
-		return title.getDivWrapperEnd();
+	Attribute getDivStartAttribute() {
+		return title.getDivStartAttribute();
 	}
 
 	/**

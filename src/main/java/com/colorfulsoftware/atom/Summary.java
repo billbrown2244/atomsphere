@@ -73,16 +73,12 @@ public class Summary implements Serializable {
 		return summary.getAttributes();
 	}
 
-	String getDivWrapperStart() {
-		return summary.getDivWrapperStart();
+	String getDivStartName() {
+		return summary.getDivStartName();
 	}
 	
-	Attribute getDivWrapperStartAttr() {
-		return summary.getDivWrapperStartAttr();
-	}
-
-	String getDivWrapperEnd() {
-		return summary.getDivWrapperEnd();
+	Attribute getDivStartAttribute() {
+		return summary.getDivStartAttribute();
 	}
 
 	/**

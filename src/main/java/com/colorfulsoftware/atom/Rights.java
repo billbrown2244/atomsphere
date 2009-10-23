@@ -69,16 +69,12 @@ public class Rights implements Serializable {
 		return rights.getAttributes();
 	}
 
-	String getDivWrapperStart() {
-		return rights.getDivWrapperStart();
+	String getDivStartName() {
+		return rights.getDivStartName();
 	}
 
-	Attribute getDivWrapperStartAttr() {
-		return rights.getDivWrapperStartAttr();
-	}
-	
-	String getDivWrapperEnd() {
-		return rights.getDivWrapperEnd();
+	Attribute getDivStartAttribute() {
+		return rights.getDivStartAttribute();
 	}
 
 	/**

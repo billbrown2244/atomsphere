@@ -785,6 +785,7 @@ public class FeedDocTest implements Serializable {
 					"One <xh:strong>bold</xh:strong> foot forward ");
 			assertNotNull(feed1.getTitle().getAttribute("type"));
 			assertNull(feed1.getTitle().getAttribute("bunk"));
+			System.out.println("feed1:\n"+feed1);
 			assertNotNull(feedDoc.readFeedToString(feed1));
 
 			try {
@@ -1161,6 +1162,7 @@ public class FeedDocTest implements Serializable {
 			XMLStreamWriter writer = XMLOutputFactory.newInstance()
 					.createXMLStreamWriter(
 							new FileOutputStream("target/dump1.xml"));
+			System.out.println("feed:\n"+feed);
 			feedWriter.writeFeed(writer, feed);
 			writer.flush();
 			writer.close();
@@ -1258,7 +1260,6 @@ public class FeedDocTest implements Serializable {
 				assertNotNull(lnk.getRel());
 			}
 
-			new File("target/dump1.xml").deleteOnExit();
 
 		} catch (Exception e) {
 			e.printStackTrace();

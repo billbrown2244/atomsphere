@@ -29,6 +29,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 /**
@@ -170,15 +171,15 @@ class FeedReader implements Serializable {
 			feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
 			reader.next();
 		}
-		
-		//here for reading fragments that don't have attributes.
+
+		// here for reading fragments that don't have attributes.
 		if (reader.getEventType() != XMLStreamConstants.START_ELEMENT) {
 			return null;
 		}
 
-		//make sure all the attribute values are properly xml encoded/escaped
-		//with value.replaceAll("&amp;","&").replaceAll("&", "&amp;")
-		
+		// make sure all the attribute values are properly xml encoded/escaped
+		// with value.replaceAll("&amp;","&").replaceAll("&", "&amp;")
+
 		// add the namespace attributes.
 		for (int i = 0; i < reader.getNamespaceCount(); i++) {
 			String attrName = "xmlns";
@@ -188,8 +189,8 @@ class FeedReader implements Serializable {
 
 			if (reader.getNamespaceURI(i) != null) {
 				attributes.add(feedDoc.buildAttribute(attrName, reader
-						.getNamespaceURI(i).replaceAll("&amp;",
-						"&").replaceAll("&", "&amp;")));
+						.getNamespaceURI(i).replaceAll("&amp;", "&")
+						.replaceAll("&", "&amp;")));
 			}
 
 		}
@@ -204,8 +205,8 @@ class FeedReader implements Serializable {
 			}
 
 			attributes.add(feedDoc.buildAttribute(attrName, reader
-					.getAttributeValue(i).replaceAll("&amp;",
-					"&").replaceAll("&", "&amp;")));
+					.getAttributeValue(i).replaceAll("&amp;", "&").replaceAll(
+							"&", "&amp;")));
 		}
 
 		// return null if no attributes were created.
@@ -374,6 +375,8 @@ class FeedReader implements Serializable {
 		String summary = null;
 		if (containsXHTML(attributes)) {
 			summary = readXHTML(reader, "summary");
+		//} else if (containsHTML(attributes)) {
+		//	summary = readEscapedHTML(reader, "summary");
 		} else {
 			summary = reader.getElementText();
 		}
@@ -383,8 +386,9 @@ class FeedReader implements Serializable {
 	// used for xhtml.
 	private boolean containsXHTML(List<Attribute> attributes) {
 		Attribute xhtml = feedDoc.getAttributeFromGroup(attributes, "type");
-		return ((xhtml != null) && (xhtml.getValue().equals("xhtml") || xhtml
-				.getValue().equals("html")));
+		return ((xhtml != null) && (xhtml.getValue().equals("xhtml") ||
+																		 xhtml
+		 .getValue().equals("html")));
 	}
 
 	Source readSource(XMLStreamReader reader) throws Exception {
@@ -503,6 +507,7 @@ class FeedReader implements Serializable {
 		} else {
 			title = reader.getElementText();
 		}
+		System.out.println("title:=\n"+title);
 		return feedDoc.buildTitle(title, attributes);
 	}
 
@@ -568,6 +573,56 @@ class FeedReader implements Serializable {
 		return xhtml.toString();
 	}
 
+	String readEncodedHTML(XMLStreamReader reader, String parentElement)
+			throws XMLStreamException, Exception {
+		StringBuilder xhtml = new StringBuilder();
+		String elementName = null;
+		boolean breakOut = false;
+		while (reader.hasNext()) {
+			switch (reader.next()) {
+
+			case XMLStreamConstants.START_ELEMENT:
+				elementName = getElementName(reader);
+				xhtml.append("<" + elementName);
+				List<Attribute> attributes = getAttributes(reader);
+				// add the attributes
+				if (attributes != null && attributes.size() > 0) {
+					for (Attribute attr : attributes) {
+						xhtml.append(" " + attr.getName() + "=\""
+								+ attr.getValue() + "\"");
+					}
+				}
+				xhtml.append(">");
+				break;
+
+			case XMLStreamConstants.END_ELEMENT:
+				elementName = getElementName(reader);
+				if (elementName.equals(parentElement)) {
+					breakOut = true;
+				} else {
+					xhtml.append("</" + elementName + ">");
+				}
+				break;
+
+			// so far: neither the stax-api or geronimo stax implementations
+			// can see this :(
+			// case XMLStreamConstants.CDATA:
+			// xhtml.append("<![CDATA[" + reader.getText() + "]]>");
+			// break;
+
+			default:
+				// escape the necessary characters.
+				String escapedTxt = reader.getText().replaceAll("&", "&amp;")
+						.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+				xhtml.append(escapedTxt);
+			}
+			if (breakOut) {
+				break;
+			}
+		}
+		return xhtml.toString();
+	}
+
 	private String readXHTML(XMLStreamReader reader, String parentElement)
 			throws Exception {
 		StringBuffer xhtml = new StringBuffer();
@@ -575,12 +630,12 @@ class FeedReader implements Serializable {
 
 		while (reader.hasNext()) {
 			boolean breakOut = false;
-			int next = reader.next();
 
-			switch (next) {
+			switch (reader.next()) {
 
 			case XMLStreamConstants.START_ELEMENT:
 				elementName = getElementName(reader);
+				System.out.println("element name: "+elementName);
 				xhtml.append("<" + elementName);
 				List<Attribute> attributes = getAttributes(reader);
 				// add the attributes
@@ -612,11 +667,16 @@ class FeedReader implements Serializable {
 
 			default:
 				// escape the necessary characters.
+				String escapedTxt = reader.getText().replaceAll("&", "&amp;")
+				.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+		xhtml.append(escapedTxt);
+		/*
 				String escapedTxt = reader.getText().replaceAll("&amp;", "&")
 						.replaceAll("&", "&amp;").replaceAll("&lt;", "<")
 						.replaceAll("<", "&lt;").replaceAll("&gt;", ">")
 						.replaceAll(">", "&gt;");
 				xhtml.append(escapedTxt);
+			*/
 			}
 			if (breakOut) {
 				break;

@@ -53,10 +53,9 @@ class AtomTextConstruct implements Serializable {
 
 	private final List<Attribute> attributes;
 	private final String text;
-	private final String divWrapperStart;
-	private final Attribute divWrapperStartAttr;
-	private final String divWrapperEnd;
 	private ContentType contentType;
+	private final String divStartName;
+	private final Attribute divStartAttribute;
 
 	// content elements do a different validation.
 	AtomTextConstruct(String text, List<Attribute> attributes,
@@ -119,35 +118,42 @@ class AtomTextConstruct implements Serializable {
 		}
 
 		// do we need to wrap the xhtml in a div.
+		String divWrapperStart = null;
 		if (contentType == ContentType.XHTML) {
-			this.divWrapperStart = getDivWrapperStart(text).replaceAll("<", "")
-					.replace(">", "");
-			String[] wrapperAttrs = this.divWrapperStart.split(" ");
-			if (wrapperAttrs.length > 1) {
-				String[] attribute = wrapperAttrs[1].substring(0,
-						wrapperAttrs[1].length() - 1).split("=");
-				this.divWrapperStartAttr = new Attribute(attribute[0],
-						attribute[1]);
-			} else {
-				this.divWrapperStartAttr = null;
-			}
-			this.divWrapperEnd = getDivWrapperEnd(text);
+			divWrapperStart = getDivStartName(text);
+			//divWrapperEnd = 
+				getDivWrapperEnd(text);
 			this.text = getXhtmlText(text);
 		} else {
-			this.divWrapperStart = null;
-			this.divWrapperStartAttr = null;
-			this.divWrapperEnd = null;
 			this.text = text;
+		}
+
+		// prepare the div wrapper start element and optional element.
+		if (divWrapperStart != null) {
+			String bare = divWrapperStart.replaceAll("<", "").replaceAll(
+					">", "");
+			String[] split = bare.split(" ");
+			if (split.length > 1) {
+				this.divStartName = split[0];
+				String[] attrSplit = split[1].replaceAll("\"", "").split("=");
+				this.divStartAttribute = new Attribute(attrSplit[0],
+						attrSplit[1]);
+			} else {
+				this.divStartName = bare;
+				this.divStartAttribute = null;
+			}
+		} else {
+			this.divStartName = null;
+			this.divStartAttribute = null;
 		}
 	}
 
 	AtomTextConstruct(AtomTextConstruct atomTextConstruct) {
 		this.attributes = atomTextConstruct.getAttributes();
 		this.text = atomTextConstruct.getText();
-		this.divWrapperStart = atomTextConstruct.getDivWrapperStart();
-		this.divWrapperStartAttr = atomTextConstruct.getDivWrapperStartAttr();
-		this.divWrapperEnd = atomTextConstruct.getDivWrapperEnd();
 		this.contentType = atomTextConstruct.getContentType();
+		this.divStartName = atomTextConstruct.getDivStartName();
+		this.divStartAttribute = atomTextConstruct.getDivStartAttribute();
 	}
 
 	ContentType getContentType() {
@@ -178,7 +184,7 @@ class AtomTextConstruct implements Serializable {
 		EXTERNAL
 	}
 
-	private String getDivWrapperStart(String text) {
+	private String getDivStartName(String text) {
 		return (text == null) ? null : text.substring(0, text.indexOf(">") + 1);
 	}
 
@@ -234,16 +240,12 @@ class AtomTextConstruct implements Serializable {
 		return text;
 	}
 
-	String getDivWrapperStart() {
-		return divWrapperStart;
+	String getDivStartName() {
+		return divStartName;
 	}
 
-	Attribute getDivWrapperStartAttr() {
-		return divWrapperStartAttr;
-	}
-
-	String getDivWrapperEnd() {
-		return divWrapperEnd;
+	Attribute getDivStartAttribute() {
+		return divStartAttribute;
 	}
 
 	/**
@@ -274,7 +276,12 @@ class AtomTextConstruct implements Serializable {
 		if (contentType != ContentType.EXTERNAL) {
 			sb.append(" >");
 			if (contentType == ContentType.XHTML) {
-				sb.append(divWrapperStart + text + divWrapperEnd);
+				sb.append("<"
+						+ divStartName
+						+ ((divStartAttribute == null) ? "" : " "
+								+ divStartAttribute.getName() + "=\""
+								+ divStartAttribute.getValue() + "\">") + text
+						+ "</" + divStartName + ">");
 			} else {
 				sb.append(text);
 			}
