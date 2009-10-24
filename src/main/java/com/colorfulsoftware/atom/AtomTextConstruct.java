@@ -132,14 +132,10 @@ class AtomTextConstruct implements Serializable {
 		if (divWrapperStart != null) {
 			String bare = divWrapperStart.replaceAll("<", "").replaceAll(">",
 					"").trim();
-			System.out.println("bare = " + bare);
 			String[] split = bare.split(" ");
-			System.out.println("split size = " + split.length);
 			if (split.length > 1) {
 				this.divStartName = split[0];
 				String[] attrSplit = split[1].replaceAll("\"", "").split("=");
-				System.out.println("attrSplit size = " + attrSplit.length);
-				System.out.println("attrSplit[0] = " + attrSplit[0]);
 				this.divStartAttribute = new Attribute(attrSplit[0],
 						attrSplit[1]);
 			} else {

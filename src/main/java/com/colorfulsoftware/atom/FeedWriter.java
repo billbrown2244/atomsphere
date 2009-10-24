@@ -163,17 +163,16 @@ class FeedWriter implements Serializable {
 				.getText(), title.getContentType());
 		writer.writeEndElement();
 	}
-	
-	private String writeEmptyElement(XMLStreamWriter writer, String text) throws Exception {
+
+	private String writeEmptyElement(XMLStreamWriter writer, String text)
+			throws Exception {
 		if (text == null || text.length() == 0) {
 			return "";
 		}
-		System.out.println("text in writeEmptyElement: "+text);
 		String rawText;
-	
-		//do we have attributes.
-		if (text.indexOf("=") != -1
-				&& (text.indexOf("=") < text.indexOf("/>"))) {
+
+		// do we have attributes.
+		if (text.indexOf("=") != -1 && (text.indexOf("=") < text.indexOf("/>"))) {
 
 			rawText = text.substring(0, text.indexOf("/>")).trim();
 
@@ -183,49 +182,44 @@ class FeedWriter implements Serializable {
 			if (allData[0].indexOf(":") == -1) {
 				writer.writeEmptyElement(allData[0]);
 			} else {
-				String prefix = allData[0].substring(0, rawText
-						.indexOf(":"));
-				String localName = allData[0].substring(rawText
-						.indexOf(":") + 1);
+				String prefix = allData[0].substring(0, rawText.indexOf(":"));
+				String localName = allData[0]
+						.substring(rawText.indexOf(":") + 1);
 				writer.writeEmptyElement(prefix, localName, "");
 			}
 
 			// write the attributes.
-			String[] attrs = Arrays.copyOfRange(allData, 1,
-					allData.length - 1);
+			String[] attrs = Arrays.copyOfRange(allData, 1, allData.length - 1);
 			for (String attr : attrs) {
 				String[] attrParts = attr.replaceAll("\"", "").split("=");
 				writer.writeAttribute(attrParts[0], attrParts[1]);
 			}
 
-		}else{
-			//just write the start element.
+		} else {
+			// just write the start element.
 			rawText = text.substring(0, text.indexOf("/>")).trim();
 			if (rawText.indexOf(":") == -1) {
 				writer.writeEmptyElement(rawText);
 			} else {
-				String prefix = rawText.substring(0, rawText
-						.indexOf(":"));
-				String localName = rawText.substring(rawText
-						.indexOf(":") + 1);
+				String prefix = rawText.substring(0, rawText.indexOf(":"));
+				String localName = rawText.substring(rawText.indexOf(":") + 1);
 				writer.writeEmptyElement(prefix, localName, "");
 			}
 		}
 
-		//skip past this start element and re-run the routine.
+		// skip past this start element and re-run the routine.
 		return text.substring(text.indexOf("/>") + 2);
 
 	}
-	
-	private String writeStartElement(XMLStreamWriter writer, String text) throws Exception {
+
+	private String writeStartElement(XMLStreamWriter writer, String text)
+			throws Exception {
 		if (text == null || text.length() == 0) {
 			return "";
 		}
 		String rawText;
-		System.out.println("text in writeStartElement: "+text);
-		//do we have attributes.
-		if (text.indexOf("=") != -1
-				&& (text.indexOf("=") < text.indexOf(">"))) {
+		// do we have attributes.
+		if (text.indexOf("=") != -1 && (text.indexOf("=") < text.indexOf(">"))) {
 
 			rawText = text.substring(0, text.indexOf(">")).trim();
 
@@ -235,137 +229,52 @@ class FeedWriter implements Serializable {
 			if (allData[0].indexOf(":") == -1) {
 				writer.writeStartElement(allData[0]);
 			} else {
-				String prefix = allData[0].substring(0, rawText
-						.indexOf(":"));
-				String localName = allData[0].substring(rawText
-						.indexOf(":") + 1);
+				String prefix = allData[0].substring(0, rawText.indexOf(":"));
+				String localName = allData[0]
+						.substring(rawText.indexOf(":") + 1);
 				writer.writeStartElement(prefix, localName, "");
 			}
 
 			// write the attributes.
-			String[] attrs = Arrays.copyOfRange(allData, 1,
-					allData.length - 1);
+			String[] attrs = Arrays.copyOfRange(allData, 1, allData.length - 1);
 			for (String attr : attrs) {
 				String[] attrParts = attr.replaceAll("\"", "").split("=");
 				writer.writeAttribute(attrParts[0], attrParts[1]);
 			}
 
-		}else{
-			//just write the start element.
+		} else {
+			// just write the start element.
 			rawText = text.substring(0, text.indexOf(">")).trim();
 			if (rawText.indexOf(":") == -1) {
 				writer.writeStartElement(rawText);
 			} else {
-				String prefix = rawText.substring(0, rawText
-						.indexOf(":"));
-				String localName = rawText.substring(rawText
-						.indexOf(":") + 1);
+				String prefix = rawText.substring(0, rawText.indexOf(":"));
+				String localName = rawText.substring(rawText.indexOf(":") + 1);
 				writer.writeStartElement(prefix, localName, "");
 			}
 		}
 
-		//skip past this start element and re-run the routine.
+		// skip past this start element and re-run the routine.
 		return text.substring(text.indexOf(">") + 1);
-		
-		/*
-		// check for start element close before a space.
-		if (text.indexOf(" ") != -1 && (text.indexOf(">") < text.indexOf(" "))) {
-			System.out.println("found no space");
-			rawText = text.substring(0, text.indexOf('>'));
-			// check for prefix
-			if (rawText.indexOf(":") == -1) {
-				if (isEmptyElement) {
-					System.out.println("wrtiting empty element:" + rawText);
-					writer.writeEmptyElement(rawText);
-				} else {
-					writer.writeStartElement(rawText);
-				}
-			} else {
-				String prefix = rawText.substring(0, rawText.indexOf(":"));
-				String localName = rawText.substring(rawText.indexOf(":") + 1);
-				if (isEmptyElement) {
-					System.out.println("wrtiting empty element:" + rawText);
-					writer.writeEmptyElement(prefix, localName, "");
-				} else {
-					writer.writeStartElement(prefix, localName, "");
-				}
-			}
-			text = text.substring(text.indexOf(">") + 1);
-
-		} else if (text.indexOf(" ") != -1
-				&& (text.indexOf(">") > text.indexOf(" "))) {
-			System.out.println("found space");
-			rawText = text.substring(0, text.indexOf(" "));
-			// check for prefix
-			if (rawText.indexOf(":") == -1) {
-				if (isEmptyElement) {
-					System.out.println("wrtiting empty element:" + rawText);
-					writer.writeEmptyElement(rawText);
-				} else {
-					writer.writeStartElement(rawText);
-				}
-			} else {
-				String prefix = rawText.substring(0, rawText.indexOf(":"));
-				String localName = rawText.substring(rawText.indexOf(":") + 1);
-				if (isEmptyElement) {
-					System.out.println("wrtiting empty element:" + rawText);
-					writer.writeEmptyElement(prefix, localName, "");
-				} else {
-					writer.writeStartElement(prefix, localName, "");
-				}
-			}
-			text = text.substring(text.indexOf(" ") + 1);
-
-			// check to see if there are attributes.
-			if (text.indexOf("=") != -1
-					&& (text.indexOf("=") < text.indexOf(">"))) {
-				hasAttrs = true;
-			}
-		}
-
-		// write the attributes
-		if (hasAttrs) {
-			// get them first.
-			if ((text.indexOf("/>") == -1)
-					|| (text.indexOf(">") < text.indexOf("/>"))) {
-				rawText = text.substring(0, text.indexOf(">")).trim();
-				String[] attrs = rawText.split(" ");
-				for (String attr : attrs) {
-					String[] attrParts = attr.replaceAll("\"", "").split("=");
-					writer.writeAttribute(attrParts[0], attrParts[1]);
-				}
-
-			} else {
-				rawText = text.substring(0, text.indexOf("/>")).trim();
-				String[] attrs = rawText.split(" ");
-				for (String attr : attrs) {
-					String[] attrParts = attr.replaceAll("\"", "").split("=");
-					writer.writeAttribute(attrParts[0], attrParts[1]);
-				}
-				isEmptyElement = true;
-			}
-
-			text = text.substring(text.indexOf(">") + 1);
-		}
-		*/
 	}
-	
-	private String writeEndElement(XMLStreamWriter writer, String text) throws Exception {
-		System.out.println("text in writeEndElement: "+text);
+
+	private String writeEndElement(XMLStreamWriter writer, String text)
+			throws Exception {
 		// write the end element
 		writer.writeEndElement();
 
 		return text.substring(text.indexOf(">") + 1);
 	}
-	
-	private String writeLessThanChar(XMLStreamWriter writer, String text) throws Exception {
+
+	private String writeLessThanChar(XMLStreamWriter writer, String text)
+			throws Exception {
 		if (text == null || text.length() == 0) {
 			return "";
 		}
 		String rawText;
-		System.out.println("text in writeLessThanChar: "+text);
 		// make sure to include the '<' characters in the text.
-		while ((text.indexOf(">") > text.indexOf("<")) && text.indexOf("<") != -1) {
+		while ((text.indexOf(">") > text.indexOf("<"))
+				&& text.indexOf("<") != -1) {
 			writer.writeCharacters("<");
 			rawText = text.substring(0, text.indexOf("<"));
 			writer.writeCharacters(rawText);
@@ -375,202 +284,69 @@ class FeedWriter implements Serializable {
 	}
 
 	void writeXHTML(XMLStreamWriter writer, String text) throws Exception {
-		System.out.println("textBefore:\n" + text);
-		text = text.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll(
-				"&amp;", "&");
-		System.out.println("textAfter:\n" + text);
-		// writer.writeCharacters(txt);
-
-		String rawText;
-		boolean hasAttrs = false;
-		boolean isEmptyElement = false;
-		
-		boolean startElement = false;
-		boolean emptyElement = false;
-		boolean endElement = false;
-		boolean lessThanChar = false;
 
 		// if text is null or empty return.
 		if (text == null || text.length() == 0) {
 			return;
 		} else {
+			String rawText;
+			
+			// prepare the markup to be written.
+			text = text.replaceAll("&lt;", "<").replaceAll("&gt;", ">")
+					.replaceAll("&amp;", "&");
+
+			// we are now at a start element,
+			// or an empty element
+			// or a '<'
+			// or an end element.
+			// or text.
+			// lets check.
+
+			// always check first for an end element since this routine is
+			// recursive.
+			if (text.indexOf("/") == 0 && text.indexOf(">") != -1
+					&& text.indexOf("/>") != 0) {
+				writeXHTML(writer, writeEndElement(writer, text));
+				return;
+			}
+
 			// write text up to an element or the end of the text
 			if (text.indexOf("<") != -1) {
 				rawText = text.substring(0, text.indexOf('<'));
 				writer.writeCharacters(rawText);
 
-				text = text.substring(text.indexOf('<'));
+				text = text.substring(text.indexOf('<') + 1);
 
-				// we are now at a start element, 
-				// or an empty element
-				// or a '<' 
-				// or an end element.
-				// lets check.
-				
-				
-				if(text.indexOf("/") == 0){
-					writeXHTML(writer,writeEndElement(writer, text));
+				// do we have an end element
+				if (text.indexOf("/") == 0 && text.indexOf(">") != -1
+						&& text.indexOf("/>") != 0) {
+					writeXHTML(writer, writeEndElement(writer, text));
 					return;
-				}else{//scroll one over to check the others.
-					text = text.substring(1);
 				}
-				
-				
+
+				// do we have a '<' character
 				if ((text.indexOf("<") < text.indexOf(">"))
 						&& text.indexOf("<") != -1) {
-					writeXHTML(writer,writeLessThanChar(writer, text));	
+					writeXHTML(writer, writeLessThanChar(writer, text));
 					return;
 				}
-				
+
+				// do we have an empty element
 				if ((text.indexOf("/>") != -1)
 						&& (text.indexOf("/>") < text.indexOf(">"))) {
-					writeXHTML(writer,writeEmptyElement(writer, text));
+					writeXHTML(writer, writeEmptyElement(writer, text));
 					return;
 				}
-				
-				//then this is a regular start element.
-				writeXHTML(writer,writeStartElement(writer, text));
-				
+
+				// then this is a regular start element.
+				writeXHTML(writer, writeStartElement(writer, text));
+
 			} else {
-				
-				if(text.startsWith("/")){
-					writeXHTML(writer,writeEndElement(writer, text));
-					return;
-				}else{//scroll one over to check the others.
-					text = text.substring(1);
-				}
-				
-				// just text, write and return.
-				writer.writeCharacters(text.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll(
-								"&amp;", "&"));
+				// we have just plain text so write it.
+				writer.writeCharacters(text);
 				return;
 			}
 		}
-		
-	
-		/*
-		
-
-		// here we either close the current element and repeat
-		// or write the content, close the element and repeat.
-
-		System.out.println("text before close: \n" + text);
-		System.out.println("isEmptyElement? " + isEmptyElement);
-		if (isEmptyElement) {
-			// repeat
-			writeXHTML(writer, text);
-		} else {
-			// write the content
-			if (text.indexOf("<") != -1) {
-				rawText = text.substring(0, text.indexOf("<"));
-				writer.writeCharacters(rawText);
-			}
-
-			text = text.substring(text.indexOf('<') + 1);
-
-			if ((text.indexOf(">") > text.indexOf("<"))
-					&& text.indexOf("<") != -1) {
-				// make sure to include the '<' characters in the text.
-				while ((text.indexOf(">") > text.indexOf("<"))) {
-					writer.writeCharacters("<");
-
-					rawText = text.substring(0, text.indexOf("<"));
-					writer.writeCharacters(rawText);
-					text = text.substring(text.indexOf('<') + 1);
-
-				}
-			}
-
-			// write the end element
-			writer.writeEndElement();
-
-			text = text.substring(text.indexOf(">") + 1);
-
-			// repeat
-			writeXHTML(writer, text);
-		}
-*/
-		/*
-		 * if (text == null || text.length() == 0) { return; }
-		 * 
-		 * if (text.indexOf('<') == -1) {
-		 * 
-		 * writer.writeCharacters(text.replace("&lt;", "<").replace("&gt;",
-		 * ">").replaceAll("&amp;", "&"));
-		 * 
-		 * } else {
-		 * 
-		 * if (text.startsWith("</")) { // write the end element
-		 * writer.writeEndElement(); // search for the next element text =
-		 * text.substring(text.indexOf('>') + 1); writeXHTML(writer, text);
-		 * 
-		 * } else {
-		 * 
-		 * // write up until the // opening of the next element // except if
-		 * this is an end tag. String localWrite = null; if
-		 * (!text.startsWith("/")) { localWrite = text.substring(0,
-		 * text.indexOf('<')); writer.writeCharacters(localWrite.replace("&lt;",
-		 * "<") .replace("&gt;", ">").replaceAll("&amp;", "&")); text =
-		 * text.substring(text.indexOf('<') + 1); }
-		 * 
-		 * // if we reach another < before > then this // is not a start
-		 * element. /* if ((text.indexOf(">") > text.indexOf("<")) &&
-		 * !text.startsWith("/")) {
-		 * 
-		 * writer.writeCharacters(localWrite.replace("&lt;", "<")
-		 * .replace("&gt;", ">").replaceAll("&amp;", "&")); text =
-		 * text.substring(localWrite.length() - 1);
-		 * 
-		 * writeXHTML(writer, text);
-		 * 
-		 * } else {
-		 * 
-		 * // get the start element String startElement = text.substring(0,
-		 * text.indexOf('>')) .trim();
-		 * 
-		 * // check for end element. if (startElement.startsWith("/")) { //
-		 * write the end element writer.writeEndElement(); // search for the
-		 * next element text = text.substring(text.indexOf('>') + 1);
-		 * writeXHTML(writer, text);
-		 * 
-		 * } else { System.out.println("startELement: "+startElement); // check
-		 * for empty element if (startElement.indexOf('/') ==
-		 * startElement.length() - 1) { // check for attributes String[]
-		 * attributes = startElement.split(" "); if (attributes.length > 1) { //
-		 * if the name has a prefix, just // write it as part of the local name.
-		 * writer.writeEmptyElement(attributes[0]); for (int i = 1; i <
-		 * attributes.length; i++) { if (attributes[i].indexOf("=") != -1) { //
-		 * we nee to put everything // to the right of the first '=' // sign //
-		 * in the value part because we // could // have // a query string with
-		 * multiple '=' // signs. String attrName = attributes[i].substring( 0,
-		 * attributes[i].indexOf('=')); String attrValue =
-		 * attributes[i].substring( attributes[i].indexOf('=') + 2,
-		 * attributes[i].lastIndexOf("\"")); writer.writeAttribute(attrName,
-		 * attrValue); } } } else { // if the name has a prefix, just // write
-		 * it as part of the local name. writer.writeEmptyElement(startElement);
-		 * }
-		 * 
-		 * } else {// this is regular start element
-		 * 
-		 * // check for attributes String[] attributes =
-		 * startElement.split(" ");
-		 * 
-		 * if (attributes.length > 1) { // if the name has a prefix, // just
-		 * write it as part of the local name.
-		 * 
-		 * writer.writeStartElement(attributes[0]); for (int i = 1; i <
-		 * attributes.length; i++) { if (attributes[i].indexOf("=") != -1) {
-		 * String attrName = attributes[i].substring( 0,
-		 * attributes[i].indexOf('=')); String attrValue =
-		 * attributes[i].substring( attributes[i].indexOf('=') + 2,
-		 * attributes[i].lastIndexOf("\"")); writer.writeAttribute(attrName,
-		 * attrValue); } } startElement = attributes[0]; } else { // if the name
-		 * has a prefix, // just write it as part of the local name.
-		 * writer.writeStartElement(attributes[0]); } } text =
-		 * text.substring(text.indexOf('>') + 1);
-		 * 
-		 * // search for the next element writeXHTML(writer, text); } // } } }
-		 */
 	}
 
 	void writeAuthors(XMLStreamWriter writer, List<Author> authors)

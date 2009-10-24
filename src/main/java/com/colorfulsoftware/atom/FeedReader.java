@@ -29,7 +29,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 /**
@@ -170,11 +169,6 @@ class FeedReader implements Serializable {
 		if (reader.getEventType() == XMLStreamConstants.START_DOCUMENT) {
 			feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
 			reader.next();
-		}
-
-		// here for reading fragments that don't have attributes.
-		if (reader.getEventType() != XMLStreamConstants.START_ELEMENT) {
-			return null;
 		}
 
 		// make sure all the attribute values are properly xml encoded/escaped
@@ -507,7 +501,6 @@ class FeedReader implements Serializable {
 		} else {
 			title = reader.getElementText();
 		}
-		System.out.println("title:=\n"+title);
 		return feedDoc.buildTitle(title, attributes);
 	}
 
@@ -573,56 +566,6 @@ class FeedReader implements Serializable {
 		return xhtml.toString();
 	}
 
-	String readEncodedHTML(XMLStreamReader reader, String parentElement)
-			throws XMLStreamException, Exception {
-		StringBuilder xhtml = new StringBuilder();
-		String elementName = null;
-		boolean breakOut = false;
-		while (reader.hasNext()) {
-			switch (reader.next()) {
-
-			case XMLStreamConstants.START_ELEMENT:
-				elementName = getElementName(reader);
-				xhtml.append("<" + elementName);
-				List<Attribute> attributes = getAttributes(reader);
-				// add the attributes
-				if (attributes != null && attributes.size() > 0) {
-					for (Attribute attr : attributes) {
-						xhtml.append(" " + attr.getName() + "=\""
-								+ attr.getValue() + "\"");
-					}
-				}
-				xhtml.append(">");
-				break;
-
-			case XMLStreamConstants.END_ELEMENT:
-				elementName = getElementName(reader);
-				if (elementName.equals(parentElement)) {
-					breakOut = true;
-				} else {
-					xhtml.append("</" + elementName + ">");
-				}
-				break;
-
-			// so far: neither the stax-api or geronimo stax implementations
-			// can see this :(
-			// case XMLStreamConstants.CDATA:
-			// xhtml.append("<![CDATA[" + reader.getText() + "]]>");
-			// break;
-
-			default:
-				// escape the necessary characters.
-				String escapedTxt = reader.getText().replaceAll("&", "&amp;")
-						.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-				xhtml.append(escapedTxt);
-			}
-			if (breakOut) {
-				break;
-			}
-		}
-		return xhtml.toString();
-	}
-
 	private String readXHTML(XMLStreamReader reader, String parentElement)
 			throws Exception {
 		StringBuffer xhtml = new StringBuffer();
@@ -635,7 +578,6 @@ class FeedReader implements Serializable {
 
 			case XMLStreamConstants.START_ELEMENT:
 				elementName = getElementName(reader);
-				System.out.println("element name: "+elementName);
 				xhtml.append("<" + elementName);
 				List<Attribute> attributes = getAttributes(reader);
 				// add the attributes
