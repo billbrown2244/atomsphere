@@ -570,7 +570,7 @@ class FeedReader implements Serializable {
 			throws Exception {
 		StringBuffer xhtml = new StringBuffer();
 		String elementName = null;
-
+		boolean justReadStart = true;
 		while (reader.hasNext()) {
 			boolean breakOut = false;
 
@@ -588,7 +588,8 @@ class FeedReader implements Serializable {
 								+ "\"");
 					}
 				}
-				xhtml.append(">");
+				justReadStart = true;
+				
 				break;
 
 			case XMLStreamConstants.END_ELEMENT:
@@ -597,7 +598,12 @@ class FeedReader implements Serializable {
 						&& namespaceURI.equals("http://www.w3.org/2005/Atom")) {
 					breakOut = true;
 				} else {
-					xhtml.append("</" + elementName + ">");
+					if(justReadStart){
+						xhtml.append(" />");
+					}else{
+						xhtml.append("</" + elementName + ">");
+					}
+					justReadStart = false;
 				}
 				break;
 
@@ -608,6 +614,10 @@ class FeedReader implements Serializable {
 			// break;
 
 			default:
+				if(justReadStart){
+					xhtml.append(">");
+					justReadStart = false;
+				}
 				// escape the necessary characters.
 				String escapedTxt = reader.getText().replaceAll("&", "&amp;")
 				.replaceAll("<", "&lt;").replaceAll(">", "&gt;");

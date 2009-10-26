@@ -332,6 +332,7 @@ public class FeedReaderTest implements Serializable {
 				assertNotNull(source.getId());
 			}
 
+			System.out.println("feed:\n"+feed);
 			// make sure it can also be written afterwards.
 			FeedWriter feedWriter = new FeedWriter();
 			XMLStreamWriter writer = XMLOutputFactory.newInstance()
