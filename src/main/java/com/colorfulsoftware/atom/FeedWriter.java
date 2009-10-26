@@ -166,11 +166,7 @@ class FeedWriter implements Serializable {
 
 	private String writeEmptyElement(XMLStreamWriter writer, String text)
 			throws Exception {
-		if (text == null || text.length() == 0) {
-			return null;
-		}
 		String rawText;
-		System.out.println("text in writeEmptyElement:\n"+text);
 		// do we have attributes.
 		if (text.indexOf("=") != -1 && (text.indexOf("=") < text.indexOf("/>"))) {
 
@@ -214,11 +210,7 @@ class FeedWriter implements Serializable {
 
 	private String writeStartElement(XMLStreamWriter writer, String text)
 			throws Exception {
-		if (text == null || text.length() == 0) {
-			return null;
-		}
 		String rawText;
-		System.out.println("text in writeStartElement:\n"+text);
 		// do we have attributes.
 		if (text.indexOf("=") != -1 && (text.indexOf("=") < text.indexOf(">"))) {
 
@@ -237,7 +229,7 @@ class FeedWriter implements Serializable {
 			}
 
 			// write the attributes.
-			String[] attrs = Arrays.copyOfRange(allData, 1, allData.length - 1);
+			String[] attrs = Arrays.copyOfRange(allData, 1, allData.length);
 			for (String attr : attrs) {
 				String[] attrParts = attr.replaceAll("\"", "").split("=");
 				writer.writeAttribute(attrParts[0], attrParts[1]);
@@ -261,7 +253,6 @@ class FeedWriter implements Serializable {
 
 	private String writeEndElement(XMLStreamWriter writer, String text)
 			throws Exception {
-		System.out.println("text in writeEndElement:\n"+text);
 		// write the end element
 		writer.writeEndElement();
 
@@ -270,11 +261,7 @@ class FeedWriter implements Serializable {
 
 	private String writeLessThanChar(XMLStreamWriter writer, String text)
 			throws Exception {
-		if (text == null || text.length() == 0) {
-			return null;
-		}
 		String rawText;
-		System.out.println("text in writeLessThanChar:\n"+text);
 		// make sure to include the '<' characters in the text.
 		while ((text.indexOf(">") > text.indexOf("<"))
 				&& text.indexOf("<") != -1) {

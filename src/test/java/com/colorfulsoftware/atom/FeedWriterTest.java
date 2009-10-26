@@ -156,8 +156,7 @@ public class FeedWriterTest implements Serializable {
 			// xhtml prefix xh is bound at entry
 			+ "<xh:div>"
 			+ "This is <xh:b>XHTML</xh:b> content with a tag the end <xh:hr id=\"line\"/>."
-			+ "</xh:div>"
-			+ "</content>" + "</entry>";
+			+ "</xh:div>" + "</content>" + "</entry>";
 
 	private String entry3Result = "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:xh=\"http://www.w3.org/1999/xhtml\">"
 			+ "<id>http://colorfulsoftware.localhost/colorfulsoftware/"
@@ -178,8 +177,7 @@ public class FeedWriterTest implements Serializable {
 			// no need to wrap in supplied div.
 			+ "<xh:div>"
 			+ "This is <xh:b>XHTML</xh:b> content with a tag the end <xh:hr id=\"line\"/>."
-			+ "</xh:div>"
-			+ "</content>" + "</entry>";
+			+ "</xh:div>" + "</content>" + "</entry>";
 
 	private String entry4 = "<entry xmlns=\"http://www.w3.org/2005/Atom\">"
 			+ "<id>http://colorfulsoftware.localhost/colorfulsoftware/"
@@ -196,8 +194,9 @@ public class FeedWriterTest implements Serializable {
 			+ "</summary>"
 			+ "<content type=\"xhtml\" xmlns:xh=\"http://www.w3.org/1999/xhtml\">"
 			// xhtml prefix xhtml is bound at entry
-			+ "<xh:div>" + "This is <xh:b>XHTML</xh:b> content." + "</xh:div>"
-			+ "</content>" + "</entry>";
+			+ "<xh:div>"
+			+ "This is <xh:b>XHTML</xh:b> content.  <xh:p class=\"funkGreen\">This is a simple paragraph.  With two sentences.</xh:p>  Throw in this at the end <xh:hr/>"
+			+ "</xh:div>" + "</content>" + "</entry>";
 
 	private String entry4Result = "<entry xmlns=\"http://www.w3.org/2005/Atom\">"
 			+ "<id>http://colorfulsoftware.localhost/colorfulsoftware/"
@@ -217,9 +216,8 @@ public class FeedWriterTest implements Serializable {
 			// xhtml prefix xhtml is bound at entry
 			// no need to wrap in supplied div.
 			+ "<xh:div>"
-			+ "This is <xh:b>XHTML</xh:b> content."
-			+ "</xh:div>"
-			+ "</content>" + "</entry>";
+			+ "This is <xh:b>XHTML</xh:b> content.  <xh:p class=\"funkGreen\">This is a simple paragraph.  With two sentences.</xh:p>  Throw in this at the end <xh:hr/>"
+			+ "</xh:div>" + "</content>" + "</entry>";
 
 	/**
 	 * @throws Exception
@@ -244,10 +242,10 @@ public class FeedWriterTest implements Serializable {
 			writer.close();
 		}
 
-		//new File("target/out.xml").deleteOnExit();
-		//new File("target/out2.xml").deleteOnExit();
-		//new File("target/xhtml.xml").deleteOnExit();
-		//new File("target/dump1.xml").deleteOnExit();
+		// new File("target/out.xml").deleteOnExit();
+		// new File("target/out2.xml").deleteOnExit();
+		// new File("target/xhtml.xml").deleteOnExit();
+		// new File("target/dump1.xml").deleteOnExit();
 	}
 
 	/**
@@ -280,24 +278,22 @@ public class FeedWriterTest implements Serializable {
 					.createXMLStreamWriter(
 							new FileOutputStream("target/xhtml1.xml"));
 			feedWriter.writeXHTML(writer2, xhtml1);
-		
+
 			feedWriter = new FeedWriter();
-			writer2 = XMLOutputFactory.newInstance()
-					.createXMLStreamWriter(
-							new FileOutputStream("target/xhtml2.xml"));
+			writer2 = XMLOutputFactory.newInstance().createXMLStreamWriter(
+					new FileOutputStream("target/xhtml2.xml"));
 			feedWriter.writeXHTML(writer2, xhtml2);
 
 			// test query string attribute.
 			FeedWriter feedWriter2 = new FeedWriter();
-			writer2 = XMLOutputFactory.newInstance()
-					.createXMLStreamWriter(
-							new FileOutputStream("target/xhtml.xml"));
+			writer2 = XMLOutputFactory.newInstance().createXMLStreamWriter(
+					new FileOutputStream("target/xhtml.xml"));
 			feedWriter2.writeXHTML(writer2, queryStringXHTML);
 			writer2.flush();
 			writer2.close();
-			
+
 			BufferedWriter fout = new BufferedWriter(new FileWriter(
-			"target/xhtmlRegular.xml"));
+					"target/xhtmlRegular.xml"));
 			fout.write(queryStringXHTML);
 			fout.flush();
 			fout.close();
@@ -361,18 +357,12 @@ public class FeedWriterTest implements Serializable {
 			assertTrue(entries != null);
 			assertTrue(entries.size() == 1);
 
-			for(Entry ent: entries.values()){
-				System.out.println("entry:\n"+ent);
-			}
-			
 			theXMLString = new StringWriter();
 			writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
 					theXMLString);
 			new FeedWriter().writeEntries(writer, entries);
 			writer.flush();
 			writer.close();
-			System.out.println("theXMLString3:\n"+theXMLString.toString());
-			System.out.println("entry3Result:\n"+entry3Result);
 			assertEquals(theXMLString.toString(), entry3Result);
 
 			entries = new FeedReader().readEntry(XMLInputFactory.newInstance()

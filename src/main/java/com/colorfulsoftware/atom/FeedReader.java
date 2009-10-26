@@ -369,8 +369,8 @@ class FeedReader implements Serializable {
 		String summary = null;
 		if (containsXHTML(attributes)) {
 			summary = readXHTML(reader, "summary");
-		//} else if (containsHTML(attributes)) {
-		//	summary = readEscapedHTML(reader, "summary");
+			// } else if (containsHTML(attributes)) {
+			// summary = readEscapedHTML(reader, "summary");
 		} else {
 			summary = reader.getElementText();
 		}
@@ -380,9 +380,8 @@ class FeedReader implements Serializable {
 	// used for xhtml.
 	private boolean containsXHTML(List<Attribute> attributes) {
 		Attribute xhtml = feedDoc.getAttributeFromGroup(attributes, "type");
-		return ((xhtml != null) && (xhtml.getValue().equals("xhtml") ||
-																		 xhtml
-		 .getValue().equals("html")));
+		return ((xhtml != null) && (xhtml.getValue().equals("xhtml") || xhtml
+				.getValue().equals("html")));
 	}
 
 	Source readSource(XMLStreamReader reader) throws Exception {
@@ -570,7 +569,7 @@ class FeedReader implements Serializable {
 			throws Exception {
 		StringBuffer xhtml = new StringBuffer();
 		String elementName = null;
-		boolean justReadStart = true;
+		boolean justReadStart = false;
 		while (reader.hasNext()) {
 			boolean breakOut = false;
 
@@ -578,7 +577,15 @@ class FeedReader implements Serializable {
 
 			case XMLStreamConstants.START_ELEMENT:
 				elementName = getElementName(reader);
+
+				// if we read 2 start elements in a row, we need to close the
+				// first start element.
+				if (justReadStart) {
+					xhtml.append(" >");
+				}
+
 				xhtml.append("<" + elementName);
+
 				List<Attribute> attributes = getAttributes(reader);
 				// add the attributes
 				if (attributes != null && attributes.size() > 0) {
@@ -589,7 +596,7 @@ class FeedReader implements Serializable {
 					}
 				}
 				justReadStart = true;
-				
+
 				break;
 
 			case XMLStreamConstants.END_ELEMENT:
@@ -598,9 +605,9 @@ class FeedReader implements Serializable {
 						&& namespaceURI.equals("http://www.w3.org/2005/Atom")) {
 					breakOut = true;
 				} else {
-					if(justReadStart){
+					if (justReadStart) {
 						xhtml.append(" />");
-					}else{
+					} else {
 						xhtml.append("</" + elementName + ">");
 					}
 					justReadStart = false;
@@ -614,21 +621,20 @@ class FeedReader implements Serializable {
 			// break;
 
 			default:
-				if(justReadStart){
+				if (justReadStart) {
 					xhtml.append(">");
 					justReadStart = false;
 				}
 				// escape the necessary characters.
 				String escapedTxt = reader.getText().replaceAll("&", "&amp;")
-				.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-		xhtml.append(escapedTxt);
-		/*
-				String escapedTxt = reader.getText().replaceAll("&amp;", "&")
-						.replaceAll("&", "&amp;").replaceAll("&lt;", "<")
-						.replaceAll("<", "&lt;").replaceAll("&gt;", ">")
-						.replaceAll(">", "&gt;");
+						.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 				xhtml.append(escapedTxt);
-			*/
+				/*
+				 * String escapedTxt = reader.getText().replaceAll("&amp;", "&")
+				 * .replaceAll("&", "&amp;").replaceAll("&lt;", "<")
+				 * .replaceAll("<", "&lt;").replaceAll("&gt;", ">")
+				 * .replaceAll(">", "&gt;"); xhtml.append(escapedTxt);
+				 */
 			}
 			if (breakOut) {
 				break;

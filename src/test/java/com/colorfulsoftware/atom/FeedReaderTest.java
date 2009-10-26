@@ -162,7 +162,7 @@ public class FeedReaderTest implements Serializable {
 			+ "    <updated>2009-04-13T09:21:26.00-06:00</updated>"
 			+ "    <what:now myAttr=\"valuable\" />"
 			+ "    <title type=\"xhtml\">"
-			+ "      <div xmlns=\"http://www.w3.org/1999/xhtml\"><a href=\"&quot;http://www.laptopsfast.com&quot;\" onclick=\"&quot;logStatistic(this.href);&quot;\">Laptops Fast</a></div>"
+			+ "      <div xmlns=\"http://www.w3.org/1999/xhtml\"><a href=\"http://www.laptopsfast.com\" onclick=\"logStatistic(this.href);\">Laptops Fast</a></div>"
 			+ "				</title>"
 			+ "    <author><name>Laptops Fast</name></author>"
 			+ "    <link href=\"http://www.laptopsfast.com\" rel=\"alternate\" />"
@@ -332,7 +332,12 @@ public class FeedReaderTest implements Serializable {
 				assertNotNull(source.getId());
 			}
 
-			System.out.println("feed:\n"+feed);
+			BufferedWriter out = new BufferedWriter(new FileWriter(
+					"target/source1.xml"));
+			out.write(feed.toString());
+			out.flush();
+			out.close();
+
 			// make sure it can also be written afterwards.
 			FeedWriter feedWriter = new FeedWriter();
 			XMLStreamWriter writer = XMLOutputFactory.newInstance()
