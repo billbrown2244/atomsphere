@@ -475,7 +475,8 @@ class FeedWriter implements Serializable {
 				// write the attributes.
 				writeAttributes(writer, extension.getAttributes());
 				// add the content.
-				writer.writeCharacters(extension.getContent());
+				//write it as xhtml to take into account sub elements.
+				writeXHTML(writer,extension.getContent());
 
 				// close the element.
 				writer.writeEndElement();

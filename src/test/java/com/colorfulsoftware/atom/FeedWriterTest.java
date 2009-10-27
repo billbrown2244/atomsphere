@@ -119,6 +119,7 @@ public class FeedWriterTest implements Serializable {
 			+ "<title>Requirements</title>    "
 			+ "<published>2007-02-26T12:58:53.197-06:00</published>    "
 			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
+			+ "<xh:p>a random xhtml extension in the middle of the entry data.  <xh:hr/>This is actually valid.</xh:p>"
 			// xhtml prefix xh is bound at entry
 			+ "<content type=\"xhtml\">"
 			+ "<xh:div>"
@@ -133,6 +134,7 @@ public class FeedWriterTest implements Serializable {
 			+ "<title>Requirements</title>"
 			+ "<author><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
 			+ "<published>2007-02-26T12:58:53.197-06:00</published>"
+			+ "<xh:p>a random xhtml extension in the middle of the entry data.  <xh:hr/>This is actually valid.</xh:p>"
 			+ "<content type=\"xhtml\">"
 			// xhtml prefix xh is bound at entry
 			// no need to wrap in supplied div.
@@ -344,12 +346,18 @@ public class FeedWriterTest implements Serializable {
 			assertTrue(entries != null);
 			assertTrue(entries.size() == 1);
 
+			for(Entry ent: entries.values()){
+				System.out.println("entry:\n"+ent);
+			}
+			
 			theXMLString = new StringWriter();
 			writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
 					theXMLString);
 			new FeedWriter().writeEntries(writer, entries);
 			writer.flush();
 			writer.close();
+			System.out.println("theXMLString.toString():\n"+theXMLString.toString());
+			System.out.println("entry2Result:\n"+entry2Result);
 			assertEquals(theXMLString.toString(), entry2Result);
 
 			entries = new FeedReader().readEntry(XMLInputFactory.newInstance()

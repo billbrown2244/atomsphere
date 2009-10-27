@@ -121,7 +121,6 @@ class AtomTextConstruct implements Serializable {
 		String divWrapperStart = null;
 		if (contentType == ContentType.XHTML) {
 			divWrapperStart = getDivStartName(text);
-			// divWrapperEnd =
 			getDivWrapperEnd(text);
 			this.text = getXhtmlText(text);
 		} else {
