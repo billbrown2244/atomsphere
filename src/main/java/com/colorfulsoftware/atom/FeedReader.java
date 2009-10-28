@@ -379,7 +379,14 @@ class FeedReader implements Serializable {
 
 	// used for xhtml.
 	private boolean containsXHTML(List<Attribute> attributes) {
-		Attribute xhtml = feedDoc.getAttributeFromGroup(attributes, "type");
+		Attribute xhtml = null;
+		if (attributes != null) {
+			for (Attribute attr : attributes) {
+				if (attr.getName().equalsIgnoreCase("type")) {
+					xhtml = attr;
+				}
+			}
+		}
 		return ((xhtml != null) && (xhtml.getValue().equals("xhtml") || xhtml
 				.getValue().equals("html")));
 	}

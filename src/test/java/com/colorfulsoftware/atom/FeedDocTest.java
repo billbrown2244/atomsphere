@@ -128,7 +128,7 @@ public class FeedDocTest implements Serializable {
 			+ "<link href=\"http://www.minoritydirectory.net/latest.xml\" rel=\"self\" />"
 			+ "<icon>http://www.minoritydirectory.net/images/favicon.ico</icon>"
 			+ "<logo>http://www.minoritydirectory.net/images/logo.gif</logo>"
-			+ "<sort:desc type=\"updated\" />"
+			+ "<sort:asc type=\"updated\" />"
 			+ "</source><id>http://www.minoritydirectory.net/Virtual+Quest+llc</id>"
 			+ "<updated>2009-10-14T15:25:39.00-06:00</updated>"
 			+ "<title type=\"html\">&lt;a href=\"http://www.minoritydirectory.net/businessservices\" title=\"See Full Listing...\" >Virtual Quest llc&lt;/a></title>"
@@ -161,6 +161,8 @@ public class FeedDocTest implements Serializable {
 			+ "<updated>2008-01-02T00:00:00.00-06:00</updated>"
 			+ "<title>test entry 1</title>" + "</entry>";
 
+	private String basicFeed1 = "<feed><title>Example</title><id>abc.123.xyz</id><updated>2020-12-13T18:30:02Z</updated><author><name>someone</name></author></feed>";
+	
 	private String expectedFeed1 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\">"
 			+ " <title>Example Feed</title>"
@@ -692,7 +694,29 @@ public class FeedDocTest implements Serializable {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			assertTrue(e instanceof AtomSpecException);
+			fail("should not get here.");
+		}
+		
+		try {
+			feed1 = feedDoc.readFeedToBean(basicFeed1);
+			assertNull(feed1.getAttributes());
+			assertNull(feed1.getAttribute("xmlns"));
+			assertNull(feed1.getAttribute("xml:lang"));
+			XMLStreamWriter writer = XMLOutputFactory.newInstance()
+					.createXMLStreamWriter(
+							new FileOutputStream("target/basicFeed.xml"));
+			feedDoc.writeFeedDoc(writer, feed1,null,null);
+			writer.flush();
+			writer.close();
+			feed1 = feedDoc.readFeedToBean(new File("target/basicFeed.xml"));
+			System.out.println(feed1);
+			assertNotNull(feed1.getAttributes());
+			assertNotNull(feed1.getAttribute("xmlns"));
+			assertNotNull(feed1.getAttribute("xml:lang"));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("should not get here.");
 		}
 
 		try {
@@ -702,6 +726,7 @@ public class FeedDocTest implements Serializable {
 			assertNull(feed1.getExtension("local:test").getAttribute("bunky"));
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			fail("should not get here.");
 		}
 
@@ -1183,13 +1208,15 @@ public class FeedDocTest implements Serializable {
 			assertNotNull(feed.getUpdated().getDateTime());
 			assertNull(feed.getSubtitle().getAttribute("sayWhat"));
 
-			FeedWriter feedWriter = new FeedWriter();
+			//sort the entries:
+			feed = feedDoc.sortEntries(feed, feedDoc.SORT_ASC,Summary.class);
+			feed = feedDoc.sortEntries(feed, feedDoc.SORT_DESC,Title.class);
+			feed = feedDoc.sortEntries(feed, feedDoc.SORT_ASC,Updated.class);
+			
 			XMLStreamWriter writer = XMLOutputFactory.newInstance()
 					.createXMLStreamWriter(
 							new FileOutputStream("target/dump1.xml"));
-			feedWriter.writeFeed(writer, feed);
-			writer.flush();
-			writer.close();
+			feedDoc.writeFeedDoc(writer, feed,null,null);
 
 			int fileName = 1;
 			for (Entry ent : feed.getEntries().values()) {
@@ -1256,7 +1283,7 @@ public class FeedDocTest implements Serializable {
 					assertNotNull(source.getCategory("purpose"));
 					assertNotNull(source
 							.getLink("http://www.minoritydirectory.net/latest.xml"));
-					assertNotNull(source.getExtension("sort:desc"));
+					assertNotNull(source.getExtension("sort:asc"));
 				}
 			}
 

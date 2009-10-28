@@ -68,6 +68,9 @@ public final class FeedDoc implements Serializable {
 	private String libUri;
 	private String libVersion;
 
+	private Attribute langEn;
+	private Attribute atomBase;
+
 	/**
 	 * creates a new feed document.
 	 * 
@@ -80,7 +83,8 @@ public final class FeedDoc implements Serializable {
 		props.load(FeedDoc.class.getResourceAsStream("/atomsphere.properties"));
 		libUri = props.getProperty("uri");
 		libVersion = props.getProperty("version");
-
+		langEn = new Attribute("xml:lang", "en-US");
+		atomBase = new Attribute("xmlns", "http://www.w3.org/2005/Atom");
 	}
 
 	/**
@@ -400,10 +404,10 @@ public final class FeedDoc implements Serializable {
 		if (attributes == null) {
 			attributes = new LinkedList<Attribute>();
 		}
-		if (getAttributeFromGroup(attributes, getAtomBase().getName()) == null) {
+		if (entry.getAttribute("xmlns") == null) {
 			attributes.add(getAtomBase());
 		}
-		if (getAttributeFromGroup(attributes, getLangEn().getName()) == null) {
+		if (entry.getAttribute("xml:lang") == null) {
 			attributes.add(getLangEn());
 		}
 
@@ -1049,16 +1053,18 @@ public final class FeedDoc implements Serializable {
 
 		// add atom base and xml_language to the entry if they are not there.
 		List<Attribute> attributes = feed.getAttributes();
+		
 		if (attributes == null) {
 			attributes = new LinkedList<Attribute>();
 		}
-		if (getAttributeFromGroup(attributes, getAtomBase().getName()) == null) {
+		System.out.println("attrs size before: "+attributes.size());
+		if (feed.getAttribute("xmlns") == null) {
 			attributes.add(getAtomBase());
 		}
-		if (getAttributeFromGroup(attributes, getLangEn().getName()) == null) {
+		if (feed.getAttribute("xml:lang") == null) {
 			attributes.add(getLangEn());
 		}
-
+		System.out.println("attrs size after: "+attributes.size());
 		// rebuild the feed with the updated attributes
 		// and atomsphere generator element
 		feed = buildFeed(feed.getId(), feed.getTitle(), feed.getUpdated(), feed
@@ -1066,7 +1072,7 @@ public final class FeedDoc implements Serializable {
 				.getContributors(), feed.getLinks(), attributes, feed
 				.getExtensions(), getAtomsphereVersion(), feed.getSubtitle(),
 				feed.getIcon(), feed.getLogo(), feed.getEntries());
-
+		System.out.println("feed after: "+feed);
 		// write the xml header.
 		writer.writeStartDocument(encoding, version);
 		new FeedWriter().writeFeed(writer, feed);
@@ -1079,25 +1085,6 @@ public final class FeedDoc implements Serializable {
 			Email email, List<Attribute> attributes, List<Extension> extensions)
 			throws AtomSpecException {
 		return new AtomPersonConstruct(name, uri, email, attributes, extensions);
-	}
-
-	// checks for and returns the Attribute from the String attribute (argument)
-	// in the list of attributes (argument)
-	// used by Category, Generator and Link.
-	Attribute getAttributeFromGroup(List<Attribute> attributes,
-			String attributeName) {
-		if (attributes != null) {
-			for (Attribute attr : attributes) {
-				if (attr.getName().equalsIgnoreCase(attributeName)) {
-					try {
-						return buildAttribute(attr.getName(), attr.getValue());
-					} catch (AtomSpecException e) {
-						// this shouldn't happen.
-					}
-				}
-			}
-		}
-		return null;
 	}
 
 	/**
@@ -1212,18 +1199,13 @@ public final class FeedDoc implements Serializable {
 	// used by FeedReader and FeedWriter
 	Feed checkForAndApplyExtension(Feed feed, Attribute xmlns) throws Exception {
 
-		// if there aren't any attributes for the feed and thus no xmlns:sort
-		// attribute
-		// return the defaults.
-		if (feed.getAttributes() == null) {
-			return feed;
-		}
-
 		// check for the first supported extension
 		// currently only sort is implemented.
-		for (Attribute attr : feed.getAttributes()) {
-			if (attr.equals(xmlns)) {
-				return applySort(feed);
+		if (feed.getAttributes() != null) {
+			for (Attribute attr : feed.getAttributes()) {
+				if (attr.equals(xmlns)) {
+					return applySort(feed);
+				}
 			}
 		}
 		return feed;
@@ -1280,24 +1262,14 @@ public final class FeedDoc implements Serializable {
 	 *         http://www.w3.org/2005/Atom
 	 */
 	public Attribute getAtomBase() {
-		try {
-			return buildAttribute("xmlns", "http://www.w3.org/2005/Atom");
-		} catch (AtomSpecException e) {
-			// this shouldn't happen.
-			return null;
-		}
+		return new Attribute(atomBase);
 	}
 
 	/**
 	 * @return the base language for the library en-US.
 	 */
 	public Attribute getLangEn() {
-		try {
-			return buildAttribute("xml:lang", "en-US");
-		} catch (AtomSpecException e) {
-			// this shouldn't happen.
-			return null;
-		}
+		return new Attribute(langEn);
 	}
 
 	/**
