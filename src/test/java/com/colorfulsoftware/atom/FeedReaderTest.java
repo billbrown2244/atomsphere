@@ -118,6 +118,7 @@ public class FeedReaderTest implements Serializable {
 			+ "  <icon>http://www.minoritydirectory.net/images/favicon.ico</icon>"
 			+ "  <logo>http://www.minoritydirectory.net/images/logo.gif</logo>"
 			+ "  <sort:desc type=\"updated\" />"
+			+ "  <sort:fake>with a fake <sort:embedded id=\"unique\" /> nested extension element and nested<sort:level1>nested <sort:level2>really embedded</sort:level2> sort extension stuff</sort:level1></sort:fake>"
 			+ "  <entry>"
 			+ "    <id>http://www.laptopsfast.com</id>"
 			+ "    <updated>2009-04-13T09:21:26.00-06:00</updated>"
@@ -166,7 +167,6 @@ public class FeedReaderTest implements Serializable {
 			+ "				</title>"
 			+ "    <author><name>Laptops Fast</name></author>"
 			+ "    <link href=\"http://www.laptopsfast.com\" rel=\"alternate\" />"
-			+ "   <summary>Laptops and Accessories Retailer</summary>"
 			+ "</source>" + "  </entry></feed>";
 
 	String rights1 = "<rights type=\"xhtml\"><div xmlns=\"http://www.w3.org/1999/xhtml\">A marked up <br /> rights.This is <span style=\"color:blue;\">blue text :). <hr id=\"unique\" class=\"phat\" /> <a href=\"http://maps.google.com?q=something&amp;b=somethingElse\">a fake map link</a></span>. </div></rights>";

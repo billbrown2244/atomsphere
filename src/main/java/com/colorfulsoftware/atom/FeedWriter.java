@@ -280,7 +280,7 @@ class FeedWriter implements Serializable {
 			return;
 		} else {
 			String rawText;
-			
+
 			// prepare the markup to be written.
 			text = text.replaceAll("&lt;", "<").replaceAll("&gt;", ">")
 					.replaceAll("&amp;", "&");
@@ -450,33 +450,29 @@ class FeedWriter implements Serializable {
 			if (extension.getContent() == null
 					|| extension.getContent().trim().equals("")) {
 				String elementName = extension.getElementName();
-				if (elementName.indexOf(":") == -1) {
-					writer.writeEmptyElement(elementName);
-				} else {
-					String prefix = elementName.substring(0, elementName
-							.indexOf(":"));
-					String localName = elementName.substring(elementName
-							.indexOf(":") + 1);
-					writer.writeEmptyElement(prefix, localName, "");
-				}
+				// all elements should have prefix and local name
+				String prefix = elementName.substring(0, elementName
+						.indexOf(":"));
+				String localName = elementName.substring(elementName
+						.indexOf(":") + 1);
+				writer.writeEmptyElement(prefix, localName, "");
+
 				// write the attributes.
 				writeAttributes(writer, extension.getAttributes());
 			} else {
 				String elementName = extension.getElementName();
-				if (elementName.indexOf(":") == -1) {
-					writer.writeStartElement(elementName);
-				} else {
-					String prefix = elementName.substring(0, elementName
-							.indexOf(":"));
-					String localName = elementName.substring(elementName
-							.indexOf(":") + 1);
-					writer.writeStartElement(prefix, localName, "");
-				}
+				// all elements should have prefix and local name
+				String prefix = elementName.substring(0, elementName
+						.indexOf(":"));
+				String localName = elementName.substring(elementName
+						.indexOf(":") + 1);
+				writer.writeStartElement(prefix, localName, "");
+
 				// write the attributes.
 				writeAttributes(writer, extension.getAttributes());
 				// add the content.
-				//write it as xhtml to take into account sub elements.
-				writeXHTML(writer,extension.getContent());
+				// write it as xhtml to take into account sub elements.
+				writeXHTML(writer, extension.getContent());
 
 				// close the element.
 				writer.writeEndElement();

@@ -278,7 +278,7 @@ class AtomTextConstruct implements Serializable {
 				sb.append("<"
 						+ divStartName
 						+ ((divStartAttribute == null) ? ">"
-								: divStartAttribute + " \">") + text + "</"
+								: divStartAttribute + " >") + text + "</"
 						+ divStartName + ">");
 			} else {
 				sb.append(text);

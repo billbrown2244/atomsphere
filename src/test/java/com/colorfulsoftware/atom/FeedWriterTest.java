@@ -345,10 +345,6 @@ public class FeedWriterTest implements Serializable {
 					.createXMLStreamReader(new StringReader(entry2)), null);
 			assertTrue(entries != null);
 			assertTrue(entries.size() == 1);
-
-			for(Entry ent: entries.values()){
-				System.out.println("entry:\n"+ent);
-			}
 			
 			theXMLString = new StringWriter();
 			writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
@@ -356,8 +352,6 @@ public class FeedWriterTest implements Serializable {
 			new FeedWriter().writeEntries(writer, entries);
 			writer.flush();
 			writer.close();
-			System.out.println("theXMLString.toString():\n"+theXMLString.toString());
-			System.out.println("entry2Result:\n"+entry2Result);
 			assertEquals(theXMLString.toString(), entry2Result);
 
 			entries = new FeedReader().readEntry(XMLInputFactory.newInstance()

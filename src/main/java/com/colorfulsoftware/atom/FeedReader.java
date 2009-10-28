@@ -118,7 +118,7 @@ class FeedReader implements Serializable {
 				} else if (elementName.equals("entry")
 						|| elementName.equals("atom:entry")) {
 					entries = readEntry(reader, entries);
-				} else {// extension
+				} else {// extension    
 					extensions = readExtension(reader, extensions, elementName);
 				}
 				break;
@@ -544,7 +544,7 @@ class FeedReader implements Serializable {
 
 				break;
 
-			// so far no parsers seem to be able to detect CDATA :(. Maybe it's
+			// so far no parsers seem to be able to detect CDATA :(. Maybe a
 			// not necessary?
 			// case XMLStreamConstants.CDATA:
 			// xhtml.append("<![CDATA[" + reader.getText() + "]]>");
@@ -614,7 +614,7 @@ class FeedReader implements Serializable {
 				}
 				break;
 
-			// so far no parsers seem to be able to detect CDATA :(. Maybe it's
+			// so far no parsers seem to be able to detect CDATA :(. Maybe a
 			// not necessary?
 			// case XMLStreamConstants.CDATA:
 			// xhtml.append("<![CDATA[" + reader.getText() + "]]>");
@@ -629,12 +629,6 @@ class FeedReader implements Serializable {
 				String escapedTxt = reader.getText().replaceAll("&", "&amp;")
 						.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 				xhtml.append(escapedTxt);
-				/*
-				 * String escapedTxt = reader.getText().replaceAll("&amp;", "&")
-				 * .replaceAll("&", "&amp;").replaceAll("&lt;", "<")
-				 * .replaceAll("<", "&lt;").replaceAll("&gt;", ">")
-				 * .replaceAll(">", "&gt;"); xhtml.append(escapedTxt);
-				 */
 			}
 			if (breakOut) {
 				break;

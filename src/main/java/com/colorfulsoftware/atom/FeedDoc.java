@@ -477,8 +477,6 @@ public final class FeedDoc implements Serializable {
 		SortedMap<String, Entry> entries = new FeedReader().readEntry(reader,
 				null);
 		// readEntry() only reads at most one entry.
-		// so if the string contains more than one entry, only the first gets
-		// returned.
 		return entries.get(entries.firstKey());
 	}
 
@@ -514,8 +512,6 @@ public final class FeedDoc implements Serializable {
 		SortedMap<String, Entry> entries = new FeedReader().readEntry(reader,
 				null);
 		// readEntry() only reads at most one entry.
-		// so if the string contains more than one entry, only the first gets
-		// returned.
 		return entries.get(entries.firstKey());
 	}
 
@@ -574,12 +570,13 @@ public final class FeedDoc implements Serializable {
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 		XMLStreamReader reader = inputFactory.createXMLStreamReader(
 				inputStream, encoding);
-		SortedMap<String, Entry> entries = new FeedReader().readEntry(reader,
-				null);
-		// readEntry() only reads at most one entry.
+		Feed feed = new FeedReader().readFeed(reader);
+		// readEntry() reads the first entry from a feed or the sole entry if it
+		// is the root element.
 		// so if the string contains more than one entry, only the first gets
 		// returned.
-		return entries.get(entries.firstKey());
+		SortedMap<String, Entry> entries = feed.getEntries();
+		return entries == null ? null : entries.get(entries.firstKey());
 	}
 
 	/**

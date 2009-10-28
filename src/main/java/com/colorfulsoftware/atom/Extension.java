@@ -64,11 +64,11 @@ public class Extension implements Serializable {
 	Extension(String elementName, List<Attribute> attributes, String content)
 			throws AtomSpecException {
 
-		// specification customization
-		if (elementName == null || elementName.equals("")) {
-			throw new AtomSpecException(
-					"Extension element names SHOULD NOT be null and SHOULD NOT be blank.");
+		if (elementName.indexOf(":") == -1 || elementName.indexOf(":") == 0) {
+			throw new AtomSpecException("Extension element '" + elementName
+					+ "' is missing a namespace prefix.");
 		}
+
 		this.elementName = elementName;
 		this.content = content;
 
