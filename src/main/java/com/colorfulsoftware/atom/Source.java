@@ -255,6 +255,9 @@ public class Source implements Serializable {
 		return sourceAdaptor.getExtension(extName);
 	}
 
+	/**
+	 * Shows the contents of the <source> element.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("<source");

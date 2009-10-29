@@ -213,6 +213,9 @@ class AtomDateConstruct implements Serializable {
 		return null;
 	}
 
+	/**
+	 * Shows the contents of the <updated> or <published> elements.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

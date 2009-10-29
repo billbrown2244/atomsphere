@@ -129,6 +129,9 @@ public class Content implements Serializable {
 		return content.getContentType();
 	}
 
+	/**
+	 * Shows the contents of the <content> element.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("<content");

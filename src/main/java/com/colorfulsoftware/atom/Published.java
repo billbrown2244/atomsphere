@@ -93,6 +93,9 @@ public class Published implements Serializable {
 		return published.getAttribute(attrName);
 	}
 
+	/**
+	 * Shows the contents of the <published> element.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("<published");

@@ -89,6 +89,9 @@ public class Subtitle implements Serializable {
 		return subtitle.getContentType();
 	}
 
+	/**
+	 * Shows the contents of the <subtitle> element.
+	 */
 	@Override
 	public String toString() {
 		return "<subtitle" + subtitle.toString() + "</subtitle>";

@@ -56,6 +56,9 @@ public class Name implements Serializable {
 		return name.getText();
 	}
 
+	/**
+	 * Shows the contents of the <name> element.
+	 */
 	@Override
 	public String toString() {
 		return "<name>" + name.getText() + "</name>";

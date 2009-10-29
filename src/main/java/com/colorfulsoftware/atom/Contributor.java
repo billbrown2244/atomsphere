@@ -116,6 +116,9 @@ public class Contributor implements Serializable {
 		return person.getExtension(extName);
 	}
 
+	/**
+	 * Shows the contents of the <contributor> element.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("<contributor");

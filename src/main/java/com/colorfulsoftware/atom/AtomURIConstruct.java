@@ -96,6 +96,9 @@ class AtomURIConstruct implements Serializable {
 		return null;
 	}
 
+	/**
+	 * Shows the contents of the <id>, <icon> or <logo> elements.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

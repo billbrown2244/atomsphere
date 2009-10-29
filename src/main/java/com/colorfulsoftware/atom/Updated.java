@@ -93,6 +93,9 @@ public class Updated implements Serializable {
 		return updated.getAttribute(attrName);
 	}
 
+	/**
+	 * Shows the contents of the <updated> element.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("<updated");

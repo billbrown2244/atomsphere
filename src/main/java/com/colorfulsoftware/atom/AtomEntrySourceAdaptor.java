@@ -370,6 +370,9 @@ class AtomEntrySourceAdaptor implements Serializable {
 		return null;
 	}
 
+	/**
+	 * Shows the contents of the <entry> or <source> elements. 
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

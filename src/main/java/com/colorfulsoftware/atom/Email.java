@@ -55,6 +55,9 @@ public class Email implements Serializable {
 		return email.getText();
 	}
 
+	/**
+	 * Shows the contents of the <email> element.
+	 */
 	@Override
 	public String toString() {
 		return "<email>" + email.getText() + "</email>";

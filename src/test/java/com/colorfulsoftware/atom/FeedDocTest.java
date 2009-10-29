@@ -23,9 +23,12 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -103,7 +106,7 @@ public class FeedDocTest implements Serializable {
 			+ "<link href=\"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0/sort.rnc\" rel=\"alternate\" type=\"application/atom+xml\" hreflang=\"en-us\" title=\"relax ng\" >This is also valid.  See http://www.atomenabled.org/developers/syndication/atom-format-spec.php The \"atom:link\" element defines a reference from an entry or feed to a Web resource. This specification assigns no meaning to the content (if any) of this element. (#Other Extensibility section)</link>"
 			+ "<icon local:testAttr=\"testVal\">http://www.minoritydirectory.net/images/logo.gif</icon>"
 			+ "<logo local:testAttr=\"testVal\">http://www.minoritydirectory.net/images/logo.gif</logo>"
-			+ "<rights xmlns=\"http://www.w3.org/2005/Atom\">Copyright 2007</rights>"
+			+ "<rights xmlns=\"http://www.w3.org/2005/Atom\" type=\"html\">Copyright 2007 &lt;hr /&gt;</rights>"
 			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\"><id>http://colorfulsoftware.localhost/colorfulsoftware/projects/atomsphere/atom.xml#About</id>"
 			+ "<updated>2009-03-02T13:00:00.699-06:00</updated><title>About</title><published xmlns=\"http://www.w3.org/2005/Atom\">2007-02-26T12:34:01.330-06:00</published>"
 			+ "<summary>About the project</summary>"
@@ -122,7 +125,7 @@ public class FeedDocTest implements Serializable {
 			+ "<updated>2009-10-20T08:23:27.830-06:00</updated>"
 			+ "<generator>What up doh?</generator>"
 			+ "<category term=\"purpose\" label=\"Organization Listings for Minorities in the USA\" />"
-			+ "<title>Latest Updates...</title><subtitle>A much needed resource.</subtitle>"
+			+ "<title>Latest Updates...</title><subtitle type=\"html\">A much needed resource.&lt;hr /&gt;</subtitle>"
 			+ "<rights>Free Speech</rights>"
 			+ "<author><name>The Minority Directory</name></author><contributor><name>The People</name></contributor>"
 			+ "<link href=\"http://www.minoritydirectory.net/latest.xml\" rel=\"self\" />"
@@ -162,7 +165,59 @@ public class FeedDocTest implements Serializable {
 			+ "<title>test entry 1</title>" + "</entry>";
 
 	private String basicFeed1 = "<feed><title>Example</title><id>abc.123.xyz</id><updated>2020-12-13T18:30:02Z</updated><author><name>someone</name></author></feed>";
-	
+
+	private String basicFeed2 = "<feed xmlns:sort=\"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0\"><sort:asc type=\"title\" /><title>Example</title><id>abc.123.xyz</id><updated>2020-12-13T18:30:02Z</updated><author><name>someone</name></author>"
+			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
+			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+			+ "<title>test entry 1</title>"
+			+ "</entry>"
+			+ " <entry>"
+			+ "   <title>Atom-Powered Robots Run Amok</title>"
+			+ "   <link href=\"http://example.org/2003/12/13/atom03\"/>"
+			+ "   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>"
+			+ "   <updated>2003-12-13T18:30:02Z</updated>"
+			+ "   <summary>Some text.</summary>" + " </entry></feed>";
+
+	private String basicFeed3 = "<feed xmlns:sort=\"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0\"><sort:asc type=\"summary\" /><title>Example</title><id>abc.123.xyz</id><updated>2020-12-13T18:30:02Z</updated><author><name>someone</name></author>"
+			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
+			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+			+ "<title>test entry 1</title>"
+			+ "</entry>"
+			+ " <entry>"
+			+ "   <title>Atom-Powered Robots Run Amok</title>"
+			+ "   <link href=\"http://example.org/2003/12/13/atom03\"/>"
+			+ "   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>"
+			+ "   <updated>2003-12-13T18:30:02Z</updated>"
+			+ "   <summary>Some text.</summary>" + " </entry></feed>";
+
+	private String basicFeed4 = "<feed xmlns:sort=\"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0\"><sort:desc type=\"title\" /><title>Example</title><id>abc.123.xyz</id><updated>2020-12-13T18:30:02Z</updated><author><name>someone</name></author>"
+			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
+			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+			+ "<title>test entry 1</title>"
+			+ "</entry>"
+			+ " <entry>"
+			+ "   <title>Atom-Powered Robots Run Amok</title>"
+			+ "   <link href=\"http://example.org/2003/12/13/atom03\"/>"
+			+ "   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>"
+			+ "   <updated>2003-12-13T18:30:02Z</updated>"
+			+ "   <summary>Some text.</summary>" + " </entry></feed>";
+
+	private String basicFeed5 = "<feed xmlns:sort=\"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0\"><sort:desc type=\"summary\" /><title>Example</title><id>abc.123.xyz</id><updated>2020-12-13T18:30:02Z</updated><author><name>someone</name></author>"
+			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
+			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+			+ "<title>test entry 1</title><summary>Some text.</summary>"
+			+ "</entry>"
+			+ " <entry>"
+			+ "   <title>Atom-Powered Robots Run Amok</title>"
+			+ "   <link href=\"http://example.org/2003/12/13/atom03\"/>"
+			+ "   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>"
+			+ "   <updated>2003-12-13T18:30:02Z</updated>"
+			+ "   <summary>Some text.</summary>" + " </entry></feed>";
+
 	private String expectedFeed1 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\">"
 			+ " <title>Example Feed</title>"
@@ -182,6 +237,23 @@ public class FeedDocTest implements Serializable {
 	private String expectedFeed2 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">"
 			+ " <title>Example Feed</title>"
+			+ " <subtitle>A subtitle.</subtitle>"
+			+ " <link href=\"http://example.org/feed/\" rel=\"self\"/>"
+			+ " <link href=\"http://example.org/\"/>"
+			+ " <local:test xmlns=\"http://purl.org/dc/elements/1.1/fakeNamespace\">things</local:test>"
+			+ " <updated xml:lang=\"en-US\">2003-12-13T18:30:02Z</updated>"
+			+ " <author>" + "   <name>John Doe</name>"
+			+ "   <email>johndoe@example.com</email>" + " </author>"
+			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
+			+ " <entry>" + "   <title>Atom-Powered Robots Run Amok</title>"
+			+ "   <link href=\"http://example.org/2003/12/13/atom03\"/>"
+			+ "   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>"
+			+ "   <updated>2003-12-13T18:30:02Z</updated>"
+			+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
+
+	private String expectedFeed3 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">"
+			+ " <title type=\"xhtml\"><div xmlns=\"http://www.w3.org/1999/xhtml\">/mean> Example Feed</div></title>"
 			+ " <subtitle>A subtitle.</subtitle>"
 			+ " <link href=\"http://example.org/feed/\" rel=\"self\"/>"
 			+ " <link href=\"http://example.org/\"/>"
@@ -222,23 +294,22 @@ public class FeedDocTest implements Serializable {
 			+ "   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>"
 			+ "   <updated>2003-12-13T18:30:02Z</updated>"
 			+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
-	
-	private String badFeed11 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-		+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">"
-		+ " <title>Example Feed</title>"
-		+ " <subtitle type=\"xhtml\"><div>A marked up <br /> subtitle.</div></subtitle>"
-		+ " <link href=\"http://example.org/feed/\" rel=\"self\"/>"
-		+ " <link href=\"http://example.org/\"/>" + " <:local></:local>"
-		+ " <updated xml:lang=\"en-US\">2003-12-13T18:30:02Z</updated>"
-		+ " <author>" + "   <name>John Doe</name>"
-		+ "   <email>johndoe@example.com</email>" + " </author>"
-		+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
-		+ " <entry>" + "   <title>Atom-Powered Robots Run Amok</title>"
-		+ "   <link href=\"http://example.org/2003/12/13/atom03\"/>"
-		+ "   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>"
-		+ "   <updated>2003-12-13T18:30:02Z</updated>"
-		+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
 
+	private String badFeed11 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">"
+			+ " <title>Example Feed</title>"
+			+ " <subtitle type=\"xhtml\"><div>A marked up <br /> subtitle.</div></subtitle>"
+			+ " <link href=\"http://example.org/feed/\" rel=\"self\"/>"
+			+ " <link href=\"http://example.org/\"/>" + " <:local></:local>"
+			+ " <updated xml:lang=\"en-US\">2003-12-13T18:30:02Z</updated>"
+			+ " <author>" + "   <name>John Doe</name>"
+			+ "   <email>johndoe@example.com</email>" + " </author>"
+			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
+			+ " <entry>" + "   <title>Atom-Powered Robots Run Amok</title>"
+			+ "   <link href=\"http://example.org/2003/12/13/atom03\"/>"
+			+ "   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>"
+			+ "   <updated>2003-12-13T18:30:02Z</updated>"
+			+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
 
 	private String badFeed2 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">"
@@ -522,6 +593,28 @@ public class FeedDocTest implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		// add the indenting stream writer jar to the classpath
+		// http://forums.sun.com/thread.jspa?threadID=300557&start=0&tstart=0
+		URLClassLoader sysloader = (URLClassLoader) ClassLoader
+				.getSystemClassLoader();
+		Class<?> sysclass = URLClassLoader.class;
+		try {
+			Method method = sysclass.getDeclaredMethod("addURL",
+					java.net.URL.class);
+			method.setAccessible(true);
+			method.invoke(sysloader, new Object[] { new java.net.URL(
+					"http://ftpna2.bea.com/pub/downloads/jsr173.jar") });
+			method
+					.invoke(
+							sysloader,
+							new Object[] { new java.net.URL(
+									"http://repo2.maven.org/maven2/net/java/dev/stax-utils/stax-utils/20060502/stax-utils-20060502.jar") });
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new IOException(
+					"Error, could not add URL to system classloader");
+		}// end try catch
 	}
 
 	/**
@@ -696,7 +789,7 @@ public class FeedDocTest implements Serializable {
 			e.printStackTrace();
 			fail("should not get here.");
 		}
-		
+
 		try {
 			feed1 = feedDoc.readFeedToBean(basicFeed1);
 			assertNull(feed1.getAttributes());
@@ -704,15 +797,41 @@ public class FeedDocTest implements Serializable {
 			assertNull(feed1.getAttribute("xml:lang"));
 			XMLStreamWriter writer = XMLOutputFactory.newInstance()
 					.createXMLStreamWriter(
-							new FileOutputStream("target/basicFeed.xml"));
-			feedDoc.writeFeedDoc(writer, feed1,null,null);
-			writer.flush();
-			writer.close();
-			feed1 = feedDoc.readFeedToBean(new File("target/basicFeed.xml"));
-			System.out.println(feed1);
+							new FileOutputStream("target/basicFeed1.xml"));
+			feedDoc.writeFeedDoc(writer, feed1, null, null);
+
+			feed1 = feedDoc.readFeedToBean(new File("target/basicFeed1.xml"));
 			assertNotNull(feed1.getAttributes());
 			assertNotNull(feed1.getAttribute("xmlns"));
 			assertNotNull(feed1.getAttribute("xml:lang"));
+
+			// do some sorting
+			feed1 = feedDoc.readFeedToBean(basicFeed2);
+			writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
+					new FileOutputStream("target/basicFeed2.xml"));
+			feedDoc.writeFeedDoc(writer, feed1, null, null);
+
+			try {
+				feed1 = feedDoc.readFeedToBean(basicFeed3);
+				writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
+						new FileOutputStream("target/basicFeed3.xml"));
+				feedDoc.writeFeedDoc(writer, feed1, null, null);
+				fail("should not get here.");
+			} catch (AtomSpecException e) {
+				assertEquals(
+						e.getMessage(),
+						"The feed entries cannot be sorted by <summary> because not all of them have one.");
+			}
+
+			feed1 = feedDoc.readFeedToBean(basicFeed4);
+			writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
+					new FileOutputStream("target/basicFeed4.xml"));
+			feedDoc.writeFeedDoc(writer, feed1, null, null);
+
+			feed1 = feedDoc.readFeedToBean(basicFeed5);
+			writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
+					new FileOutputStream("target/basicFeed5.xml"));
+			feedDoc.writeFeedDoc(writer, feed1, null, null);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -731,6 +850,20 @@ public class FeedDocTest implements Serializable {
 		}
 
 		try {
+			feed1 = feedDoc.readFeedToBean(expectedFeed3);
+			assertNotNull(feed1);
+			assertEquals(feed1.getTitle().getText(), "/mean> Example Feed");
+			BufferedWriter fout = new BufferedWriter(new FileWriter(
+					"target/expectedFeed3.xml"));
+			fout.write(feed1.toString());
+			fout.flush();
+			fout.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("should not get here.");
+		}
+
+		try {
 			feed1 = feedDoc.readFeedToBean(badFeed1);
 			fail("should not get here.");
 		} catch (Exception e) {
@@ -738,7 +871,7 @@ public class FeedDocTest implements Serializable {
 			assertEquals(e.getMessage(),
 					"Extension element '' is missing a namespace prefix.");
 		}
-		
+
 		try {
 			feed1 = feedDoc.readFeedToBean(badFeed11);
 			fail("should not get here.");
@@ -864,6 +997,18 @@ public class FeedDocTest implements Serializable {
 				assertEquals(e.getMessage(),
 						"Category elements MUST have a \"term\" attribute.");
 			}
+
+			String feedStr = feedDoc.readFeedToString(feedDoc
+					.readFeedToBean(new URL(
+							"http://www.earthbeats.net/drops.xml")),
+					"javanet.staxutils.IndentingXMLStreamWriter");
+			assertNotNull(feedStr);
+			BufferedWriter fout = new BufferedWriter(new FileWriter(
+					"target/indentedDrops.xml"));
+			fout.write(feedStr);
+			fout.flush();
+			fout.close();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);
@@ -1187,6 +1332,7 @@ public class FeedDocTest implements Serializable {
 
 			// read and write a full feed.
 			feed = feedDoc.readFeedToBean(mega);
+			assertNotNull(feedDoc.getLibVersion());
 			BufferedWriter out = new BufferedWriter(new FileWriter(
 					"target/mega.xml"));
 			out.write(feed.toString());
@@ -1208,15 +1354,24 @@ public class FeedDocTest implements Serializable {
 			assertNotNull(feed.getUpdated().getDateTime());
 			assertNull(feed.getSubtitle().getAttribute("sayWhat"));
 
-			//sort the entries:
-			feed = feedDoc.sortEntries(feed, feedDoc.SORT_ASC,Summary.class);
-			feed = feedDoc.sortEntries(feed, feedDoc.SORT_DESC,Title.class);
-			feed = feedDoc.sortEntries(feed, feedDoc.SORT_ASC,Updated.class);
-			
+			// sort the entries:
+			feed = feedDoc.sortEntries(feed, feedDoc.SORT_ASC, Summary.class);
+			feed = feedDoc.sortEntries(feed, feedDoc.SORT_DESC, Title.class);
+			feed = feedDoc.sortEntries(feed, feedDoc.SORT_ASC, Updated.class);
+			// this wont sort anything.
+			try {
+				feed = feedDoc
+						.sortEntries(feed, feedDoc.SORT_ASC, Author.class);
+				fail("should not get here.");
+			} catch (AtomSpecException e) {
+				assertEquals(e.getMessage(),
+						"The feed entries cannot be sorted by an invalid type 'Author'.");
+			}
+
 			XMLStreamWriter writer = XMLOutputFactory.newInstance()
 					.createXMLStreamWriter(
 							new FileOutputStream("target/dump1.xml"));
-			feedDoc.writeFeedDoc(writer, feed,null,null);
+			feedDoc.writeFeedDoc(writer, feed, null, null);
 
 			int fileName = 1;
 			for (Entry ent : feed.getEntries().values()) {
@@ -1310,7 +1465,6 @@ public class FeedDocTest implements Serializable {
 				assertNotNull(lnk.getType());
 				assertNotNull(lnk.getRel());
 			}
-
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1474,13 +1628,13 @@ public class FeedDocTest implements Serializable {
 			assertNotNull(ext);
 			Attribute attr = ext.getAttribute("xmlns:local");
 			assertNotNull(attr);
-			
+
 			FeedWriter feedWriter2 = new FeedWriter();
 			XMLStreamWriter writer2 = XMLOutputFactory.newInstance()
 					.createXMLStreamWriter(
 							new FileOutputStream("target/extension2.xml"));
 			SortedMap<String, Entry> entries = new TreeMap<String, Entry>();
-			entries.put("key",ent);
+			entries.put("key", ent);
 			feedWriter2.writeEntries(writer2, entries);
 			writer2.flush();
 			writer2.close();

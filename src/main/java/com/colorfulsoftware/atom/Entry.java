@@ -289,6 +289,9 @@ public class Entry implements Serializable {
 		return entryAdaptor.getExtension(extName);
 	}
 
+	/**
+	 * Shows the contents of the <entry> element.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("<entry");

@@ -64,7 +64,7 @@ public class FeedReaderTest implements Serializable {
 
 	private String title1 = "<title type=\"xhtml\" xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">"
 			+ "<xhtml:div>"
-			+ "Less: <xhtml:em> &lt; </xhtml:em>"
+			+ "Less: <xhtml:em> &lt; and &amp; </xhtml:em>"
 			+ "</xhtml:div>" + "</title>";
 
 	private String title1HTML = "<title type=\"html\">"
@@ -448,7 +448,7 @@ public class FeedReaderTest implements Serializable {
 					new StringReader(title1));
 			Title title = feedReader.readTitle(reader);
 			assertTrue(title.getText().equals(
-					"Less: <xhtml:em> &lt; </xhtml:em>"));
+					"Less: <xhtml:em> &lt; and &amp; </xhtml:em>"));
 			assertTrue(title.getAttributes() != null);
 			assertTrue(title.getAttributes().size() == 2);
 			assertTrue(title.getAttributes().get(1).getName().equals("type"));

@@ -194,6 +194,9 @@ class AtomPersonConstruct implements Serializable {
 		return null;
 	}
 
+	/**
+	 * Shows the contents of the <author> or <contributor> elements. 
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

@@ -108,6 +108,9 @@ public class Author implements Serializable {
 		return person.getExtension(extName);
 	}
 
+	/**
+	 * Shows the contents of the <author> element.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("<author");

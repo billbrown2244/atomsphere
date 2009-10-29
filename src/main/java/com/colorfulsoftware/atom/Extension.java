@@ -135,6 +135,9 @@ public class Extension implements Serializable {
 		return null;
 	}
 
+	/**
+	 * Shows the contents of the extension element.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("<" + elementName);

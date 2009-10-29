@@ -96,6 +96,9 @@ public class Summary implements Serializable {
 		return summary.getContentType();
 	}
 
+	/**
+	 * Shows the contents of the <summary> element.
+	 */
 	@Override
 	public String toString() {
 		return "<summary" + summary.toString() + "</summary>";

@@ -56,6 +56,9 @@ public class URI implements Serializable {
 		return uri.getText();
 	}
 
+	/**
+	 * Shows the contents of the <uri> element.
+	 */
 	@Override
 	public String toString() {
 		return "<uri>" + uri.getText() + "</uri>";

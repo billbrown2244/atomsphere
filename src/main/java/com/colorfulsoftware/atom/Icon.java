@@ -85,6 +85,9 @@ public class Icon implements Serializable {
 		return icon.getAttribute(attrName);
 	}
 
+	/**
+	 * Shows the contents of the <icon> element.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("<icon");

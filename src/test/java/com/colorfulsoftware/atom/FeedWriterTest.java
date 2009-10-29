@@ -231,6 +231,7 @@ public class FeedWriterTest implements Serializable {
 		feedWriter = new FeedWriter();
 		writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
 				new FileOutputStream("target/out.xml"));
+
 	}
 
 	/**
@@ -267,6 +268,7 @@ public class FeedWriterTest implements Serializable {
 			e.printStackTrace();
 			fail("could not read and write feed.");
 		}
+
 	}
 
 	/**
@@ -345,7 +347,7 @@ public class FeedWriterTest implements Serializable {
 					.createXMLStreamReader(new StringReader(entry2)), null);
 			assertTrue(entries != null);
 			assertTrue(entries.size() == 1);
-			
+
 			theXMLString = new StringWriter();
 			writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
 					theXMLString);
@@ -386,6 +388,24 @@ public class FeedWriterTest implements Serializable {
 			writer.close();
 			assertEquals(theXMLString.toString(), entry4Result);
 
+			
+			try {
+				// write the first entry to a file.
+				for (Entry ent : entries.values()) {
+					String entStr = feedDoc.readEntryToString(ent,
+							"javanet.staxutils.IndentingXMLStreamWriter");
+					assertNotNull(entStr);
+					BufferedWriter fout = new BufferedWriter(new FileWriter(
+							"target/entryIndent.xml"));
+					fout.write(entStr);
+					fout.flush();
+					fout.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				fail("could not write entries." + e.getLocalizedMessage());
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("could not write entries." + e.getLocalizedMessage());

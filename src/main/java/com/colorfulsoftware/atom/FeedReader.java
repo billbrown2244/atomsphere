@@ -118,7 +118,7 @@ class FeedReader implements Serializable {
 				} else if (elementName.equals("entry")
 						|| elementName.equals("atom:entry")) {
 					entries = readEntry(reader, entries);
-				} else {// extension    
+				} else {// extension
 					extensions = readExtension(reader, extensions, elementName);
 				}
 				break;
@@ -368,9 +368,9 @@ class FeedReader implements Serializable {
 		// if the content is XHTML, we need to read in the contents of the div.
 		String summary = null;
 		if (containsXHTML(attributes)) {
-			summary = readXHTML(reader, "summary");
-			// } else if (containsHTML(attributes)) {
-			// summary = readEscapedHTML(reader, "summary");
+			summary = readXHTML(reader, "summary", false);
+		} else if (containsHTML(attributes)) {
+			summary = readXHTML(reader, "summary", true);
 		} else {
 			summary = reader.getElementText();
 		}
@@ -387,8 +387,20 @@ class FeedReader implements Serializable {
 				}
 			}
 		}
-		return ((xhtml != null) && (xhtml.getValue().equals("xhtml") || xhtml
-				.getValue().equals("html")));
+		return ((xhtml != null) && (xhtml.getValue().equals("xhtml")));
+	}
+
+	// used for html.
+	private boolean containsHTML(List<Attribute> attributes) {
+		Attribute html = null;
+		if (attributes != null) {
+			for (Attribute attr : attributes) {
+				if (attr.getName().equalsIgnoreCase("type")) {
+					html = attr;
+				}
+			}
+		}
+		return ((html != null) && (html.getValue().equals("html")));
 	}
 
 	Source readSource(XMLStreamReader reader) throws Exception {
@@ -486,7 +498,9 @@ class FeedReader implements Serializable {
 		// if the content is XHTML, we need to skip the contents of the div.
 		String content = null;
 		if (containsXHTML(attributes)) {
-			content = readXHTML(reader, "content");
+			content = readXHTML(reader, "content", false);
+		} else if (containsHTML(attributes)) {
+			content = readXHTML(reader, "content", true);
 		} else {
 			content = reader.getElementText();
 		}
@@ -503,7 +517,9 @@ class FeedReader implements Serializable {
 		// if the content is XHTML, we need to read in the contents of the div.
 		String title = null;
 		if (containsXHTML(attributes)) {
-			title = readXHTML(reader, "title");
+			title = readXHTML(reader, "title", false);
+		} else if (containsHTML(attributes)) {
+			title = readXHTML(reader, "title", true);
 		} else {
 			title = reader.getElementText();
 		}
@@ -572,8 +588,8 @@ class FeedReader implements Serializable {
 		return xhtml.toString();
 	}
 
-	private String readXHTML(XMLStreamReader reader, String parentElement)
-			throws Exception {
+	private String readXHTML(XMLStreamReader reader, String parentElement,
+			boolean escapeHTML) throws Exception {
 		StringBuffer xhtml = new StringBuffer();
 		String elementName = null;
 		boolean justReadStart = false;
@@ -588,7 +604,7 @@ class FeedReader implements Serializable {
 				// if we read 2 start elements in a row, we need to close the
 				// first start element.
 				if (justReadStart) {
-					xhtml.append(" >");
+					xhtml.append(">");
 				}
 
 				xhtml.append("<" + elementName);
@@ -632,10 +648,15 @@ class FeedReader implements Serializable {
 					xhtml.append(">");
 					justReadStart = false;
 				}
-				// escape the necessary characters.
-				String escapedTxt = reader.getText().replaceAll("&", "&amp;")
-						.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-				xhtml.append(escapedTxt);
+				// if this is html, escape the markup.
+				if (escapeHTML) {
+					xhtml.append(reader.getText().replaceAll("&", "&amp;")
+							.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+				} else {
+					// escape the sole '&lt;' and '&amp;' sole characters.
+					xhtml.append(reader.getText().replaceAll("&", "&amp;")
+							.replaceAll("<", "&lt;"));
+				}
 			}
 			if (breakOut) {
 				break;
@@ -649,7 +670,9 @@ class FeedReader implements Serializable {
 		// if the content is XHTML, we need to read in the contents of the div.
 		String subtitle = null;
 		if (containsXHTML(attributes)) {
-			subtitle = readXHTML(reader, "subtitle");
+			subtitle = readXHTML(reader, "subtitle", false);
+		} else if (containsHTML(attributes)) {
+			subtitle = readXHTML(reader, "subtitle", true);
 		} else {
 			subtitle = reader.getElementText();
 		}
@@ -661,7 +684,9 @@ class FeedReader implements Serializable {
 		// if the content is XHTML, we need to read in the contents of the div.
 		String rights = null;
 		if (containsXHTML(attributes)) {
-			rights = readXHTML(reader, "rights");
+			rights = readXHTML(reader, "rights", false);
+		} else if (containsHTML(attributes)) {
+			rights = readXHTML(reader, "rights", true);
 		} else {
 			rights = reader.getElementText();
 		}

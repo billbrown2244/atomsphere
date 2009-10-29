@@ -87,6 +87,9 @@ public class Attribute implements Serializable {
 		return false;
 	}
 
+	/**
+	 * Shows the contents of the element's attribute in the form of ' attrName="attrValue"'.
+	 */
 	@Override
 	public String toString() {
 		return " " + name + "=\"" + value + "\"";

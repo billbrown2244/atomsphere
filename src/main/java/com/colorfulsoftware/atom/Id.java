@@ -86,6 +86,9 @@ public class Id implements Serializable {
 		return id.getAttribute(attrName);
 	}
 
+	/**
+	 * Shows the contents of the <id> element.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("<id");

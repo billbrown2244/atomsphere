@@ -145,6 +145,9 @@ public class Generator implements Serializable {
 		return null;
 	}
 
+	/**
+	 * Shows the contents of the <generator> element.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("<generator");

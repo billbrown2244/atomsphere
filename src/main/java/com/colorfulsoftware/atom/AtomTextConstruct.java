@@ -263,6 +263,10 @@ class AtomTextConstruct implements Serializable {
 		return null;
 	}
 
+	/**
+	 * Shows the contents of the <content>, <rights>, <subtitle>, <summary> or
+	 * <title> elements.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

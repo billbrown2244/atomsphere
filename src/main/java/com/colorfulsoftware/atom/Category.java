@@ -149,6 +149,9 @@ public class Category implements Serializable {
 		return null;
 	}
 
+	/**
+	 * Shows the contents of the <category> element.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("<category");

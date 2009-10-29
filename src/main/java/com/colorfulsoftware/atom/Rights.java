@@ -90,6 +90,9 @@ public class Rights implements Serializable {
 		return rights.getContentType();
 	}
 
+	/**
+	 * Shows the contents of the <rights> element.
+	 */
 	@Override
 	public String toString() {
 		return "<rights" + rights.toString() + "</rights>";

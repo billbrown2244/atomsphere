@@ -1053,18 +1053,16 @@ public final class FeedDoc implements Serializable {
 
 		// add atom base and xml_language to the entry if they are not there.
 		List<Attribute> attributes = feed.getAttributes();
-		
+
 		if (attributes == null) {
 			attributes = new LinkedList<Attribute>();
 		}
-		System.out.println("attrs size before: "+attributes.size());
 		if (feed.getAttribute("xmlns") == null) {
 			attributes.add(getAtomBase());
 		}
 		if (feed.getAttribute("xml:lang") == null) {
 			attributes.add(getLangEn());
 		}
-		System.out.println("attrs size after: "+attributes.size());
 		// rebuild the feed with the updated attributes
 		// and atomsphere generator element
 		feed = buildFeed(feed.getId(), feed.getTitle(), feed.getUpdated(), feed
@@ -1072,7 +1070,6 @@ public final class FeedDoc implements Serializable {
 				.getContributors(), feed.getLinks(), attributes, feed
 				.getExtensions(), getAtomsphereVersion(), feed.getSubtitle(),
 				feed.getIcon(), feed.getLogo(), feed.getEntries());
-		System.out.println("feed after: "+feed);
 		// write the xml header.
 		writer.writeStartDocument(encoding, version);
 		new FeedWriter().writeFeed(writer, feed);
@@ -1106,6 +1103,15 @@ public final class FeedDoc implements Serializable {
 	public Feed sortEntries(Feed feed, Comparator<String> comparator,
 			Class<?> elementClass) throws AtomSpecException {
 
+		// short circuit if we are asked to sort an invalid type
+		if (!elementClass.getSimpleName().equals("Updated")
+				&& !elementClass.getSimpleName().equals("Title")
+				&& !elementClass.getSimpleName().equals("Summary")) {
+			throw new AtomSpecException(
+					"The feed entries cannot be sorted by an invalid type '"
+							+ elementClass.getSimpleName() + "'.");
+		}
+
 		if (feed.getEntries() != null) {
 			// sort the entries with the passed in instance as the key
 			SortedMap<String, Entry> resortedEntries = new TreeMap<String, Entry>(
@@ -1119,6 +1125,10 @@ public final class FeedDoc implements Serializable {
 					resortedEntries.put(entry.getTitle().getText(), entry);
 				}
 				if (elementClass.getSimpleName().equals("Summary")) {
+					if (entry.getSummary() == null) {
+						throw new AtomSpecException(
+								"The feed entries cannot be sorted by <summary> because not all of them have one.");
+					}
 					resortedEntries.put(entry.getSummary().getText(), entry);
 				}
 			}
@@ -1214,47 +1224,45 @@ public final class FeedDoc implements Serializable {
 	// check for and apply the first sort extension.
 	private Feed applySort(Feed feed) throws AtomSpecException {
 		// only do the work if there are extensions.
-		if (feed.getExtensions() != null) {
-			// look for the first extension element if the namespace exists.
-			for (Extension ext : feed.getExtensions()) {
-				if (ext.getElementName().equals("sort:asc")) {
-					for (Attribute attr : ext.getAttributes()) {
-						if (attr.getName().equalsIgnoreCase("type")) {
-							String value = attr.getValue();
-							if (value.equals("updated")) {
-								return sortEntries(feed, SORT_ASC,
-										Updated.class);
-							}
-							if (value.equals("title")) {
-								return sortEntries(feed, SORT_ASC, Title.class);
-							}
-							if (value.equals("summary")) {
-								return sortEntries(feed, SORT_ASC,
-										Summary.class);
-							}
-						}
+		// look for the first extension element if the namespace exists.
+		Class<?> clazz = null;
+		Comparator<String> comp = null;
+		for (Extension ext : feed.getExtensions()) {
+			if (ext.getElementName().equals("sort:asc")) {
+				for (Attribute attr : ext.getAttributes()) {
+					if (attr.getName().equalsIgnoreCase("type")
+							&& attr.getValue().equals("updated")) {
+						clazz = Updated.class;
+						comp = SORT_ASC;
+					} else if (attr.getName().equalsIgnoreCase("type")
+							&& attr.getValue().equals("title")) {
+						clazz = Title.class;
+						comp = SORT_ASC;
+					} else if (attr.getName().equalsIgnoreCase("type")
+							&& attr.getValue().equals("summary")) {
+						clazz = Summary.class;
+						comp = SORT_ASC;
 					}
-				} else if (ext.getElementName().equals("sort:desc")) {
-					for (Attribute attr : ext.getAttributes()) {
-						if (attr.getName().equalsIgnoreCase("type")) {
-							String value = attr.getValue();
-							if (value.equals("updated")) {
-								return sortEntries(feed, SORT_DESC,
-										Updated.class);
-							}
-							if (value.equals("title")) {
-								return sortEntries(feed, SORT_DESC, Title.class);
-							}
-							if (value.equals("summary")) {
-								return sortEntries(feed, SORT_DESC,
-										Summary.class);
-							}
-						}
+				}
+			} else if (ext.getElementName().equals("sort:desc")) {
+				for (Attribute attr : ext.getAttributes()) {
+					if (attr.getName().equalsIgnoreCase("type")
+							&& attr.getValue().equals("updated")) {
+						clazz = Updated.class;
+						comp = SORT_DESC;
+					} else if (attr.getName().equalsIgnoreCase("type")
+							&& attr.getValue().equals("title")) {
+						clazz = Title.class;
+						comp = SORT_DESC;
+					} else if (attr.getName().equalsIgnoreCase("type")
+							&& attr.getValue().equals("summary")) {
+						clazz = Summary.class;
+						comp = SORT_DESC;
 					}
 				}
 			}
 		}
-		return feed;
+		return sortEntries(feed, comp, clazz);
 	}
 
 	/**

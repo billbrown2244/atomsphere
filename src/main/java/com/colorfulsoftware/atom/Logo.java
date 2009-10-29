@@ -81,6 +81,9 @@ public class Logo implements Serializable {
 		return logo.getAttribute(attrName);
 	}
 
+	/**
+	 * Shows the contents of the <logo> element.
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("<logo");

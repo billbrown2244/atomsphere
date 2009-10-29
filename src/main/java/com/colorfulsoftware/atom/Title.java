@@ -91,6 +91,9 @@ public class Title implements Serializable {
 		return title.getContentType();
 	}
 
+	/**
+	 * Shows the contents of the <title> element.
+	 */
 	@Override
 	public String toString() {
 		return "<title" + title.toString() + "</title>";
