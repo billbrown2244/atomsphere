@@ -202,24 +202,24 @@ class AtomPersonConstruct implements Serializable {
 		StringBuilder sb = new StringBuilder();
 		if (attributes != null) {
 			for (Attribute attribute : attributes) {
-				sb.append(attribute.toString());
+				sb.append(attribute);
 			}
 		}
 		// close the parent element
 		sb.append(">");
 
 		if (name != null) {
-			sb.append(name.toString());
+			sb.append(name);
 		}
 		if (email != null) {
-			sb.append(email.toString());
+			sb.append(email);
 		}
 		if (uri != null) {
-			sb.append(uri.toString());
+			sb.append(uri);
 		}
 		if (extensions != null) {
 			for (Extension extension : extensions) {
-				sb.append(extension.toString());
+				sb.append(extension);
 			}
 		}
 		return sb.toString();

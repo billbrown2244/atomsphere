@@ -113,9 +113,6 @@ public class Author implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder("<author");
-		sb.append(person.toString());
-		sb.append("</author>");
-		return sb.toString();
+		return "<author" + person + "</author>";
 	}
 }

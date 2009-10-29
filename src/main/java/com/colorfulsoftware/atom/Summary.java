@@ -76,7 +76,7 @@ public class Summary implements Serializable {
 	String getDivStartName() {
 		return summary.getDivStartName();
 	}
-	
+
 	Attribute getDivStartAttribute() {
 		return summary.getDivStartAttribute();
 	}
@@ -101,6 +101,6 @@ public class Summary implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "<summary" + summary.toString() + "</summary>";
+		return "<summary" + summary + "</summary>";
 	}
 }

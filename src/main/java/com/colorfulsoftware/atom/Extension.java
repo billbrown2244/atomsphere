@@ -143,7 +143,7 @@ public class Extension implements Serializable {
 		StringBuilder sb = new StringBuilder("<" + elementName);
 		if (attributes != null) {
 			for (Attribute attribute : attributes) {
-				sb.append(attribute.toString());
+				sb.append(attribute);
 			}
 		}
 

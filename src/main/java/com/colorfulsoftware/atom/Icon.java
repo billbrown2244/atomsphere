@@ -90,9 +90,6 @@ public class Icon implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder("<icon");
-		sb.append(icon.toString());
-		sb.append("</icon>");
-		return sb.toString();
+		return "<icon" + icon + "</icon>";
 	}
 }

@@ -98,9 +98,6 @@ public class Updated implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder("<updated");
-		sb.append(updated.toString());
-		sb.append("</updated>");
-		return sb.toString();
+		return "<updated" + updated + "</updated>";
 	}
 }

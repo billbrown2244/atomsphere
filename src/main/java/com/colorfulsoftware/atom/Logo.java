@@ -86,9 +86,6 @@ public class Logo implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder("<logo");
-		sb.append(logo.toString());
-		sb.append("</logo>");
-		return sb.toString();
+		return "<logo" + logo + "</logo>";
 	}
 }

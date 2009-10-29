@@ -135,7 +135,7 @@ public class Content implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("<content");
-		sb.append(content.toString());
+		sb.append(content);
 		if (content.getContentType() == ContentType.EXTERNAL) {
 			sb.append(" />");
 		} else {

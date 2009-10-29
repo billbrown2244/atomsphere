@@ -157,7 +157,7 @@ public class Category implements Serializable {
 		StringBuilder sb = new StringBuilder("<category");
 
 		for (Attribute attribute : attributes) {
-			sb.append(attribute.toString());
+			sb.append(attribute);
 		}
 
 		if (content == null || content.equals("")) {

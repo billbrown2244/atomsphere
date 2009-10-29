@@ -207,7 +207,7 @@ public class Link implements Serializable {
 	public String toString() {
 		StringBuilder sb = new StringBuilder("<link");
 		for (Attribute attribute : attributes) {
-			sb.append(attribute.toString());
+			sb.append(attribute);
 		}
 
 		if (content == null || content.equals("")) {

@@ -295,19 +295,19 @@ public class Entry implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("<entry");
-		sb.append(entryAdaptor.toString());
+		sb.append(entryAdaptor);
 
 		if (published != null) {
-			sb.append(published.toString());
+			sb.append(published);
 		}
 		if (summary != null) {
-			sb.append(summary.toString());
+			sb.append(summary);
 		}
 		if (source != null) {
-			sb.append(source.toString());
+			sb.append(source);
 		}
 		if (content != null) {
-			sb.append(content.toString());
+			sb.append(content);
 		}
 
 		sb.append("</entry>");

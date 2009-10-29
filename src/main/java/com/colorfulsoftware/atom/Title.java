@@ -96,6 +96,6 @@ public class Title implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "<title" + title.toString() + "</title>";
+		return "<title" + title + "</title>";
 	}
 }

@@ -153,7 +153,7 @@ public class Generator implements Serializable {
 		StringBuilder sb = new StringBuilder("<generator");
 		if (attributes != null) {
 			for (Attribute attribute : attributes) {
-				sb.append(attribute.toString());
+				sb.append(attribute);
 			}
 		}
 		// if there is content add it.

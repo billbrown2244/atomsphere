@@ -272,7 +272,7 @@ class AtomTextConstruct implements Serializable {
 		StringBuilder sb = new StringBuilder();
 		if (attributes != null) {
 			for (Attribute attribute : attributes) {
-				sb.append(attribute.toString());
+				sb.append(attribute);
 			}
 		}
 		// if there is content add it.

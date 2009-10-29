@@ -95,6 +95,6 @@ public class Rights implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "<rights" + rights.toString() + "</rights>";
+		return "<rights" + rights + "</rights>";
 	}
 }

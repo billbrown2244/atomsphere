@@ -378,55 +378,55 @@ class AtomEntrySourceAdaptor implements Serializable {
 		StringBuilder sb = new StringBuilder();
 		if (attributes != null) {
 			for (Attribute attribute : attributes) {
-				sb.append(attribute.toString());
+				sb.append(attribute);
 			}
 		}
 		// close the parent element
 		sb.append(">");
 
 		if (id != null) {
-			sb.append(id.toString());
+			sb.append(id);
 		}
 
 		if (title != null) {
-			sb.append(title.toString());
+			sb.append(title);
 		}
 
 		if (updated != null) {
-			sb.append(updated.toString());
+			sb.append(updated);
 		}
 
 		if (rights != null) {
-			sb.append(rights.toString());
+			sb.append(rights);
 		}
 
 		if (categories != null) {
 			for (Category category : categories) {
-				sb.append(category.toString());
+				sb.append(category);
 			}
 		}
 
 		if (authors != null) {
 			for (Author author : authors) {
-				sb.append(author.toString());
+				sb.append(author);
 			}
 		}
 
 		if (contributors != null) {
 			for (Contributor contributor : contributors) {
-				sb.append(contributor.toString());
+				sb.append(contributor);
 			}
 		}
 
 		if (links != null) {
 			for (Link link : links) {
-				sb.append(link.toString());
+				sb.append(link);
 			}
 		}
 
 		if (extensions != null) {
 			for (Extension extension : extensions) {
-				sb.append(extension.toString());
+				sb.append(extension);
 			}
 		}
 

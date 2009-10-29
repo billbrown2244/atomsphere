@@ -221,7 +221,7 @@ class AtomDateConstruct implements Serializable {
 		StringBuilder sb = new StringBuilder();
 		if (attributes != null) {
 			for (Attribute attribute : attributes) {
-				sb.append(attribute.toString());
+				sb.append(attribute);
 			}
 		}
 		// close the parent element

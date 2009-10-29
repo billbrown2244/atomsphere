@@ -91,9 +91,6 @@ public class Id implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder("<id");
-		sb.append(id.toString());
-		sb.append("</id>");
-		return sb.toString();
+		return "<id" + id + "</id>";
 	}
 }

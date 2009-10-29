@@ -121,9 +121,6 @@ public class Contributor implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder("<contributor");
-		sb.append(person.toString());
-		sb.append("</contributor>");
-		return sb.toString();
+		return "<contributor" + person + "</contributor>";
 	}
 }

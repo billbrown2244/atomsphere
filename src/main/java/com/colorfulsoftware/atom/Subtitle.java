@@ -71,7 +71,7 @@ public class Subtitle implements Serializable {
 	String getDivStartName() {
 		return subtitle.getDivStartName();
 	}
-	
+
 	Attribute getDivStartAttribute() {
 		return subtitle.getDivStartAttribute();
 	}
@@ -94,6 +94,6 @@ public class Subtitle implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "<subtitle" + subtitle.toString() + "</subtitle>";
+		return "<subtitle" + subtitle + "</subtitle>";
 	}
 }

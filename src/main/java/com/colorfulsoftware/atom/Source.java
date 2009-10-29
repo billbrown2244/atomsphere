@@ -261,22 +261,22 @@ public class Source implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("<source");
-		sb.append(sourceAdaptor.toString());
+		sb.append(sourceAdaptor);
 
 		if (generator != null) {
-			sb.append(generator.toString());
+			sb.append(generator);
 		}
 
 		if (subtitle != null) {
-			sb.append(subtitle.toString());
+			sb.append(subtitle);
 		}
 
 		if (icon != null) {
-			sb.append(icon.toString());
+			sb.append(icon);
 		}
 
 		if (logo != null) {
-			sb.append(logo.toString());
+			sb.append(logo);
 		}
 
 		sb.append("</source>");
