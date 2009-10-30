@@ -5,7 +5,7 @@
 	<artifactId>atomsphere</artifactId>
 	<packaging>jar</packaging>
 	<name>Atomsphere</name>
-	<version>2.5.0.0-SNAPSHOT</version>
+	<version>3.0.0.0-SNAPSHOT</version>
 	<description>An Atom 1.0 Feed Library written in Java</description>
 	<url>http://www.colorfulsoftware.com/projects/atomsphere</url>
 	<licenses>
