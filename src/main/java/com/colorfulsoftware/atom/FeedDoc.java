@@ -70,6 +70,8 @@ public final class FeedDoc implements Serializable {
 
 	private Attribute langEn;
 	private Attribute atomBase;
+	
+	private XMLInputFactory inputFactory;
 
 	/**
 	 * creates a new feed document.
@@ -85,6 +87,12 @@ public final class FeedDoc implements Serializable {
 		libVersion = props.getProperty("version");
 		langEn = new Attribute("xml:lang", "en-US");
 		atomBase = new Attribute("xmlns", "http://www.w3.org/2005/Atom");
+		
+		inputFactory = XMLInputFactory.newInstance();
+		// this is done to help for parsing documents that have undeclared and
+		// unescaped html or xhtml entities.
+		inputFactory.setProperty(
+				"javax.xml.stream.isReplacingEntityReferences", Boolean.FALSE);
 	}
 
 	/**
@@ -448,7 +456,6 @@ public final class FeedDoc implements Serializable {
 			encoding = localEncoding;
 
 		}
-		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 		XMLStreamReader reader = inputFactory
 				.createXMLStreamReader(new ByteArrayInputStream(xmlString
 						.getBytes(encoding)));
@@ -474,7 +481,6 @@ public final class FeedDoc implements Serializable {
 			encoding = localEncoding;
 
 		}
-		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 		XMLStreamReader reader = inputFactory
 				.createXMLStreamReader(new ByteArrayInputStream(xmlString
 						.getBytes(encoding)));
@@ -494,7 +500,6 @@ public final class FeedDoc implements Serializable {
 	 *             if the file cannot be parsed into a Feed element.
 	 */
 	public Feed readFeedToBean(File file) throws Exception {
-		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 		XMLStreamReader reader = inputFactory.createXMLStreamReader(
 				new FileInputStream(file), encoding);
 		return new FeedReader().readFeed(reader);
@@ -510,7 +515,6 @@ public final class FeedDoc implements Serializable {
 	 *             if the file cannot be parsed into an Entry element.
 	 */
 	public Entry readEntryToBean(File file) throws Exception {
-		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 		XMLStreamReader reader = inputFactory.createXMLStreamReader(
 				new FileInputStream(file), encoding);
 		SortedMap<String, Entry> entries = new FeedReader().readEntry(reader,
@@ -555,7 +559,6 @@ public final class FeedDoc implements Serializable {
 	 *             if the URL cannot be parsed into a Feed element.
 	 */
 	public Feed readFeedToBean(InputStream inputStream) throws Exception {
-		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 		XMLStreamReader reader = inputFactory.createXMLStreamReader(
 				inputStream, encoding);
 		return new FeedReader().readFeed(reader);
@@ -571,7 +574,6 @@ public final class FeedDoc implements Serializable {
 	 *             if the URL cannot be parsed into a Feed element.
 	 */
 	public Entry readEntryToBean(InputStream inputStream) throws Exception {
-		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 		XMLStreamReader reader = inputFactory.createXMLStreamReader(
 				inputStream, encoding);
 		Feed feed = new FeedReader().readFeed(reader);

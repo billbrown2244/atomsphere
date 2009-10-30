@@ -222,7 +222,8 @@ class FeedReader implements Serializable {
 			case XMLStreamConstants.START_ELEMENT:
 				String elementNameStart = getElementName(reader);
 				if (!elementNameStart.equals(elementName)) {
-					extText.append(readSubExtension(reader, elementNameStart));
+					extText.append(readSubExtension(reader, elementNameStart,
+							attributes));
 				}
 				break;
 
@@ -234,7 +235,20 @@ class FeedReader implements Serializable {
 				break;
 
 			default:
-				extText = extText.append(reader.getText());
+				if (containsXHTML(attributes)) {
+					System.out.println("ext reading xhtml");
+					extText.append(readXHTML(reader, elementName, false));
+				} else if (containsHTML(attributes)) {
+					System.out.println("ext reading html");
+					extText.append(readXHTML(reader, elementName, true));
+				} else {
+					if (containsXHTML(reader, elementName)) {
+						System.out.println("ext reading xhtml by namespace");
+						extText.append(readXHTML(reader, elementName, false));
+					} else {
+						extText.append(reader.getText());
+					}
+				}
 			}
 			if (breakOut) {
 				break;
@@ -314,6 +328,7 @@ class FeedReader implements Serializable {
 						|| elementName.equals("atom:updated")) {
 					updated = readUpdated(reader);
 				} else {// extension
+					System.out.println("ext element in Entry:\n"+elementName);
 					extensions = readExtension(reader, extensions, elementName);
 				}
 				break;
@@ -375,6 +390,18 @@ class FeedReader implements Serializable {
 			summary = reader.getElementText();
 		}
 		return feedDoc.buildSummary(summary, attributes);
+	}
+
+	// used to check if the extension prefix matches the xhtml namespace
+	private boolean containsXHTML(XMLStreamReader reader, String elementName) {
+		System.out.println("elementName for containsXHTML:\n"+elementName);
+		if (elementName.indexOf(":") != -1) {
+			String ns = reader.getNamespaceURI(
+					elementName.substring(0, elementName.indexOf(":")));
+			return ns != null && ns.equals(
+					"http://www.w3.org/1999/xhtml");
+		}
+		return false;
 	}
 
 	// used for xhtml.
@@ -526,9 +553,16 @@ class FeedReader implements Serializable {
 		return feedDoc.buildTitle(title, attributes);
 	}
 
-	private String readSubExtension(XMLStreamReader reader, String elementName)
-			throws Exception {
-		StringBuffer xhtml = new StringBuffer("<" + elementName);
+	private String readSubExtension(XMLStreamReader reader, String elementName,
+			List<Attribute> parentAttributes) throws Exception {
+
+		StringBuffer xhtml = null;
+		if (containsXHTML(parentAttributes) || containsHTML(parentAttributes)) {
+			xhtml = new StringBuffer("&lt;" + elementName);
+		} else {
+			xhtml = new StringBuffer("<" + elementName);
+		}
+
 		List<Attribute> attributes = getAttributes(reader);
 		// add the attributes
 		if (attributes != null && attributes.size() > 0) {
@@ -549,7 +583,8 @@ class FeedReader implements Serializable {
 			case XMLStreamConstants.START_ELEMENT:
 				elementNameStart = getElementName(reader);
 				if (!elementNameStart.equals(elementName)) {
-					xhtml.append(readSubExtension(reader, elementNameStart));
+					xhtml.append(readSubExtension(reader, elementNameStart,
+							attributes));
 				}
 				break;
 
@@ -559,10 +594,19 @@ class FeedReader implements Serializable {
 					breakOut = true;
 				}
 
-				if (openElementClosed) {
-					xhtml.append("</" + elementName + ">");
+				if (containsXHTML(parentAttributes)
+						|| containsHTML(parentAttributes)) {
+					if (openElementClosed) {
+						xhtml.append("&lt;/" + elementName + "&gt;");
+					} else {
+						xhtml.append(" /&gt;");
+					}
 				} else {
-					xhtml.append(" />");
+					if (openElementClosed) {
+						xhtml.append("</" + elementName + ">");
+					} else {
+						xhtml.append(" />");
+					}
 				}
 
 				break;
@@ -576,7 +620,12 @@ class FeedReader implements Serializable {
 			default:
 				// close the open element if we get here
 				if (elementNameStart.equals(elementName)) {
-					xhtml.append(" >");
+					if (containsXHTML(parentAttributes)
+							|| containsHTML(parentAttributes)) {
+						xhtml.append(" &gt;");
+					} else {
+						xhtml.append(" >");
+					}
 					openElementClosed = true;
 				}
 				xhtml.append(reader.getText());
@@ -590,6 +639,7 @@ class FeedReader implements Serializable {
 
 	private String readXHTML(XMLStreamReader reader, String parentElement,
 			boolean escapeHTML) throws Exception {
+		System.out.println("parent element:\n"+parentElement);
 		StringBuffer xhtml = new StringBuffer();
 		String elementName = null;
 		boolean justReadStart = false;
@@ -600,7 +650,7 @@ class FeedReader implements Serializable {
 
 			case XMLStreamConstants.START_ELEMENT:
 				elementName = getElementName(reader);
-
+				System.out.println("readXHTML element:\n"+elementName);
 				// if we read 2 start elements in a row, we need to close the
 				// first start element.
 				if (justReadStart) {
@@ -624,8 +674,9 @@ class FeedReader implements Serializable {
 
 			case XMLStreamConstants.END_ELEMENT:
 				elementName = getElementName(reader);
-				if (elementName.equals(parentElement)
-						&& namespaceURI.equals("http://www.w3.org/2005/Atom")) {
+				System.out.println("readXHTML end element:\n"+elementName);
+				System.out.println("namespaceURI\n"+namespaceURI);
+				if (elementName.equals(parentElement)) {
 					breakOut = true;
 				} else {
 					if (justReadStart) {
@@ -659,6 +710,7 @@ class FeedReader implements Serializable {
 				}
 			}
 			if (breakOut) {
+				System.out.println("breaking out of readXHTML");
 				break;
 			}
 		}

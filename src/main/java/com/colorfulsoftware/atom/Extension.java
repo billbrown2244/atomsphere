@@ -64,11 +64,6 @@ public class Extension implements Serializable {
 	Extension(String elementName, List<Attribute> attributes, String content)
 			throws AtomSpecException {
 
-		if (elementName.indexOf(":") == -1 || elementName.indexOf(":") == 0) {
-			throw new AtomSpecException("Extension element '" + elementName
-					+ "' is missing a namespace prefix.");
-		}
-
 		this.elementName = elementName;
 		this.content = content;
 
@@ -80,6 +75,16 @@ public class Extension implements Serializable {
 				this.attributes.add(new Attribute(attr.getName(), attr
 						.getValue()));
 			}
+		}
+
+		if (elementName == null
+				|| (elementName.indexOf(":") == -1 && getAttribute("xmlns") == null)
+				|| elementName.indexOf(":") == 0) {
+
+			throw new AtomSpecException(
+					"Extension element '"
+							+ elementName
+							+ "' is missing a namespace prefix or namespace declaration.");
 		}
 	}
 

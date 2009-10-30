@@ -282,8 +282,8 @@ class FeedWriter implements Serializable {
 			String rawText;
 
 			// prepare the markup to be written.
-			text = text.replaceAll("&lt;", "<").replaceAll("&gt;", ">")
-					.replaceAll("&amp;", "&");
+			text = text.replaceAll("&amp;", "&").replaceAll("&lt;", "<")
+					.replaceAll("&gt;", ">");
 
 			// we are now at a start element,
 			// or an empty element
@@ -450,29 +450,38 @@ class FeedWriter implements Serializable {
 			if (extension.getContent() == null
 					|| extension.getContent().trim().equals("")) {
 				String elementName = extension.getElementName();
-				// all elements should have prefix and local name
-				String prefix = elementName.substring(0, elementName
-						.indexOf(":"));
-				String localName = elementName.substring(elementName
-						.indexOf(":") + 1);
-				writer.writeEmptyElement(prefix, localName, "");
-
-				// write the attributes.
-				writeAttributes(writer, extension.getAttributes());
+				if (elementName.indexOf(":") == -1) {
+					writer.writeEmptyElement(elementName);
+				} else {
+					String prefix = elementName.substring(0, elementName
+							.indexOf(":"));
+					String localName = elementName.substring(elementName
+							.indexOf(":") + 1);
+					writer.writeEmptyElement(prefix, localName, "");
+				}
+				if (extension.getAttributes() != null) {
+					for (Attribute attr : extension.getAttributes()) {
+						writer.writeAttribute(attr.getName(), attr.getValue());
+					}
+				}
 			} else {
 				String elementName = extension.getElementName();
-				// all elements should have prefix and local name
-				String prefix = elementName.substring(0, elementName
-						.indexOf(":"));
-				String localName = elementName.substring(elementName
-						.indexOf(":") + 1);
-				writer.writeStartElement(prefix, localName, "");
-
-				// write the attributes.
-				writeAttributes(writer, extension.getAttributes());
+				if (elementName.indexOf(":") == -1) {
+					writer.writeStartElement(elementName);
+				} else {
+					String prefix = elementName.substring(0, elementName
+							.indexOf(":"));
+					String localName = elementName.substring(elementName
+							.indexOf(":") + 1);
+					writer.writeStartElement(prefix, localName, "");
+				}
+				if (extension.getAttributes() != null) {
+					for (Attribute attr : extension.getAttributes()) {
+						writer.writeAttribute(attr.getName(), attr.getValue());
+					}
+				}
 				// add the content.
-				// write it as xhtml to take into account sub elements.
-				writeXHTML(writer, extension.getContent());
+				writer.writeCharacters(extension.getContent());
 
 				// close the element.
 				writer.writeEndElement();

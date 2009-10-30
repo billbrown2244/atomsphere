@@ -354,6 +354,8 @@ public class FeedWriterTest implements Serializable {
 			new FeedWriter().writeEntries(writer, entries);
 			writer.flush();
 			writer.close();
+			System.out.println("theXML:\n"+theXMLString);
+			System.out.println("entry2Result:\n"+entry2Result);
 			assertEquals(theXMLString.toString(), entry2Result);
 
 			entries = new FeedReader().readEntry(XMLInputFactory.newInstance()

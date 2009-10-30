@@ -92,6 +92,8 @@ public class FeedDocTest implements Serializable {
 			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\" xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">"
 			+ "<id local:something=\"testVal\">http://colorfulsoftware.localhost/projects/atomsphere/atom.xml</id>"
 			+ "<updated local:somethingElse=\"fakeValue\">2007-03-08T20:52:40.70-06:00</updated>"
+			+ "<fakeExt xmlns=\"http://www.fake.extension.org/fakeness\" />"
+			+ "<fakeExt xmlns=\"http://www.fake.extension.org/fakeness\">fakecontent</fakeExt>"
 			+ "<generator uri=\"http://www.colorfulsoftware.com/projects/atomsphere\" version=\"1.0.2.0\"></generator>"
 			+ "<title type=\"xhtml\"><div xmlns=\"http://www.w3.org/1999/xhtml\">Atomsphere a <b>great atom 1.0 parser </b></div></title>  <subtitle>a java atom feed library</subtitle>"
 			+ "<author local:testAttr=\"testVal\"><test:test xmlns:test=\"http://www.w3.org/1999/test\" /><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
@@ -869,7 +871,7 @@ public class FeedDocTest implements Serializable {
 		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
 			assertEquals(e.getMessage(),
-					"Extension element '' is missing a namespace prefix.");
+					"Extension element '' is missing a namespace prefix or namespace declaration.");
 		}
 
 		try {
@@ -878,7 +880,7 @@ public class FeedDocTest implements Serializable {
 		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
 			assertEquals(e.getMessage(),
-					"Extension element ':local' is missing a namespace prefix.");
+					"Extension element ':local' is missing a namespace prefix or namespace declaration.");
 		}
 
 		try {
