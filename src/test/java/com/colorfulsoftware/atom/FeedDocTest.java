@@ -961,6 +961,7 @@ public class FeedDocTest implements Serializable {
 
 			feed1 = feedDoc.readFeedToBean(title6);
 			assertNotNull(feed1.getTitle());
+			System.out.println("feedTitle6:\n"+feed1.getTitle());
 			assertEquals(feed1.getTitle().getText(),
 					"One <strong>bold</strong> foot forward<title>can you see me</title>");
 			assertNotNull(feedDoc.readFeedToString(feed1));
