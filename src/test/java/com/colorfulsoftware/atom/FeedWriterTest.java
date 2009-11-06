@@ -348,6 +348,10 @@ public class FeedWriterTest implements Serializable {
 			assertTrue(entries != null);
 			assertTrue(entries.size() == 1);
 
+			for(Entry ent: entries.values()){
+				System.out.println("ent:\n"+ent);
+			}
+			
 			theXMLString = new StringWriter();
 			writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
 					theXMLString);

@@ -216,49 +216,54 @@ class FeedReader implements Serializable {
 		StringBuilder extText = new StringBuilder();
 		List<Attribute> attributes = getAttributes(reader);
 
-		boolean breakOut = false;
-		while (reader.hasNext()) {
-			switch (reader.next()) {
-			case XMLStreamConstants.START_ELEMENT:
-				String elementNameStart = getElementName(reader);
-				System.out.println("elementNameStart in readExtension: "+elementNameStart);
-				if (!elementNameStart.equals(elementName)) {
-					extText.append(readSubExtension(reader, elementNameStart,
-							attributes));
-				}
-				break;
+		// if this is a top level extension and it is has type of xhtml then
+		// treat it as such.
+		if (containsXHTML(reader, elementName)) {
+			System.out.println("ext reading xhtml by namespace");
+			extText.append(readXHTML(reader, elementName, true));
+			
+		} else {
 
-			case XMLStreamConstants.END_ELEMENT:
-				String elementNameEnd = getElementName(reader);
-				System.out.println("elementNameEnd in readExtension: "+elementNameEnd);
-				System.out.println("ext reading xhtml");
-				if (elementNameEnd.equals(elementName)) {
-					breakOut = true;
-				}
-				break;
+			boolean breakOut = false;
+			while (reader.hasNext()) {
+				switch (reader.next()) {
+				case XMLStreamConstants.START_ELEMENT:
+					String elementNameStart = getElementName(reader);
+					System.out.println("elementNameStart in readExtension: "
+							+ elementNameStart);
+					if (!elementNameStart.equals(elementName)) {
+						extText.append(readSubExtension(reader,
+								elementNameStart, attributes));
+					}
+					break;
 
-			default:
-				if (containsXHTML(attributes)) {
+				case XMLStreamConstants.END_ELEMENT:
+					String elementNameEnd = getElementName(reader);
+					System.out.println("elementNameEnd in readExtension: "
+							+ elementNameEnd);
 					System.out.println("ext reading xhtml");
-					extText.append(readXHTML(reader, elementName, false));
-				} else if (containsHTML(attributes)) {
-					System.out.println("ext reading html");
-					extText.append(readXHTML(reader, elementName, true));
-				} else {
-					if (containsXHTML(reader, elementName)) {
-						System.out.println("ext reading xhtml by namespace");
-						extText.append(readXHTML(reader, elementName, false));
+					if (elementNameEnd.equals(elementName)) {
 						breakOut = true;
+					}
+					break;
+
+				default:
+					if (containsXHTML(attributes)) {
+						System.out.println("ext reading xhtml");
+						extText.append(readXHTML(reader, elementName, false));
+					} else if (containsHTML(attributes)) {
+						System.out.println("ext reading html");
+						extText.append(readXHTML(reader, elementName, true));
 					} else {
 						extText.append(reader.getText());
 					}
 				}
-			}
-			if (breakOut) {
-				break;
-			}
+				if (breakOut) {
+					break;
+				}
+			}	
 		}
-
+		
 		extensions.add(feedDoc.buildExtension(elementName, attributes, extText
 				.toString()));
 		return extensions;
@@ -648,7 +653,7 @@ class FeedReader implements Serializable {
 		StringBuffer xhtml = new StringBuffer();
 		String elementName = null;
 		boolean justReadStart = false;
-		
+
 		while (reader.hasNext()) {
 			boolean breakOut = false;
 
@@ -727,6 +732,7 @@ class FeedReader implements Serializable {
 				break;
 			}
 		}
+		System.out.println("returning xhtml:\n"+xhtml);
 		return xhtml.toString();
 	}
 

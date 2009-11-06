@@ -112,10 +112,16 @@ class FeedWriter implements Serializable {
 
 	}
 
+	private String xhtmlNamespacePrefix = null;
+
 	private void writeAttributes(XMLStreamWriter writer,
 			List<Attribute> attributes) throws Exception {
 		if (attributes != null) {
 			for (Attribute attr : attributes) {
+				if (attr.getName().indexOf(":") != -1) {
+					xhtmlNamespacePrefix = attr.getName().substring(0,
+							attr.getName().indexOf(":"));
+				}
 				writer.writeAttribute(attr.getName(), attr.getValue());
 			}
 		}
@@ -481,7 +487,21 @@ class FeedWriter implements Serializable {
 					}
 				}
 				// add the content.
-				writer.writeCharacters(extension.getContent());
+				if (extension.getAttribute("type") != null
+						&& extension.getAttribute("type").getValue().equals(
+								"xhtml")
+						|| xhtmlNamespacePrefix != null
+						&& xhtmlNamespacePrefix
+								.equals(extension.getElementName()
+										.substring(
+												0,
+												extension.getElementName()
+														.indexOf(":")))) {
+					System.out.println("writing xhtml in write extension.");
+					writeXHTML(writer, extension.getContent());
+				} else {
+					writer.writeCharacters(extension.getContent());
+				}
 
 				// close the element.
 				writer.writeEndElement();
