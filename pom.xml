@@ -6,7 +6,7 @@
 	<packaging>jar</packaging>
 	<name>Atomsphere</name>
 	<version>3.0.0.0-SNAPSHOT</version>
-	<description>An Atom 1.0 Feed Library written in Java</description>
+	<description>An Atom 1.0 feed library written in Java on top of the Stax API.</description>
 	<url>http://www.colorfulsoftware.com/projects/atomsphere</url>
 	<licenses>
 		<license>
