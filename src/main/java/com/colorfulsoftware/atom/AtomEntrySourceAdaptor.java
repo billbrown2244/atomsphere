@@ -371,7 +371,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	}
 
 	/**
-	 * Shows the contents of the <entry> or <source> elements. 
+	 * Shows the contents of the <entry> or <source> elements.
 	 */
 	@Override
 	public String toString() {

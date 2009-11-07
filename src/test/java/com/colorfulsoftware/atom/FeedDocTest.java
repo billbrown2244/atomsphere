@@ -93,7 +93,9 @@ public class FeedDocTest implements Serializable {
 			+ "<id local:something=\"testVal\">http://colorfulsoftware.localhost/projects/atomsphere/atom.xml</id>"
 			+ "<updated local:somethingElse=\"fakeValue\">2007-03-08T20:52:40.70-06:00</updated>"
 			+ "<fakeExt xmlns=\"http://www.fake.extension.org/fakeness\" />"
+			+ "<div xmlns=\"http://www.w3.org/1999/xhtml\" />"
 			+ "<fakeExt xmlns=\"http://www.fake.extension.org/fakeness\">fakecontent</fakeExt>"
+			+ "<div xmlns=\"http://www.w3.org/1999/xhtml\">fakecontent</div>"
 			+ "<generator uri=\"http://www.colorfulsoftware.com/projects/atomsphere\" version=\"1.0.2.0\"></generator>"
 			+ "<title type=\"xhtml\"><div xmlns=\"http://www.w3.org/1999/xhtml\">Atomsphere a <b>great atom 1.0 parser </b></div></title>  <subtitle>a java atom feed library</subtitle>"
 			+ "<author local:testAttr=\"testVal\"><test:test xmlns:test=\"http://www.w3.org/1999/test\" /><name>Bill Brown</name><uri>http://www.colorfulsoftware.com</uri><email>info@colorfulsoftware.com</email></author>"
@@ -879,7 +881,8 @@ public class FeedDocTest implements Serializable {
 			fail("should not get here.");
 		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
-			assertEquals(e.getMessage(),
+			assertEquals(
+					e.getMessage(),
 					"Extension element ':local' is missing a namespace prefix or namespace declaration.");
 		}
 
@@ -961,7 +964,6 @@ public class FeedDocTest implements Serializable {
 
 			feed1 = feedDoc.readFeedToBean(title6);
 			assertNotNull(feed1.getTitle());
-			System.out.println("feedTitle6:\n"+feed1.getTitle());
 			assertEquals(feed1.getTitle().getText(),
 					"One <strong>bold</strong> foot forward<title>can you see me</title>");
 			assertNotNull(feedDoc.readFeedToString(feed1));
@@ -1341,6 +1343,9 @@ public class FeedDocTest implements Serializable {
 			out.write(feed.toString());
 			out.flush();
 			out.close();
+			feedDoc.writeFeedDoc(new FileOutputStream(new File(
+					"target/mega2.xml")), feed, feedDoc.getEncoding(), feedDoc
+					.getXmlVersion());
 			assertNotNull(feed.getId());
 			assertNull(feed.getGenerator().getAttribute("notHere"));
 			assertNotNull(feed.getAuthor("Bill Brown"));

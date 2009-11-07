@@ -219,9 +219,8 @@ class FeedReader implements Serializable {
 		// if this is a top level extension and it is has type of xhtml then
 		// treat it as such.
 		if (containsXHTML(reader, elementName)) {
-			System.out.println("ext reading xhtml by namespace");
 			extText.append(readXHTML(reader, elementName, true));
-			
+
 		} else {
 
 			boolean breakOut = false;
@@ -229,8 +228,6 @@ class FeedReader implements Serializable {
 				switch (reader.next()) {
 				case XMLStreamConstants.START_ELEMENT:
 					String elementNameStart = getElementName(reader);
-					System.out.println("elementNameStart in readExtension: "
-							+ elementNameStart);
 					if (!elementNameStart.equals(elementName)) {
 						extText.append(readSubExtension(reader,
 								elementNameStart, attributes));
@@ -239,31 +236,21 @@ class FeedReader implements Serializable {
 
 				case XMLStreamConstants.END_ELEMENT:
 					String elementNameEnd = getElementName(reader);
-					System.out.println("elementNameEnd in readExtension: "
-							+ elementNameEnd);
-					System.out.println("ext reading xhtml");
 					if (elementNameEnd.equals(elementName)) {
 						breakOut = true;
 					}
 					break;
 
 				default:
-					if (containsXHTML(attributes)) {
-						System.out.println("ext reading xhtml");
-						extText.append(readXHTML(reader, elementName, false));
-					} else if (containsHTML(attributes)) {
-						System.out.println("ext reading html");
-						extText.append(readXHTML(reader, elementName, true));
-					} else {
-						extText.append(reader.getText());
-					}
+					extText.append(reader.getText());
+					break;
 				}
 				if (breakOut) {
 					break;
 				}
-			}	
+			}
 		}
-		
+
 		extensions.add(feedDoc.buildExtension(elementName, attributes, extText
 				.toString()));
 		return extensions;
@@ -337,7 +324,6 @@ class FeedReader implements Serializable {
 						|| elementName.equals("atom:updated")) {
 					updated = readUpdated(reader);
 				} else {// extension
-					System.out.println("ext element in Entry:\n" + elementName);
 					extensions = readExtension(reader, extensions, elementName);
 				}
 				break;
@@ -403,7 +389,6 @@ class FeedReader implements Serializable {
 
 	// used to check if the extension prefix matches the xhtml namespace
 	private boolean containsXHTML(XMLStreamReader reader, String elementName) {
-		System.out.println("elementName for containsXHTML:\n" + elementName);
 		if (elementName.indexOf(":") != -1) {
 			String ns = reader.getNamespaceURI(elementName.substring(0,
 					elementName.indexOf(":")));
@@ -564,12 +549,7 @@ class FeedReader implements Serializable {
 	private String readSubExtension(XMLStreamReader reader, String elementName,
 			List<Attribute> parentAttributes) throws Exception {
 
-		StringBuffer xhtml = null;
-		if (containsXHTML(parentAttributes) || containsHTML(parentAttributes)) {
-			xhtml = new StringBuffer("&lt;" + elementName);
-		} else {
-			xhtml = new StringBuffer("<" + elementName);
-		}
+		StringBuffer xhtml = new StringBuffer("<" + elementName);
 
 		List<Attribute> attributes = getAttributes(reader);
 		// add the attributes
@@ -602,19 +582,10 @@ class FeedReader implements Serializable {
 					breakOut = true;
 				}
 
-				if (containsXHTML(parentAttributes)
-						|| containsHTML(parentAttributes)) {
-					if (openElementClosed) {
-						xhtml.append("&lt;/" + elementName + "&gt;");
-					} else {
-						xhtml.append(" /&gt;");
-					}
+				if (openElementClosed) {
+					xhtml.append("</" + elementName + ">");
 				} else {
-					if (openElementClosed) {
-						xhtml.append("</" + elementName + ">");
-					} else {
-						xhtml.append(" />");
-					}
+					xhtml.append(" />");
 				}
 
 				break;
@@ -628,12 +599,7 @@ class FeedReader implements Serializable {
 			default:
 				// close the open element if we get here
 				if (elementNameStart.equals(elementName)) {
-					if (containsXHTML(parentAttributes)
-							|| containsHTML(parentAttributes)) {
-						xhtml.append(" &gt;");
-					} else {
-						xhtml.append(" >");
-					}
+					xhtml.append(" >");
 					openElementClosed = true;
 				}
 				xhtml.append(reader.getText());
@@ -647,9 +613,7 @@ class FeedReader implements Serializable {
 
 	private String readXHTML(XMLStreamReader reader, String parentElement,
 			boolean escapeHTML) throws Exception {
-		System.out.println("parent element:\n" + parentElement);
 		String parentNamespaceURI = namespaceURI;
-		System.out.println("parentNamespaceURI:\n" + parentNamespaceURI);
 		StringBuffer xhtml = new StringBuffer();
 		String elementName = null;
 		boolean justReadStart = false;
@@ -661,7 +625,6 @@ class FeedReader implements Serializable {
 
 			case XMLStreamConstants.START_ELEMENT:
 				elementName = getElementName(reader);
-				System.out.println("readXHTML element:\n" + elementName);
 				// if we read 2 start elements in a row, we need to close the
 				// first start element.
 				if (justReadStart) {
@@ -685,8 +648,6 @@ class FeedReader implements Serializable {
 
 			case XMLStreamConstants.END_ELEMENT:
 				elementName = getElementName(reader);
-				System.out.println("readXHTML end element:\n" + elementName);
-				System.out.println("namespaceURI\n" + namespaceURI);
 				if ((elementName.equals(parentElement) && !namespaceURI
 						.equals("http://www.w3.org/1999/xhtml"))
 						|| (elementName.equals(parentElement) && parentNamespaceURI
@@ -716,23 +677,19 @@ class FeedReader implements Serializable {
 				// if this is html, escape the markup.
 				if (escapeHTML) {
 					String text = reader.getText();
-					System.out.println("html text:\n" + text);
 					xhtml.append(text.replaceAll("&", "&amp;").replaceAll("<",
 							"&lt;").replaceAll(">", "&gt;"));
 				} else {
 					String text = reader.getText();
-					System.out.println("xhtml text:\n" + text);
 					// escape the sole '&lt;' and '&amp;' sole characters.
 					xhtml.append(text.replaceAll("&", "&amp;").replaceAll("<",
 							"&lt;"));
 				}
 			}
 			if (breakOut) {
-				System.out.println("breaking out of readXHTML");
 				break;
 			}
 		}
-		System.out.println("returning xhtml:\n"+xhtml);
 		return xhtml.toString();
 	}
 

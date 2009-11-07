@@ -109,7 +109,7 @@ public class Content implements Serializable {
 	String getDivStartName() {
 		return content.getDivStartName();
 	}
-	
+
 	Attribute getDivStartAttribute() {
 		return content.getDivStartAttribute();
 	}

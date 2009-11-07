@@ -112,6 +112,7 @@ class FeedWriter implements Serializable {
 
 	}
 
+	private String namespacePrefix = null;
 	private String xhtmlNamespacePrefix = null;
 
 	private void writeAttributes(XMLStreamWriter writer,
@@ -119,8 +120,13 @@ class FeedWriter implements Serializable {
 		if (attributes != null) {
 			for (Attribute attr : attributes) {
 				if (attr.getName().indexOf(":") != -1) {
-					xhtmlNamespacePrefix = attr.getName().substring(0,
-							attr.getName().indexOf(":"));
+					namespacePrefix = attr.getName().substring(
+							attr.getName().indexOf(":") + 1);
+				}
+				if (namespacePrefix != null
+						&& attr.getValue().equals(
+								"http://www.w3.org/1999/xhtml")) {
+					xhtmlNamespacePrefix = namespacePrefix;
 				}
 				writer.writeAttribute(attr.getName(), attr.getValue());
 			}
@@ -487,18 +493,18 @@ class FeedWriter implements Serializable {
 					}
 				}
 				// add the content.
-				if (extension.getAttribute("type") != null
-						&& extension.getAttribute("type").getValue().equals(
-								"xhtml")
-						|| xhtmlNamespacePrefix != null
-						&& xhtmlNamespacePrefix
-								.equals(extension.getElementName()
-										.substring(
-												0,
-												extension.getElementName()
-														.indexOf(":")))) {
-					System.out.println("writing xhtml in write extension.");
+				String eleName = extension.getElementName();
+				if (eleName.indexOf(":") != -1) {
+					if (xhtmlNamespacePrefix != null
+							&& xhtmlNamespacePrefix.equals(eleName.substring(0,
+									eleName.indexOf(":")))) {
+						writeXHTML(writer, extension.getContent());
+					}
+				} else if (extension.getAttribute("xmlns") != null
+						&& extension.getAttribute("xmlns").getValue().equals(
+								"http://www.w3.org/1999/xhtml")) {
 					writeXHTML(writer, extension.getContent());
+					
 				} else {
 					writer.writeCharacters(extension.getContent());
 				}

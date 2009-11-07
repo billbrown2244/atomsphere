@@ -70,7 +70,7 @@ public final class FeedDoc implements Serializable {
 
 	private Attribute langEn;
 	private Attribute atomBase;
-	
+
 	private XMLInputFactory inputFactory;
 
 	/**
@@ -87,7 +87,7 @@ public final class FeedDoc implements Serializable {
 		libVersion = props.getProperty("version");
 		langEn = new Attribute("xml:lang", "en-US");
 		atomBase = new Attribute("xmlns", "http://www.w3.org/2005/Atom");
-		
+
 		inputFactory = XMLInputFactory.newInstance();
 		// this is done to help for parsing documents that have undeclared and
 		// unescaped html or xhtml entities.

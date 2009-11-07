@@ -348,18 +348,12 @@ public class FeedWriterTest implements Serializable {
 			assertTrue(entries != null);
 			assertTrue(entries.size() == 1);
 
-			for(Entry ent: entries.values()){
-				System.out.println("ent:\n"+ent);
-			}
-			
 			theXMLString = new StringWriter();
 			writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
 					theXMLString);
 			new FeedWriter().writeEntries(writer, entries);
 			writer.flush();
 			writer.close();
-			System.out.println("theXML:\n"+theXMLString);
-			System.out.println("entry2Result:\n"+entry2Result);
 			assertEquals(theXMLString.toString(), entry2Result);
 
 			entries = new FeedReader().readEntry(XMLInputFactory.newInstance()
@@ -394,7 +388,6 @@ public class FeedWriterTest implements Serializable {
 			writer.close();
 			assertEquals(theXMLString.toString(), entry4Result);
 
-			
 			try {
 				// write the first entry to a file.
 				for (Entry ent : entries.values()) {
@@ -411,7 +404,7 @@ public class FeedWriterTest implements Serializable {
 				e.printStackTrace();
 				fail("could not write entries." + e.getLocalizedMessage());
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("could not write entries." + e.getLocalizedMessage());

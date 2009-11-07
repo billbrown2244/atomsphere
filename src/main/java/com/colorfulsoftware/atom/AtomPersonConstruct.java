@@ -195,7 +195,7 @@ class AtomPersonConstruct implements Serializable {
 	}
 
 	/**
-	 * Shows the contents of the <author> or <contributor> elements. 
+	 * Shows the contents of the <author> or <contributor> elements.
 	 */
 	@Override
 	public String toString() {
