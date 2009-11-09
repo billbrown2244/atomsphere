@@ -25,8 +25,6 @@ package com.colorfulsoftware.atom;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
@@ -70,7 +68,7 @@ class FeedReader implements Serializable {
 		Subtitle subtitle = null;
 		Title title = null;
 		Updated updated = null;
-		SortedMap<String, Entry> entries = null;
+		List<Entry> entries = null;
 		String elementName = null;
 
 		while (reader.hasNext()) {
@@ -256,14 +254,161 @@ class FeedReader implements Serializable {
 		return extensions;
 	}
 
-	SortedMap<String, Entry> readEntry(XMLStreamReader reader,
-			SortedMap<String, Entry> entries) throws Exception {
+	private String readSubExtension(XMLStreamReader reader, String elementName,
+			List<Attribute> parentAttributes) throws Exception {
+
+		StringBuffer xhtml = new StringBuffer("<" + elementName);
+
+		List<Attribute> attributes = getAttributes(reader);
+		// add the attributes
+		if (attributes != null && attributes.size() > 0) {
+			for (Attribute attr : attributes) {
+				xhtml.append(" " + attr.getName() + "=\"" + attr.getValue()
+						+ "\"");
+			}
+		}
+		boolean openElementClosed = false;
+		String elementNameStart = elementName;
+
+		while (reader.hasNext()) {
+			boolean breakOut = false;
+			int next = reader.next();
+
+			switch (next) {
+
+			case XMLStreamConstants.START_ELEMENT:
+				elementNameStart = getElementName(reader);
+				if (!elementNameStart.equals(elementName)) {
+					xhtml.append(readSubExtension(reader, elementNameStart,
+							attributes));
+				}
+				break;
+
+			case XMLStreamConstants.END_ELEMENT:
+				String elementNameEnd = getElementName(reader);
+				if (elementNameEnd.equals(elementName)) {
+					breakOut = true;
+				}
+
+				if (openElementClosed) {
+					xhtml.append("</" + elementName + ">");
+				} else {
+					xhtml.append(" />");
+				}
+
+				break;
+
+			// so far no parsers seem to be able to detect CDATA :(. Maybe a
+			// not necessary?
+			// case XMLStreamConstants.CDATA:
+			// xhtml.append("<![CDATA[" + reader.getText() + "]]>");
+			// break;
+
+			default:
+				// close the open element if we get here
+				if (elementNameStart.equals(elementName)) {
+					xhtml.append(" >");
+					openElementClosed = true;
+				}
+				xhtml.append(reader.getText());
+			}
+			if (breakOut) {
+				break;
+			}
+		}
+		return xhtml.toString();
+	}
+
+	private String readXHTML(XMLStreamReader reader, String parentElement,
+			boolean escapeHTML) throws Exception {
+		String parentNamespaceURI = namespaceURI;
+		StringBuffer xhtml = new StringBuffer();
+		String elementName = null;
+		boolean justReadStart = false;
+
+		while (reader.hasNext()) {
+			boolean breakOut = false;
+
+			switch (reader.next()) {
+
+			case XMLStreamConstants.START_ELEMENT:
+				elementName = getElementName(reader);
+				// if we read 2 start elements in a row, we need to close the
+				// first start element.
+				if (justReadStart) {
+					xhtml.append(">");
+				}
+
+				xhtml.append("<" + elementName);
+
+				List<Attribute> attributes = getAttributes(reader);
+				// add the attributes
+				if (attributes != null && attributes.size() > 0) {
+					for (Attribute attr : attributes) {
+						String attrVal = attr.getValue();
+						xhtml.append(" " + attr.getName() + "=\"" + attrVal
+								+ "\"");
+					}
+				}
+				justReadStart = true;
+
+				break;
+
+			case XMLStreamConstants.END_ELEMENT:
+				elementName = getElementName(reader);
+				if ((elementName.equals(parentElement) && !namespaceURI
+						.equals("http://www.w3.org/1999/xhtml"))
+						|| (elementName.equals(parentElement) && parentNamespaceURI
+								.equals("http://www.w3.org/1999/xhtml"))) {
+					breakOut = true;
+				} else {
+					if (justReadStart) {
+						xhtml.append(" />");
+					} else {
+						xhtml.append("</" + elementName + ">");
+					}
+					justReadStart = false;
+				}
+				break;
+
+			// so far no parsers seem to be able to detect CDATA :(. Maybe a
+			// not necessary?
+			// case XMLStreamConstants.CDATA:
+			// xhtml.append("<![CDATA[" + reader.getText() + "]]>");
+			// break;
+
+			default:
+				if (justReadStart) {
+					xhtml.append(">");
+					justReadStart = false;
+				}
+				// if this is html, escape the markup.
+				if (escapeHTML) {
+					String text = reader.getText();
+					xhtml.append(text.replaceAll("&", "&amp;").replaceAll("<",
+							"&lt;").replaceAll(">", "&gt;"));
+				} else {
+					String text = reader.getText();
+					// escape the sole '&lt;' and '&amp;' sole characters.
+					xhtml.append(text.replaceAll("&", "&amp;").replaceAll("<",
+							"&lt;"));
+				}
+			}
+			if (breakOut) {
+				break;
+			}
+		}
+		return xhtml.toString();
+	}
+
+	List<Entry> readEntry(XMLStreamReader reader,
+			List<Entry> entries) throws Exception {
 		if (feedDoc == null) {
 			feedDoc = new FeedDoc();
 		}
 
 		if (entries == null) {
-			entries = new TreeMap<String, Entry>();
+			entries = new LinkedList<Entry>();
 		}
 
 		Id id = null;
@@ -346,7 +491,7 @@ class FeedReader implements Serializable {
 			throw new AtomSpecException(
 					"atom:entry elements MUST contain exactly one atom:updated element.");
 		}
-		entries.put(updated.getText(), feedDoc.buildEntry(id, title, updated,
+		entries.add(feedDoc.buildEntry(id, title, updated,
 				rights, content, authors, categories, contributors, links,
 				attributes, extensions, published, summary, source));
 
@@ -544,153 +689,6 @@ class FeedReader implements Serializable {
 			title = reader.getElementText();
 		}
 		return feedDoc.buildTitle(title, attributes);
-	}
-
-	private String readSubExtension(XMLStreamReader reader, String elementName,
-			List<Attribute> parentAttributes) throws Exception {
-
-		StringBuffer xhtml = new StringBuffer("<" + elementName);
-
-		List<Attribute> attributes = getAttributes(reader);
-		// add the attributes
-		if (attributes != null && attributes.size() > 0) {
-			for (Attribute attr : attributes) {
-				xhtml.append(" " + attr.getName() + "=\"" + attr.getValue()
-						+ "\"");
-			}
-		}
-		boolean openElementClosed = false;
-		String elementNameStart = elementName;
-
-		while (reader.hasNext()) {
-			boolean breakOut = false;
-			int next = reader.next();
-
-			switch (next) {
-
-			case XMLStreamConstants.START_ELEMENT:
-				elementNameStart = getElementName(reader);
-				if (!elementNameStart.equals(elementName)) {
-					xhtml.append(readSubExtension(reader, elementNameStart,
-							attributes));
-				}
-				break;
-
-			case XMLStreamConstants.END_ELEMENT:
-				String elementNameEnd = getElementName(reader);
-				if (elementNameEnd.equals(elementName)) {
-					breakOut = true;
-				}
-
-				if (openElementClosed) {
-					xhtml.append("</" + elementName + ">");
-				} else {
-					xhtml.append(" />");
-				}
-
-				break;
-
-			// so far no parsers seem to be able to detect CDATA :(. Maybe a
-			// not necessary?
-			// case XMLStreamConstants.CDATA:
-			// xhtml.append("<![CDATA[" + reader.getText() + "]]>");
-			// break;
-
-			default:
-				// close the open element if we get here
-				if (elementNameStart.equals(elementName)) {
-					xhtml.append(" >");
-					openElementClosed = true;
-				}
-				xhtml.append(reader.getText());
-			}
-			if (breakOut) {
-				break;
-			}
-		}
-		return xhtml.toString();
-	}
-
-	private String readXHTML(XMLStreamReader reader, String parentElement,
-			boolean escapeHTML) throws Exception {
-		String parentNamespaceURI = namespaceURI;
-		StringBuffer xhtml = new StringBuffer();
-		String elementName = null;
-		boolean justReadStart = false;
-
-		while (reader.hasNext()) {
-			boolean breakOut = false;
-
-			switch (reader.next()) {
-
-			case XMLStreamConstants.START_ELEMENT:
-				elementName = getElementName(reader);
-				// if we read 2 start elements in a row, we need to close the
-				// first start element.
-				if (justReadStart) {
-					xhtml.append(">");
-				}
-
-				xhtml.append("<" + elementName);
-
-				List<Attribute> attributes = getAttributes(reader);
-				// add the attributes
-				if (attributes != null && attributes.size() > 0) {
-					for (Attribute attr : attributes) {
-						String attrVal = attr.getValue();
-						xhtml.append(" " + attr.getName() + "=\"" + attrVal
-								+ "\"");
-					}
-				}
-				justReadStart = true;
-
-				break;
-
-			case XMLStreamConstants.END_ELEMENT:
-				elementName = getElementName(reader);
-				if ((elementName.equals(parentElement) && !namespaceURI
-						.equals("http://www.w3.org/1999/xhtml"))
-						|| (elementName.equals(parentElement) && parentNamespaceURI
-								.equals("http://www.w3.org/1999/xhtml"))) {
-					breakOut = true;
-				} else {
-					if (justReadStart) {
-						xhtml.append(" />");
-					} else {
-						xhtml.append("</" + elementName + ">");
-					}
-					justReadStart = false;
-				}
-				break;
-
-			// so far no parsers seem to be able to detect CDATA :(. Maybe a
-			// not necessary?
-			// case XMLStreamConstants.CDATA:
-			// xhtml.append("<![CDATA[" + reader.getText() + "]]>");
-			// break;
-
-			default:
-				if (justReadStart) {
-					xhtml.append(">");
-					justReadStart = false;
-				}
-				// if this is html, escape the markup.
-				if (escapeHTML) {
-					String text = reader.getText();
-					xhtml.append(text.replaceAll("&", "&amp;").replaceAll("<",
-							"&lt;").replaceAll(">", "&gt;"));
-				} else {
-					String text = reader.getText();
-					// escape the sole '&lt;' and '&amp;' sole characters.
-					xhtml.append(text.replaceAll("&", "&amp;").replaceAll("<",
-							"&lt;"));
-				}
-			}
-			if (breakOut) {
-				break;
-			}
-		}
-		return xhtml.toString();
 	}
 
 	Subtitle readSubtitle(XMLStreamReader reader) throws Exception {

@@ -28,8 +28,8 @@ import java.io.FileWriter;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -245,7 +245,7 @@ public class FeedReaderTest implements Serializable {
 			out.write(feed.toString());
 			out.flush();
 			out.close();
-			for (Entry entry : feed.getEntries().values()) {
+			for (Entry entry : feed.getEntries()) {
 				assertNotNull(entry.getExtensions());
 			}
 
@@ -285,12 +285,12 @@ public class FeedReaderTest implements Serializable {
 
 			reader = XMLInputFactory.newInstance().createXMLStreamReader(
 					new StringReader(summary3));
-			SortedMap<String, Entry> entries = feedReader.readEntry(reader,
+			List<Entry> entries = feedReader.readEntry(reader,
 					null);
 			assertTrue(entries != null);
 			assertTrue(entries.size() == 1);
 
-			Entry entry = entries.values().iterator().next();
+			Entry entry = entries.iterator().next();
 			assertTrue(entry.getAttributes() != null);
 			assertTrue(entry.getAttributes().size() == 1);
 			assertTrue(entry.getAttributes().get(0).getName()
@@ -326,7 +326,7 @@ public class FeedReaderTest implements Serializable {
 
 			assertNotNull(feed.getEntries());
 
-			for (Entry entry : feed.getEntries().values()) {
+			for (Entry entry : feed.getEntries()) {
 				assertNotNull(entry.getSource());
 				Source source = entry.getSource();
 				assertNotNull(source.getId());
@@ -409,12 +409,12 @@ public class FeedReaderTest implements Serializable {
 
 			reader = XMLInputFactory.newInstance().createXMLStreamReader(
 					new StringReader(content3));
-			SortedMap<String, Entry> entries = feedReader.readEntry(reader,
+			List<Entry> entries = feedReader.readEntry(reader,
 					null);
 			assertTrue(entries != null);
 			assertTrue(entries.size() == 1);
 
-			Entry entry = entries.values().iterator().next();
+			Entry entry = entries.iterator().next();
 			assertTrue(entry.getAttributes() != null);
 			assertTrue(entry.getAttributes().size() == 1);
 			assertTrue(entry.getAttributes().get(0).getName()

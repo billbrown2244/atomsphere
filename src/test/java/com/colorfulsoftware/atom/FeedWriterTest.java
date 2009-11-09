@@ -32,7 +32,7 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.SortedMap;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -329,7 +329,7 @@ public class FeedWriterTest implements Serializable {
 	public void testWriteEntries() {
 		try {
 
-			SortedMap<String, Entry> entries = new FeedReader().readEntry(
+			List<Entry> entries = new FeedReader().readEntry(
 					XMLInputFactory.newInstance().createXMLStreamReader(
 							new StringReader(entry1)), null);
 			assertTrue(entries != null);
@@ -390,7 +390,7 @@ public class FeedWriterTest implements Serializable {
 
 			try {
 				// write the first entry to a file.
-				for (Entry ent : entries.values()) {
+				for (Entry ent : entries) {
 					String entStr = feedDoc.readEntryToString(ent,
 							"javanet.staxutils.IndentingXMLStreamWriter");
 					assertNotNull(entStr);

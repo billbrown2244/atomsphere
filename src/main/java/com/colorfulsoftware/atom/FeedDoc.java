@@ -31,8 +31,6 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -64,9 +62,7 @@ public final class FeedDoc implements Serializable {
 	 * the default XML version of "1.0"
 	 */
 	private String xmlVersion = "1.0";
-
-	private String libUri;
-	private String libVersion;
+	private Generator libVersion;
 
 	private Attribute langEn;
 	private Attribute atomBase;
@@ -81,12 +77,16 @@ public final class FeedDoc implements Serializable {
 	 *             environment.
 	 */
 	public FeedDoc() throws Exception {
-		Properties props = new Properties();
-		props.load(FeedDoc.class.getResourceAsStream("/atomsphere.properties"));
-		libUri = props.getProperty("uri");
-		libVersion = props.getProperty("version");
+
 		langEn = new Attribute("xml:lang", "en-US");
 		atomBase = new Attribute("xmlns", "http://www.w3.org/2005/Atom");
+
+		Properties props = new Properties();
+		props.load(FeedDoc.class.getResourceAsStream("/atomsphere.properties"));
+		List<Attribute> attributes = new LinkedList<Attribute>();
+		attributes.add(new Attribute("uri", props.getProperty("uri")));
+		attributes.add(new Attribute("version", props.getProperty("version")));
+		libVersion = buildGenerator(attributes, "Atomsphere");
 
 		inputFactory = XMLInputFactory.newInstance();
 		// this is done to help for parsing documents that have undeclared and
@@ -114,14 +114,9 @@ public final class FeedDoc implements Serializable {
 	 * @return the Atomsphere library version in the form of a generator
 	 *         element. This element is output for all feeds that are generated
 	 *         by Atomsphere.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Generator getAtomsphereVersion() throws AtomSpecException {
-		List<Attribute> attributes = new LinkedList<Attribute>();
-		attributes.add(buildAttribute("uri", libUri));
-		attributes.add(buildAttribute("version", libVersion));
-		return buildGenerator(attributes, "Atomsphere");
+	public Generator getLibVersion() {
+		return new Generator(libVersion);
 	}
 
 	/**
@@ -405,7 +400,7 @@ public final class FeedDoc implements Serializable {
 	private void writeEntryOutput(Entry entry, XMLStreamWriter writer,
 			String encoding, String version) throws AtomSpecException,
 			Exception, XMLStreamException {
-		SortedMap<String, Entry> entries = new TreeMap<String, Entry>();
+		List<Entry> entries = new LinkedList<Entry>();
 
 		// add atom base and language to the entry if they are not there.
 		List<Attribute> attributes = entry.getAttributes();
@@ -421,7 +416,7 @@ public final class FeedDoc implements Serializable {
 
 		// rebuild the entry with the added attributes.
 		entries
-				.put(entry.getUpdated().getText(), buildEntry(entry.getId(),
+				.add(buildEntry(entry.getId(),
 						entry.getTitle(), entry.getUpdated(),
 						entry.getRights(), entry.getContent(), entry
 								.getAuthors(), entry.getCategories(), entry
@@ -484,10 +479,9 @@ public final class FeedDoc implements Serializable {
 		XMLStreamReader reader = inputFactory
 				.createXMLStreamReader(new ByteArrayInputStream(xmlString
 						.getBytes(encoding)));
-		SortedMap<String, Entry> entries = new FeedReader().readEntry(reader,
-				null);
+		List<Entry> entries = new FeedReader().readEntry(reader, null);
 		// readEntry() only reads at most one entry.
-		return entries.get(entries.firstKey());
+		return entries.get(0);
 	}
 
 	/**
@@ -517,10 +511,9 @@ public final class FeedDoc implements Serializable {
 	public Entry readEntryToBean(File file) throws Exception {
 		XMLStreamReader reader = inputFactory.createXMLStreamReader(
 				new FileInputStream(file), encoding);
-		SortedMap<String, Entry> entries = new FeedReader().readEntry(reader,
-				null);
+		List<Entry> entries = new FeedReader().readEntry(reader, null);
 		// readEntry() only reads at most one entry.
-		return entries.get(entries.firstKey());
+		return entries.get(0);
 	}
 
 	/**
@@ -581,8 +574,8 @@ public final class FeedDoc implements Serializable {
 		// is the root element.
 		// so if the string contains more than one entry, only the first gets
 		// returned.
-		SortedMap<String, Entry> entries = feed.getEntries();
-		return entries == null ? null : entries.get(entries.firstKey());
+		List<Entry> entries = feed.getEntries();
+		return entries == null ? null : entries.get(0);
 	}
 
 	/**
@@ -628,7 +621,7 @@ public final class FeedDoc implements Serializable {
 			List<Contributor> contributors, List<Link> links,
 			List<Attribute> attributes, List<Extension> extensions,
 			Generator generator, Subtitle subtitle, Icon icon, Logo logo,
-			SortedMap<String, Entry> entries) throws AtomSpecException {
+			List<Entry> entries) throws AtomSpecException {
 		return new Feed(id, title, updated, rights, authors, categories,
 				contributors, links, attributes, extensions, generator,
 				subtitle, icon, logo, entries);
@@ -1070,8 +1063,8 @@ public final class FeedDoc implements Serializable {
 		feed = buildFeed(feed.getId(), feed.getTitle(), feed.getUpdated(), feed
 				.getRights(), feed.getAuthors(), feed.getCategories(), feed
 				.getContributors(), feed.getLinks(), attributes, feed
-				.getExtensions(), getAtomsphereVersion(), feed.getSubtitle(),
-				feed.getIcon(), feed.getLogo(), feed.getEntries());
+				.getExtensions(), getLibVersion(), feed.getSubtitle(), feed
+				.getIcon(), feed.getLogo(), feed.getEntries());
 		// write the xml header.
 		writer.writeStartDocument(encoding, version);
 		new FeedWriter().writeFeed(writer, feed);
@@ -1116,22 +1109,21 @@ public final class FeedDoc implements Serializable {
 
 		if (feed.getEntries() != null) {
 			// sort the entries with the passed in instance as the key
-			SortedMap<String, Entry> resortedEntries = new TreeMap<String, Entry>(
-					comparator);
-			SortedMap<String, Entry> currentEntries = feed.getEntries();
-			for (Entry entry : currentEntries.values()) {
+			List<Entry> resortedEntries = new LinkedList<Entry>();
+			List<Entry> currentEntries = feed.getEntries();
+			for (Entry entry : currentEntries) {
 				if (elementClass.getSimpleName().equals("Updated")) {
-					resortedEntries.put(entry.getUpdated().getText(), entry);
+					resortedEntries.add(entry);// entry.getUpdated().getText()
 				}
 				if (elementClass.getSimpleName().equals("Title")) {
-					resortedEntries.put(entry.getTitle().getText(), entry);
+					resortedEntries.add(entry);// entry.getTitle().getText(),
 				}
 				if (elementClass.getSimpleName().equals("Summary")) {
 					if (entry.getSummary() == null) {
 						throw new AtomSpecException(
 								"The feed entries cannot be sorted by <summary> because not all of them have one.");
 					}
-					resortedEntries.put(entry.getSummary().getText(), entry);
+					resortedEntries.add(entry);// entry.getSummary().getText(),
 				}
 			}
 
@@ -1297,10 +1289,4 @@ public final class FeedDoc implements Serializable {
 		return xmlVersion;
 	}
 
-	/**
-	 * @return the atomsphere library version.
-	 */
-	public String getLibVersion() {
-		return libVersion;
-	}
 }

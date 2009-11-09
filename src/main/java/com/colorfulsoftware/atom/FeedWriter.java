@@ -34,7 +34,6 @@ package com.colorfulsoftware.atom;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
-import java.util.SortedMap;
 
 import javax.xml.stream.XMLStreamWriter;
 
@@ -515,10 +514,10 @@ class FeedWriter implements Serializable {
 		}
 	}
 
-	void writeEntries(XMLStreamWriter writer, SortedMap<String, Entry> entries)
+	void writeEntries(XMLStreamWriter writer, List<Entry> entries)
 			throws Exception {
 		// print out the entries.
-		for (Entry entry : entries.values()) {
+		for (Entry entry : entries) {
 			writer.writeStartElement("entry");
 			// write the attributes.
 			writeAttributes(writer, entry.getAttributes());
