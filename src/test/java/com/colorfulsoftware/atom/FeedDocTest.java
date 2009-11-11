@@ -220,6 +220,19 @@ public class FeedDocTest implements Serializable {
 			+ "   <updated>2003-12-13T18:30:02Z</updated>"
 			+ "   <summary>Some text.</summary>" + " </entry></feed>";
 
+	private String basicFeed6 = "<feed xmlns:sort=\"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0\"><sort:asc type=\"id\" /><title>Example</title><id>abc.123.xyz</id><updated>2020-12-13T18:30:02Z</updated><author><name>someone</name></author>"
+			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+			+ "<id>125</id>"
+			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+			+ "<title>test entry 1</title>"
+			+ "</entry>"
+			+ " <entry>"
+			+ "   <title>Atom-Powered Robots Run Amok</title>"
+			+ "   <link href=\"http://example.org/2003/12/13/atom03\"/>"
+			+ "   <id>123</id>"
+			+ "   <updated>2003-12-13T18:30:02Z</updated>"
+			+ "   <summary>Some text.</summary>" + " </entry></feed>";
+
 	private String expectedFeed1 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\">"
 			+ " <title>Example Feed</title>"
@@ -685,8 +698,8 @@ public class FeedDocTest implements Serializable {
 			feed1 = feedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
 			feedDoc.writeEntryDoc(new FileOutputStream(
-					"src/test/resources/out1.xml"), feed1.getEntries().get(0), feedDoc.getEncoding(),
-					feedDoc.getXmlVersion());
+					"src/test/resources/out1.xml"), feed1.getEntries().get(0),
+					feedDoc.getEncoding(), feedDoc.getXmlVersion());
 			Entry entry1 = feedDoc.readEntryToBean(new File(
 					"src/test/resources/out1.xml"));
 			assertNotNull(entry1);
@@ -700,8 +713,8 @@ public class FeedDocTest implements Serializable {
 					"http://www.rand.org/news/press/index.xml"));
 			OutputStreamWriter writer = new OutputStreamWriter(
 					new FileOutputStream("target/out2.xml"), "UTF-8");
-			feedDoc.writeEntryDoc(writer, feed1.getEntries().get(0), "UTF-8", feedDoc
-					.getXmlVersion());
+			feedDoc.writeEntryDoc(writer, feed1.getEntries().get(0), "UTF-8",
+					feedDoc.getXmlVersion());
 			Entry entry1 = feedDoc.readEntryToBean(new File("target/out2.xml"));
 			assertNotNull(entry1);
 		} catch (Exception e) {
@@ -1359,13 +1372,12 @@ public class FeedDocTest implements Serializable {
 			assertNull(feed.getSubtitle().getAttribute("sayWhat"));
 
 			// sort the entries:
-			feed = feedDoc.sortEntries(feed, feedDoc.SORT_ASC, Summary.class);
-			feed = feedDoc.sortEntries(feed, feedDoc.SORT_DESC, Title.class);
-			feed = feedDoc.sortEntries(feed, feedDoc.SORT_ASC, Updated.class);
+			feed = feedDoc.sortEntries(feed, Summary.class, "asc");
+			feed = feedDoc.sortEntries(feed, Title.class, "desc");
+			feed = feedDoc.sortEntries(feed, Updated.class, "asc");
 			// this wont sort anything.
 			try {
-				feed = feedDoc
-						.sortEntries(feed, feedDoc.SORT_ASC, Author.class);
+				feed = feedDoc.sortEntries(feed, Author.class, "asc");
 				fail("should not get here.");
 			} catch (AtomSpecException e) {
 				assertEquals(e.getMessage(),
@@ -1495,9 +1507,8 @@ public class FeedDocTest implements Serializable {
 			updated = feedDoc.buildUpdated(null, Calendar.getInstance()
 					.getTime().toString());
 			entries = new LinkedList<Entry>();
-			entries.add(feedDoc.buildEntry(id, title,
-					updated, null, null, null, null, null, null, null, null,
-					null, null, null));
+			entries.add(feedDoc.buildEntry(id, title, updated, null, null,
+					null, null, null, null, null, null, null, null, null));
 		} catch (AtomSpecException e1) {
 			e1.printStackTrace();
 			fail("should not get here.");
@@ -1643,7 +1654,6 @@ public class FeedDocTest implements Serializable {
 			writer2.flush();
 			writer2.close();
 		} catch (Exception e) {
-			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);
 			assertEquals(
 					e.getMessage(),
@@ -1672,30 +1682,30 @@ public class FeedDocTest implements Serializable {
 							.getSubtitle(), feed1.getIcon(), feed1.getLogo(),
 					entries);
 			assertEquals(Title.class.getSimpleName(), "Title");
-			feed1 = feedDoc.sortEntries(feed1, feedDoc.SORT_ASC, Title.class);
+			feed1 = feedDoc.sortEntries(feed1, Title.class, "asc");
 			for (Entry entry : feed1.getEntries()) {
 				assertNotNull(entry);
 			}
 			List<Entry> entries2 = feed1.getEntries();
-			/*fix this for sorting.
-			assertEquals(entries2.get(0), entryStr1);
-			entries2.remove(entries2.firstKey());
-			assertEquals(entries2.firstKey(), entryStr2);
-			entries2.remove(entries2.firstKey());
-			assertEquals(entries2.firstKey(), entryStr3);
-			*/
-			feed1 = feedDoc.sortEntries(feed1, feedDoc.SORT_DESC, Title.class);
+
+			assertEquals(entries2.get(0).getTitle().getText(), entryStr1);
+			entries2.remove(entries2.get(0));
+			assertEquals(entries2.get(0).getTitle().getText(), entryStr2);
+			entries2.remove(entries2.get(0));
+			assertEquals(entries2.get(0).getTitle().getText(), entryStr3);
+
+			feed1 = feedDoc.sortEntries(feed1, Title.class, "desc");
 			for (Entry entry : feed1.getEntries()) {
 				assertNotNull(entry);
 			}
 			entries2 = feed1.getEntries();
-			/*fix this for sorting.
-			assertEquals(entries2.firstKey(), entryStr3);
-			entries2.remove(entries2.firstKey());
-			assertEquals(entries2.firstKey(), entryStr2);
-			entries2.remove(entries2.firstKey());
-			assertEquals(entries2.firstKey(), entryStr1);
-*/
+
+			assertEquals(entries2.get(0).getTitle().getText(), entryStr3);
+			entries2.remove(entries2.get(0));
+			assertEquals(entries2.get(0).getTitle().getText(), entryStr2);
+			entries2.remove(entries2.get(0));
+			assertEquals(entries2.get(0).getTitle().getText(), entryStr1);
+
 			// test the null entries case.
 			feed1 = feedDoc.buildFeed(feed1.getId(), feed1.getTitle(), feed1
 					.getUpdated(), feed1.getRights(), feed1.getAuthors(), feed1
@@ -1704,11 +1714,21 @@ public class FeedDocTest implements Serializable {
 							.getExtensions(), feed1.getGenerator(), feed1
 							.getSubtitle(), feed1.getIcon(), feed1.getLogo(),
 					null);
-			feed1 = feedDoc.sortEntries(feed1, feedDoc.SORT_DESC, Title.class);
+			feed1 = feedDoc.sortEntries(feed1, Title.class, "desc");
 			assertNull(feed1.getEntries());
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			fail("this shouldn't happen");
+		}
+
+		try {
+			feed1 = feedDoc.readFeedToBean(basicFeed6);
+			assertEquals(feed1.getEntries().get(0).getId().getAtomUri(), "125");
+			assertEquals(feed1.getEntries().get(1).getId().getAtomUri(), "123");
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("this shouldn't happen");
 		}
 	}
 
