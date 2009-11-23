@@ -329,8 +329,8 @@ public class FeedWriterTest implements Serializable {
 	public void testWriteEntries() {
 		try {
 
-			List<Entry> entries = new FeedReader().readEntry(
-					XMLInputFactory.newInstance().createXMLStreamReader(
+			List<Entry> entries = new FeedReader().readEntry(XMLInputFactory
+					.newInstance().createXMLStreamReader(
 							new StringReader(entry1)), null);
 			assertTrue(entries != null);
 			assertTrue(entries.size() == 1);

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.colorfulsoftware</groupId>
 	<artifactId>atomsphere</artifactId>
@@ -107,44 +108,23 @@
 	</reporting>
 	<dependencies>
 		<dependency>
+			<groupId>stax</groupId>
+			<artifactId>stax-api</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		<!-- This Also works 
+		<dependency>
 			<groupId>org.apache.geronimo.specs</groupId>
 			<artifactId>geronimo-stax-api_1.0_spec</artifactId>
 			<version>1.0.1</version>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.7</version>
 			<scope>test</scope>
 		</dependency>
-		<!--
-			Notes: Use this dependency for additional functionality such as
-			formatted output. Take a look at FeedDocTest.java for example
-			<dependency> <groupId>net.java.dev.stax-utils</groupId>
-			<artifactId>stax-utils</artifactId> <version>20060502</version>
-			</dependency>
-		-->
-		<!--
-			NOTES: currently not in central repository needs to be downloaded
-			from http://ftpna2.bea.com/pub/downloads/jsr173.ja <dependency>
-			<groupId>javax.xml</groupId> <artifactId>jsr173</artifactId>
-			<version>1.0</version> </dependency>
-		-->
-		<!--
-			NOTES: passes all but CDATA test. <dependency>
-			<groupId>com.sun.xml.stream</groupId> <artifactId>sjsxp</artifactId>
-			<version>1.0.1</version> <scope>provided</scope> </dependency>
-		-->
-		<!--
-			NOTES: passes all but CDATA equality test. <dependency>
-			<groupId>stax</groupId> <artifactId>stax</artifactId>
-			<version>1.2.0_rc2-dev</version> </dependency>
-		-->
-		<!--
-			NOTES: writes <?xml doctype and encoding with single quotes ' and Does not pass the CDATA equality test. <dependency>
-			<groupId>woodstox</groupId> <artifactId>wstx-asl</artifactId>
-			<version>3.2.0</version> </dependency>
-		-->
 	</dependencies>
 	<distributionManagement>
 		<repository>

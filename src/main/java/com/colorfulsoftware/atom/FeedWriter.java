@@ -503,7 +503,7 @@ class FeedWriter implements Serializable {
 						&& extension.getAttribute("xmlns").getValue().equals(
 								"http://www.w3.org/1999/xhtml")) {
 					writeXHTML(writer, extension.getContent());
-					
+
 				} else {
 					writer.writeCharacters(extension.getContent());
 				}

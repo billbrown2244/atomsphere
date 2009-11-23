@@ -287,7 +287,7 @@ public final class FeedDoc implements Serializable {
 		if (feed == null) {
 			throw new AtomSpecException("The atom feed object cannot be null.");
 		}
-		
+
 		StringWriter theString = new StringWriter();
 		try {
 			Class<?> cls = Class.forName(xmlStreamWriter);
@@ -324,7 +324,7 @@ public final class FeedDoc implements Serializable {
 		if (entry == null) {
 			throw new AtomSpecException("The atom entry object cannot be null.");
 		}
-		
+
 		StringWriter theString = new StringWriter();
 		try {
 			Class<?> cls = Class.forName(xmlStreamWriter);
@@ -342,7 +342,6 @@ public final class FeedDoc implements Serializable {
 		return theString.toString();
 	}
 
-
 	// used for writing entry documents to their output.
 	private void writeEntryOutput(Entry entry, XMLStreamWriter writer,
 			String encoding, String version) throws AtomSpecException,
@@ -352,7 +351,7 @@ public final class FeedDoc implements Serializable {
 		if (entry == null) {
 			throw new AtomSpecException("The atom entry object cannot be null.");
 		}
-		
+
 		// add atom base and language to the entry if they are not there.
 		List<Attribute> attributes = entry.getAttributes();
 		if (attributes == null) {
@@ -990,7 +989,7 @@ public final class FeedDoc implements Serializable {
 		if (feed == null) {
 			throw new AtomSpecException("The atom feed object cannot be null.");
 		}
-		
+
 		// make sure the feed is sorted before it is written out to the file.
 		// this prevents the client code from having to
 		// maintain the sorting during usage
@@ -1043,7 +1042,8 @@ public final class FeedDoc implements Serializable {
 	 * @param ascDesc
 	 *            the sort direction of ascending or descending.
 	 * @return the sorted feed.
-	 * @throws AtomSpecException if the feed cannot be sorted.
+	 * @throws AtomSpecException
+	 *             if the feed cannot be sorted.
 	 */
 	public Feed sortEntries(Feed feed, Class<?> elementClass, String ascDesc)
 			throws AtomSpecException {
@@ -1160,10 +1160,11 @@ public final class FeedDoc implements Serializable {
 
 		// check for the first supported extension
 		// currently only sort is implemented.
-		if (feed.getAttributes() != null && feed.getAttribute(xmlns.getName()) != null) {
+		if (feed.getAttributes() != null
+				&& feed.getAttribute(xmlns.getName()) != null) {
 			return applySort(feed);
 		}
-		
+
 		return feed;
 	}
 
@@ -1183,8 +1184,8 @@ public final class FeedDoc implements Serializable {
 				return sortEntries(feed, Summary.class, "asc");
 			}
 
-		} 
-		
+		}
+
 		if (sortDesc != null) {
 			Attribute type = sortDesc.getAttribute("type");
 			if (type != null && type.getValue().equals("updated")) {

@@ -720,25 +720,26 @@ public class FeedDocTest implements Serializable {
 			e.printStackTrace();
 			fail("should not get here.");
 		}
-		
+
 		// test a bad output.
 		try {
-			feedDoc.writeEntryDoc(new FileWriter("file.bunk"), null, null,null);
+			feedDoc
+					.writeEntryDoc(new FileWriter("file.bunk"), null, null,
+							null);
 			fail("this should not happen.");
 		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
 			assertEquals(e.getMessage(),
 					"The atom entry object cannot be null.");
 		}
-		
+
 		// test a bad output.
 		try {
-			feedDoc.writeFeedDoc(new FileWriter("file.bunk"), null, null,null);
+			feedDoc.writeFeedDoc(new FileWriter("file.bunk"), null, null, null);
 			fail("this should not happen.");
 		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
-			assertEquals(e.getMessage(),
-					"The atom feed object cannot be null.");
+			assertEquals(e.getMessage(), "The atom feed object cannot be null.");
 		}
 	}
 
@@ -1052,15 +1053,14 @@ public class FeedDocTest implements Serializable {
 			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);
 		}
-		
+
 		// test a bad reader.
 		try {
 			feedDoc.readFeedToString(null, null);
 			fail("this should not happen.");
 		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
-			assertEquals(e.getMessage(),
-					"The atom feed object cannot be null.");
+			assertEquals(e.getMessage(), "The atom feed object cannot be null.");
 		}
 	}
 
