@@ -284,6 +284,10 @@ public final class FeedDoc implements Serializable {
 	public String readFeedToString(Feed feed, String xmlStreamWriter)
 			throws Exception {
 
+		if (feed == null) {
+			throw new AtomSpecException("The atom feed object cannot be null.");
+		}
+		
 		StringWriter theString = new StringWriter();
 		try {
 			Class<?> cls = Class.forName(xmlStreamWriter);
@@ -296,7 +300,7 @@ public final class FeedDoc implements Serializable {
 			writeFeedOutput(feed, writer, encoding, xmlVersion);
 
 		} catch (Exception e) {
-			return readFeedToString(feed);
+			return feed.toString();
 		}
 		return theString.toString();
 	}
@@ -317,6 +321,10 @@ public final class FeedDoc implements Serializable {
 	public String readEntryToString(Entry entry, String xmlStreamWriter)
 			throws Exception {
 
+		if (entry == null) {
+			throw new AtomSpecException("The atom entry object cannot be null.");
+		}
+		
 		StringWriter theString = new StringWriter();
 		try {
 			Class<?> cls = Class.forName(xmlStreamWriter);
@@ -329,55 +337,11 @@ public final class FeedDoc implements Serializable {
 			writeEntryOutput(entry, writer, encoding, xmlVersion);
 
 		} catch (Exception e) {
-			return readEntryToString(entry);
+			return entry.toString();
 		}
 		return theString.toString();
 	}
 
-	/**
-	 * This method reads in a Feed bean and returns the contents as an atom feed
-	 * string.
-	 * 
-	 * @param feed
-	 *            the feed to be converted to an atom string.
-	 * @return an atom feed document string.
-	 * @throws Exception
-	 *             thrown if the feed cannot be returned as a String
-	 */
-	public String readFeedToString(Feed feed) throws Exception {
-
-		StringWriter theString = new StringWriter();
-
-		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-		XMLStreamWriter writer = outputFactory.createXMLStreamWriter(theString);
-
-		writeFeedOutput(feed, writer, encoding, xmlVersion);
-
-		return theString.toString();
-	}
-
-	/**
-	 * This method reads in an atom Entry element and returns the contents as an
-	 * atom Entry document String containing the entry.
-	 * 
-	 * @param entry
-	 *            the entry to be converted to an atom entry document string.
-	 * @return an atom entry document string containing the entry argument
-	 *         passed in.
-	 * @throws Exception
-	 *             thrown if the feed cannot be returned as a String
-	 */
-	public String readEntryToString(Entry entry) throws Exception {
-
-		StringWriter theString = new StringWriter();
-
-		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-		XMLStreamWriter writer = outputFactory.createXMLStreamWriter(theString);
-
-		writeEntryOutput(entry, writer, encoding, xmlVersion);
-
-		return theString.toString();
-	}
 
 	// used for writing entry documents to their output.
 	private void writeEntryOutput(Entry entry, XMLStreamWriter writer,
@@ -385,6 +349,10 @@ public final class FeedDoc implements Serializable {
 			Exception, XMLStreamException {
 		List<Entry> entries = new LinkedList<Entry>();
 
+		if (entry == null) {
+			throw new AtomSpecException("The atom entry object cannot be null.");
+		}
+		
 		// add atom base and language to the entry if they are not there.
 		List<Attribute> attributes = entry.getAttributes();
 		if (attributes == null) {
@@ -1017,9 +985,12 @@ public final class FeedDoc implements Serializable {
 
 	// used to write feed output for several feed writing methods.
 	private void writeFeedOutput(Feed feed, XMLStreamWriter writer,
-			String encoding, String version) throws XMLStreamException,
-			Exception {
+			String encoding, String version) throws Exception {
 
+		if (feed == null) {
+			throw new AtomSpecException("The atom feed object cannot be null.");
+		}
+		
 		// make sure the feed is sorted before it is written out to the file.
 		// this prevents the client code from having to
 		// maintain the sorting during usage
@@ -1072,7 +1043,7 @@ public final class FeedDoc implements Serializable {
 	 * @param ascDesc
 	 *            the sort direction of ascending or descending.
 	 * @return the sorted feed.
-	 * @throws AtomSpecException
+	 * @throws AtomSpecException if the feed cannot be sorted.
 	 */
 	public Feed sortEntries(Feed feed, Class<?> elementClass, String ascDesc)
 			throws AtomSpecException {

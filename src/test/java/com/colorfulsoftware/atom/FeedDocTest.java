@@ -154,11 +154,10 @@ public class FeedDocTest implements Serializable {
 			+ "<content type=\"html\">&lt;h4&gt;Installation (atomsphere library)&lt;/h4&gt; &lt;ul&gt; &lt;li&gt;Add the jsr173, sjsxp, stax-utils and atomsphere jars to the classpath (WEB-INF/lib for webapps).&lt;/li&gt; &lt;/ul&gt; &lt;h4&gt;Installation (atomsphere-taglib)&lt;/h4&gt; &lt;ul&gt; &lt;li&gt;Add the atomsphere jar to the classpath (WEB-INF/lib for webapps).&lt;/li&gt;&lt;li&gt;Add the atomsphereTags.tld tag descriptor to the top of the jsp page (See example below). &lt;/li&gt; &lt;li&gt;Add anyrequired attributes and optional attributes to the custom tag (See example below).&lt;/li&gt; &lt;li&gt;View the atomsphereTags.tld for a description of the attributes and what they do.&lt;/li&gt;&lt;/ul&gt; &lt;h4&gt;Installation (atomsphere-weblib)&lt;/h4&gt; &lt;ul&gt;&lt;li&gt;Add the atomsphere and atomsphere-weblib jars to the classpath (WEB-INF/lib for webapps).&lt;/li&gt;&lt;li&gt;Copy the web-fragrment.xml (embeded in the jar file) to your application's web.xml file.&lt;/li&gt;&lt;/ul&gt; &lt;h4&gt;Installation (atomsphere-webapp)&lt;/h4&gt; &lt;ul&gt; &lt;li&gt;Deploy the war file to any J2EE servlet container.&lt;/li&gt; &lt;/ul&gt;</content>"
 			+ "</entry>" + "</feed>";
 
-	private String expectedEntry1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+	private String expectedEntry1 = "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
 			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
-			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
-			+ "<title>test entry 1</title>" + "</entry>";
+			+ "<title>test entry 1</title>"
+			+ "<updated>2008-01-01T00:00:00.00-06:00</updated></entry>";
 
 	private String badEntry1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\" id=\"notCool\">"
@@ -721,6 +720,26 @@ public class FeedDocTest implements Serializable {
 			e.printStackTrace();
 			fail("should not get here.");
 		}
+		
+		// test a bad output.
+		try {
+			feedDoc.writeEntryDoc(new FileWriter("file.bunk"), null, null,null);
+			fail("this should not happen.");
+		} catch (Exception e) {
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(e.getMessage(),
+					"The atom entry object cannot be null.");
+		}
+		
+		// test a bad output.
+		try {
+			feedDoc.writeFeedDoc(new FileWriter("file.bunk"), null, null,null);
+			fail("this should not happen.");
+		} catch (Exception e) {
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(e.getMessage(),
+					"The atom feed object cannot be null.");
+		}
 	}
 
 	/**
@@ -787,9 +806,8 @@ public class FeedDocTest implements Serializable {
 	public void testReadFeedToStringFeed() {
 		try {
 			feed1 = feedDoc.readFeedToBean(expectedFeed1);
-			String feed1Str = feedDoc.readFeedToString(feed1);
-			assertNotNull(feed1Str);
-			feed1 = feedDoc.readFeedToBean(feed1Str);
+			assertNotNull(feed1.toString());
+			feed1 = feedDoc.readFeedToBean(feed1.toString());
 			assertNotNull(feed1);
 			assertNotNull(feed1.getId());
 			assertNotNull(feed1.getTitle());
@@ -937,24 +955,28 @@ public class FeedDocTest implements Serializable {
 			feed1 = feedDoc.readFeedToBean(title1);
 			assertNotNull(feed1.getTitle());
 			assertEquals(feed1.getTitle().getText(), "One bold foot forward");
-			assertNotNull(feedDoc.readFeedToString(feed1));
+			assertNotNull(feedDoc.readFeedToString(feed1, ""));
+			assertNotNull(feed1.toString());
 
 			feed1 = feedDoc.readFeedToBean(title2);
 			assertNotNull(feed1.getTitle());
 			assertEquals(feed1.getTitle().getText(), "One bold foot forward");
-			assertNotNull(feedDoc.readFeedToString(feed1));
+			assertNotNull(feedDoc.readFeedToString(feed1, ""));
+			assertNotNull(feed1.toString());
 
 			feed1 = feedDoc.readFeedToBean(title3);
 			assertNotNull(feed1.getTitle());
 			assertEquals(feed1.getTitle().getText(),
 					"One <strong>bold</strong> foot forward");
-			assertNotNull(feedDoc.readFeedToString(feed1));
+			assertNotNull(feedDoc.readFeedToString(feed1, ""));
+			assertNotNull(feed1.toString());
 
 			feed1 = feedDoc.readFeedToBean(title4);
 			assertNotNull(feed1.getTitle());
 			assertEquals(feed1.getTitle().getText(),
 					"One &lt;strong&gt;bold&lt;/strong&gt; foot forward");
-			assertNotNull(feedDoc.readFeedToString(feed1));
+			assertNotNull(feedDoc.readFeedToString(feed1, ""));
+			assertNotNull(feed1.toString());
 
 			/*
 			 * currently of the 3 implementations tested: sjsxp stax woodstox
@@ -969,13 +991,15 @@ public class FeedDocTest implements Serializable {
 			assertNotNull(feed1.getTitle());
 			assertEquals(feed1.getTitle().getText(),
 					"One &lt;strong&gt;bold&lt;/strong&gt; foot forward");
-			assertNotNull(feedDoc.readFeedToString(feed1));
+			assertNotNull(feedDoc.readFeedToString(feed1, ""));
+			assertNotNull(feed1.toString());
 
 			feed1 = feedDoc.readFeedToBean(title6);
 			assertNotNull(feed1.getTitle());
 			assertEquals(feed1.getTitle().getText(),
 					"One <strong>bold</strong> foot forward<title>can you see me</title>");
-			assertNotNull(feedDoc.readFeedToString(feed1));
+			assertNotNull(feedDoc.readFeedToString(feed1, ""));
+			assertNotNull(feed1.toString());
 
 			feed1 = feedDoc.readFeedToBean(title7);
 			assertNotNull(feed1.getTitle());
@@ -983,7 +1007,8 @@ public class FeedDocTest implements Serializable {
 					"One <xh:strong>bold</xh:strong> foot forward ");
 			assertNotNull(feed1.getTitle().getAttribute("type"));
 			assertNull(feed1.getTitle().getAttribute("bunk"));
-			assertNotNull(feedDoc.readFeedToString(feed1));
+			assertNotNull(feedDoc.readFeedToString(feed1, ""));
+			assertNotNull(feed1.toString());
 
 			try {
 				feed1 = feedDoc.readFeedToBean(brokeTitle1);
@@ -1026,6 +1051,16 @@ public class FeedDocTest implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);
+		}
+		
+		// test a bad reader.
+		try {
+			feedDoc.readFeedToString(null, null);
+			fail("this should not happen.");
+		} catch (Exception e) {
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(e.getMessage(),
+					"The atom feed object cannot be null.");
 		}
 	}
 
@@ -1075,8 +1110,10 @@ public class FeedDocTest implements Serializable {
 	@Test
 	public void testReadEntryToString() {
 		try {
-			String entryStr = feedDoc.readEntryToString(feedDoc
-					.readEntryToBean(expectedEntry1));
+			String entryStr = feedDoc.readEntryToString(
+					feedDoc.readEntryToBean(expectedEntry1), null).toString();
+			System.out.println("entryStr:\n" + entryStr);
+			System.out.println("expectedEntry1:\n" + expectedEntry1);
 			assertTrue(entryStr != null);
 			assertEquals(entryStr, expectedEntry1);
 		} catch (Exception e) {
@@ -1099,6 +1136,16 @@ public class FeedDocTest implements Serializable {
 			assertTrue(entryStr != null);
 		} catch (Exception e) {
 			fail("this should not happen.");
+		}
+
+		// test a bad reader.
+		try {
+			feedDoc.readEntryToString(null, null);
+			fail("this should not happen.");
+		} catch (Exception e) {
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(e.getMessage(),
+					"The atom entry object cannot be null.");
 		}
 	}
 

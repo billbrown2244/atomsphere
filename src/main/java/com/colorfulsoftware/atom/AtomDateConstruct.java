@@ -226,7 +226,7 @@ class AtomDateConstruct implements Serializable {
 		}
 		// close the parent element
 		// and add the date string
-		sb.append(" >" + text);
+		sb.append(">" + text);
 		return sb.toString();
 	}
 }

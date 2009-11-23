@@ -277,7 +277,7 @@ class AtomTextConstruct implements Serializable {
 		}
 		// if there is content add it.
 		if (contentType != ContentType.EXTERNAL) {
-			sb.append(" >");
+			sb.append(">");
 			if (contentType == ContentType.XHTML) {
 				sb.append("<"
 						+ divStartName

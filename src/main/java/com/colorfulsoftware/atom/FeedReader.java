@@ -401,8 +401,8 @@ class FeedReader implements Serializable {
 		return xhtml.toString();
 	}
 
-	List<Entry> readEntry(XMLStreamReader reader,
-			List<Entry> entries) throws Exception {
+	List<Entry> readEntry(XMLStreamReader reader, List<Entry> entries)
+			throws Exception {
 		if (feedDoc == null) {
 			feedDoc = new FeedDoc();
 		}
@@ -491,9 +491,9 @@ class FeedReader implements Serializable {
 			throw new AtomSpecException(
 					"atom:entry elements MUST contain exactly one atom:updated element.");
 		}
-		entries.add(feedDoc.buildEntry(id, title, updated,
-				rights, content, authors, categories, contributors, links,
-				attributes, extensions, published, summary, source));
+		entries.add(feedDoc.buildEntry(id, title, updated, rights, content,
+				authors, categories, contributors, links, attributes,
+				extensions, published, summary, source));
 
 		return entries;
 	}
@@ -534,6 +534,9 @@ class FeedReader implements Serializable {
 
 	// used to check if the extension prefix matches the xhtml namespace
 	private boolean containsXHTML(XMLStreamReader reader, String elementName) {
+		if (reader.getNamespaceURI().equals("http://www.w3.org/1999/xhtml")) {
+			return true;
+		}
 		if (elementName.indexOf(":") != -1) {
 			String ns = reader.getNamespaceURI(elementName.substring(0,
 					elementName.indexOf(":")));
