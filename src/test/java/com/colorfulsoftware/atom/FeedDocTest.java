@@ -1112,8 +1112,6 @@ public class FeedDocTest implements Serializable {
 		try {
 			String entryStr = feedDoc.readEntryToString(
 					feedDoc.readEntryToBean(expectedEntry1), null).toString();
-			System.out.println("entryStr:\n" + entryStr);
-			System.out.println("expectedEntry1:\n" + expectedEntry1);
 			assertTrue(entryStr != null);
 			assertEquals(entryStr, expectedEntry1);
 		} catch (Exception e) {
