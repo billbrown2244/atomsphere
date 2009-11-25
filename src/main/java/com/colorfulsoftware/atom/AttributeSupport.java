@@ -26,7 +26,7 @@ import java.io.Serializable;
  * @author Bill Brown
  * 
  */
-public class AttributeSupport implements Serializable {
+class AttributeSupport implements Serializable {
 
 	private static final long serialVersionUID = -5670802769839692012L;
 	/**
