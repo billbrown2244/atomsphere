@@ -723,7 +723,7 @@ public class FeedDocTest implements Serializable {
 		// test a bad output.
 		try {
 			feedDoc
-					.writeEntryDoc(new FileWriter("file.bunk"), null, null,
+					.writeEntryDoc(new FileWriter("target/file.bunk"), null, null,
 							null);
 			fail("this should not happen.");
 		} catch (Exception e) {
@@ -734,7 +734,7 @@ public class FeedDocTest implements Serializable {
 
 		// test a bad output.
 		try {
-			feedDoc.writeFeedDoc(new FileWriter("file.bunk"), null, null, null);
+			feedDoc.writeFeedDoc(new FileWriter("target/file.bunk"), null, null, null);
 			fail("this should not happen.");
 		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
