@@ -63,8 +63,6 @@ class AtomDateConstruct implements Serializable {
 	 * 
 	 * date-time = full-date "T" full-time
 	 * 
-	 * 
-	 * @throws AtomSpecException if the date format is not valid.
 	 */
 	AtomDateConstruct(List<Attribute> attributes, String dateTime)
 			throws AtomSpecException {

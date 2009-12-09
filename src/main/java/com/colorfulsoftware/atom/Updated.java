@@ -74,10 +74,8 @@ public class Updated implements Serializable {
 	/**
 	 * 
 	 * @return the attributes for this element.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public List<Attribute> getAttributes() throws AtomSpecException {
+	public List<Attribute> getAttributes() {
 		return updated.getAttributes();
 	}
 
@@ -85,10 +83,8 @@ public class Updated implements Serializable {
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Attribute getAttribute(String attrName) throws AtomSpecException {
+	public Attribute getAttribute(String attrName) {
 		return updated.getAttribute(attrName);
 	}
 

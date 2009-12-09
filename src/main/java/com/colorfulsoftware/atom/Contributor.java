@@ -77,19 +77,15 @@ public class Contributor implements Serializable {
 
 	/**
 	 * @return the list of attributes
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public List<Attribute> getAttributes() throws AtomSpecException {
+	public List<Attribute> getAttributes() {
 		return person.getAttributes();
 	}
 
 	/**
 	 * @return the list of extensions
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public List<Extension> getExtensions() throws AtomSpecException {
+	public List<Extension> getExtensions() {
 		return person.getExtensions();
 	}
 
@@ -97,10 +93,8 @@ public class Contributor implements Serializable {
 	 * @param attrName
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Attribute getAttribute(String attrName) throws AtomSpecException {
+	public Attribute getAttribute(String attrName) {
 		return person.getAttribute(attrName);
 	}
 
@@ -108,10 +102,8 @@ public class Contributor implements Serializable {
 	 * @param extName
 	 *            the element name of the extension to get.
 	 * @return the Extension object if extName matches or null if not found.
-	 * @throws AtomSpecException
-	 *             if the data is not valid.
 	 */
-	public Extension getExtension(String extName) throws AtomSpecException {
+	public Extension getExtension(String extName) {
 		return person.getExtension(extName);
 	}
 
