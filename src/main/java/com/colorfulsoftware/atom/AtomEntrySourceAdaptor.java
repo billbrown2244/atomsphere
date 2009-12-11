@@ -337,15 +337,26 @@ class AtomEntrySourceAdaptor implements Serializable {
 	}
 
 	/**
-	 * @param hrefVal
-	 *            the href attribute value to look for.
-	 * @return the Link object if href matches or null if not found.
+	 * 
+	 * @param relAttributeValue
+	 * @return the Link object based on the semantics of the rel attribute of
+	 *         the link. See <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php#element.link"
+	 *         >atom:link</a>.
 	 */
-	public Link getLink(String hrefVal) {
+	public Link getLink(String relAttributeValue) {
+		if (relAttributeValue == null) {
+			return null;
+		}
 		if (this.links != null) {
 			for (Link link : this.links) {
-				if (link.getHref().getValue() != null
-						&& link.getHref().getValue().equals(hrefVal)) {
+				if (relAttributeValue.equals("self")
+						&& link.getRel().getValue() != null
+						&& link.getRel().getValue().equals("self")) {
+					return new Link(link);
+				}
+				if (relAttributeValue.equals("alternate")
+						&& link.getRel().getValue() != null
+						&& link.getRel().getValue().equals("alternate")) {
 					return new Link(link);
 				}
 			}
