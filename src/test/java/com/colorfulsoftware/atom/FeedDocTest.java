@@ -1404,7 +1404,7 @@ public class FeedDocTest implements Serializable {
 			assertNotNull(feed.getAuthor("Bill Brown"));
 			assertNotNull(feed.getContributor("Bill Brown"));
 			assertNotNull(feed
-					.getLink("http://www.colorfulsoftware.com/projects/atomsphere/atom.xml"));
+					.getLink("self"));
 			assertNotNull(feed.getId().getAttribute("local:something"));
 			assertNull(feed.getId().getAttribute("bunk"));
 			assertNull(feed.getCategory("math").getAttribute("anythingWrong"));
@@ -1460,7 +1460,7 @@ public class FeedDocTest implements Serializable {
 					assertNotNull(ent.getCategory("science"));
 					assertNull(ent.getCategory("nothing"));
 					assertNotNull(ent
-							.getLink("http://www.colorfulsoftware.com/projects/atomsphere/atom.xml"));
+							.getLink("alternate"));
 					assertNull(ent.getLink("http://www.fakeness.net"));
 					assertNotNull(ent.getExtension("local:element"));
 					assertNull(ent.getExtension("local:notthere"));
@@ -1483,7 +1483,7 @@ public class FeedDocTest implements Serializable {
 					assertNotNull(ent.getCategory("science"));
 					assertNull(ent.getCategory("nothing"));
 					assertNotNull(ent
-							.getLink("http://www.colorfulsoftware.com/projects/atomsphere/atom.xml"));
+							.getLink("alternate"));
 					assertNull(ent.getLink("http://www.fakeness.net"));
 					assertNotNull(ent.getExtension("local:element"));
 					assertNull(ent.getExtension("local:notthere"));
@@ -1497,7 +1497,7 @@ public class FeedDocTest implements Serializable {
 					assertNotNull(source.getContributor("The People"));
 					assertNotNull(source.getCategory("purpose"));
 					assertNotNull(source
-							.getLink("http://www.minoritydirectory.net/latest.xml"));
+							.getLink("self"));
 					assertNotNull(source.getExtension("sort:asc"));
 				}
 			}
