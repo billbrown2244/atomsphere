@@ -338,9 +338,9 @@ class AtomEntrySourceAdaptor implements Serializable {
 
 	/**
 	 * 
-	 * @param relAttributeValue
+	 * @param relAttributeValue the value of the rel attribute.
 	 * @return the Link object based on the semantics of the rel attribute of
-	 *         the link. See <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php#element.link"
+	 *         the link element. See <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php#element.link"
 	 *         >atom:link</a>.
 	 */
 	public Link getLink(String relAttributeValue) {
