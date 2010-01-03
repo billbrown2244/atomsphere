@@ -1405,6 +1405,8 @@ public class FeedDocTest implements Serializable {
 			assertNotNull(feed.getContributor("Bill Brown"));
 			assertNotNull(feed
 					.getLink("self"));
+			assertNull(feed
+					.getLink(null));
 			assertNotNull(feed.getId().getAttribute("local:something"));
 			assertNull(feed.getId().getAttribute("bunk"));
 			assertNull(feed.getCategory("math").getAttribute("anythingWrong"));
@@ -1732,6 +1734,8 @@ public class FeedDocTest implements Serializable {
 			}
 			List<Entry> entries2 = feed1.getEntries();
 
+			assertNotNull(feed1.getEntry(entryStr1));
+			assertNull(feed1.getEntry(entryStr1+"bunk"));
 			assertEquals(entries2.get(0).getTitle().getText(), entryStr1);
 			entries2.remove(entries2.get(0));
 			assertEquals(entries2.get(0).getTitle().getText(), entryStr2);

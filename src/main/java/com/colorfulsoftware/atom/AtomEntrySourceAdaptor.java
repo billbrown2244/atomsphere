@@ -148,7 +148,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the category attribute list.
 	 */
-	public List<Attribute> getAttributes() {
+	List<Attribute> getAttributes() {
 
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
 		if (this.attributes != null) {
@@ -163,7 +163,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the authors for this entry.
 	 */
-	public List<Author> getAuthors() {
+	List<Author> getAuthors() {
 		if (authors == null) {
 			return null;
 		}
@@ -178,7 +178,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the categories for this element.
 	 */
-	public List<Category> getCategories() {
+	List<Category> getCategories() {
 		if (categories == null) {
 			return null;
 		}
@@ -193,7 +193,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the contributors for this entry.
 	 */
-	public List<Contributor> getContributors() {
+	List<Contributor> getContributors() {
 		if (contributors == null) {
 			return null;
 		}
@@ -208,7 +208,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the extensions for this entry.
 	 */
-	public List<Extension> getExtensions() {
+	List<Extension> getExtensions() {
 		if (extensions == null) {
 			return null;
 		}
@@ -223,7 +223,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the links for this entry.
 	 */
-	public List<Link> getLinks() {
+	List<Link> getLinks() {
 		if (links == null) {
 			return null;
 		}
@@ -238,7 +238,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the unique identifier for this entry.
 	 */
-	public Id getId() {
+	Id getId() {
 		return new Id(id);
 	}
 
@@ -246,7 +246,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the associated rights for this entry.
 	 */
-	public Rights getRights() {
+	Rights getRights() {
 		return (rights == null) ? null : new Rights(rights);
 	}
 
@@ -254,7 +254,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the title for this element.
 	 */
-	public Title getTitle() {
+	Title getTitle() {
 		return new Title(title);
 	}
 
@@ -262,7 +262,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * 
 	 * @return the updated date for this element.
 	 */
-	public Updated getUpdated() {
+	Updated getUpdated() {
 		return new Updated(updated);
 	}
 
@@ -271,7 +271,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 *            the name of the attribute to get.
 	 * @return the Attribute object if attrName matches or null if not found.
 	 */
-	public Attribute getAttribute(String attrName) {
+	Attribute getAttribute(String attrName) {
 		if (this.attributes != null) {
 			for (Attribute attribute : this.attributes) {
 				if (attribute.getName().equals(attrName)) {
@@ -287,7 +287,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 *            the name of the author to get.
 	 * @return the Author object if the name matches or null if not found.
 	 */
-	public Author getAuthor(String name) {
+	Author getAuthor(String name) {
 		if (this.authors != null) {
 			for (Author author : this.authors) {
 				if (author.getName() != null
@@ -305,7 +305,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 *            the term value.
 	 * @return the Category object if the term matches or null if not found.
 	 */
-	public Category getCategory(String termValue) {
+	Category getCategory(String termValue) {
 		if (this.categories != null) {
 			for (Category category : this.categories) {
 				if (category.getAttribute("term") != null
@@ -323,7 +323,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 *            the name of the contributor
 	 * @return the Contributor object if name matches or null if not found.
 	 */
-	public Contributor getContributor(String name) {
+	Contributor getContributor(String name) {
 		if (this.contributors != null) {
 			for (Contributor contributor : this.contributors) {
 				if (contributor.getName() != null
@@ -343,7 +343,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 *         the link element. See <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php#element.link"
 	 *         >atom:link</a>.
 	 */
-	public Link getLink(String relAttributeValue) {
+	Link getLink(String relAttributeValue) {
 		if (relAttributeValue == null) {
 			return null;
 		}
@@ -369,7 +369,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 *            the element name of the extension to get.
 	 * @return the Extension object if extName matches or null if not found.
 	 */
-	public Extension getExtension(String extName) {
+	Extension getExtension(String extName) {
 		if (this.extensions != null) {
 			for (Extension extension : this.extensions) {
 				if (extension.getElementName().equals(extName)) {

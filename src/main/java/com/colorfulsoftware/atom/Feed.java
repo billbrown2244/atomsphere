@@ -294,8 +294,26 @@ public class Feed implements Serializable {
 	}
 
 	/**
+	 * @param entryTitle
+	 *            the title of this entry
+	 * @return the entry with the given title or null if not found.
+	 */
+	public Entry getEntry(String entryTitle) {
+		if (this.entries != null) {
+			for (Entry entry : this.entries) {
+				if (entry.getTitle() != null
+						&& entry.getTitle().getText().equals(entryTitle)) {
+					return new Entry(entry);
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * 
-	 * @param relAttributeValue the value of the rel attribute.
+	 * @param relAttributeValue
+	 *            the value of the rel attribute.
 	 * @return the Link object based on the semantics of the rel attribute of
 	 *         the link element. See <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php#element.link"
 	 *         >atom:link</a>.
