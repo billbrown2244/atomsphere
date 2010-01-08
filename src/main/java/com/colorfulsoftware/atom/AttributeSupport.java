@@ -44,7 +44,9 @@ class AttributeSupport implements Serializable {
 		this.value = attr.getValue();
 		this.atomCommonAttribute = name.equals("xml:base")
 				|| name.equals("xml:lang")
-				|| name.matches(".+:.+")
+				|| name.equals("xml:base")
+				|| name.matches("xmlns:.+")
+				|| name.matches("local:.+")
 				|| (name.equals("xmlns") && value
 						.equals("http://www.w3.org/2005/Atom"));
 	}

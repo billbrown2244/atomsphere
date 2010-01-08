@@ -149,8 +149,6 @@ class AtomDateConstruct implements Serializable {
 							+ dateTime);
 		}
 
-		;
-
 		this.text = sdf.format(this.dateTime = new Date(local.getTime()));
 
 	}
