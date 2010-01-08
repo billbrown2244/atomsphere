@@ -48,11 +48,10 @@ public class Attribute implements Serializable {
 	Attribute(String name, String value) throws AtomSpecException {
 		// specification customization
 		if (name == null || name.equals("")) {
-			throw new AtomSpecException(
-					"Attributes SHOULD NOT be blank.");
+			throw new AtomSpecException("Attribute names SHOULD NOT be blank.");
 		}
 		this.name = name;
-		this.value = value;
+		this.value = (value == null) ? "" : value;
 	}
 
 	Attribute(Attribute attribute) {

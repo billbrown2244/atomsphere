@@ -722,9 +722,8 @@ public class FeedDocTest implements Serializable {
 
 		// test a bad output.
 		try {
-			feedDoc
-					.writeEntryDoc(new FileWriter("target/file.bunk"), null, null,
-							null);
+			feedDoc.writeEntryDoc(new FileWriter("target/file.bunk"), null,
+					null, null);
 			fail("this should not happen.");
 		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
@@ -734,7 +733,8 @@ public class FeedDocTest implements Serializable {
 
 		// test a bad output.
 		try {
-			feedDoc.writeFeedDoc(new FileWriter("target/file.bunk"), null, null, null);
+			feedDoc.writeFeedDoc(new FileWriter("target/file.bunk"), null,
+					null, null);
 			fail("this should not happen.");
 		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
@@ -1243,6 +1243,44 @@ public class FeedDocTest implements Serializable {
 	}
 
 	/**
+	 * tests building an attribute
+	 */
+	@Test
+	public void testBuildAttribute() {
+		try {
+			feedDoc.buildAttribute(null, null);
+			fail("should not get here.");
+		} catch (AtomSpecException r) {
+			assertEquals(r.getMessage(), "Attribute names SHOULD NOT be blank.");
+		}
+
+		try {
+			feedDoc.buildAttribute("", null);
+			fail("should not get here.");
+		} catch (AtomSpecException r) {
+			assertEquals(r.getMessage(), "Attribute names SHOULD NOT be blank.");
+		}
+
+		try {
+			Attribute attr = feedDoc.buildAttribute("yep", null);
+			assertNotNull(attr);
+		} catch (AtomSpecException r) {
+			fail("should not get here.");
+		}
+
+		try {
+			Attribute attr = feedDoc.buildAttribute("yep", "");
+			assertNotNull(attr);
+			Attribute attr2 = feedDoc.buildAttribute("yep", "");
+			assertTrue(attr.equals(attr2));
+			attr2 = feedDoc.buildAttribute("yep", null);
+			assertTrue(attr.equals(attr2));
+		} catch (AtomSpecException r) {
+			fail("should not get here.");
+		}
+	}
+
+	/**
 	 * test the feed building dates.
 	 */
 	@Test
@@ -1403,12 +1441,9 @@ public class FeedDocTest implements Serializable {
 			assertNull(feed.getGenerator().getAttribute("notHere"));
 			assertNotNull(feed.getAuthor("Bill Brown"));
 			assertNotNull(feed.getContributor("Bill Brown"));
-			assertNotNull(feed
-					.getLink("self"));
-			assertNull(feed
-					.getLink("self").getContent());
-			assertNull(feed
-					.getLink(null));
+			assertNotNull(feed.getLink("self"));
+			assertNull(feed.getLink("self").getContent());
+			assertNull(feed.getLink(null));
 			assertNotNull(feed.getId().getAttribute("local:something"));
 			assertNull(feed.getId().getAttribute("bunk"));
 			assertNull(feed.getCategory("math").getAttribute("anythingWrong"));
@@ -1464,8 +1499,7 @@ public class FeedDocTest implements Serializable {
 					assertNull(ent.getContributor("some other dude"));
 					assertNotNull(ent.getCategory("science"));
 					assertNull(ent.getCategory("nothing"));
-					assertNotNull(ent
-							.getLink("alternate"));
+					assertNotNull(ent.getLink("alternate"));
 					assertNull(ent.getLink("http://www.fakeness.net"));
 					assertNotNull(ent.getExtension("local:element"));
 					assertNull(ent.getExtension("local:notthere"));
@@ -1487,8 +1521,7 @@ public class FeedDocTest implements Serializable {
 					assertNull(ent.getContributor("some other dude"));
 					assertNotNull(ent.getCategory("science"));
 					assertNull(ent.getCategory("nothing"));
-					assertNotNull(ent
-							.getLink("alternate"));
+					assertNotNull(ent.getLink("alternate"));
 					assertNull(ent.getLink("http://www.fakeness.net"));
 					assertNotNull(ent.getExtension("local:element"));
 					assertNull(ent.getExtension("local:notthere"));
@@ -1501,8 +1534,7 @@ public class FeedDocTest implements Serializable {
 					assertNotNull(source.getAuthor("The Minority Directory"));
 					assertNotNull(source.getContributor("The People"));
 					assertNotNull(source.getCategory("purpose"));
-					assertNotNull(source
-							.getLink("self"));
+					assertNotNull(source.getLink("self"));
 					assertNotNull(source.getExtension("sort:asc"));
 				}
 			}
@@ -1542,8 +1574,7 @@ public class FeedDocTest implements Serializable {
 			fail("should not get here.");
 		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
-			assertEquals(e.getMessage(),
-					"Attributes SHOULD NOT be blank.");
+			assertEquals(e.getMessage(), "Attribute names SHOULD NOT be blank.");
 		}
 
 		Id id = null;
@@ -1738,7 +1769,7 @@ public class FeedDocTest implements Serializable {
 			List<Entry> entries2 = feed1.getEntries();
 
 			assertNotNull(feed1.getEntry(entryStr1));
-			assertNull(feed1.getEntry(entryStr1+"bunk"));
+			assertNull(feed1.getEntry(entryStr1 + "bunk"));
 			assertEquals(entries2.get(0).getTitle().getText(), entryStr1);
 			entries2.remove(entries2.get(0));
 			assertEquals(entries2.get(0).getTitle().getText(), entryStr2);
