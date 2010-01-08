@@ -62,7 +62,6 @@ class AtomDateConstruct implements Serializable {
 	 * partial-time time-offset
 	 * 
 	 * date-time = full-date "T" full-time
-	 * 
 	 */
 	AtomDateConstruct(List<Attribute> attributes, String dateTime)
 			throws AtomSpecException {
@@ -81,86 +80,85 @@ class AtomDateConstruct implements Serializable {
 		}
 
 		// specification customization
-		if (dateTime == null) {
+		if (dateTime == null || dateTime.trim().equals("")) {
 			throw new AtomSpecException(
-					"AtomDateConstruct Dates SHOULD NOT be null.");
+					"AtomDateConstruct Dates SHOULD NOT be blank.");
+		}
+
+		Date local = null;
+		String timeZoneOffset = null;
+
+		int hours = (((TimeZone.getDefault().getRawOffset() / 1000) / 60) / 60);
+		if (hours >= 0) {
+			timeZoneOffset = TimeZone.getTimeZone("GMT" + "+" + hours).getID()
+					.substring(3);
 		} else {
+			timeZoneOffset = TimeZone
+					.getTimeZone("GMT" + "-" + Math.abs(hours)).getID()
+					.substring(3);
+		}
+		// this is the preferred default format.
+		SimpleDateFormat sdf = new SimpleDateFormat(
+				"yyyy-MM-dd\'T\'HH:mm:ss.SS\'" + timeZoneOffset + "\'");
 
-			Date local = null;
-			String timeZoneOffset = null;
+		boolean valid = true;
+		try {
+			// example: 2006-04-28T12:50:43.337-05:00
+			local = sdf.parse(dateTime);
+		} catch (Exception e1) {
+			valid = false;
+		}
 
-			int hours = (((TimeZone.getDefault().getRawOffset() / 1000) / 60) / 60);
-			if (hours >= 0) {
-				timeZoneOffset = TimeZone.getTimeZone("GMT" + "+" + hours)
-						.getID().substring(3);
-			} else {
-				timeZoneOffset = TimeZone.getTimeZone(
-						"GMT" + "-" + Math.abs(hours)).getID().substring(3);
-			}
-			// this is the preferred default format.
-			SimpleDateFormat sdf = new SimpleDateFormat(
-					"yyyy-MM-dd\'T\'HH:mm:ss.SS\'" + timeZoneOffset + "\'");
-
-			boolean valid = true;
+		if (!valid) {
 			try {
-				// example: 2006-04-28T12:50:43.337-05:00
+				// example: 2009-10-15T11:11:30.52Z
+				sdf = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'Z\'");
 				local = sdf.parse(dateTime);
-			} catch (Exception e1) {
+				valid = true;
+			} catch (Exception e2) {
 				valid = false;
 			}
-
-			if (!valid) {
-				try {
-					// example: 2009-10-15T11:11:30.52Z
-					sdf = new SimpleDateFormat(
-							"yyyy-MM-dd\'T\'HH:mm:ss.SS\'Z\'");
-					local = sdf.parse(dateTime);
-					valid = true;
-				} catch (Exception e2) {
-					valid = false;
-				}
-			}
-
-			if (!valid) {
-				try {
-					// example: 2009-10-15T11:11:30Z
-					sdf = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss\'Z\'");
-					local = sdf.parse(dateTime);
-					valid = true;
-				} catch (Exception e3) {
-					valid = false;
-				}
-			}
-
-			if (!valid) {
-				try {
-					// example: Mon Oct 19 10:52:18 CDT 2009
-					// or: Tue Oct 20 02:48:09 GMT+10:00 2009
-					sdf = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
-					local = sdf.parse(dateTime);
-					valid = true;
-				} catch (Exception e4) {
-					valid = false;
-				}
-			}
-
-			if (!valid) {
-				throw new AtomSpecException(
-						"error trying to create the date element with string: "
-								+ dateTime);
-			}
-
-			;
-
-			this.text = sdf.format(this.dateTime = new Date(local.getTime()));
-
 		}
+
+		if (!valid) {
+			try {
+				// example: 2009-10-15T11:11:30Z
+				sdf = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss\'Z\'");
+				local = sdf.parse(dateTime);
+				valid = true;
+			} catch (Exception e3) {
+				valid = false;
+			}
+		}
+
+		if (!valid) {
+			try {
+				// example: Mon Oct 19 10:52:18 CDT 2009
+				// or: Tue Oct 20 02:48:09 GMT+10:00 2009
+				sdf = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
+				local = sdf.parse(dateTime);
+				valid = true;
+			} catch (Exception e4) {
+				valid = false;
+			}
+		}
+
+		if (!valid) {
+			throw new AtomSpecException(
+					"error trying to create the date element with string: "
+							+ dateTime);
+		}
+
+		;
+
+		this.text = sdf.format(this.dateTime = new Date(local.getTime()));
+
 	}
 
 	AtomDateConstruct(AtomDateConstruct atomDateConstruct) {
 		this.attributes = atomDateConstruct.getAttributes();
 		this.dateTime = atomDateConstruct.getDateTime();
-		this.text = atomDateConstruct.getText();
+		this.text = atomDateConstruct.text;
 	}
 
 	/**

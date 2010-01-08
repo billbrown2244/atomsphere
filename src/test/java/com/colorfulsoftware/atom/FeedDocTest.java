@@ -1252,7 +1252,7 @@ public class FeedDocTest implements Serializable {
 			fail("should not get here.");
 		} catch (AtomSpecException e) {
 			assertEquals(e.getMessage(),
-					"AtomDateConstruct Dates SHOULD NOT be null.");
+					"AtomDateConstruct Dates SHOULD NOT be blank.");
 		}
 
 		try {
@@ -1406,10 +1406,13 @@ public class FeedDocTest implements Serializable {
 			assertNotNull(feed
 					.getLink("self"));
 			assertNull(feed
+					.getLink("self").getContent());
+			assertNull(feed
 					.getLink(null));
 			assertNotNull(feed.getId().getAttribute("local:something"));
 			assertNull(feed.getId().getAttribute("bunk"));
 			assertNull(feed.getCategory("math").getAttribute("anythingWrong"));
+			assertNull(feed.getCategory("math").getContent());
 			assertNotNull(feed.getIcon().getAttribute("local:testAttr"));
 			assertNotNull(feed.getLogo().getAttribute("local:testAttr"));
 			assertNotNull(feed.getRights().getAttribute("xmlns"));
@@ -1540,7 +1543,7 @@ public class FeedDocTest implements Serializable {
 		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
 			assertEquals(e.getMessage(),
-					"Attributes SHOULD NOT be null and SHOULD NOT be blank.");
+					"Attributes SHOULD NOT be blank.");
 		}
 
 		Id id = null;

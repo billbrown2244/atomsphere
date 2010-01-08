@@ -86,7 +86,7 @@ public class Generator implements Serializable {
 		this.attributes = generator.getAttributes();
 		this.uri = generator.getUri();
 		this.version = generator.getVersion();
-		this.text = generator.getText();
+		this.text = generator.text;
 	}
 
 	/**

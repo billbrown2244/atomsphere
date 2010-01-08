@@ -78,7 +78,7 @@ public class Category implements Serializable {
 
 		this.label = getAttribute("label");
 
-		this.content = content;
+		this.content = (content == null || content.equals("")) ? null : content;
 	}
 
 	Category(Category category) {
@@ -86,7 +86,7 @@ public class Category implements Serializable {
 		this.term = category.getTerm();
 		this.scheme = category.getScheme();
 		this.label = category.getLabel();
-		this.content = category.getContent();
+		this.content = category.content;
 	}
 
 	/**

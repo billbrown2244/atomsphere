@@ -77,6 +77,7 @@ public class Extension implements Serializable {
 		}
 
 		if (elementName == null
+				|| elementName.equals("")
 				|| (elementName.indexOf(":") == -1 && getAttribute("xmlns") == null)
 				|| elementName.indexOf(":") == 0) {
 
@@ -89,9 +90,9 @@ public class Extension implements Serializable {
 
 	// copy constructor
 	Extension(Extension extension) {
-		this.elementName = extension.getElementName();
+		this.elementName = extension.elementName;
 		this.attributes = extension.getAttributes();
-		this.content = extension.getContent();
+		this.content = extension.content;
 	}
 
 	/**

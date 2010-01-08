@@ -49,15 +49,15 @@ public class Attribute implements Serializable {
 		// specification customization
 		if (name == null || name.equals("")) {
 			throw new AtomSpecException(
-					"Attributes SHOULD NOT be null and SHOULD NOT be blank.");
+					"Attributes SHOULD NOT be blank.");
 		}
 		this.name = name;
 		this.value = value;
 	}
 
 	Attribute(Attribute attribute) {
-		this.name = attribute.getName();
-		this.value = attribute.getValue();
+		this.name = attribute.name;
+		this.value = attribute.value;
 	}
 
 	/**

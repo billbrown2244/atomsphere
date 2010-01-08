@@ -95,7 +95,7 @@ public class Link implements Serializable {
 
 		this.length = getAttribute("length");
 
-		this.content = content;
+		this.content = (content == null || content.equals("")) ? null : content;
 	}
 
 	Link(Link link) {
@@ -106,7 +106,7 @@ public class Link implements Serializable {
 		this.hreflang = link.getHreflang();
 		this.title = link.getTitle();
 		this.length = link.getLength();
-		this.content = link.getContent();
+		this.content = link.content;
 	}
 
 	/**

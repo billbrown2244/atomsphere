@@ -52,7 +52,7 @@ class AtomURIConstruct implements Serializable {
 
 	AtomURIConstruct(AtomURIConstruct atomURIConstruct) {
 		this.attributes = atomURIConstruct.getAttributes();
-		this.atomUri = atomURIConstruct.getAtomUri();
+		this.atomUri = atomURIConstruct.atomUri;
 	}
 
 	/**

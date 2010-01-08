@@ -148,9 +148,9 @@ class AtomTextConstruct implements Serializable {
 
 	AtomTextConstruct(AtomTextConstruct atomTextConstruct) {
 		this.attributes = atomTextConstruct.getAttributes();
-		this.text = atomTextConstruct.getText();
+		this.text = atomTextConstruct.text;
 		this.contentType = atomTextConstruct.getContentType();
-		this.divStartName = atomTextConstruct.getDivStartName();
+		this.divStartName = atomTextConstruct.divStartName;
 		this.divStartAttribute = atomTextConstruct.getDivStartAttribute();
 	}
 
