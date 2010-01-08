@@ -63,9 +63,9 @@ class AtomPersonConstruct implements Serializable {
 			throws AtomSpecException {
 
 		// check to make sure there is a name element
-		if (name == null || name.equals("")) {
+		if (name == null || name.getText() == null || name.getText().equals("")) {
 			throw new AtomSpecException(
-					"Person constructs MUST contain exactly one \"atom:name\" element.");
+					"Person constructs MUST contain exactly one \"atom:name\" element.  The name SHOULD NOT be blank.");
 		}
 		this.name = new Name(name.getText());
 
