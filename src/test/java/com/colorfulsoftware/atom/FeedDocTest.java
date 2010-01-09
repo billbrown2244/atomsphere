@@ -1281,6 +1281,48 @@ public class FeedDocTest implements Serializable {
 	}
 
 	/**
+	 * tests building an author
+	 */
+	@Test
+	public void testBuildAuthor() {
+
+		try {
+			feedDoc.buildAuthor(null, feedDoc.buildURI(null), feedDoc
+					.buildEmail(null), null, null);
+			fail("should not get here.");
+		} catch (AtomSpecException r) {
+			assertEquals(r.getMessage(),
+					"Person constructs MUST contain exactly one \"atom:name\" element.");
+		}
+
+		try {
+			feedDoc.buildAuthor(feedDoc.buildName(null),
+					feedDoc.buildURI(null), feedDoc.buildEmail(null), null,
+					null);
+			fail("should not get here.");
+		} catch (AtomSpecException r) {
+			assertEquals(r.getMessage(), "The person name SHOULD NOT be blank.");
+		}
+
+		try {
+			feedDoc.buildAuthor(feedDoc.buildName(""), feedDoc.buildURI(null),
+					feedDoc.buildEmail(null), null, null);
+			fail("should not get here.");
+		} catch (AtomSpecException r) {
+			assertEquals(r.getMessage(), "The person name SHOULD NOT be blank.");
+		}
+
+		try {
+			Author author = feedDoc.buildAuthor(feedDoc.buildName("someone"),
+					feedDoc.buildURI(null), feedDoc.buildEmail(null), null,
+					null);
+			assertNotNull(author);
+		} catch (AtomSpecException r) {
+			fail("should not get here.");
+		}
+	}
+
+	/**
 	 * test the feed building dates.
 	 */
 	@Test
