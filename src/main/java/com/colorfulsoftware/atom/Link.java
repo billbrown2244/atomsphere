@@ -77,13 +77,16 @@ public class Link implements Serializable {
 				}
 				this.attributes.add(new Attribute(attr));
 			}
-			if (getAttribute("href") == null) {
-				throw new AtomSpecException(
-						"atom:link elements MUST have an href attribute, whose value MUST be a IRI reference.");
-			}
 		}
 
-		this.href = getAttribute("href");
+		if ((this.href = getAttribute("href")) == null) {
+			throw new AtomSpecException(
+					"atom:link elements MUST have an href attribute, whose value MUST be a IRI reference.");
+		}
+		if (this.href.getValue() == null || this.href.getValue().equals("")) {
+			throw new AtomSpecException(
+					"Link href attribue SHOULD NOT be blank.");
+		}
 
 		this.rel = getAttribute("rel");
 
@@ -116,12 +119,10 @@ public class Link implements Serializable {
 	public List<Attribute> getAttributes() {
 
 		List<Attribute> attrsCopy = new LinkedList<Attribute>();
-		if (this.attributes != null) {
-			for (Attribute attr : this.attributes) {
-				attrsCopy.add(new Attribute(attr));
-			}
+		for (Attribute attr : this.attributes) {
+			attrsCopy.add(new Attribute(attr));
 		}
-		return (this.attributes == null) ? null : attrsCopy;
+		return attrsCopy;
 	}
 
 	/**
@@ -189,11 +190,9 @@ public class Link implements Serializable {
 	 * @return the Attribute object if attrName matches or null if not found.
 	 */
 	public Attribute getAttribute(String attrName) {
-		if (this.attributes != null) {
-			for (Attribute attribute : this.attributes) {
-				if (attribute.getName().equals(attrName)) {
-					return new Attribute(attribute);
-				}
+		for (Attribute attribute : this.attributes) {
+			if (attribute.getName().equals(attrName)) {
+				return new Attribute(attribute);
 			}
 		}
 		return null;
@@ -209,7 +208,7 @@ public class Link implements Serializable {
 			sb.append(attribute);
 		}
 
-		if (content == null || content.equals("")) {
+		if (content == null) {
 			sb.append(" />");
 		} else {
 			sb.append(" >" + content + "</link>");

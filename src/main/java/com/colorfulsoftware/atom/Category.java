@@ -72,7 +72,12 @@ public class Category implements Serializable {
 			}
 		}
 
-		this.term = getAttribute("term");
+		if ((this.term = getAttribute("term")) == null
+				|| this.term.getValue() == null
+				|| this.term.getValue().equals("")) {
+			throw new AtomSpecException(
+					"Category term attribue SHOULD NOT be blank.");
+		}
 
 		this.scheme = getAttribute("scheme");
 
@@ -159,7 +164,7 @@ public class Category implements Serializable {
 			sb.append(attribute);
 		}
 
-		if (content == null || content.equals("")) {
+		if (content == null) {
 			sb.append(" />");
 		} else {
 			sb.append(" >" + content + "</category>");

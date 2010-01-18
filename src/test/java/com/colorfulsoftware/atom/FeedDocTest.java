@@ -1750,6 +1750,95 @@ public class FeedDocTest implements Serializable {
 	}
 
 	/**
+	 * test category
+	 */
+	@Test
+	public void testCategory() {
+		try {
+			List<Attribute> attrs = new LinkedList<Attribute>();
+			attrs.add(feedDoc.buildAttribute("term", null));
+			feedDoc.buildCategory(attrs, null);
+			fail("should not get here.");
+		} catch (Exception e) {
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(e.getMessage(),
+					"Category term attribue SHOULD NOT be blank.");
+		}
+
+		try {
+			List<Attribute> attrs = new LinkedList<Attribute>();
+			attrs.add(feedDoc.buildAttribute("term", ""));
+			feedDoc.buildCategory(attrs, null);
+			fail("should not get here.");
+		} catch (Exception e) {
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(e.getMessage(),
+					"Category term attribue SHOULD NOT be blank.");
+		}
+		
+		try {
+			List<Attribute> attrs = new LinkedList<Attribute>();
+			attrs.add(feedDoc.buildAttribute("label", "something"));
+			feedDoc.buildCategory(attrs, null);
+			fail("should not get here.");
+		} catch (Exception e) {
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(e.getMessage(),
+					"Category term attribue SHOULD NOT be blank.");
+		}
+
+		try {
+			List<Attribute> attrs = new LinkedList<Attribute>();
+			attrs.add(feedDoc.buildAttribute("term", "something"));
+			Category cat = feedDoc.buildCategory(attrs,
+					"");
+			assertTrue(cat != null);
+			assertTrue(cat.getContent() == null);
+		} catch (Exception e) {
+			fail("should not get here.");
+		}
+		
+		try {
+			List<Attribute> attrs = new LinkedList<Attribute>();
+			attrs.add(feedDoc.buildAttribute("term", "something"));
+			Category cat = feedDoc.buildCategory(attrs,
+					"anything should not throw exception");
+			assertTrue(cat != null);
+			assertTrue(cat.getContent() != null);
+		} catch (Exception e) {
+			fail("should not get here.");
+		}
+	}
+	
+	/**
+	 * test category
+	 */
+	@Test
+	public void testLink() {
+		try {
+			List<Attribute> attrs = new LinkedList<Attribute>();
+			attrs.add(feedDoc.buildAttribute("href", null));
+			feedDoc.buildLink(attrs, null);
+			fail("should not get here.");
+		} catch (Exception e) {
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(e.getMessage(),
+					"Link href attribue SHOULD NOT be blank.");
+		}
+
+		try {
+			List<Attribute> attrs = new LinkedList<Attribute>();
+			attrs.add(feedDoc.buildAttribute("href", ""));
+			feedDoc.buildLink(attrs, null);
+			fail("should not get here.");
+		} catch (Exception e) {
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(e.getMessage(),
+					"Link href attribue SHOULD NOT be blank.");
+		}
+	}
+
+	/**
 	 * test failure of an empty generator
 	 */
 	@Test
