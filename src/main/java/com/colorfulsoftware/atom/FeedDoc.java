@@ -570,9 +570,28 @@ public final class FeedDoc implements Serializable {
 			List<Attribute> attributes, List<Extension> extensions,
 			Generator generator, Subtitle subtitle, Icon icon, Logo logo,
 			List<Entry> entries) throws AtomSpecException {
-		return new Feed(id, title, updated, rights, authors, categories,
+		Feed feed = new Feed(id, title, updated, rights, authors, categories,
 				contributors, links, attributes, extensions, generator,
 				subtitle, icon, logo, entries);
+		
+		/*
+		throw new AtomSpecException(
+				"extension prefix '' is not bound to a namespace declaration 'xmlns:"
+						+ namePrefix + "' in a parent element.");
+		List<Attribute> feedAttributes = feed.getAttributes();
+		validateExtensions(feedAttributes,feed.getExtensions());
+		for(Author author: authors){
+			List<Attribute> authorAttributes = author.getAttributes();
+			authorAttributes.addAll(feedAttributes);
+			validateExtensions(authorAttributes,author.getExtensions());
+		}
+		for(Author author: authors){
+			List<Attribute> authorAttributes = author.getAttributes();
+			authorAttributes.addAll(feedAttributes);
+			validateExtensions(authorAttributes,author.getExtensions());
+		}
+		*/
+		return feed;
 	}
 
 	/**

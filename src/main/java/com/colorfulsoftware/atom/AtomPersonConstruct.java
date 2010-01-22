@@ -57,6 +57,8 @@ class AtomPersonConstruct implements Serializable {
 	private final Email email;
 
 	private final List<Extension> extensions;
+	
+	private String unboundPrefix = null;
 
 	AtomPersonConstruct(Name name, URI uri, Email email,
 			List<Attribute> attributes, List<Extension> extensions)
@@ -98,9 +100,16 @@ class AtomPersonConstruct implements Serializable {
 			this.extensions = null;
 		} else {
 			this.extensions = new LinkedList<Extension>();
-			for (Extension extension : extensions) {
+				// check that the extension prefix is bound to a namespace
+				for (Extension extension : extensions) {
+					String namePrefix = extension.getElementName().substring(0,
+							extension.getElementName().indexOf(":"));
+					if (getAttribute("xmlns:" + namePrefix) == null) {
+						this.unboundPrefix = namePrefix;
+					}
 				this.extensions.add(new Extension(extension));
-			}
+				}
+			
 		}
 
 	}
@@ -228,5 +237,9 @@ class AtomPersonConstruct implements Serializable {
 			}
 		}
 		return sb.toString();
+	}
+
+	public String getUnboundPrefix() {
+		return unboundPrefix;
 	}
 }
