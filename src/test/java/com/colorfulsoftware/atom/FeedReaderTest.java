@@ -125,7 +125,7 @@ public class FeedReaderTest implements Serializable {
 			+ "    <title type=\"xhtml\">"
 			+ "      <div xmlns=\"http://www.w3.org/1999/xhtml\"><a href=\"&quot;http://www.laptopsfast.com&quot;\" onclick=\"&quot;logStatistic(this.href);&quot;\">Laptops Fast</a></div>"
 			+ "				</title>"
-			+ "    <author><name>Laptops Fast</name></author>"
+			+ "    <author><name>Laptops Fast</name><what:now myAttr=\"valuable\" /></author>"
 			+ "    <link href=\"http://www.laptopsfast.com\" rel=\"alternate\" />"
 			+ "   <summary>Laptops and Accessories Retailer</summary>"
 			+ "    <content type=\"image/jpeg\" src=\"http://www.minoritydirectory.net/loadImage?img=b8fabc9f-da35-4e5c-ba56-3e7de2a3dca1\" />  </entry>"

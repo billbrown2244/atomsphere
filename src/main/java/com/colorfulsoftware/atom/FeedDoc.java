@@ -255,6 +255,19 @@ public final class FeedDoc implements Serializable {
 	 */
 	public void writeEntryDoc(XMLStreamWriter output, Entry entry,
 			String encoding, String version) throws Exception {
+		// if there are any unbound prefixes, throw an exception
+		if (entry != null && entry.getUnboundPrefixes() != null) {
+			StringBuilder sb = new StringBuilder();
+			for (String namePrefix : entry.getUnboundPrefixes()) {
+				sb.append(namePrefix + " ");
+			}
+			throw new AtomSpecException(
+					"the following extension prefix(es) '"
+							+ sb
+							+ "' are not bound to a namespace declaration 'xmlns:"
+							+ sb
+							+ "' in a parent element. See http://www.w3.org/TR/1999/REC-xml-names-19990114/#ns-decl");
+		}
 		writeEntryOutput(entry, output, encoding, version);
 	}
 
@@ -570,28 +583,9 @@ public final class FeedDoc implements Serializable {
 			List<Attribute> attributes, List<Extension> extensions,
 			Generator generator, Subtitle subtitle, Icon icon, Logo logo,
 			List<Entry> entries) throws AtomSpecException {
-		Feed feed = new Feed(id, title, updated, rights, authors, categories,
+		return new Feed(id, title, updated, rights, authors, categories,
 				contributors, links, attributes, extensions, generator,
 				subtitle, icon, logo, entries);
-		
-		/*
-		throw new AtomSpecException(
-				"extension prefix '' is not bound to a namespace declaration 'xmlns:"
-						+ namePrefix + "' in a parent element.");
-		List<Attribute> feedAttributes = feed.getAttributes();
-		validateExtensions(feedAttributes,feed.getExtensions());
-		for(Author author: authors){
-			List<Attribute> authorAttributes = author.getAttributes();
-			authorAttributes.addAll(feedAttributes);
-			validateExtensions(authorAttributes,author.getExtensions());
-		}
-		for(Author author: authors){
-			List<Attribute> authorAttributes = author.getAttributes();
-			authorAttributes.addAll(feedAttributes);
-			validateExtensions(authorAttributes,author.getExtensions());
-		}
-		*/
-		return feed;
 	}
 
 	/**

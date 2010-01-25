@@ -63,6 +63,7 @@ public class Source implements Serializable {
 	private final Icon icon;
 	private final Logo logo;
 	private final Subtitle subtitle;
+	private List<String> unboundPrefixes;
 
 	// use the factory method in the FeedDoc.
 	Source(Id id, Title title, Updated updated, Rights rights,
@@ -78,6 +79,9 @@ public class Source implements Serializable {
 		this.subtitle = (subtitle == null) ? null : new Subtitle(subtitle);
 		this.icon = (icon == null) ? null : new Icon(icon);
 		this.logo = (logo == null) ? null : new Logo(logo);
+
+		// check that the extension prefixes are bound to a namespace
+		this.unboundPrefixes = sourceAdaptor.getUnboundPrefixes();
 	}
 
 	Source(Source source) {
@@ -283,5 +287,9 @@ public class Source implements Serializable {
 
 		sb.append("</source>");
 		return sb.toString();
+	}
+
+	List<String> getUnboundPrefixes() {
+		return unboundPrefixes;
 	}
 }

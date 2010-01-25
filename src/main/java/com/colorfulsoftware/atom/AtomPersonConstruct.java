@@ -57,8 +57,8 @@ class AtomPersonConstruct implements Serializable {
 	private final Email email;
 
 	private final List<Extension> extensions;
-	
-	private String unboundPrefix = null;
+
+	private List<String> unboundPrefixes = null;
 
 	AtomPersonConstruct(Name name, URI uri, Email email,
 			List<Attribute> attributes, List<Extension> extensions)
@@ -69,12 +69,11 @@ class AtomPersonConstruct implements Serializable {
 			throw new AtomSpecException(
 					"Person constructs MUST contain exactly one \"atom:name\" element.");
 		}
-		
-		if(name.getText() == null || name.getText().equals("")){
-			throw new AtomSpecException(
-			"The person name SHOULD NOT be blank.");
+
+		if (name.getText() == null || name.getText().equals("")) {
+			throw new AtomSpecException("The person name SHOULD NOT be blank.");
 		}
-		
+
 		this.name = new Name(name.getText());
 
 		this.uri = (uri == null) ? null : new URI(uri.getText());
@@ -100,18 +99,22 @@ class AtomPersonConstruct implements Serializable {
 			this.extensions = null;
 		} else {
 			this.extensions = new LinkedList<Extension>();
-				// check that the extension prefix is bound to a namespace
-				for (Extension extension : extensions) {
-					String namePrefix = extension.getElementName().substring(0,
-							extension.getElementName().indexOf(":"));
-					if (getAttribute("xmlns:" + namePrefix) == null) {
-						this.unboundPrefix = namePrefix;
-					}
-				this.extensions.add(new Extension(extension));
-				}
-			
-		}
 
+			for (Extension extension : extensions) {
+				// check that the extension prefix is bound to a namespace
+				String namespacePrefix = extension.getNamespacePrefix();
+				System.out.println("prefix: " + namespacePrefix);
+				if (namespacePrefix != null) {
+					if (getAttribute("xmlns:" + namespacePrefix) == null) {
+						if (this.unboundPrefixes == null) {
+							this.unboundPrefixes = new LinkedList<String>();
+						}
+						this.unboundPrefixes.add(namespacePrefix);
+					}
+				}
+				this.extensions.add(new Extension(extension));
+			}
+		}
 	}
 
 	public AtomPersonConstruct(AtomPersonConstruct person) {
@@ -120,6 +123,7 @@ class AtomPersonConstruct implements Serializable {
 		this.uri = person.getUri();
 		this.email = person.getEmail();
 		this.extensions = person.getExtensions();
+		this.unboundPrefixes = person.getUnboundPrefixes();
 	}
 
 	/**
@@ -222,9 +226,8 @@ class AtomPersonConstruct implements Serializable {
 		// close the parent element
 		sb.append(">");
 
-		if (name != null) {
-			sb.append(name);
-		}
+		sb.append(name);
+		
 		if (email != null) {
 			sb.append(email);
 		}
@@ -239,7 +242,7 @@ class AtomPersonConstruct implements Serializable {
 		return sb.toString();
 	}
 
-	public String getUnboundPrefix() {
-		return unboundPrefix;
+	List<String> getUnboundPrefixes() {
+		return unboundPrefixes;
 	}
 }

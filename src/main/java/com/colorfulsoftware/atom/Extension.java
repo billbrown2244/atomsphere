@@ -58,6 +58,7 @@ public class Extension implements Serializable {
 	private final String elementName;
 	private final List<Attribute> attributes;
 	private final String content;
+	private final String namespacePrefix;
 
 	// use the factory method in the FeedDoc.
 	Extension(String elementName, List<Attribute> attributes, String content)
@@ -86,6 +87,19 @@ public class Extension implements Serializable {
 							+ elementName
 							+ "' is missing a namespace prefix or namespace declaration.");
 		}
+
+		// the namespace prefix is used here for validation only.
+		if (elementName.indexOf(":") != -1) {
+			String potentialPrefix = elementName.substring(0, elementName
+					.indexOf(":"));
+			if (getAttribute("xmlns:" + potentialPrefix) == null) {
+				this.namespacePrefix = potentialPrefix;
+			} else {
+				this.namespacePrefix = null;
+			}
+		} else {
+			this.namespacePrefix = null;
+		}
 	}
 
 	// copy constructor
@@ -93,6 +107,7 @@ public class Extension implements Serializable {
 		this.elementName = extension.elementName;
 		this.attributes = extension.getAttributes();
 		this.content = extension.content;
+		this.namespacePrefix = extension.namespacePrefix;
 	}
 
 	/**
@@ -159,5 +174,9 @@ public class Extension implements Serializable {
 		}
 
 		return sb.toString();
+	}
+
+	String getNamespacePrefix() {
+		return namespacePrefix;
 	}
 }

@@ -71,6 +71,7 @@ public class Feed implements Serializable {
 	private final Logo logo;
 	private final Subtitle subtitle;
 	private final List<Entry> entries;
+	private List<String> unboundPrefixes;
 
 	// use the factory method in the FeedDoc.
 	Feed(Id id, Title title, Updated updated, Rights rights,
@@ -105,6 +106,8 @@ public class Feed implements Serializable {
 		this.icon = (icon == null) ? null : new Icon(icon);
 		this.logo = (logo == null) ? null : new Logo(logo);
 
+		this.unboundPrefixes = sourceAdaptor.getUnboundPrefixes();
+
 		if (entries == null) {
 			this.entries = null;
 			if (sourceAdaptor.getAuthors() == null) {
@@ -114,19 +117,44 @@ public class Feed implements Serializable {
 		} else {
 
 			this.entries = new LinkedList<Entry>();
-			for (Entry entry : entries) {
 
+			for (Entry entry : entries) {
+				// check that the entry unbound prefixes are ok.
+				if (entry.getUnboundPrefixes() != null) {
+					for (String unboundPrefix : entry.getUnboundPrefixes()) {
+						if (sourceAdaptor
+								.getAttribute("xmlns:" + unboundPrefix) == null) {
+							if (this.unboundPrefixes == null) {
+								this.unboundPrefixes = new LinkedList<String>();
+							}
+							this.unboundPrefixes.addAll(entry
+									.getUnboundPrefixes());
+						}
+					}
+				}
 				// if there is no author element at the feed level
 				// check to make sure the entry has an author element
-				if (sourceAdaptor.getAuthors() == null) {
-					if (entry.getAuthors() == null) {
-						throw new AtomSpecException(
-								"atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
-					}
+				if (sourceAdaptor.getAuthors() == null
+						&& entry.getAuthors() == null) {
+					throw new AtomSpecException(
+							"atom:feed elements MUST contain one or more atom:author elements, unless all of the atom:feed element's child atom:entry elements contain at least one atom:author element.");
+
 				}
 
 				this.entries.add(new Entry(entry));
 			}
+		}
+
+		// if there are any unbound prefixes, throw an exception
+		if (this.unboundPrefixes != null) {
+			StringBuilder sb = new StringBuilder();
+			for (String namePrefix : this.unboundPrefixes) {
+				sb.append(namePrefix + " ");
+			}
+			throw new AtomSpecException(
+					"the following extension prefix(es) ( "
+							+ sb
+							+ ") are not bound to a namespace declaration. See http://www.w3.org/TR/1999/REC-xml-names-19990114/#ns-decl");
 		}
 	}
 
@@ -301,8 +329,7 @@ public class Feed implements Serializable {
 	public Entry getEntry(String entryTitle) {
 		if (this.entries != null) {
 			for (Entry entry : this.entries) {
-				if (entry.getTitle() != null
-						&& entry.getTitle().getText().equals(entryTitle)) {
+				if (entry.getTitle().getText().equals(entryTitle)) {
 					return new Entry(entry);
 				}
 			}
@@ -364,4 +391,5 @@ public class Feed implements Serializable {
 		sb.append("</feed>");
 		return sb.toString();
 	}
+
 }

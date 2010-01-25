@@ -62,6 +62,7 @@ public class Entry implements Serializable {
 	private final Published published;
 	private final Source source;
 	private final Summary summary;
+	private List<String> unboundPrefixes;
 
 	// use the factory method in the FeedDoc.
 	Entry(Id id, Title title, Updated updated, Rights rights, Content content,
@@ -112,6 +113,18 @@ public class Entry implements Serializable {
 		this.published = (published == null) ? null : new Published(published);
 		this.source = (source == null) ? null : new Source(source);
 		this.summary = (summary == null) ? null : new Summary(summary);
+
+		// check that the extension prefixes are bound to a namespace
+		if (source != null && source.getUnboundPrefixes() != null) {
+			this.unboundPrefixes = source.getUnboundPrefixes();
+		}
+		if (entryAdaptor.getUnboundPrefixes() != null) {
+			if (this.unboundPrefixes == null) {
+				this.unboundPrefixes = entryAdaptor.getUnboundPrefixes();
+			} else {
+				this.unboundPrefixes.addAll(entryAdaptor.getUnboundPrefixes());
+			}
+		}
 	}
 
 	Entry(Entry entry) {
@@ -314,5 +327,9 @@ public class Entry implements Serializable {
 
 		sb.append("</entry>");
 		return sb.toString();
+	}
+
+	List<String> getUnboundPrefixes() {
+		return unboundPrefixes;
 	}
 }

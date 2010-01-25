@@ -58,6 +58,8 @@ class AtomEntrySourceAdaptor implements Serializable {
 
 	private final Rights rights;
 
+	private List<String> unboundPrefixes = null;
+
 	AtomEntrySourceAdaptor(Id id, Title title, Updated updated, Rights rights,
 			List<Author> authors, List<Category> categories,
 			List<Contributor> contributors, List<Link> links,
@@ -126,9 +128,44 @@ class AtomEntrySourceAdaptor implements Serializable {
 		} else {
 			this.extensions = new LinkedList<Extension>();
 			for (Extension extension : extensions) {
+				// check that the extension prefix is bound to a namespace
+				String namespacePrefix = extension.getNamespacePrefix();
+				System.out.println("prefix: " + namespacePrefix);
+				if (namespacePrefix != null) {
+					if (getAttribute("xmlns:" + namespacePrefix) == null) {
+						if (this.unboundPrefixes == null) {
+							this.unboundPrefixes = new LinkedList<String>();
+						}
+						this.unboundPrefixes.add(namespacePrefix);
+					}
+				}
 				this.extensions.add(new Extension(extension));
 			}
 		}
+
+		// check that the other extension prefixes are bound to a namespace
+		if (authors != null) {
+			for (Author author : authors) {
+				if (author.getUnboundPrefixes() != null) {
+					if (this.unboundPrefixes == null) {
+						this.unboundPrefixes = new LinkedList<String>();
+					}
+					this.unboundPrefixes.addAll(author.getUnboundPrefixes());
+				}
+			}
+		}
+		if (contributors != null) {
+			for (Contributor contributor : contributors) {
+				if (contributor.getUnboundPrefixes() != null) {
+					if (this.unboundPrefixes == null) {
+						this.unboundPrefixes = new LinkedList<String>();
+					}
+					this.unboundPrefixes.addAll(contributor
+							.getUnboundPrefixes());
+				}
+			}
+		}
+
 	}
 
 	AtomEntrySourceAdaptor(AtomEntrySourceAdaptor atomEntrySourceAdaptor) {
@@ -142,6 +179,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 		this.title = atomEntrySourceAdaptor.getTitle();
 		this.updated = atomEntrySourceAdaptor.getUpdated();
 		this.rights = atomEntrySourceAdaptor.getRights();
+		this.unboundPrefixes = atomEntrySourceAdaptor.getUnboundPrefixes();
 	}
 
 	/**
@@ -395,17 +433,11 @@ class AtomEntrySourceAdaptor implements Serializable {
 		// close the parent element
 		sb.append(">");
 
-		if (id != null) {
-			sb.append(id);
-		}
+		sb.append(id);
 
-		if (title != null) {
-			sb.append(title);
-		}
+		sb.append(title);
 
-		if (updated != null) {
-			sb.append(updated);
-		}
+		sb.append(updated);
 
 		if (rights != null) {
 			sb.append(rights);
@@ -442,5 +474,9 @@ class AtomEntrySourceAdaptor implements Serializable {
 		}
 
 		return sb.toString();
+	}
+
+	List<String> getUnboundPrefixes() {
+		return unboundPrefixes;
 	}
 }

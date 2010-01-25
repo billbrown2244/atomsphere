@@ -42,12 +42,14 @@ public class Author implements Serializable {
 	 */
 	private static final long serialVersionUID = -4952942936430794533L;
 	private final AtomPersonConstruct person;
+	private List<String> unboundPrefixes = null;
 
 	// use the factory method in the FeedDoc.
 	Author(Name name, URI uri, Email email, List<Attribute> attributes,
 			List<Extension> extensions) throws AtomSpecException {
 		this.person = new AtomPersonConstruct(name, uri, email, attributes,
 				extensions);
+		this.unboundPrefixes = person.getUnboundPrefixes();
 	}
 
 	Author(Author author) {
@@ -113,5 +115,9 @@ public class Author implements Serializable {
 	@Override
 	public String toString() {
 		return "<author" + person + "</author>";
+	}
+
+	List<String> getUnboundPrefixes() {
+		return unboundPrefixes;
 	}
 }

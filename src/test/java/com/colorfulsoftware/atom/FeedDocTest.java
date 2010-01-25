@@ -726,6 +726,7 @@ public class FeedDocTest implements Serializable {
 					null, null);
 			fail("this should not happen.");
 		} catch (Exception e) {
+			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);
 			assertEquals(e.getMessage(),
 					"The atom entry object cannot be null.");
@@ -1775,7 +1776,7 @@ public class FeedDocTest implements Serializable {
 			assertEquals(e.getMessage(),
 					"Category term attribue SHOULD NOT be blank.");
 		}
-		
+
 		try {
 			List<Attribute> attrs = new LinkedList<Attribute>();
 			attrs.add(feedDoc.buildAttribute("label", "something"));
@@ -1790,14 +1791,13 @@ public class FeedDocTest implements Serializable {
 		try {
 			List<Attribute> attrs = new LinkedList<Attribute>();
 			attrs.add(feedDoc.buildAttribute("term", "something"));
-			Category cat = feedDoc.buildCategory(attrs,
-					"");
+			Category cat = feedDoc.buildCategory(attrs, "");
 			assertTrue(cat != null);
 			assertTrue(cat.getContent() == null);
 		} catch (Exception e) {
 			fail("should not get here.");
 		}
-		
+
 		try {
 			List<Attribute> attrs = new LinkedList<Attribute>();
 			attrs.add(feedDoc.buildAttribute("term", "something"));
@@ -1809,7 +1809,7 @@ public class FeedDocTest implements Serializable {
 			fail("should not get here.");
 		}
 	}
-	
+
 	/**
 	 * test category
 	 */
