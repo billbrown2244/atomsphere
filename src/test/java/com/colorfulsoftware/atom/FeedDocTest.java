@@ -86,7 +86,7 @@ public class FeedDocTest implements Serializable {
 	}
 
 	private String mega = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\" xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\" xmlns:what=\"http://abc.def.ghi.com\" xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">"
 			+ "<id local:something=\"testVal\">http://colorfulsoftware.localhost/projects/atomsphere/atom.xml</id>"
 			+ "<updated local:somethingElse=\"fakeValue\">2007-03-08T20:52:40.70-06:00</updated>"
 			+ "<fakeExt xmlns=\"http://www.fake.extension.org/fakeness\" />"
@@ -128,7 +128,7 @@ public class FeedDocTest implements Serializable {
 			+ "<category term=\"purpose\" label=\"Organization Listings for Minorities in the USA\" />"
 			+ "<title>Latest Updates...</title><subtitle type=\"html\">A much needed resource.&lt;hr /&gt;</subtitle>"
 			+ "<rights>Free Speech</rights>"
-			+ "<author><name>The Minority Directory</name></author><contributor><name>The People</name></contributor>"
+			+ "<author><what:now myAttr=\"valuable\" /><name>The Minority Directory</name></author><contributor><name>The People</name></contributor>"
 			+ "<link href=\"http://www.minoritydirectory.net/latest.xml\" rel=\"self\" />"
 			+ "<icon>http://www.minoritydirectory.net/images/favicon.ico</icon>"
 			+ "<logo>http://www.minoritydirectory.net/images/logo.gif</logo>"

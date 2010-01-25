@@ -106,7 +106,11 @@ public class Feed implements Serializable {
 		this.icon = (icon == null) ? null : new Icon(icon);
 		this.logo = (logo == null) ? null : new Logo(logo);
 
-		this.unboundPrefixes = sourceAdaptor.getUnboundPrefixes();
+		// check that the extension prefixes are bound to a namespace
+		this.unboundPrefixes = new LinkedList<String>();
+		if (sourceAdaptor.getUnboundPrefixes() != null) {
+			this.unboundPrefixes.addAll(sourceAdaptor.getUnboundPrefixes());
+		}
 
 		if (entries == null) {
 			this.entries = null;
@@ -124,9 +128,6 @@ public class Feed implements Serializable {
 					for (String unboundPrefix : entry.getUnboundPrefixes()) {
 						if (sourceAdaptor
 								.getAttribute("xmlns:" + unboundPrefix) == null) {
-							if (this.unboundPrefixes == null) {
-								this.unboundPrefixes = new LinkedList<String>();
-							}
 							this.unboundPrefixes.addAll(entry
 									.getUnboundPrefixes());
 						}
@@ -146,7 +147,7 @@ public class Feed implements Serializable {
 		}
 
 		// if there are any unbound prefixes, throw an exception
-		if (this.unboundPrefixes != null) {
+		if (this.unboundPrefixes.size() > 0) {
 			StringBuilder sb = new StringBuilder();
 			for (String namePrefix : this.unboundPrefixes) {
 				sb.append(namePrefix + " ");

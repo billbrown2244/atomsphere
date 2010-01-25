@@ -123,6 +123,8 @@ class AtomEntrySourceAdaptor implements Serializable {
 			}
 		}
 
+		this.unboundPrefixes = new LinkedList<String>();
+
 		if (extensions == null) {
 			this.extensions = null;
 		} else {
@@ -130,12 +132,8 @@ class AtomEntrySourceAdaptor implements Serializable {
 			for (Extension extension : extensions) {
 				// check that the extension prefix is bound to a namespace
 				String namespacePrefix = extension.getNamespacePrefix();
-				System.out.println("prefix: " + namespacePrefix);
 				if (namespacePrefix != null) {
 					if (getAttribute("xmlns:" + namespacePrefix) == null) {
-						if (this.unboundPrefixes == null) {
-							this.unboundPrefixes = new LinkedList<String>();
-						}
 						this.unboundPrefixes.add(namespacePrefix);
 					}
 				}
@@ -147,25 +145,31 @@ class AtomEntrySourceAdaptor implements Serializable {
 		if (authors != null) {
 			for (Author author : authors) {
 				if (author.getUnboundPrefixes() != null) {
-					if (this.unboundPrefixes == null) {
-						this.unboundPrefixes = new LinkedList<String>();
+					for (String unboundPrefix : author.getUnboundPrefixes()) {
+						if (getAttribute("xmlns:" + unboundPrefix) == null) {
+							this.unboundPrefixes.addAll(author
+									.getUnboundPrefixes());
+						}
 					}
-					this.unboundPrefixes.addAll(author.getUnboundPrefixes());
 				}
 			}
 		}
 		if (contributors != null) {
 			for (Contributor contributor : contributors) {
 				if (contributor.getUnboundPrefixes() != null) {
-					if (this.unboundPrefixes == null) {
-						this.unboundPrefixes = new LinkedList<String>();
+					for (String unboundPrefix : contributor
+							.getUnboundPrefixes()) {
+						if (getAttribute("xmlns:" + unboundPrefix) == null) {
+							this.unboundPrefixes.addAll(contributor
+									.getUnboundPrefixes());
+						}
 					}
-					this.unboundPrefixes.addAll(contributor
-							.getUnboundPrefixes());
 				}
 			}
 		}
 
+		this.unboundPrefixes = (this.unboundPrefixes.size() == 0) ? null
+				: this.unboundPrefixes;
 	}
 
 	AtomEntrySourceAdaptor(AtomEntrySourceAdaptor atomEntrySourceAdaptor) {
@@ -328,9 +332,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	Author getAuthor(String name) {
 		if (this.authors != null) {
 			for (Author author : this.authors) {
-				if (author.getName() != null
-						&& author.getName().getText() != null
-						&& author.getName().getText().equals(name)) {
+				if (author.getName().getText().equals(name)) {
 					return new Author(author);
 				}
 			}
@@ -346,9 +348,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	Category getCategory(String termValue) {
 		if (this.categories != null) {
 			for (Category category : this.categories) {
-				if (category.getAttribute("term") != null
-						&& category.getAttribute("term").getValue().equals(
-								termValue)) {
+				if (category.getAttribute("term").getValue().equals(termValue)) {
 					return new Category(category);
 				}
 			}
@@ -364,9 +364,7 @@ class AtomEntrySourceAdaptor implements Serializable {
 	Contributor getContributor(String name) {
 		if (this.contributors != null) {
 			for (Contributor contributor : this.contributors) {
-				if (contributor.getName() != null
-						&& contributor.getName().getText() != null
-						&& contributor.getName().getText().equals(name)) {
+				if (contributor.getName().getText().equals(name)) {
 					return new Contributor(contributor);
 				}
 			}
@@ -388,14 +386,8 @@ class AtomEntrySourceAdaptor implements Serializable {
 		}
 		if (this.links != null) {
 			for (Link link : this.links) {
-				if (relAttributeValue.equals("self")
-						&& link.getRel().getValue() != null
-						&& link.getRel().getValue().equals("self")) {
-					return new Link(link);
-				}
-				if (relAttributeValue.equals("alternate")
-						&& link.getRel().getValue() != null
-						&& link.getRel().getValue().equals("alternate")) {
+				// rel values of "self" and "alternate" are most relevant
+				if (link.getRel().getValue().equals(relAttributeValue)) {
 					return new Link(link);
 				}
 			}

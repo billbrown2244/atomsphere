@@ -73,7 +73,6 @@ public class Category implements Serializable {
 		}
 
 		if ((this.term = getAttribute("term")) == null
-				|| this.term.getValue() == null
 				|| this.term.getValue().equals("")) {
 			throw new AtomSpecException(
 					"Category term attribue SHOULD NOT be blank.");

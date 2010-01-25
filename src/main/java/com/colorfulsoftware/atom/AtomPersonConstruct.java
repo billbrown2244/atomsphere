@@ -95,6 +95,8 @@ class AtomPersonConstruct implements Serializable {
 			}
 		}
 
+		this.unboundPrefixes = new LinkedList<String>();
+
 		if (extensions == null) {
 			this.extensions = null;
 		} else {
@@ -103,18 +105,17 @@ class AtomPersonConstruct implements Serializable {
 			for (Extension extension : extensions) {
 				// check that the extension prefix is bound to a namespace
 				String namespacePrefix = extension.getNamespacePrefix();
-				System.out.println("prefix: " + namespacePrefix);
 				if (namespacePrefix != null) {
 					if (getAttribute("xmlns:" + namespacePrefix) == null) {
-						if (this.unboundPrefixes == null) {
-							this.unboundPrefixes = new LinkedList<String>();
-						}
 						this.unboundPrefixes.add(namespacePrefix);
 					}
 				}
 				this.extensions.add(new Extension(extension));
 			}
 		}
+
+		this.unboundPrefixes = (this.unboundPrefixes.size() == 0) ? null
+				: this.unboundPrefixes;
 	}
 
 	public AtomPersonConstruct(AtomPersonConstruct person) {
@@ -227,7 +228,7 @@ class AtomPersonConstruct implements Serializable {
 		sb.append(">");
 
 		sb.append(name);
-		
+
 		if (email != null) {
 			sb.append(email);
 		}

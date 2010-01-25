@@ -21,6 +21,7 @@
 package com.colorfulsoftware.atom;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -115,16 +116,15 @@ public class Entry implements Serializable {
 		this.summary = (summary == null) ? null : new Summary(summary);
 
 		// check that the extension prefixes are bound to a namespace
+		this.unboundPrefixes = new LinkedList<String>();
 		if (source != null && source.getUnboundPrefixes() != null) {
-			this.unboundPrefixes = source.getUnboundPrefixes();
+			this.unboundPrefixes.addAll(source.getUnboundPrefixes());
 		}
 		if (entryAdaptor.getUnboundPrefixes() != null) {
-			if (this.unboundPrefixes == null) {
-				this.unboundPrefixes = entryAdaptor.getUnboundPrefixes();
-			} else {
-				this.unboundPrefixes.addAll(entryAdaptor.getUnboundPrefixes());
-			}
+			this.unboundPrefixes.addAll(entryAdaptor.getUnboundPrefixes());
 		}
+		this.unboundPrefixes = (this.unboundPrefixes.size() == 0) ? null
+				: this.unboundPrefixes;
 	}
 
 	Entry(Entry entry) {
