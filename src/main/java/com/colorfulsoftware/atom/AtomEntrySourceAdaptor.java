@@ -144,8 +144,10 @@ class AtomEntrySourceAdaptor implements Serializable {
 		// check that the other extension prefixes are bound to a namespace
 		if (authors != null) {
 			for (Author author : authors) {
+				System.out.println("AtomEntrySourceAdaptor are author prefixes null? "+author.getUnboundPrefixes());
 				if (author.getUnboundPrefixes() != null) {
 					for (String unboundPrefix : author.getUnboundPrefixes()) {
+						System.out.println("AtomEntrySourceAdaptor is the source attribute there? "+getAttribute("xmlns:" + unboundPrefix));
 						if (getAttribute("xmlns:" + unboundPrefix) == null) {
 							this.unboundPrefixes.addAll(author
 									.getUnboundPrefixes());

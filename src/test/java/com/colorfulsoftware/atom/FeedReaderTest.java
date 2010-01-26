@@ -32,6 +32,7 @@ import java.util.Map;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
@@ -158,23 +159,23 @@ public class FeedReaderTest implements Serializable {
 			+ "  <entry>"
 			+ "    <id>http://www.laptopsfast.com</id>"
 			+ "    <updated>2009-04-13T09:21:26.00-06:00</updated>"
-			+ "    <what:now myAttr=\"valuable\" />"
+			+ "    <green:now myAttr=\"valuable\" />"
 			+ "    <title type=\"xhtml\">"
 			+ "      <div xmlns=\"http://www.w3.org/1999/xhtml\"><a href=\"&quot;http://www.laptopsfast.com&quot;\" onclick=\"&quot;logStatistic(this.href);&quot;\">Laptops Fast</a></div>"
 			+ "				</title>"
-			+ "    <author><name>Laptops Fast</name><what:now myAttr=\"valuable\" /></author>"
+			+ "    <author><name>Laptops Fast</name><green:now myAttr=\"valuable\" /></author>"
 			+ "    <link href=\"http://www.laptopsfast.com\" rel=\"alternate\" />"
 			+ "   <summary>Laptops and Accessories Retailer</summary>"
 			+ "    <content type=\"image/jpeg\" src=\"http://www.minoritydirectory.net/loadImage?img=b8fabc9f-da35-4e5c-ba56-3e7de2a3dca1\" />  </entry>"
 			+ "  <entry>"
 			+ "    <id>http://www.brookscleaningcompany.com</id>"
 			+ "    <updated>2009-03-24T08:04:50.00-06:00</updated>"
-			+ "    <what:up>hello there</what:up>"
+			+ "    <green:up>hello there</green:up>"
 			+ "	<title type=\"xhtml\">"
 			+ "      <div xmlns=\"http://www.w3.org/1999/xhtml\"><a href=\"&quot;http://www.brookscleaningcompany.com&quot;\" onclick=\"&quot;logStatistic(this.href);&quot;\">Brooks Cleaning Company</a></div>"
 			+ "</title>"
 			+ "    <author><name>Brooks Cleaning Company</name></author>"
-			+ "    <contributor><name>Someone</name><what:now myAttr=\"valuable\" /></contributor>"
+			+ "    <contributor><name>Someone</name><green:now myAttr=\"valuable\" /></contributor>"
 			+ "    <link href=\"http://www.brookscleaningcompany.com\" rel=\"alternate\" />"
 			+ "    <summary>Brooks Cleaning Co. &#xd; Salem, MI.&#xd; For Business &amp; Industry, Est. 2000</summary>"
 			+ "    <content type=\"image/jpeg\" src=\"http://www.minoritydirectory.net/loadImage?img=c8eaeee7-753c-4a80-a6b3-aeaf137590d2\" />"
@@ -271,6 +272,7 @@ public class FeedReaderTest implements Serializable {
 	 */
 	@Test
 	public void testReadExtension() {
+		
 		try {
 			reader = XMLInputFactory.newInstance().createXMLStreamReader(
 					new StringReader(extension1));
@@ -294,13 +296,15 @@ public class FeedReaderTest implements Serializable {
 		try {
 			reader = XMLInputFactory.newInstance().createXMLStreamReader(
 					new StringReader(extension2));
+			feedReader.readFeed(reader);
 			fail("should not get here.");
 		} catch (Exception e) {
-			assertTrue(e instanceof AtomSpecException);
-			assertEquals(
-					e.getMessage(),
-					"the following extension prefix(es) ( what ) are not bound to a namespace declaration. See http://www.w3.org/TR/1999/REC-xml-names-19990114/#ns-decl");
+			e.printStackTrace();
+			assertTrue(e instanceof XMLStreamException);
+			assertTrue(
+					e.getMessage().indexOf("ElementPrefixUnbound") != -1);
 		}
+		
 	}
 
 	/**

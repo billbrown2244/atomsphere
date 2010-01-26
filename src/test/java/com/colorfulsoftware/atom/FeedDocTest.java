@@ -1054,13 +1054,63 @@ public class FeedDocTest implements Serializable {
 			assertTrue(e instanceof AtomSpecException);
 		}
 
-		// test a bad reader.
 		try {
 			feedDoc.readFeedToString(null, null);
 			fail("this should not happen.");
 		} catch (Exception e) {
 			assertTrue(e instanceof AtomSpecException);
 			assertEquals(e.getMessage(), "The atom feed object cannot be null.");
+		}
+
+		// test extension namespaces
+		try {
+			feed1 = feedDoc.readFeedToBean(basicFeed4);
+			List<Author> auths = feed1.getAuthors();
+			Author author = auths.remove(0);
+			List<Extension> extns = new LinkedList<Extension>();
+			extns.add(feedDoc.buildExtension("whats:up", null,
+					"nothing special"));
+			auths.add(feedDoc.buildAuthor(author.getName(), author.getUri(),
+					author.getEmail(), author.getAttributes(), extns));
+			feedDoc.buildFeed(feed1.getId(), feed1.getTitle(), feed1
+					.getUpdated(), feed1.getRights(), auths, feed1
+					.getCategories(), feed1.getContributors(),
+					feed1.getLinks(), feed1.getAttributes(), feed1
+							.getExtensions(), feed1.getGenerator(), feed1
+							.getSubtitle(), feed1.getIcon(), feed1.getLogo(),
+					feed1.getEntries());
+			fail("this should not happen.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(
+					e.getMessage(),
+					"the following extension prefix(es) ( whats ) are not bound to a namespace declaration. See http://www.w3.org/TR/1999/REC-xml-names-19990114/#ns-decl");
+		}
+
+		try {
+			feed1 = feedDoc.readFeedToBean(basicFeed4);
+			List<Author> auths = feed1.getAuthors();
+			Author author = auths.remove(0);
+			List<Extension> extns = new LinkedList<Extension>();
+			extns.add(feedDoc.buildExtension("whats:up", null,
+					"nothing special"));
+			List<Attribute> attrs = feed1.getAttributes();
+			attrs.add(feedDoc.buildAttribute("xmlns:whats",
+					"http://www.yyy.zzz"));
+			auths.add(feedDoc.buildAuthor(author.getName(), author.getUri(),
+					author.getEmail(), author.getAttributes(), extns));
+			feed1 = feedDoc.buildFeed(feed1.getId(), feed1.getTitle(), feed1
+					.getUpdated(), feed1.getRights(), auths, feed1
+					.getCategories(), feed1.getContributors(),
+					feed1.getLinks(), attrs, feed1.getExtensions(), feed1
+							.getGenerator(), feed1.getSubtitle(), feed1
+							.getIcon(), feed1.getLogo(), null);
+			assertNotNull(feed1);
+			assertNotNull(feed1.getAuthor("someone").getExtension("whats:up"));
+			assertNull(feed1.getEntry("anything"));
+		} catch (Exception e) {
+			fail("this should not happen.");
 		}
 	}
 

@@ -146,6 +146,9 @@ public class Feed implements Serializable {
 			}
 		}
 
+		if(this.unboundPrefixes != null){
+		System.out.println("Feed unboundPrefixes size = "+this.unboundPrefixes.size());
+		}
 		// if there are any unbound prefixes, throw an exception
 		if (this.unboundPrefixes.size() > 0) {
 			StringBuilder sb = new StringBuilder();
