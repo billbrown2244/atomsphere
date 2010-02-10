@@ -392,6 +392,27 @@ public class FeedDocTest implements Serializable {
 			+ "   <updated>2003-12-13T18:30:02Z</updated>"
 			+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
 
+	private String badFeed6 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+			+ "<feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:local=\"http://purl.org/dc/elements/1.1/fakeNamespace\">"
+			+ " <title>Example Feed</title>"
+			+ " <subtitle type=\"xhtml\"><div>A marked up <br /> subtitle.</div></subtitle>"
+			+ " <link href=\"http://example.org/feed/\" rel=\"self\"/>"
+			+ " <link href=\"http://example.org/\"/>"
+			+ " <updated xml:lang=\"en-US\">2003-12-13T18:30:02Z</updated>"
+			+ " <author>"
+			+ "   <name>John Doe</name>"
+			+ "   <email>johndoe@example.com</email>"
+			+ " </author>"
+			+ " <id>urn:uuid:60a76c80-d399-11d9-b91C-0003939e0af6</id>"
+			+ " <entry xml:lang=\"en-US\">"
+			+ "   <title>Atom-Powered Robots Run Amok</title>"
+			+ "   <link href=\"http://example.org/2003/12/13/atom03\"/>"
+			// add this to the feed after creation.
+			// + " <unbound:ext>some text</unbound:ext>"
+			+ "   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>"
+			+ "   <updated>2003-12-13T18:30:02Z</updated>"
+			+ "   <summary>Some text.</summary>" + " </entry>" + "</feed>";
+
 	private Entry entry1, entry2, entry3;
 
 	// found these examples here:
@@ -648,11 +669,9 @@ public class FeedDocTest implements Serializable {
 		try {
 			feed1 = feedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
-			feedDoc.writeFeedDoc(new FileOutputStream(
-					"src/test/resources/out1.xml"), feed1, feedDoc
-					.getEncoding(), feedDoc.getXmlVersion());
-			Feed feed2 = feedDoc.readFeedToBean(new File(
-					"src/test/resources/out1.xml"));
+			feedDoc.writeFeedDoc(new FileOutputStream("target/out1.xml"),
+					feed1, feedDoc.getEncoding(), feedDoc.getXmlVersion());
+			Feed feed2 = feedDoc.readFeedToBean(new File("target/out1.xml"));
 			assertNotNull(feed2);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -695,11 +714,10 @@ public class FeedDocTest implements Serializable {
 		try {
 			feed1 = feedDoc.readFeedToBean(new java.net.URL(
 					"http://www.rand.org/news/press/index.xml"));
-			feedDoc.writeEntryDoc(new FileOutputStream(
-					"src/test/resources/out1.xml"), feed1.getEntries().get(0),
-					feedDoc.getEncoding(), feedDoc.getXmlVersion());
-			Entry entry1 = feedDoc.readEntryToBean(new File(
-					"src/test/resources/out1.xml"));
+			feedDoc.writeEntryDoc(new FileOutputStream("target/out5.xml"),
+					feed1.getEntries().get(0), feedDoc.getEncoding(), feedDoc
+							.getXmlVersion());
+			Entry entry1 = feedDoc.readEntryToBean(new File("target/out5.xml"));
 			assertNotNull(entry1);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -950,6 +968,70 @@ public class FeedDocTest implements Serializable {
 					"atom:link elements MUST have an href attribute, whose value MUST be a IRI reference.");
 		}
 
+		try {
+			feed1 = feedDoc.readFeedToBean(badFeed6);
+			Entry ent = feed1.getEntry("Atom-Powered Robots Run Amok");
+			Extension ext = feedDoc.buildExtension("unbound:ele", null, null);
+			List<Extension> extns = new LinkedList<Extension>();
+			extns.add(ext);
+			ent = feedDoc.buildEntry(ent.getId(), ent.getTitle(), ent
+					.getUpdated(), ent.getRights(), ent.getContent(), ent
+					.getAuthors(), ent.getCategories(), ent.getContributors(),
+					ent.getLinks(), ent.getAttributes(), extns, ent
+							.getPublished(), ent.getSummary(), ent.getSource());
+			List<Entry> entries = feed1.getEntries();
+			for (int i = 0; i < entries.size(); i++) {
+				if (entries.get(i).getTitle().getText().equals(
+						"Atom-Powered Robots Run Amok")) {
+					entries.remove(i);
+					break;
+				}
+			}
+			entries.add(ent);
+			feedDoc.buildFeed(feed1.getId(), feed1.getTitle(), feed1
+					.getUpdated(), feed1.getRights(), feed1.getAuthors(), feed1
+					.getCategories(), feed1.getContributors(),
+					feed1.getLinks(), feed1.getAttributes(), feed1
+							.getExtensions(), feed1.getGenerator(), feed1
+							.getSubtitle(), feed1.getIcon(), feed1.getLogo(),
+					entries);
+			fail("should not get here.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("e.getMessage(): " + e);
+			System.out.println("e.getMessage(): " + e.getMessage());
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(
+					e.getMessage(),
+					"the following extension prefix(es) ( unbound ) are not bound to a namespace declaration. See http://www.w3.org/TR/1999/REC-xml-names-19990114/#ns-decl.");
+		}
+
+		try {
+			feed1 = feedDoc.readFeedToBean(badFeed6);
+			Entry ent = feed1.getEntry("Atom-Powered Robots Run Amok");
+			feedDoc.writeEntryDoc(new FileOutputStream(new File(
+			"target/works.xml")), ent, null, null);
+			Extension ext = feedDoc.buildExtension("unbound:ele", null, null);
+			List<Extension> extns = new LinkedList<Extension>();
+			extns.add(ext);
+			ent = feedDoc.buildEntry(ent.getId(), ent.getTitle(), ent
+					.getUpdated(), ent.getRights(), ent.getContent(), ent
+					.getAuthors(), ent.getCategories(), ent.getContributors(),
+					ent.getLinks(), ent.getAttributes(), extns, ent
+							.getPublished(), ent.getSummary(), ent.getSource());
+			feedDoc.writeEntryDoc(new FileOutputStream(new File(
+					"target/never.xml")), ent, null, null);
+			fail("should not get here.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("e.getMessage(): " + e);
+			System.out.println("e.getMessage(): " + e.getMessage());
+			assertTrue(e instanceof AtomSpecException);
+			assertEquals(
+					e.getMessage(),
+					"the following extension prefix(es) ( unbound ) are not bound to a namespace declaration. See http://www.w3.org/TR/1999/REC-xml-names-19990114/#ns-decl.");
+		}
+
 		// test the seven title variants.
 		try {
 
@@ -1085,7 +1167,7 @@ public class FeedDocTest implements Serializable {
 			assertTrue(e instanceof AtomSpecException);
 			assertEquals(
 					e.getMessage(),
-					"the following extension prefix(es) ( whats ) are not bound to a namespace declaration. See http://www.w3.org/TR/1999/REC-xml-names-19990114/#ns-decl");
+					"the following extension prefix(es) ( whats ) are not bound to a namespace declaration. See http://www.w3.org/TR/1999/REC-xml-names-19990114/#ns-decl.");
 		}
 
 		try {

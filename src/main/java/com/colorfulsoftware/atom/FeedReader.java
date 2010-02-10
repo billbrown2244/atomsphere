@@ -384,8 +384,12 @@ class FeedReader implements Serializable {
 				// if this is html, escape the markup.
 				if (escapeHTML) {
 					String text = reader.getText();
-					xhtml.append(text.replaceAll("&", "&amp;").replaceAll("<",
-							"&lt;").replaceAll(">", "&gt;"));
+					// if the feed we are reading has invalid escaping the text
+					// will be null which results in a skipping of the malformed character.
+					if (text != null) {
+						xhtml.append(text.replaceAll("&", "&amp;").replaceAll(
+								"<", "&lt;").replaceAll(">", "&gt;"));
+					}
 				} else {
 					String text = reader.getText();
 					// escape the sole '&lt;' and '&amp;' sole characters.

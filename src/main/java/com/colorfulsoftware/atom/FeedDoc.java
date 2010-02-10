@@ -262,11 +262,9 @@ public final class FeedDoc implements Serializable {
 				sb.append(namePrefix + " ");
 			}
 			throw new AtomSpecException(
-					"the following extension prefix(es) '"
+					"the following extension prefix(es) ( "
 							+ sb
-							+ "' are not bound to a namespace declaration 'xmlns:"
-							+ sb
-							+ "' in a parent element. See http://www.w3.org/TR/1999/REC-xml-names-19990114/#ns-decl");
+							+ ") are not bound to a namespace declaration. See http://www.w3.org/TR/1999/REC-xml-names-19990114/#ns-decl.");
 		}
 		writeEntryOutput(entry, output, encoding, version);
 	}

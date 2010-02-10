@@ -146,9 +146,6 @@ public class Feed implements Serializable {
 			}
 		}
 
-		if(this.unboundPrefixes != null){
-		System.out.println("Feed unboundPrefixes size = "+this.unboundPrefixes.size());
-		}
 		// if there are any unbound prefixes, throw an exception
 		if (this.unboundPrefixes.size() > 0) {
 			StringBuilder sb = new StringBuilder();
@@ -158,7 +155,7 @@ public class Feed implements Serializable {
 			throw new AtomSpecException(
 					"the following extension prefix(es) ( "
 							+ sb
-							+ ") are not bound to a namespace declaration. See http://www.w3.org/TR/1999/REC-xml-names-19990114/#ns-decl");
+							+ ") are not bound to a namespace declaration. See http://www.w3.org/TR/1999/REC-xml-names-19990114/#ns-decl.");
 		}
 	}
 
