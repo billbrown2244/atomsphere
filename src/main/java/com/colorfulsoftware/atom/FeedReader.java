@@ -76,44 +76,31 @@ class FeedReader implements Serializable {
 			case XMLStreamConstants.START_ELEMENT:
 				elementName = getElementName(reader);
 
-				if (elementName.equals("author")
-						|| elementName.equals("atom:author")) {
+				if (elementName.equals("author")) {
 					authors = readAuthor(reader, authors);
-				} else if (elementName.equals("category")
-						|| elementName.equals("atom:category")) {
+				} else if (elementName.equals("category")) {
 					categories = readCategory(reader, categories);
-				} else if (elementName.equals("contributor")
-						|| elementName.equals("atom:contributor")) {
+				} else if (elementName.equals("contributor")) {
 					contributors = readContributor(reader, contributors);
-				} else if (elementName.equals("generator")
-						|| elementName.equals("atom:generator")) {
+				} else if (elementName.equals("generator")) {
 					generator = readGenerator(reader);
-				} else if (elementName.equals("icon")
-						|| elementName.equals("atom:icon")) {
+				} else if (elementName.equals("icon")) {
 					icon = readIcon(reader);
-				} else if (elementName.equals("id")
-						|| elementName.equals("atom:id")) {
+				} else if (elementName.equals("id")) {
 					id = readId(reader);
-				} else if (elementName.equals("link")
-						|| elementName.equals("atom:link")) {
+				} else if (elementName.equals("link")) {
 					links = readLink(reader, links);
-				} else if (elementName.equals("logo")
-						|| elementName.equals("atom:logo")) {
+				} else if (elementName.equals("logo")) {
 					logo = readLogo(reader);
-				} else if (elementName.equals("rights")
-						|| elementName.equals("atom:rights")) {
+				} else if (elementName.equals("rights")) {
 					rights = readRights(reader);
-				} else if (elementName.equals("subtitle")
-						|| elementName.equals("atom:subtitle")) {
+				} else if (elementName.equals("subtitle")) {
 					subtitle = readSubtitle(reader);
-				} else if (elementName.equals("title")
-						|| elementName.equals("atom:title")) {
+				} else if (elementName.equals("title")) {
 					title = readTitle(reader);
-				} else if (elementName.equals("updated")
-						|| elementName.equals("atom:updated")) {
+				} else if (elementName.equals("updated")) {
 					updated = readUpdated(reader);
-				} else if (elementName.equals("entry")
-						|| elementName.equals("atom:entry")) {
+				} else if (elementName.equals("entry")) {
 					entries = readEntry(reader, entries);
 				} else {// extension
 					extensions = readExtension(reader, extensions, elementName);
@@ -385,7 +372,8 @@ class FeedReader implements Serializable {
 				if (escapeHTML) {
 					String text = reader.getText();
 					// if the feed we are reading has invalid escaping the text
-					// will be null which results in a skipping of the malformed character.
+					// will be null which results in a skipping of the malformed
+					// character.
 					if (text != null) {
 						xhtml.append(text.replaceAll("&", "&amp;").replaceAll(
 								"<", "&lt;").replaceAll(">", "&gt;"));
@@ -436,40 +424,29 @@ class FeedReader implements Serializable {
 
 			case XMLStreamConstants.START_ELEMENT:
 				elementName = getElementName(reader);
-				if (elementName.equals("id") || elementName.equals("atom:id")) {
+				if (elementName.equals("id")) {
 					id = readId(reader);
-				} else if (elementName.equals("author")
-						|| elementName.equals("atom:author")) {
+				} else if (elementName.equals("author")) {
 					authors = readAuthor(reader, authors);
-				} else if (elementName.equals("category")
-						|| elementName.equals("atom:category")) {
+				} else if (elementName.equals("category")) {
 					categories = readCategory(reader, categories);
-				} else if (elementName.equals("contributor")
-						|| elementName.equals("atom:contributor")) {
+				} else if (elementName.equals("contributor")) {
 					contributors = readContributor(reader, contributors);
-				} else if (elementName.equals("content")
-						|| elementName.equals("atom:content")) {
+				} else if (elementName.equals("content")) {
 					content = readContent(reader);
-				} else if (elementName.equals("link")
-						|| elementName.equals("atom:link")) {
+				} else if (elementName.equals("link")) {
 					links = readLink(reader, links);
-				} else if (elementName.equals("published")
-						|| elementName.equals("atom:published")) {
+				} else if (elementName.equals("published")) {
 					published = readPublished(reader);
-				} else if (elementName.equals("rights")
-						|| elementName.equals("atom:rights")) {
+				} else if (elementName.equals("rights")) {
 					rights = readRights(reader);
-				} else if (elementName.equals("source")
-						|| elementName.equals("atom:source")) {
+				} else if (elementName.equals("source")) {
 					source = readSource(reader);
-				} else if (elementName.equals("summary")
-						|| elementName.equals("atom:summary")) {
+				} else if (elementName.equals("summary")) {
 					summary = readSummary(reader);
-				} else if (elementName.equals("title")
-						|| elementName.equals("atom:title")) {
+				} else if (elementName.equals("title")) {
 					title = readTitle(reader);
-				} else if (elementName.equals("updated")
-						|| elementName.equals("atom:updated")) {
+				} else if (elementName.equals("updated")) {
 					updated = readUpdated(reader);
 				} else {// extension
 					extensions = readExtension(reader, extensions, elementName);
@@ -478,8 +455,7 @@ class FeedReader implements Serializable {
 
 			case XMLStreamConstants.END_ELEMENT:
 				elementName = getElementName(reader);
-				if (elementName.equals("entry")
-						|| elementName.equals("atom:entry")) {
+				if (elementName.equals("entry")) {
 					breakOut = true;
 				}
 				break;
@@ -601,41 +577,29 @@ class FeedReader implements Serializable {
 			case XMLStreamConstants.START_ELEMENT:
 				elementName = getElementName(reader);
 				// call each feed elements read method depending on the name
-				if (elementName.equals("author")
-						|| elementName.equals("atom:author")) {
+				if (elementName.equals("author")) {
 					authors = readAuthor(reader, authors);
-				} else if (elementName.equals("category")
-						|| elementName.equals("atom:category")) {
+				} else if (elementName.equals("category")) {
 					categories = readCategory(reader, categories);
-				} else if (elementName.equals("contributor")
-						|| elementName.equals("atom:contributor")) {
+				} else if (elementName.equals("contributor")) {
 					contributors = readContributor(reader, contributors);
-				} else if (elementName.equals("generator")
-						|| elementName.equals("atom:generator")) {
+				} else if (elementName.equals("generator")) {
 					generator = readGenerator(reader);
-				} else if (elementName.equals("icon")
-						|| elementName.equals("atom:icon")) {
+				} else if (elementName.equals("icon")) {
 					icon = readIcon(reader);
-				} else if (elementName.equals("id")
-						|| elementName.equals("atom:id")) {
+				} else if (elementName.equals("id")) {
 					id = readId(reader);
-				} else if (elementName.equals("link")
-						|| elementName.equals("atom:link")) {
+				} else if (elementName.equals("link")) {
 					links = readLink(reader, links);
-				} else if (elementName.equals("logo")
-						|| elementName.equals("atom:logo")) {
+				} else if (elementName.equals("logo")) {
 					logo = readLogo(reader);
-				} else if (elementName.equals("rights")
-						|| elementName.equals("atom:rights")) {
+				} else if (elementName.equals("rights")) {
 					rights = readRights(reader);
-				} else if (elementName.equals("subtitle")
-						|| elementName.equals("atom:subtitle")) {
+				} else if (elementName.equals("subtitle")) {
 					subtitle = readSubtitle(reader);
-				} else if (elementName.equals("title")
-						|| elementName.equals("atom:title")) {
+				} else if (elementName.equals("title")) {
 					title = readTitle(reader);
-				} else if (elementName.equals("updated")
-						|| elementName.equals("atom:updated")) {
+				} else if (elementName.equals("updated")) {
 					updated = readUpdated(reader);
 				} else {// extension
 					extensions = readExtension(reader, extensions, elementName);
@@ -644,8 +608,7 @@ class FeedReader implements Serializable {
 
 			case XMLStreamConstants.END_ELEMENT:
 				elementName = getElementName(reader);
-				if (elementName.equals("source")
-						|| elementName.equals("atom:source")) {
+				if (elementName.equals("source")) {
 					breakOut = true;
 				}
 				break;
@@ -806,14 +769,11 @@ class FeedReader implements Serializable {
 			switch (reader.next()) {
 			case XMLStreamConstants.START_ELEMENT:
 				elementName = getElementName(reader);
-				if (elementName.equals("name")
-						|| elementName.equals("atom:name")) {
+				if (elementName.equals("name")) {
 					name = feedDoc.buildName(reader.getElementText());
-				} else if (elementName.equals("uri")
-						|| elementName.equals("atom:uri")) {
+				} else if (elementName.equals("uri")) {
 					uri = feedDoc.buildURI(reader.getElementText());
-				} else if (elementName.equals("email")
-						|| elementName.equals("atom:email")) {
+				} else if (elementName.equals("email")) {
 					email = feedDoc.buildEmail(reader.getElementText());
 				} else {
 					if (extensions == null) {
@@ -825,8 +785,7 @@ class FeedReader implements Serializable {
 
 			case XMLStreamConstants.END_ELEMENT:
 				elementName = getElementName(reader);
-				if (elementName.equals(personType)
-						|| elementName.equals("atom:" + personType)) {
+				if (elementName.equals(personType)) {
 					breakOut = true;
 				}
 				break;

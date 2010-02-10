@@ -997,9 +997,6 @@ public class FeedDocTest implements Serializable {
 					entries);
 			fail("should not get here.");
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("e.getMessage(): " + e);
-			System.out.println("e.getMessage(): " + e.getMessage());
 			assertTrue(e instanceof AtomSpecException);
 			assertEquals(
 					e.getMessage(),
@@ -1010,7 +1007,7 @@ public class FeedDocTest implements Serializable {
 			feed1 = feedDoc.readFeedToBean(badFeed6);
 			Entry ent = feed1.getEntry("Atom-Powered Robots Run Amok");
 			feedDoc.writeEntryDoc(new FileOutputStream(new File(
-			"target/works.xml")), ent, null, null);
+					"target/works.xml")), ent, null, null);
 			Extension ext = feedDoc.buildExtension("unbound:ele", null, null);
 			List<Extension> extns = new LinkedList<Extension>();
 			extns.add(ext);
@@ -1023,9 +1020,6 @@ public class FeedDocTest implements Serializable {
 					"target/never.xml")), ent, null, null);
 			fail("should not get here.");
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("e.getMessage(): " + e);
-			System.out.println("e.getMessage(): " + e.getMessage());
 			assertTrue(e instanceof AtomSpecException);
 			assertEquals(
 					e.getMessage(),

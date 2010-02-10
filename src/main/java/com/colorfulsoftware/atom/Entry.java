@@ -117,13 +117,11 @@ public class Entry implements Serializable {
 
 		// check that the extension prefixes are bound to a namespace
 		this.unboundPrefixes = new LinkedList<String>();
-		if(source != null){
-		System.out.println("Entry are source prefixes null? "+source.getUnboundPrefixes());
-		}
+
 		if (source != null && source.getUnboundPrefixes() != null) {
 			this.unboundPrefixes.addAll(source.getUnboundPrefixes());
 		}
-		System.out.println("Entry are entryAdaptor prefixes null? "+entryAdaptor.getUnboundPrefixes());
+
 		if (entryAdaptor.getUnboundPrefixes() != null) {
 			this.unboundPrefixes.addAll(entryAdaptor.getUnboundPrefixes());
 		}

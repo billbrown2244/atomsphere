@@ -272,7 +272,7 @@ public class FeedReaderTest implements Serializable {
 	 */
 	@Test
 	public void testReadExtension() {
-		
+
 		try {
 			reader = XMLInputFactory.newInstance().createXMLStreamReader(
 					new StringReader(extension1));
@@ -301,10 +301,9 @@ public class FeedReaderTest implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue(e instanceof XMLStreamException);
-			assertTrue(
-					e.getMessage().indexOf("ElementPrefixUnbound") != -1);
+			assertTrue(e.getMessage().indexOf("ElementPrefixUnbound") != -1);
 		}
-		
+
 	}
 
 	/**
