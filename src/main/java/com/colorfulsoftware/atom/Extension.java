@@ -72,8 +72,7 @@ public class Extension implements Serializable {
 		} else {
 			this.attributes = new LinkedList<Attribute>();
 			for (Attribute attr : attributes) {
-				this.attributes.add(new Attribute(attr.getName(), attr
-						.getValue()));
+				this.attributes.add(new Attribute(attr));
 			}
 		}
 
