@@ -97,6 +97,20 @@ class AtomDateConstruct implements Serializable {
 					.getTimeZone("GMT" + "-" + Math.abs(hours)).getID()
 					.substring(3);
 		}
+
+		// check that the timezone offset is good.
+		if (dateTime.indexOf(timeZoneOffset) == -1
+				&& (dateTime.lastIndexOf("-") != -1)
+				&& (dateTime.substring(dateTime.lastIndexOf("-")).length() == 6)) {
+			timeZoneOffset = dateTime.substring(dateTime.lastIndexOf("-"));
+		}
+		// check that the timezone offset is good.
+		if (dateTime.indexOf(timeZoneOffset) == -1
+				&& (dateTime.lastIndexOf("+") != -1)
+				&& (dateTime.substring(dateTime.lastIndexOf("+")).length() == 6)) {
+			timeZoneOffset = dateTime.substring(dateTime.lastIndexOf("+"));
+		}
+
 		// this is the preferred default format.
 		SimpleDateFormat sdf = new SimpleDateFormat(
 				"yyyy-MM-dd\'T\'HH:mm:ss.SS\'" + timeZoneOffset + "\'");
@@ -111,11 +125,23 @@ class AtomDateConstruct implements Serializable {
 
 		if (!valid) {
 			try {
+				// example: 2010-02-17T02:54:20.46+00:00
+				sdf = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss\'"
+						+ timeZoneOffset + "\'");
+				local = sdf.parse(dateTime);
+				valid = true;
+			} catch (Exception e2) {
+				valid = false;
+			}
+		}
+
+		if (!valid) {
+			try {
 				// example: 2009-10-15T11:11:30.52Z
 				sdf = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'Z\'");
 				local = sdf.parse(dateTime);
 				valid = true;
-			} catch (Exception e2) {
+			} catch (Exception e3) {
 				valid = false;
 			}
 		}
@@ -126,7 +152,7 @@ class AtomDateConstruct implements Serializable {
 				sdf = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss\'Z\'");
 				local = sdf.parse(dateTime);
 				valid = true;
-			} catch (Exception e3) {
+			} catch (Exception e4) {
 				valid = false;
 			}
 		}
@@ -135,10 +161,11 @@ class AtomDateConstruct implements Serializable {
 			try {
 				// example: Mon Oct 19 10:52:18 CDT 2009
 				// or: Tue Oct 20 02:48:09 GMT+10:00 2009
+				// or: Tue Jan 01 00:00:00 CST 2008
 				sdf = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
 				local = sdf.parse(dateTime);
 				valid = true;
-			} catch (Exception e4) {
+			} catch (Exception e5) {
 				valid = false;
 			}
 		}

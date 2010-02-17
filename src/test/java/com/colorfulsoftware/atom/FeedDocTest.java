@@ -1502,6 +1502,27 @@ public class FeedDocTest implements Serializable {
 			assertEquals(e.getMessage(),
 					"error trying to create the date element with string: abcdefg");
 		}
+
+		// test adjusted date strings
+		//
+		try {
+			// test bad date string
+			Published pub = feedDoc.buildPublished(null,
+					"2010-02-17T02:54:20+02:00");
+			assertTrue(pub.getText() != null);
+			assertTrue(pub.getText().equals("2010-02-17T02:54:20+02:00"));
+
+			pub = feedDoc.buildPublished(null, "2010-02-17T02:54:20-04:00");
+			assertTrue(pub.getText() != null);
+			assertTrue(pub.getText().equals("2010-02-17T02:54:20-04:00"));
+
+			pub = feedDoc.buildPublished(null, "2010-02-17T02:54:20+00:00");
+			assertTrue(pub.getText() != null);
+			assertTrue(pub.getText().equals("2010-02-17T02:54:20+00:00"));
+
+		} catch (AtomSpecException e) {
+			fail("should not get here.");
+		}
 	}
 
 	/**
