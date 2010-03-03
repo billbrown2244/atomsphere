@@ -144,6 +144,8 @@ class FeedReader implements Serializable {
 										"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
 	}
 
+	private List<ProcessingInstruction> processingInstructions;
+
 	private List<Attribute> getAttributes(XMLStreamReader reader)
 			throws Exception {
 		List<Attribute> attributes = new LinkedList<Attribute>();
@@ -158,6 +160,24 @@ class FeedReader implements Serializable {
 		// make sure all the attribute values are properly xml encoded/escaped
 		// with value.replaceAll("&amp;","&").replaceAll("&", "&amp;")
 
+		//add the processing instructions for now.
+		while (reader.getEventType() != XMLStreamConstants.START_ELEMENT
+				&& reader.getEventType() != XMLStreamConstants.END_ELEMENT
+				&& reader.getEventType() != XMLStreamConstants.NAMESPACE) {
+			if (reader.getEventType() == XMLStreamConstants.PROCESSING_INSTRUCTION) {
+				if (processingInstructions == null) {
+					processingInstructions = new LinkedList<ProcessingInstruction>();
+				}
+				processingInstructions.add(new ProcessingInstruction(reader
+						.getPITarget(), reader.getPIData()));
+			}
+			reader.next();
+		}
+		
+		if(processingInstructions != null){
+			feedDoc = new FeedDoc(feedDoc,processingInstructions);
+		}
+		
 		// add the namespace attributes.
 		for (int i = 0; i < reader.getNamespaceCount(); i++) {
 			String attrName = "xmlns";

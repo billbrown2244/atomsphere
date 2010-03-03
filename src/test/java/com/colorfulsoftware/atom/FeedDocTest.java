@@ -795,6 +795,7 @@ public class FeedDocTest implements Serializable {
 					"com.sun.xml.txw2.output.IndentingXMLStreamWriter");
 			assertNotNull(feedStr);
 		} catch (Exception e) {
+			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);
 		}
 
@@ -823,6 +824,25 @@ public class FeedDocTest implements Serializable {
 	 */
 	@Test
 	public void testReadFeedToStringFeed() {
+
+		// this feed has processing instructions.
+		try {
+			feed1 = feedDoc
+					.readFeedToBean(new URL(
+							"http://omsa-opportunities.blogspot.com/feeds/posts/default"));
+			assertNotNull(feed1);
+			feedDoc.writeFeedDoc(XMLOutputFactory.newInstance()
+					.createXMLStreamWriter(
+							new FileOutputStream("target/procInst.xml")),
+					feed1, null, null);
+			feed1 = feedDoc
+			.readFeedToBean(new File("target/procInst.xml"));
+			assertNotNull(feed1);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("this shouldn't happen.");
+		}
+
 		try {
 			feed1 = feedDoc.readFeedToBean(expectedFeed1);
 			assertNotNull(feed1.toString());

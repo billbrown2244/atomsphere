@@ -69,6 +69,8 @@ public final class FeedDoc implements Serializable {
 	private Attribute atomBase;
 
 	private XMLInputFactory inputFactory;
+	
+	private List<ProcessingInstruction> processingInstructions;
 
 	/**
 	 * creates a new feed document.
@@ -111,6 +113,11 @@ public final class FeedDoc implements Serializable {
 		this.xmlVersion = xmlVersion;
 	}
 
+	FeedDoc(FeedDoc feedDoc,List<ProcessingInstruction> processingInstructions) throws Exception {
+		this(feedDoc.getEncoding(),feedDoc.getXmlVersion());
+		this.processingInstructions = processingInstructions;
+	}
+	
 	/**
 	 * @return the Atomsphere library version in the form of a generator
 	 *         element. This element is output for all feeds that are generated
@@ -386,6 +393,11 @@ public final class FeedDoc implements Serializable {
 
 		// write the xml header.
 		writer.writeStartDocument(encoding, version);
+		if(processingInstructions != null){
+			for(ProcessingInstruction pi: processingInstructions){
+				writer.writeProcessingInstruction(pi.getTarget(),pi.getData());
+			}
+		}
 		new FeedWriter().writeEntries(writer, entries);
 		writer.flush();
 		writer.close();
@@ -1029,6 +1041,11 @@ public final class FeedDoc implements Serializable {
 				.getIcon(), feed.getLogo(), feed.getEntries());
 		// write the xml header.
 		writer.writeStartDocument(encoding, version);
+		if(processingInstructions != null){
+			for(ProcessingInstruction pi: processingInstructions){
+				writer.writeProcessingInstruction(pi.getTarget(),pi.getData());
+			}
+		}
 		new FeedWriter().writeFeed(writer, feed);
 		writer.flush();
 		writer.close();
