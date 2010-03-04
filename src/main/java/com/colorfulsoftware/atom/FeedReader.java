@@ -40,6 +40,10 @@ class FeedReader implements Serializable {
 
 	FeedDoc feedDoc;
 
+	public FeedReader(FeedDoc feedDoc) {
+		this.feedDoc = feedDoc;
+	}
+
 	/**
 	 * This method transforms an xml stream into a Feed bean
 	 * 
@@ -50,9 +54,6 @@ class FeedReader implements Serializable {
 	 *             if the stream cannot be parsed.
 	 */
 	Feed readFeed(XMLStreamReader reader) throws Exception {
-		if (feedDoc == null) {
-			feedDoc = new FeedDoc();
-		}
 		List<Attribute> attributes = getAttributes(reader);
 		List<Author> authors = null;
 		List<Category> categories = null;
@@ -129,22 +130,21 @@ class FeedReader implements Serializable {
 			}
 		}
 
-		Feed feed = feedDoc.buildFeed(id, title, updated, rights, authors,
-				categories, contributors, links, attributes, extensions,
-				generator, subtitle, icon, logo, entries);
-
 		// because the sort extension does not enforce placement of the element
 		// do a check after the feed is built to determine if it needs to be
 		// sorted.
 		return feedDoc
-				.checkForAndApplyExtension(
-						feed,
-						feedDoc
-								.buildAttribute("xmlns:sort",
-										"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"));
+				.buildFeed(feedDoc
+						.checkForAndApplyExtension(
+								feedDoc.buildFeed(id, title, updated, rights,
+										authors, categories, contributors,
+										links, attributes, extensions,
+										generator, subtitle, icon, logo,
+										entries),
+								feedDoc
+										.buildAttribute("xmlns:sort",
+												"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0")));
 	}
-
-	private List<ProcessingInstruction> processingInstructions;
 
 	private List<Attribute> getAttributes(XMLStreamReader reader)
 			throws Exception {
@@ -153,31 +153,33 @@ class FeedReader implements Serializable {
 		// this is here to accommodate initially calling sub elements from the
 		// FeedReader
 		if (reader.getEventType() == XMLStreamConstants.START_DOCUMENT) {
-			feedDoc = new FeedDoc(reader.getEncoding(), reader.getVersion());
+			feedDoc.setEncoding(reader.getEncoding());
+			feedDoc.setXmlVersion(reader.getVersion());
 			reader.next();
 		}
 
 		// make sure all the attribute values are properly xml encoded/escaped
 		// with value.replaceAll("&amp;","&").replaceAll("&", "&amp;")
 
-		//add the processing instructions for now.
+		// add the processing instructions for now.
+		List<FeedDoc.ProcessingInstruction> processingInstructions = null;
 		while (reader.getEventType() != XMLStreamConstants.START_ELEMENT
 				&& reader.getEventType() != XMLStreamConstants.END_ELEMENT
 				&& reader.getEventType() != XMLStreamConstants.NAMESPACE) {
 			if (reader.getEventType() == XMLStreamConstants.PROCESSING_INSTRUCTION) {
 				if (processingInstructions == null) {
-					processingInstructions = new LinkedList<ProcessingInstruction>();
+					processingInstructions = new LinkedList<FeedDoc.ProcessingInstruction>();
 				}
-				processingInstructions.add(new ProcessingInstruction(reader
+				processingInstructions.add(new FeedDoc().new ProcessingInstruction(reader
 						.getPITarget(), reader.getPIData()));
 			}
 			reader.next();
 		}
-		
-		if(processingInstructions != null){
-			feedDoc = new FeedDoc(feedDoc,processingInstructions);
+
+		if (processingInstructions != null) {
+			feedDoc.setProcessingInstructions(processingInstructions);
 		}
-		
+
 		// add the namespace attributes.
 		for (int i = 0; i < reader.getNamespaceCount(); i++) {
 			String attrName = "xmlns";
@@ -414,9 +416,6 @@ class FeedReader implements Serializable {
 
 	List<Entry> readEntry(XMLStreamReader reader, List<Entry> entries)
 			throws Exception {
-		if (feedDoc == null) {
-			feedDoc = new FeedDoc();
-		}
 
 		if (entries == null) {
 			entries = new LinkedList<Entry>();

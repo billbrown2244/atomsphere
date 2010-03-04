@@ -216,7 +216,7 @@ public class FeedReaderTest implements Serializable {
 	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() throws Exception {
-		feedReader = new FeedReader();
+		feedReader = new FeedReader(new FeedDoc());
 		XMLDecoder decode = new XMLDecoder(new BufferedInputStream(
 				new FileInputStream("src/test/resources/atomConfig.xml")));
 		configFile = (Map<String, String>) decode.readObject();

@@ -63,6 +63,7 @@ public class Entry implements Serializable {
 	private final Published published;
 	private final Source source;
 	private final Summary summary;
+
 	private List<String> unboundPrefixes;
 
 	// use the factory method in the FeedDoc.
@@ -130,11 +131,16 @@ public class Entry implements Serializable {
 	}
 
 	Entry(Entry entry) {
-		this.entryAdaptor = new AtomEntrySourceAdaptor(entry.entryAdaptor);
 		this.content = entry.getContent();
+		this.entryAdaptor = entry.getEntryAdaptor();
 		this.published = entry.getPublished();
 		this.source = entry.getSource();
 		this.summary = entry.getSummary();
+		this.unboundPrefixes = entry.getUnboundPrefixes();
+	}
+
+	AtomEntrySourceAdaptor getEntryAdaptor() {
+		return new AtomEntrySourceAdaptor(this.entryAdaptor);
 	}
 
 	/**
@@ -334,4 +340,5 @@ public class Entry implements Serializable {
 	List<String> getUnboundPrefixes() {
 		return unboundPrefixes;
 	}
+
 }

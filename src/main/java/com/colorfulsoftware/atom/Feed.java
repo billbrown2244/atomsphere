@@ -65,12 +65,15 @@ public class Feed implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 8576480736811385690L;
+
 	private final AtomEntrySourceAdaptor sourceAdaptor;
 	private final Generator generator;
 	private final Icon icon;
 	private final Logo logo;
 	private final Subtitle subtitle;
 	private final List<Entry> entries;
+
+	// extra processing fields
 	private List<String> unboundPrefixes;
 
 	// use the factory method in the FeedDoc.
@@ -157,6 +160,7 @@ public class Feed implements Serializable {
 							+ sb
 							+ ") are not bound to a namespace declaration. See http://www.w3.org/TR/1999/REC-xml-names-19990114/#ns-decl.");
 		}
+
 	}
 
 	/**
@@ -392,5 +396,4 @@ public class Feed implements Serializable {
 		sb.append("</feed>");
 		return sb.toString();
 	}
-
 }

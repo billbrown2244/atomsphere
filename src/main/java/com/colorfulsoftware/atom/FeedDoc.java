@@ -69,7 +69,7 @@ public final class FeedDoc implements Serializable {
 	private Attribute atomBase;
 
 	private XMLInputFactory inputFactory;
-	
+
 	private List<ProcessingInstruction> processingInstructions;
 
 	/**
@@ -99,25 +99,43 @@ public final class FeedDoc implements Serializable {
 	}
 
 	/**
-	 * @param encoding
-	 *            the document encoding. eg: UTF-8
-	 * @param xmlVersion
-	 *            the document xml version eg: 1.0
+	 * @param processingInstructions
+	 *            xml processing instructions.
 	 * @throws Exception
 	 *             if the library version information cannot be loaded from the
 	 *             environment.
 	 */
-	public FeedDoc(String encoding, String xmlVersion) throws Exception {
+	public FeedDoc(List<ProcessingInstruction> processingInstructions)
+			throws Exception {
 		this();
-		this.encoding = encoding;
-		this.xmlVersion = xmlVersion;
-	}
-
-	FeedDoc(FeedDoc feedDoc,List<ProcessingInstruction> processingInstructions) throws Exception {
-		this(feedDoc.getEncoding(),feedDoc.getXmlVersion());
 		this.processingInstructions = processingInstructions;
 	}
-	
+
+	class ProcessingInstruction implements Serializable {
+		private final String target;
+		private final String data;
+		private static final long serialVersionUID = -4261298860522801834L;
+
+		ProcessingInstruction(String target, String data) {
+			this.target = target;
+			this.data = data;
+		}
+
+		/**
+		 * @return the target of the processing instruction
+		 */
+		public String getTarget() {
+			return target;
+		}
+
+		/**
+		 * @return the processing instruction data.
+		 */
+		public String getData() {
+			return data;
+		}
+	}
+
 	/**
 	 * @return the Atomsphere library version in the form of a generator
 	 *         element. This element is output for all feeds that are generated
@@ -238,7 +256,6 @@ public final class FeedDoc implements Serializable {
 	 */
 	public void writeFeedDoc(XMLStreamWriter output, Feed feed,
 			String encoding, String version) throws Exception {
-
 		writeFeedOutput(feed, output, encoding, version);
 
 	}
@@ -288,7 +305,8 @@ public final class FeedDoc implements Serializable {
 	 * readFeedToString(Feed)
 	 * </pre>
 	 * 
-	 * if the XMLStreamWriter class cannot be found in the classpath.
+	 * if the XMLStreamWriter class cannot be found in the classpath or is blank
+	 * or null.
 	 * 
 	 * @param feed
 	 *            the feed to be converted to an atom document string.
@@ -305,21 +323,27 @@ public final class FeedDoc implements Serializable {
 			throw new AtomSpecException("The atom feed object cannot be null.");
 		}
 
-		StringWriter theString = new StringWriter();
 		try {
-			Class<?> cls = Class.forName(xmlStreamWriter);
-			Constructor<?> ct = cls
-					.getConstructor(new Class[] { XMLStreamWriter.class });
-			Object arglist[] = new Object[] { XMLOutputFactory.newInstance()
-					.createXMLStreamWriter(theString) };
-			XMLStreamWriter writer = (XMLStreamWriter) ct.newInstance(arglist);
-
-			writeFeedOutput(feed, writer, encoding, xmlVersion);
-
+			StringWriter theString = new StringWriter();
+			if (xmlStreamWriter == null || xmlStreamWriter.equals("")) {
+				writeFeedOutput(feed, XMLOutputFactory.newInstance()
+						.createXMLStreamWriter(theString), encoding, xmlVersion);
+			} else {
+				Class<?> cls = Class.forName(xmlStreamWriter);
+				Constructor<?> ct = cls
+						.getConstructor(new Class[] { XMLStreamWriter.class });
+				Object arglist[] = new Object[] { XMLOutputFactory
+						.newInstance().createXMLStreamWriter(theString) };
+				writeFeedOutput(feed,
+						(XMLStreamWriter) ct.newInstance(arglist), encoding,
+						xmlVersion);
+			}
+			return theString.toString();
 		} catch (Exception e) {
+			e.printStackTrace();
 			return feed.toString();
 		}
-		return theString.toString();
+
 	}
 
 	/**
@@ -342,21 +366,28 @@ public final class FeedDoc implements Serializable {
 			throw new AtomSpecException("The atom entry object cannot be null.");
 		}
 
-		StringWriter theString = new StringWriter();
 		try {
-			Class<?> cls = Class.forName(xmlStreamWriter);
-			Constructor<?> ct = cls
-					.getConstructor(new Class[] { XMLStreamWriter.class });
-			Object arglist[] = new Object[] { XMLOutputFactory.newInstance()
-					.createXMLStreamWriter(theString) };
-			XMLStreamWriter writer = (XMLStreamWriter) ct.newInstance(arglist);
+			StringWriter theString = new StringWriter();
+			if (xmlStreamWriter == null || xmlStreamWriter.equals("")) {
+				writeEntryOutput(entry, XMLOutputFactory.newInstance()
+						.createXMLStreamWriter(theString), encoding, xmlVersion);
+			} else {
+				Class<?> cls = Class.forName(xmlStreamWriter);
+				Constructor<?> ct = cls
+						.getConstructor(new Class[] { XMLStreamWriter.class });
+				Object arglist[] = new Object[] { XMLOutputFactory
+						.newInstance().createXMLStreamWriter(theString) };
+				XMLStreamWriter writer = (XMLStreamWriter) ct
+						.newInstance(arglist);
 
-			writeEntryOutput(entry, writer, encoding, xmlVersion);
+				writeEntryOutput(entry, writer, encoding, xmlVersion);
 
+			}
+
+			return theString.toString();
 		} catch (Exception e) {
 			return entry.toString();
 		}
-		return theString.toString();
 	}
 
 	// used for writing entry documents to their output.
@@ -382,20 +413,13 @@ public final class FeedDoc implements Serializable {
 		}
 
 		// rebuild the entry with the added attributes.
-		entries
-				.add(buildEntry(entry.getId(), entry.getTitle(), entry
-						.getUpdated(), entry.getRights(), entry.getContent(),
-						entry.getAuthors(), entry.getCategories(), entry
-								.getContributors(), entry.getLinks(),
-						attributes, entry.getExtensions(),
-						entry.getPublished(), entry.getSummary(), entry
-								.getSource()));
+		entries.add(buildEntry(entry));
 
 		// write the xml header.
 		writer.writeStartDocument(encoding, version);
-		if(processingInstructions != null){
-			for(ProcessingInstruction pi: processingInstructions){
-				writer.writeProcessingInstruction(pi.getTarget(),pi.getData());
+		if (this.processingInstructions != null) {
+			for (ProcessingInstruction pi : this.processingInstructions) {
+				writer.writeProcessingInstruction(pi.getTarget(), pi.getData());
 			}
 		}
 		new FeedWriter().writeEntries(writer, entries);
@@ -425,7 +449,7 @@ public final class FeedDoc implements Serializable {
 		XMLStreamReader reader = inputFactory
 				.createXMLStreamReader(new ByteArrayInputStream(xmlString
 						.getBytes(encoding)));
-		return new FeedReader().readFeed(reader);
+		return new FeedReader(this).readFeed(reader);
 	}
 
 	/**
@@ -450,7 +474,7 @@ public final class FeedDoc implements Serializable {
 		XMLStreamReader reader = inputFactory
 				.createXMLStreamReader(new ByteArrayInputStream(xmlString
 						.getBytes(encoding)));
-		List<Entry> entries = new FeedReader().readEntry(reader, null);
+		List<Entry> entries = new FeedReader(this).readEntry(reader, null);
 		// readEntry() only reads at most one entry.
 		return entries.get(0);
 	}
@@ -467,7 +491,7 @@ public final class FeedDoc implements Serializable {
 	public Feed readFeedToBean(File file) throws Exception {
 		XMLStreamReader reader = inputFactory.createXMLStreamReader(
 				new FileInputStream(file), encoding);
-		return new FeedReader().readFeed(reader);
+		return new FeedReader(this).readFeed(reader);
 	}
 
 	/**
@@ -482,7 +506,7 @@ public final class FeedDoc implements Serializable {
 	public Entry readEntryToBean(File file) throws Exception {
 		XMLStreamReader reader = inputFactory.createXMLStreamReader(
 				new FileInputStream(file), encoding);
-		List<Entry> entries = new FeedReader().readEntry(reader, null);
+		List<Entry> entries = new FeedReader(this).readEntry(reader, null);
 		// readEntry() only reads at most one entry.
 		return entries.get(0);
 	}
@@ -525,7 +549,7 @@ public final class FeedDoc implements Serializable {
 	public Feed readFeedToBean(InputStream inputStream) throws Exception {
 		XMLStreamReader reader = inputFactory.createXMLStreamReader(
 				inputStream, encoding);
-		return new FeedReader().readFeed(reader);
+		return new FeedReader(this).readFeed(reader);
 	}
 
 	/**
@@ -540,7 +564,7 @@ public final class FeedDoc implements Serializable {
 	public Entry readEntryToBean(InputStream inputStream) throws Exception {
 		XMLStreamReader reader = inputFactory.createXMLStreamReader(
 				inputStream, encoding);
-		Feed feed = new FeedReader().readFeed(reader);
+		Feed feed = new FeedReader(this).readFeed(reader);
 		// readEntry() reads the first entry from a feed or the sole entry if it
 		// is the root element.
 		// so if the string contains more than one entry, only the first gets
@@ -596,6 +620,14 @@ public final class FeedDoc implements Serializable {
 		return new Feed(id, title, updated, rights, authors, categories,
 				contributors, links, attributes, extensions, generator,
 				subtitle, icon, logo, entries);
+	}
+
+	Feed buildFeed(Feed feed) throws AtomSpecException {
+		return buildFeed(feed.getId(), feed.getTitle(), feed.getUpdated(), feed
+				.getRights(), feed.getAuthors(), feed.getCategories(), feed
+				.getContributors(), feed.getLinks(), feed.getAttributes(), feed
+				.getExtensions(), feed.getGenerator(), feed.getSubtitle(), feed
+				.getIcon(), feed.getLogo(), feed.getEntries());
 	}
 
 	/**
@@ -749,6 +781,10 @@ public final class FeedDoc implements Serializable {
 		return new Entry(id, title, updated, rights, content, authors,
 				categories, contributors, links, attributes, extensions,
 				published, summary, source);
+	}
+
+	Entry buildEntry(Entry entry) {
+		return new Entry(entry);
 	}
 
 	/**
@@ -1011,7 +1047,6 @@ public final class FeedDoc implements Serializable {
 		if (feed == null) {
 			throw new AtomSpecException("The atom feed object cannot be null.");
 		}
-
 		// make sure the feed is sorted before it is written out to the file.
 		// this prevents the client code from having to
 		// maintain the sorting during usage
@@ -1037,13 +1072,13 @@ public final class FeedDoc implements Serializable {
 		feed = buildFeed(feed.getId(), feed.getTitle(), feed.getUpdated(), feed
 				.getRights(), feed.getAuthors(), feed.getCategories(), feed
 				.getContributors(), feed.getLinks(), attributes, feed
-				.getExtensions(), getLibVersion(), feed.getSubtitle(), feed
+				.getExtensions(), feed.getGenerator(), feed.getSubtitle(), feed
 				.getIcon(), feed.getLogo(), feed.getEntries());
 		// write the xml header.
 		writer.writeStartDocument(encoding, version);
-		if(processingInstructions != null){
-			for(ProcessingInstruction pi: processingInstructions){
-				writer.writeProcessingInstruction(pi.getTarget(),pi.getData());
+		if (this.processingInstructions != null) {
+			for (ProcessingInstruction pi : this.processingInstructions) {
+				writer.writeProcessingInstruction(pi.getTarget(), pi.getData());
 			}
 		}
 		new FeedWriter().writeFeed(writer, feed);
@@ -1256,6 +1291,19 @@ public final class FeedDoc implements Serializable {
 	 */
 	public String getXmlVersion() {
 		return xmlVersion;
+	}
+
+	void setEncoding(String encoding) {
+		this.encoding = encoding;
+	}
+
+	void setXmlVersion(String xmlVersion) {
+		this.xmlVersion = xmlVersion;
+	}
+
+	void setProcessingInstructions(
+			List<ProcessingInstruction> processingInstructions) {
+		this.processingInstructions = processingInstructions;
 	}
 
 }

@@ -153,16 +153,16 @@ public class FeedDocTest implements Serializable {
 			+ "<content type=\"html\">&lt;h4&gt;Installation (atomsphere library)&lt;/h4&gt; &lt;ul&gt; &lt;li&gt;Add the jsr173, sjsxp, stax-utils and atomsphere jars to the classpath (WEB-INF/lib for webapps).&lt;/li&gt; &lt;/ul&gt; &lt;h4&gt;Installation (atomsphere-taglib)&lt;/h4&gt; &lt;ul&gt; &lt;li&gt;Add the atomsphere jar to the classpath (WEB-INF/lib for webapps).&lt;/li&gt;&lt;li&gt;Add the atomsphereTags.tld tag descriptor to the top of the jsp page (See example below). &lt;/li&gt; &lt;li&gt;Add anyrequired attributes and optional attributes to the custom tag (See example below).&lt;/li&gt; &lt;li&gt;View the atomsphereTags.tld for a description of the attributes and what they do.&lt;/li&gt;&lt;/ul&gt; &lt;h4&gt;Installation (atomsphere-weblib)&lt;/h4&gt; &lt;ul&gt;&lt;li&gt;Add the atomsphere and atomsphere-weblib jars to the classpath (WEB-INF/lib for webapps).&lt;/li&gt;&lt;li&gt;Copy the web-fragrment.xml (embeded in the jar file) to your application's web.xml file.&lt;/li&gt;&lt;/ul&gt; &lt;h4&gt;Installation (atomsphere-webapp)&lt;/h4&gt; &lt;ul&gt; &lt;li&gt;Deploy the war file to any J2EE servlet container.&lt;/li&gt; &lt;/ul&gt;</content>"
 			+ "</entry>" + "</feed>";
 
-	private String expectedEntry1 = "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
+	private String expectedEntry1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\">"
 			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
-			+ "<title>test entry 1</title>"
-			+ "<updated>2008-01-01T00:00:00.00-06:00</updated></entry>";
+			+ "<updated>2008-01-01T00:00:00.00-06:00</updated>"
+			+ "<title>test entry 1</title></entry>";
 
 	private String badEntry1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<entry xmlns=\"http://www.w3.org/2005/Atom\" xml:lang=\"en-US\" id=\"notCool\">"
 			+ "<id>http://www.colorfulsoftware.com/projects/atomsphere/</id>"
 			+ "<updated>2008-01-02T00:00:00.00-06:00</updated>"
-			+ "<title>test entry 1</title>" + "</entry>";
+			+ "<title>test entry 1</title></entry>";
 
 	private String basicFeed1 = "<feed><title>Example</title><id>abc.123.xyz</id><updated>2020-12-13T18:30:02Z</updated><author><name>someone</name></author></feed>";
 
@@ -756,6 +756,7 @@ public class FeedDocTest implements Serializable {
 					null, null);
 			fail("this should not happen.");
 		} catch (Exception e) {
+			e.printStackTrace();
 			assertTrue(e instanceof AtomSpecException);
 			assertEquals(e.getMessage(), "The atom feed object cannot be null.");
 		}
@@ -777,6 +778,31 @@ public class FeedDocTest implements Serializable {
 					.getEncoding(), feedDoc.getXmlVersion());
 			Feed feed2 = feedDoc.readFeedToBean(new File("target/out2.xml"));
 			assertNotNull(feed2);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("should not get here.");
+		}
+	}
+
+	/**
+	 * test the feed doc constructors.
+	 */
+	@Test
+	public void testFeedDocTest() {
+		try {
+			FeedDoc feedDoc2 = null;
+			List<FeedDoc.ProcessingInstruction> insts = new LinkedList<FeedDoc.ProcessingInstruction>();
+			insts
+					.add(new FeedDoc().new ProcessingInstruction(
+							"xml-stylesheet",
+							"href=\"http://www.blogger.com/styles/atom.css\" type=\"text/css\""));
+			feedDoc2 = new FeedDoc(insts);
+			assertNotNull(feedDoc2);
+			String output = feedDoc2.readFeedToString(feedDoc2
+					.readFeedToBean(new java.net.URL(
+							"http://www.earthbeats.net/drops.xml")), null);
+			assertTrue(output
+					.indexOf("<?xml-stylesheet href=\"http://www.blogger.com/styles/atom.css\" type=\"text/css\"?>") != -1);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("should not get here.");
@@ -835,8 +861,8 @@ public class FeedDocTest implements Serializable {
 					.createXMLStreamWriter(
 							new FileOutputStream("target/procInst.xml")),
 					feed1, null, null);
-			feed1 = feedDoc
-			.readFeedToBean(new File("target/procInst.xml"));
+			// fail();
+			feed1 = feedDoc.readFeedToBean(new File("target/procInst.xml"));
 			assertNotNull(feed1);
 		} catch (Exception e) {
 			e.printStackTrace();

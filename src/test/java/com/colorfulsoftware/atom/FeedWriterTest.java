@@ -304,7 +304,7 @@ public class FeedWriterTest implements Serializable {
 			XMLStreamReader reader = XMLInputFactory.newInstance()
 					.createXMLStreamReader(
 							new FileInputStream("target/xhtmlRegular.xml"));
-			Content content = (new FeedReader()).readContent(reader);
+			Content content = (new FeedReader(feedDoc)).readContent(reader);
 			BufferedWriter out = new BufferedWriter(new FileWriter(
 					"target/content.xml"));
 			out.write(content.toString());
@@ -328,8 +328,8 @@ public class FeedWriterTest implements Serializable {
 	public void testWriteEntries() {
 		try {
 
-			List<Entry> entries = new FeedReader().readEntry(XMLInputFactory
-					.newInstance().createXMLStreamReader(
+			List<Entry> entries = new FeedReader(feedDoc).readEntry(
+					XMLInputFactory.newInstance().createXMLStreamReader(
 							new StringReader(entry1)), null);
 			assertTrue(entries != null);
 			assertTrue(entries.size() == 1);
@@ -342,8 +342,9 @@ public class FeedWriterTest implements Serializable {
 			writer.close();
 			assertEquals(theXMLString.toString(), entry1Result);
 
-			entries = new FeedReader().readEntry(XMLInputFactory.newInstance()
-					.createXMLStreamReader(new StringReader(entry2)), null);
+			entries = new FeedReader(feedDoc).readEntry(XMLInputFactory
+					.newInstance().createXMLStreamReader(
+							new StringReader(entry2)), null);
 			assertTrue(entries != null);
 			assertTrue(entries.size() == 1);
 
@@ -355,8 +356,9 @@ public class FeedWriterTest implements Serializable {
 			writer.close();
 			assertEquals(theXMLString.toString(), entry2Result);
 
-			entries = new FeedReader().readEntry(XMLInputFactory.newInstance()
-					.createXMLStreamReader(new StringReader(entry3)), null);
+			entries = new FeedReader(feedDoc).readEntry(XMLInputFactory
+					.newInstance().createXMLStreamReader(
+							new StringReader(entry3)), null);
 			assertTrue(entries != null);
 			assertTrue(entries.size() == 1);
 
@@ -368,14 +370,15 @@ public class FeedWriterTest implements Serializable {
 			writer.close();
 			assertEquals(theXMLString.toString(), entry3Result);
 
-			entries = new FeedReader().readEntry(XMLInputFactory.newInstance()
-					.createXMLStreamReader(new StringReader(entry3Result)),
-					null);
+			entries = new FeedReader(feedDoc).readEntry(XMLInputFactory
+					.newInstance().createXMLStreamReader(
+							new StringReader(entry3Result)), null);
 			assertTrue(entries != null);
 			assertTrue(entries.size() == 1);
 
-			entries = new FeedReader().readEntry(XMLInputFactory.newInstance()
-					.createXMLStreamReader(new StringReader(entry4)), null);
+			entries = new FeedReader(feedDoc).readEntry(XMLInputFactory
+					.newInstance().createXMLStreamReader(
+							new StringReader(entry4)), null);
 			assertTrue(entries != null);
 			assertTrue(entries.size() == 1);
 
