@@ -5,7 +5,7 @@
 	<artifactId>atomsphere</artifactId>
 	<packaging>jar</packaging>
 	<name>Atomsphere</name>
-	<version>3.0.0.1-SNAPSHOT</version>
+	<version>3.0.0.0-SNAPSHOT</version>
 	<description>An Atom 1.0 feed library written in Java on top of the Stax API.</description>
 	<url>http://www.colorfulsoftware.com/projects/atomsphere</url>
 	<licenses>
@@ -96,12 +96,9 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<configuration>
-					<attach>true</attach>
-				</configuration>
 				<executions>
 					<execution>
-						<phase>install</phase>
+						<id>attach-sources</id>
 						<goals>
 							<goal>jar</goal>
 							<goal>test-jar</goal>
@@ -117,11 +114,6 @@
 				</configuration>
 				<executions>
 					<execution>
-						<id>sign-artifacts</id>
-						<phase>verify</phase>
-						<configuration>
-							<passphrase>${gpg.passphrase}</passphrase>
-						</configuration>
 						<goals>
 							<goal>sign</goal>
 						</goals>
