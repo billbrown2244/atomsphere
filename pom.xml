@@ -117,6 +117,9 @@
 					<execution>
 						<id>sign-artifacts</id>
 						<phase>verify</phase>
+						<configuration>
+							<passphrase>${gpg.passphrase}</passphrase>
+						</configuration>
 						<goals>
 							<goal>sign</goal>
 						</goals>
