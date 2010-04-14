@@ -16,7 +16,7 @@
 		</license>
 	</licenses>
 	<scm>
-		<url>http://www.colorfulsoftware.com/svn/tags/atomsphere-3.0.0.0</url>
+		<url>http://www.colorfulsoftware.com/svn/repos/ColorfulSoftware/list/atomsphere</url>
 		<connection>scm:svn:http://www.colorfulsoftware.com/scm/atomsphere/tags/atomsphere-3.0.0.0</connection>
 		<developerConnection>scm:svn:https://billbrown.homelinux.net/pubRepo/atomsphere/tags/atomsphere-3.0.0.0</developerConnection>
 	</scm>
