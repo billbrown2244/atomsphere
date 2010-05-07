@@ -164,6 +164,9 @@ class AtomDateConstruct implements Serializable {
 				sdf = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
 				local = sdf.parse(dateTime);
 				valid = true;
+				//switch to a valid format
+				// example: 2009-10-15T11:11:30.52Z
+				sdf = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'Z\'");
 			} catch (Exception e5) {
 				valid = false;
 			}
