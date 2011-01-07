@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 William R. Brown
+ * Copyright 2011 William R. Brown
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ class AttributeSupport implements Serializable {
 				|| name.equals("xml:lang")
 				|| name.equals("xml:base")
 				|| name.matches("xmlns:.+")
-				|| name.matches("local:.+")
+				|| name.matches(".+:.+")
 				|| (name.equals("xmlns") && value
 						.equals("http://www.w3.org/2005/Atom"));
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 William R. Brown
+ * Copyright 2011 William R. Brown
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,6 +79,8 @@ class AtomPersonConstruct implements Serializable {
 
 		this.email = (email == null) ? null : new Email(email.getText());
 
+		this.unboundPrefixes = new LinkedList<String>();
+
 		if (attributes == null) {
 			this.attributes = null;
 		} else {
@@ -91,10 +93,17 @@ class AtomPersonConstruct implements Serializable {
 							+ " for this Atom Person Construct.");
 				}
 				this.attributes.add(new Attribute(attr));
+				// check for unbound attribute prefixes
+				if (attr.getName().indexOf(":") != -1
+						&& !attr.getName().equals("xml:lang")
+						&& !attr.getName().equals("xml:base")
+						&& !attr.getName().startsWith("xmlns:")) {
+					this.unboundPrefixes.add(attr.getName().substring(0,
+							attr.getName().indexOf(":")));
+				}
 			}
-		}
 
-		this.unboundPrefixes = new LinkedList<String>();
+		}
 
 		if (extensions == null) {
 			this.extensions = null;

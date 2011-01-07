@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 William R. Brown
+ * Copyright 2011 William R. Brown
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,9 +60,13 @@ public class Link implements Serializable {
 	private final Attribute title;
 	private final Attribute length;
 	private final String content;
+	private List<String> unboundPrefixes = null;
 
 	// use the factory method in the FeedDoc.
 	Link(List<Attribute> attributes, String content) throws AtomSpecException {
+
+		this.unboundPrefixes = new LinkedList<String>();
+
 		if (attributes == null) {
 			throw new AtomSpecException(
 					"atom:link elements MUST have an href attribute, whose value MUST be a IRI reference.");
@@ -75,8 +79,19 @@ public class Link implements Serializable {
 							+ attr.getName() + " for this link element.");
 				}
 				this.attributes.add(new Attribute(attr));
+				// check for unbound attribute prefixes
+				if (attr.getName().indexOf(":") != -1
+						&& !attr.getName().equals("xml:lang")
+						&& !attr.getName().equals("xml:base")
+						&& !attr.getName().startsWith("xmlns:")) {
+					this.unboundPrefixes.add(attr.getName().substring(0,
+							attr.getName().indexOf(":")));
+				}
 			}
 		}
+
+		this.unboundPrefixes = (this.unboundPrefixes.size() == 0) ? null
+				: this.unboundPrefixes;
 
 		if ((this.href = getAttribute("href")) == null) {
 			throw new AtomSpecException(
@@ -214,5 +229,9 @@ public class Link implements Serializable {
 		}
 
 		return sb.toString();
+	}
+
+	List<String> getUnboundPrefixes() {
+		return unboundPrefixes;
 	}
 }

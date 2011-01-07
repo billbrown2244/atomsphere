@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 William R. Brown
+ * Copyright 2011 William R. Brown
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -230,7 +230,7 @@ public class FeedReaderTest implements Serializable {
 		reader3 = XMLInputFactory.newInstance().createXMLStreamReader(
 				new FileInputStream("src/test/resources/dump.xml"));
 		reader4 = XMLInputFactory.newInstance().createXMLStreamReader(
-				new URL("http://www.earthbeats.net/drops.xml").openStream());
+				new URL("http://www.atomenabled.org/atom.xml").openStream());
 	}
 
 	/**

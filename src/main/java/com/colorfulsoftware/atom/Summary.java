@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 William R. Brown
+ * Copyright 2011 William R. Brown
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,5 +96,9 @@ public class Summary implements Serializable {
 	@Override
 	public String toString() {
 		return "<summary" + summary + "</summary>";
+	}
+
+	List<String> getUnboundPrefixes() {
+		return summary.getUnboundPrefixes();
 	}
 }

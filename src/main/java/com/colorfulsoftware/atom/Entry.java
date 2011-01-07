@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 William R. Brown
+ * Copyright 2011 William R. Brown
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,13 +118,34 @@ public class Entry implements Serializable {
 		// check that the extension prefixes are bound to a namespace
 		this.unboundPrefixes = new LinkedList<String>();
 
-		if (source != null && source.getUnboundPrefixes() != null) {
-			this.unboundPrefixes.addAll(source.getUnboundPrefixes());
-		}
-
 		if (entryAdaptor.getUnboundPrefixes() != null) {
 			this.unboundPrefixes.addAll(entryAdaptor.getUnboundPrefixes());
 		}
+
+		if (source != null && source.getUnboundPrefixes() != null) {
+			for (String unboundPrefix : source.getUnboundPrefixes()) {
+				if (getAttribute("xmlns:" + unboundPrefix) == null) {
+					this.unboundPrefixes.add(unboundPrefix);
+				}
+			}
+		}
+
+		if (published != null && updated.getUnboundPrefixes() != null) {
+			for (String unboundPrefix : updated.getUnboundPrefixes()) {
+				if (getAttribute("xmlns:" + unboundPrefix) == null) {
+					this.unboundPrefixes.add(unboundPrefix);
+				}
+			}
+		}
+
+		if (summary != null && summary.getUnboundPrefixes() != null) {
+			for (String unboundPrefix : summary.getUnboundPrefixes()) {
+				if (getAttribute("xmlns:" + unboundPrefix) == null) {
+					this.unboundPrefixes.add(unboundPrefix);
+				}
+			}
+		}
+
 		this.unboundPrefixes = (this.unboundPrefixes.size() == 0) ? null
 				: this.unboundPrefixes;
 	}
@@ -295,7 +316,8 @@ public class Entry implements Serializable {
 	 * @param relAttributeValue
 	 *            the value of the rel attribute.
 	 * @return the Link object based on the semantics of the rel attribute of
-	 *         the link element. See <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php#element.link"
+	 *         the link element. See <a href=
+	 *         "http://www.atomenabled.org/developers/syndication/atom-format-spec.php#element.link"
 	 *         >atom:link</a>.
 	 */
 	public Link getLink(String relAttributeValue) {

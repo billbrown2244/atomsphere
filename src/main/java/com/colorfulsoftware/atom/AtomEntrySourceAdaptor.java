@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 William R. Brown
+ * Copyright 2011 William R. Brown
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,6 +108,8 @@ class AtomEntrySourceAdaptor implements Serializable {
 			}
 		}
 
+		this.unboundPrefixes = new LinkedList<String>();
+
 		if (attributes == null) {
 			this.attributes = null;
 		} else {
@@ -119,10 +121,16 @@ class AtomEntrySourceAdaptor implements Serializable {
 							+ attr.getName() + " for this element.");
 				}
 				this.attributes.add(new Attribute(attr));
+				// check for unbound attribute prefixes
+				if (attr.getName().indexOf(":") != -1
+						&& !attr.getName().equals("xml:lang")
+						&& !attr.getName().equals("xml:base")
+						&& !attr.getName().startsWith("xmlns:")) {
+					this.unboundPrefixes.add(attr.getName().substring(0,
+							attr.getName().indexOf(":")));
+				}
 			}
 		}
-
-		this.unboundPrefixes = new LinkedList<String>();
 
 		if (extensions == null) {
 			this.extensions = null;
@@ -141,26 +149,75 @@ class AtomEntrySourceAdaptor implements Serializable {
 		}
 
 		// check that the other extension prefixes are bound to a namespace
+		if (title.getUnboundPrefixes() != null
+				&& title.getUnboundPrefixes() != null) {
+			for (String unboundPrefix : title.getUnboundPrefixes()) {
+				if (getAttribute("xmlns:" + unboundPrefix) == null) {
+					this.unboundPrefixes.add(unboundPrefix);
+				}
+			}
+		}
+
+		if (updated.getUnboundPrefixes() != null
+				&& updated.getUnboundPrefixes() != null) {
+			for (String unboundPrefix : updated.getUnboundPrefixes()) {
+				if (getAttribute("xmlns:" + unboundPrefix) == null) {
+					this.unboundPrefixes.add(unboundPrefix);
+				}
+			}
+		}
+
+		if (rights != null && rights.getUnboundPrefixes() != null) {
+			for (String unboundPrefix : rights.getUnboundPrefixes()) {
+				if (getAttribute("xmlns:" + unboundPrefix) == null) {
+					this.unboundPrefixes.add(unboundPrefix);
+				}
+			}
+		}
+
 		if (authors != null) {
 			for (Author author : authors) {
 				if (author.getUnboundPrefixes() != null) {
 					for (String unboundPrefix : author.getUnboundPrefixes()) {
 						if (getAttribute("xmlns:" + unboundPrefix) == null) {
-							this.unboundPrefixes.addAll(author
-									.getUnboundPrefixes());
+							this.unboundPrefixes.add(unboundPrefix);
 						}
 					}
 				}
 			}
 		}
+
+		if (categories != null) {
+			for (Category category : categories) {
+				if (category.getUnboundPrefixes() != null) {
+					for (String unboundPrefix : category.getUnboundPrefixes()) {
+						if (getAttribute("xmlns:" + unboundPrefix) == null) {
+							this.unboundPrefixes.add(unboundPrefix);
+						}
+					}
+				}
+			}
+		}
+
 		if (contributors != null) {
 			for (Contributor contributor : contributors) {
 				if (contributor.getUnboundPrefixes() != null) {
 					for (String unboundPrefix : contributor
 							.getUnboundPrefixes()) {
 						if (getAttribute("xmlns:" + unboundPrefix) == null) {
-							this.unboundPrefixes.addAll(contributor
-									.getUnboundPrefixes());
+							this.unboundPrefixes.add(unboundPrefix);
+						}
+					}
+				}
+			}
+		}
+
+		if (links != null) {
+			for (Link link : links) {
+				if (link.getUnboundPrefixes() != null) {
+					for (String unboundPrefix : link.getUnboundPrefixes()) {
+						if (getAttribute("xmlns:" + unboundPrefix) == null) {
+							this.unboundPrefixes.add(unboundPrefix);
 						}
 					}
 				}
@@ -376,7 +433,8 @@ class AtomEntrySourceAdaptor implements Serializable {
 	 * @param relAttributeValue
 	 *            the value of the rel attribute.
 	 * @return the Link object based on the semantics of the rel attribute of
-	 *         the link element. See <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php#element.link"
+	 *         the link element. See <a href=
+	 *         "http://www.atomenabled.org/developers/syndication/atom-format-spec.php#element.link"
 	 *         >atom:link</a>.
 	 */
 	Link getLink(String relAttributeValue) {

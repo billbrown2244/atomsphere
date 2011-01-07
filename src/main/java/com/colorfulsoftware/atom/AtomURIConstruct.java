@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 William R. Brown
+ * Copyright 2011 William R. Brown
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,12 @@ class AtomURIConstruct implements Serializable {
 	private static final long serialVersionUID = -6063992140422293183L;
 	private final List<Attribute> attributes;
 	private final String atomUri;
+	private List<String> unboundPrefixes = null;
 
 	AtomURIConstruct(List<Attribute> attributes, String atomUri)
 			throws AtomSpecException {
+
+		this.unboundPrefixes = new LinkedList<String>();
 
 		if (attributes == null) {
 			this.attributes = null;
@@ -43,8 +46,19 @@ class AtomURIConstruct implements Serializable {
 							+ attr.getName() + " for this element.");
 				}
 				this.attributes.add(new Attribute(attr));
+				// check for unbound attribute prefixes
+				if (attr.getName().indexOf(":") != -1
+						&& !attr.getName().equals("xml:lang")
+						&& !attr.getName().equals("xml:base")
+						&& !attr.getName().startsWith("xmlns:")) {
+					this.unboundPrefixes.add(attr.getName().substring(0,
+							attr.getName().indexOf(":")));
+				}
 			}
 		}
+
+		this.unboundPrefixes = (this.unboundPrefixes.size() == 0) ? null
+				: this.unboundPrefixes;
 
 		this.atomUri = atomUri;
 	}
@@ -109,5 +123,9 @@ class AtomURIConstruct implements Serializable {
 		sb.append(">" + atomUri);
 
 		return sb.toString();
+	}
+
+	List<String> getUnboundPrefixes() {
+		return unboundPrefixes;
 	}
 }

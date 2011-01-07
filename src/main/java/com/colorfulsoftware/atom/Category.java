@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 William R. Brown
+ * Copyright 2011 William R. Brown
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,10 +51,13 @@ public class Category implements Serializable {
 	private final Attribute scheme;
 	private final Attribute label;
 	private final String content;
+	private List<String> unboundPrefixes = null;
 
 	// use the factory method in the FeedDoc.
 	Category(List<Attribute> attributes, String content)
 			throws AtomSpecException {
+
+		this.unboundPrefixes = new LinkedList<String>();
 
 		if (attributes == null) {
 			throw new AtomSpecException(
@@ -68,8 +71,19 @@ public class Category implements Serializable {
 							+ attr.getName() + " in the atom:category element.");
 				}
 				this.attributes.add(new Attribute(attr));
+				// check for unbound attribute prefixes
+				if (attr.getName().indexOf(":") != -1
+						&& !attr.getName().equals("xml:lang")
+						&& !attr.getName().equals("xml:base")
+						&& !attr.getName().startsWith("xmlns:")) {
+					this.unboundPrefixes.add(attr.getName().substring(0,
+							attr.getName().indexOf(":")));
+				}
 			}
 		}
+
+		this.unboundPrefixes = (this.unboundPrefixes.size() == 0) ? null
+				: this.unboundPrefixes;
 
 		if ((this.term = getAttribute("term")) == null
 				|| this.term.getValue().equals("")) {
@@ -169,5 +183,9 @@ public class Category implements Serializable {
 		}
 
 		return sb.toString();
+	}
+
+	List<String> getUnboundPrefixes() {
+		return unboundPrefixes;
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 William R. Brown
+ * Copyright 2011 William R. Brown
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,9 +133,9 @@ class FeedWriter implements Serializable {
 	void writeSubtitle(XMLStreamWriter writer, Subtitle subtitle)
 			throws Exception {
 		writer.writeStartElement("subtitle");
-		writeAtomTextConstruct(writer, subtitle.getAttributes(), subtitle
-				.getDivStartName(), subtitle.getDivStartAttribute(), subtitle
-				.getText(), subtitle.getContentType());
+		writeAtomTextConstruct(writer, subtitle.getAttributes(),
+				subtitle.getDivStartName(), subtitle.getDivStartAttribute(),
+				subtitle.getText(), subtitle.getContentType());
 
 		writer.writeEndElement();
 	}
@@ -167,9 +167,9 @@ class FeedWriter implements Serializable {
 
 	void writeTitle(XMLStreamWriter writer, Title title) throws Exception {
 		writer.writeStartElement("title");
-		writeAtomTextConstruct(writer, title.getAttributes(), title
-				.getDivStartName(), title.getDivStartAttribute(), title
-				.getText(), title.getContentType());
+		writeAtomTextConstruct(writer, title.getAttributes(),
+				title.getDivStartName(), title.getDivStartAttribute(),
+				title.getText(), title.getContentType());
 		writer.writeEndElement();
 	}
 
@@ -410,9 +410,9 @@ class FeedWriter implements Serializable {
 
 	void writeRights(XMLStreamWriter writer, Rights rights) throws Exception {
 		writer.writeStartElement("rights");
-		writeAtomTextConstruct(writer, rights.getAttributes(), rights
-				.getDivStartName(), rights.getDivStartAttribute(), rights
-				.getText(), rights.getContentType());
+		writeAtomTextConstruct(writer, rights.getAttributes(),
+				rights.getDivStartName(), rights.getDivStartAttribute(),
+				rights.getText(), rights.getContentType());
 
 		writer.writeEndElement();
 	}
@@ -462,8 +462,8 @@ class FeedWriter implements Serializable {
 				if (elementName.indexOf(":") == -1) {
 					writer.writeEmptyElement(elementName);
 				} else {
-					String prefix = elementName.substring(0, elementName
-							.indexOf(":"));
+					String prefix = elementName.substring(0,
+							elementName.indexOf(":"));
 					String localName = elementName.substring(elementName
 							.indexOf(":") + 1);
 					writer.writeEmptyElement(prefix, localName, "");
@@ -478,8 +478,8 @@ class FeedWriter implements Serializable {
 				if (elementName.indexOf(":") == -1) {
 					writer.writeStartElement(elementName);
 				} else {
-					String prefix = elementName.substring(0, elementName
-							.indexOf(":"));
+					String prefix = elementName.substring(0,
+							elementName.indexOf(":"));
 					String localName = elementName.substring(elementName
 							.indexOf(":") + 1);
 					writer.writeStartElement(prefix, localName, "");
@@ -498,8 +498,8 @@ class FeedWriter implements Serializable {
 						writeXHTML(writer, extension.getContent());
 					}
 				} else if (extension.getAttribute("xmlns") != null
-						&& extension.getAttribute("xmlns").getValue().equals(
-								"http://www.w3.org/1999/xhtml")) {
+						&& extension.getAttribute("xmlns").getValue()
+								.equals("http://www.w3.org/1999/xhtml")) {
 					writeXHTML(writer, extension.getContent());
 
 				} else {
@@ -572,9 +572,9 @@ class FeedWriter implements Serializable {
 
 	void writeSummary(XMLStreamWriter writer, Summary summary) throws Exception {
 		writer.writeStartElement("summary");
-		writeAtomTextConstruct(writer, summary.getAttributes(), summary
-				.getDivStartName(), summary.getDivStartAttribute(), summary
-				.getText(), summary.getContentType());
+		writeAtomTextConstruct(writer, summary.getAttributes(),
+				summary.getDivStartName(), summary.getDivStartAttribute(),
+				summary.getText(), summary.getContentType());
 
 		writer.writeEndElement();
 	}
@@ -625,9 +625,9 @@ class FeedWriter implements Serializable {
 			writeAttributes(writer, content.getAttributes());
 		} else {
 			writer.writeStartElement("content");
-			writeAtomTextConstruct(writer, content.getAttributes(), content
-					.getDivStartName(), content.getDivStartAttribute(), content
-					.getContent(), content.getContentType());
+			writeAtomTextConstruct(writer, content.getAttributes(),
+					content.getDivStartName(), content.getDivStartAttribute(),
+					content.getContent(), content.getContentType());
 
 			writer.writeEndElement();
 		}

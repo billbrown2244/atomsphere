@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 William R. Brown
+ * Copyright 2011 William R. Brown
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
 package com.colorfulsoftware.atom;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -62,7 +63,7 @@ public class Source implements Serializable {
 	private final Icon icon;
 	private final Logo logo;
 	private final Subtitle subtitle;
-	private List<String> unboundPrefixes;
+	private List<String> unboundPrefixes = null;
 
 	// use the factory method in the FeedDoc.
 	Source(Id id, Title title, Updated updated, Rights rights,
@@ -79,8 +80,45 @@ public class Source implements Serializable {
 		this.icon = (icon == null) ? null : new Icon(icon);
 		this.logo = (logo == null) ? null : new Logo(logo);
 
+		this.unboundPrefixes = new LinkedList<String>();
+
 		// check that the extension prefixes are bound to a namespace
-		this.unboundPrefixes = sourceAdaptor.getUnboundPrefixes();
+		if (sourceAdaptor.getUnboundPrefixes() != null) {
+			this.unboundPrefixes.addAll(sourceAdaptor.getUnboundPrefixes());
+		}
+
+		if (generator != null && generator.getUnboundPrefixes() != null) {
+			for (String unboundPrefix : generator.getUnboundPrefixes()) {
+				if (getAttribute("xmlns:" + unboundPrefix) == null) {
+					this.unboundPrefixes.add(unboundPrefix);
+				}
+			}
+		}
+
+		if (subtitle != null && subtitle.getUnboundPrefixes() != null) {
+			for (String unboundPrefix : subtitle.getUnboundPrefixes()) {
+				if (getAttribute("xmlns:" + unboundPrefix) == null) {
+					this.unboundPrefixes.add(unboundPrefix);
+				}
+			}
+		}
+
+		if (icon != null && icon.getUnboundPrefixes() != null) {
+			for (String unboundPrefix : icon.getUnboundPrefixes()) {
+				if (getAttribute("xmlns:" + unboundPrefix) == null) {
+					this.unboundPrefixes.add(unboundPrefix);
+				}
+			}
+		}
+
+		if (logo != null && logo.getUnboundPrefixes() != null) {
+			for (String unboundPrefix : logo.getUnboundPrefixes()) {
+				if (getAttribute("xmlns:" + unboundPrefix) == null) {
+					this.unboundPrefixes.add(unboundPrefix);
+				}
+			}
+		}
+
 	}
 
 	Source(Source source) {
@@ -89,6 +127,7 @@ public class Source implements Serializable {
 		this.icon = source.getIcon();
 		this.logo = source.getLogo();
 		this.subtitle = source.getSubtitle();
+		this.unboundPrefixes = source.getUnboundPrefixes();
 	}
 
 	/**
@@ -244,7 +283,8 @@ public class Source implements Serializable {
 	 * @param relAttributeValue
 	 *            the value of the rel attribute.
 	 * @return the Link object based on the semantics of the rel attribute of
-	 *         the link element. See <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php#element.link"
+	 *         the link element. See <a href=
+	 *         "http://www.atomenabled.org/developers/syndication/atom-format-spec.php#element.link"
 	 *         >atom:link</a>.
 	 */
 	public Link getLink(String relAttributeValue) {

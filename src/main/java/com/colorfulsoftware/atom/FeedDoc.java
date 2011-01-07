@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 William R. Brown
+ * Copyright 2011 William R. Brown
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -160,8 +160,9 @@ public final class FeedDoc implements Serializable {
 	 */
 	public void writeFeedDoc(OutputStream output, Feed feed, String encoding,
 			String version) throws Exception {
-		writeFeedDoc(XMLOutputFactory.newInstance().createXMLStreamWriter(
-				output, encoding), feed, encoding, version);
+		writeFeedDoc(
+				XMLOutputFactory.newInstance().createXMLStreamWriter(output,
+						encoding), feed, encoding, version);
 	}
 
 	/**
@@ -180,8 +181,9 @@ public final class FeedDoc implements Serializable {
 	 */
 	public void writeEntryDoc(OutputStream output, Entry entry,
 			String encoding, String version) throws Exception {
-		writeEntryDoc(XMLOutputFactory.newInstance().createXMLStreamWriter(
-				output, encoding), entry, encoding, version);
+		writeEntryDoc(
+				XMLOutputFactory.newInstance().createXMLStreamWriter(output,
+						encoding), entry, encoding, version);
 	}
 
 	/**
@@ -202,8 +204,9 @@ public final class FeedDoc implements Serializable {
 	 */
 	public void writeFeedDoc(Writer output, Feed feed, String encoding,
 			String version) throws Exception {
-		writeFeedDoc(XMLOutputFactory.newInstance().createXMLStreamWriter(
-				output), feed, encoding, version);
+		writeFeedDoc(
+				XMLOutputFactory.newInstance().createXMLStreamWriter(output),
+				feed, encoding, version);
 	}
 
 	/**
@@ -225,8 +228,9 @@ public final class FeedDoc implements Serializable {
 	 */
 	public void writeEntryDoc(Writer output, Entry entry, String encoding,
 			String version) throws Exception {
-		writeEntryDoc(XMLOutputFactory.newInstance().createXMLStreamWriter(
-				output), entry, encoding, version);
+		writeEntryDoc(
+				XMLOutputFactory.newInstance().createXMLStreamWriter(output),
+				entry, encoding, version);
 	}
 
 	/**
@@ -440,8 +444,8 @@ public final class FeedDoc implements Serializable {
 		if (xmlString.contains("encoding=\"")) {
 			String localEncoding = xmlString.substring(xmlString
 					.indexOf("encoding=\"") + 10);
-			localEncoding = localEncoding.substring(0, localEncoding
-					.indexOf('"'));
+			localEncoding = localEncoding.substring(0,
+					localEncoding.indexOf('"'));
 			encoding = localEncoding;
 
 		}
@@ -465,8 +469,8 @@ public final class FeedDoc implements Serializable {
 		if (xmlString.contains("encoding=\"")) {
 			String localEncoding = xmlString.substring(xmlString
 					.indexOf("encoding=\"") + 10);
-			localEncoding = localEncoding.substring(0, localEncoding
-					.indexOf('"'));
+			localEncoding = localEncoding.substring(0,
+					localEncoding.indexOf('"'));
 			encoding = localEncoding;
 
 		}
@@ -622,11 +626,11 @@ public final class FeedDoc implements Serializable {
 	}
 
 	Feed buildFeed(Feed feed) throws AtomSpecException {
-		return buildFeed(feed.getId(), feed.getTitle(), feed.getUpdated(), feed
-				.getRights(), feed.getAuthors(), feed.getCategories(), feed
-				.getContributors(), feed.getLinks(), feed.getAttributes(), feed
-				.getExtensions(), feed.getGenerator(), feed.getSubtitle(), feed
-				.getIcon(), feed.getLogo(), feed.getEntries());
+		return buildFeed(feed.getId(), feed.getTitle(), feed.getUpdated(),
+				feed.getRights(), feed.getAuthors(), feed.getCategories(),
+				feed.getContributors(), feed.getLinks(), feed.getAttributes(),
+				feed.getExtensions(), feed.getGenerator(), feed.getSubtitle(),
+				feed.getIcon(), feed.getLogo(), feed.getEntries());
 	}
 
 	/**
@@ -1068,11 +1072,11 @@ public final class FeedDoc implements Serializable {
 		}
 		// rebuild the feed with the updated attributes
 		// and atomsphere generator element
-		feed = buildFeed(feed.getId(), feed.getTitle(), feed.getUpdated(), feed
-				.getRights(), feed.getAuthors(), feed.getCategories(), feed
-				.getContributors(), feed.getLinks(), attributes, feed
-				.getExtensions(), feed.getGenerator(), feed.getSubtitle(), feed
-				.getIcon(), feed.getLogo(), feed.getEntries());
+		feed = buildFeed(feed.getId(), feed.getTitle(), feed.getUpdated(),
+				feed.getRights(), feed.getAuthors(), feed.getCategories(),
+				feed.getContributors(), feed.getLinks(), attributes,
+				feed.getExtensions(), feed.getGenerator(), feed.getSubtitle(),
+				feed.getIcon(), feed.getLogo(), feed.getEntries());
 		// write the xml header.
 		writer.writeStartDocument(encoding, version);
 		if (this.processingInstructions != null) {
@@ -1206,8 +1210,8 @@ public final class FeedDoc implements Serializable {
 			return buildFeed(feed.getId(), feed.getTitle(), feed.getUpdated(),
 					feed.getRights(), feed.getAuthors(), feed.getCategories(),
 					feed.getContributors(), feed.getLinks(), feedAttrs,
-					localFeedExtensions, feed.getGenerator(), feed
-							.getSubtitle(), feed.getIcon(), feed.getLogo(),
+					localFeedExtensions, feed.getGenerator(),
+					feed.getSubtitle(), feed.getIcon(), feed.getLogo(),
 					new LinkedList<Entry>(resortedEntries.values()));
 		}
 		// return the feed in the original order.

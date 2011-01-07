@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 William R. Brown
+ * Copyright 2011 William R. Brown
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,16 +133,13 @@ class FeedReader implements Serializable {
 		// do a check after the feed is built to determine if it needs to be
 		// sorted.
 		return feedDoc
-				.buildFeed(feedDoc
-						.checkForAndApplyExtension(
-								feedDoc.buildFeed(id, title, updated, rights,
-										authors, categories, contributors,
-										links, attributes, extensions,
-										generator, subtitle, icon, logo,
-										entries),
-								feedDoc
-										.buildAttribute("xmlns:sort",
-												"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0")));
+				.buildFeed(feedDoc.checkForAndApplyExtension(
+						feedDoc.buildFeed(id, title, updated, rights, authors,
+								categories, contributors, links, attributes,
+								extensions, generator, subtitle, icon, logo,
+								entries),
+						feedDoc.buildAttribute("xmlns:sort",
+								"http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0")));
 	}
 
 	private List<Attribute> getAttributes(XMLStreamReader reader)
@@ -169,8 +166,9 @@ class FeedReader implements Serializable {
 				if (processingInstructions == null) {
 					processingInstructions = new LinkedList<FeedDoc.ProcessingInstruction>();
 				}
-				processingInstructions.add(new FeedDoc().new ProcessingInstruction(reader
-						.getPITarget(), reader.getPIData()));
+				processingInstructions
+						.add(new FeedDoc().new ProcessingInstruction(reader
+								.getPITarget(), reader.getPIData()));
 			}
 			reader.next();
 		}
@@ -203,9 +201,9 @@ class FeedReader implements Serializable {
 				attrName = reader.getAttributeName(i).getLocalPart();
 			}
 
-			attributes.add(feedDoc.buildAttribute(attrName, reader
-					.getAttributeValue(i).replaceAll("&amp;", "&").replaceAll(
-							"&", "&amp;")));
+			attributes.add(feedDoc.buildAttribute(attrName,
+					reader.getAttributeValue(i).replaceAll("&amp;", "&")
+							.replaceAll("&", "&amp;")));
 		}
 
 		// return null if no attributes were created.
@@ -256,8 +254,8 @@ class FeedReader implements Serializable {
 			}
 		}
 
-		extensions.add(feedDoc.buildExtension(elementName, attributes, extText
-				.toString()));
+		extensions.add(feedDoc.buildExtension(elementName, attributes,
+				extText.toString()));
 		return extensions;
 	}
 
@@ -396,8 +394,9 @@ class FeedReader implements Serializable {
 					// will be null which results in a skipping of the malformed
 					// character.
 					if (text != null) {
-						xhtml.append(text.replaceAll("&", "&amp;").replaceAll(
-								"<", "&lt;").replaceAll(">", "&gt;"));
+						xhtml.append(text.replaceAll("&", "&amp;")
+								.replaceAll("<", "&lt;")
+								.replaceAll(">", "&gt;"));
 					}
 				} else {
 					String text = reader.getText();
@@ -641,8 +640,8 @@ class FeedReader implements Serializable {
 	}
 
 	Published readPublished(XMLStreamReader reader) throws Exception {
-		return feedDoc.buildPublished(getAttributes(reader), reader
-				.getElementText());
+		return feedDoc.buildPublished(getAttributes(reader),
+				reader.getElementText());
 	}
 
 	Content readContent(XMLStreamReader reader) throws Exception {
@@ -660,8 +659,8 @@ class FeedReader implements Serializable {
 	}
 
 	Updated readUpdated(XMLStreamReader reader) throws Exception {
-		return feedDoc.buildUpdated(getAttributes(reader), reader
-				.getElementText());
+		return feedDoc.buildUpdated(getAttributes(reader),
+				reader.getElementText());
 	}
 
 	Title readTitle(XMLStreamReader reader) throws Exception {
@@ -716,8 +715,8 @@ class FeedReader implements Serializable {
 		if (links == null) {
 			links = new LinkedList<Link>();
 		}
-		links.add(feedDoc.buildLink(getAttributes(reader), reader
-				.getElementText()));
+		links.add(feedDoc.buildLink(getAttributes(reader),
+				reader.getElementText()));
 		return links;
 	}
 
@@ -731,8 +730,8 @@ class FeedReader implements Serializable {
 	}
 
 	Generator readGenerator(XMLStreamReader reader) throws Exception {
-		return feedDoc.buildGenerator(getAttributes(reader), reader
-				.getElementText());
+		return feedDoc.buildGenerator(getAttributes(reader),
+				reader.getElementText());
 	}
 
 	List<Contributor> readContributor(XMLStreamReader reader,
@@ -744,9 +743,9 @@ class FeedReader implements Serializable {
 
 		AtomPersonConstruct person = readAtomPersonConstruct(reader,
 				"contributor");
-		contributors.add(feedDoc.buildContributor(person.getName(), person
-				.getUri(), person.getEmail(), person.getAttributes(), person
-				.getExtensions()));
+		contributors.add(feedDoc.buildContributor(person.getName(),
+				person.getUri(), person.getEmail(), person.getAttributes(),
+				person.getExtensions()));
 
 		return contributors;
 	}
@@ -756,8 +755,8 @@ class FeedReader implements Serializable {
 		if (categories == null) {
 			categories = new LinkedList<Category>();
 		}
-		categories.add(feedDoc.buildCategory(getAttributes(reader), reader
-				.getElementText()));
+		categories.add(feedDoc.buildCategory(getAttributes(reader),
+				reader.getElementText()));
 		return categories;
 	}
 
@@ -768,8 +767,8 @@ class FeedReader implements Serializable {
 		}
 		AtomPersonConstruct person = readAtomPersonConstruct(reader, "author");
 		authors.add(feedDoc.buildAuthor(person.getName(), person.getUri(),
-				person.getEmail(), person.getAttributes(), person
-						.getExtensions()));
+				person.getEmail(), person.getAttributes(),
+				person.getExtensions()));
 		return authors;
 	}
 

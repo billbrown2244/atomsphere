@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 William R. Brown
+ * Copyright 2011 William R. Brown
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,8 @@ class AtomDateConstruct implements Serializable {
 
 	private final String text;
 
+	private List<String> unboundPrefixes = null;
+
 	/*
 	 * 
 	 * @param dateTime the date
@@ -64,6 +66,9 @@ class AtomDateConstruct implements Serializable {
 	 */
 	AtomDateConstruct(List<Attribute> attributes, String dateTime)
 			throws AtomSpecException {
+
+		this.unboundPrefixes = new LinkedList<String>();
+
 		if (attributes == null) {
 			this.attributes = null;
 		} else {
@@ -75,8 +80,19 @@ class AtomDateConstruct implements Serializable {
 							+ attr.getName() + " for this Atom Date Construct.");
 				}
 				this.attributes.add(new Attribute(attr));
+				// check for unbound attribute prefixes
+				if (attr.getName().indexOf(":") != -1
+						&& !attr.getName().equals("xml:lang")
+						&& !attr.getName().equals("xml:base")
+						&& !attr.getName().startsWith("xmlns:")) {
+					this.unboundPrefixes.add(attr.getName().substring(0,
+							attr.getName().indexOf(":")));
+				}
 			}
 		}
+
+		this.unboundPrefixes = (this.unboundPrefixes.size() == 0) ? null
+				: this.unboundPrefixes;
 
 		// specification customization
 		if (dateTime == null || dateTime.trim().equals("")) {
@@ -164,7 +180,7 @@ class AtomDateConstruct implements Serializable {
 				sdf = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
 				local = sdf.parse(dateTime);
 				valid = true;
-				//switch to a valid format
+				// switch to a valid format
 				// example: 2009-10-15T11:11:30.52Z
 				sdf = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SS\'Z\'");
 			} catch (Exception e5) {
@@ -250,5 +266,9 @@ class AtomDateConstruct implements Serializable {
 		// and add the date string
 		sb.append(">" + text);
 		return sb.toString();
+	}
+
+	List<String> getUnboundPrefixes() {
+		return unboundPrefixes;
 	}
 }

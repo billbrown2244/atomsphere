@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 William R. Brown
+ * Copyright 2011 William R. Brown
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,9 +48,12 @@ public class Generator implements Serializable {
 	private final Attribute uri;
 	private final Attribute version;
 	private final String text;
+	private List<String> unboundPrefixes = null;
 
 	// use the factory method in the FeedDoc.
 	Generator(List<Attribute> attributes, String text) throws AtomSpecException {
+
+		this.unboundPrefixes = new LinkedList<String>();
 
 		if (attributes == null) {
 			this.attributes = null;
@@ -63,10 +66,20 @@ public class Generator implements Serializable {
 							+ attr.getName()
 							+ " in the atom:generator element.");
 				}
-				this.attributes.add(new Attribute(attr.getName(), attr
-						.getValue()));
+				this.attributes.add(new Attribute(attr));
+				// check for unbound attribute prefixes
+				if (attr.getName().indexOf(":") != -1
+						&& !attr.getName().equals("xml:lang")
+						&& !attr.getName().equals("xml:base")
+						&& !attr.getName().startsWith("xmlns:")) {
+					this.unboundPrefixes.add(attr.getName().substring(0,
+							attr.getName().indexOf(":")));
+				}
 			}
 		}
+
+		this.unboundPrefixes = (this.unboundPrefixes.size() == 0) ? null
+				: this.unboundPrefixes;
 
 		this.uri = getAttribute("uri");
 
@@ -162,5 +175,9 @@ public class Generator implements Serializable {
 		}
 
 		return sb.toString();
+	}
+
+	List<String> getUnboundPrefixes() {
+		return unboundPrefixes;
 	}
 }

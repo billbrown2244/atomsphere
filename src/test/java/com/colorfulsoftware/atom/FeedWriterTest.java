@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 William R. Brown
+ * Copyright 2011 William R. Brown
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -259,7 +259,7 @@ public class FeedWriterTest implements Serializable {
 			writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
 					new FileOutputStream("target/dump1.xml"));
 			Feed feed = feedDoc.readFeedToBean(new URL(
-					"http://www.earthbeats.net/drops.xml"));
+					"http://www.atomenabled.org/atom.xml"));
 			feedWriter.writeFeed(writer, feed);
 
 		} catch (Exception e) {

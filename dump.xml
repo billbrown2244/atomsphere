@@ -1,0 +1,150 @@
+<!--
+
+    Copyright 2011 William R. Brown
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<feed xmlns="http://www.w3.org/2005/Atom"
+	xml:lang="en-US"
+	xmlns:sort="http://www.colorfulsoftware.com/projects/atomsphere/extension/sort/1.0"
+	xmlns:test="http://www.test.com">
+	<id>http://www.colorfulsoftware.com//news.xml</id>
+	<title>News:</title>
+	<updated>2011-01-07T10:33:36.471-06:00</updated>
+	<rights>Copyright 2007</rights>
+	<author>
+		<name>Bill Brown</name>
+		<email>support@colorfulsoftware.com</email>
+		<uri>http://www.colorfulsoftware.com</uri>
+	</author>
+	<link href="http://www.colorfulsoftware.com/news.xml" rel="self"
+		type="application/atom+xml" />
+	<sort:desc type="updated" />
+	<generator uri="http://www.colorfulsoftware.com/projects/atomsphere/"
+		version="2.0.2.1">Atomsphere</generator>
+	<logo>http://www.colorfulsoftware.com/images/logoPyramid.gif</logo>
+	<entry>
+		<id>http://www.colorfulsoftware.com//news.xml#Atomsphere%202.0.2.1</id>
+		<title>Atomsphere 2.0.2.1</title>
+		<updated>2008-10-13T09:16:32.819-06:00</updated>
+		<rights>GPL</rights>
+		<author>
+			<name test:test="hisName">Bill Brown</name>
+		</author>
+		<link href="http://www.colorfulsoftware.com/projects/atomsphere"
+			rel="self" />
+		<published>2008-10-13T09:16:32.819-06:00</published>
+		<summary>bug fix release and improved taglib support</summary>
+		<content type="xhtml">
+			<div xmlns="http://www.w3.org/1999/xhtml">This release fixed a
+				bug in the rendering of the content element for xhtml content when
+				the links appeared with a querystring. There is also better support
+				for rendering images with the taglib. See the taglib descriptor file
+				for more information.</div>
+		</content>
+	</entry>
+	<entry>
+		<id>http://www.colorfulsoftware.com/news.xml#Atomsphere%202.0.1.0</id>
+		<title>Atomsphere 2.0.1.0</title>
+		<updated>2008-04-20T22:28:44.473-06:00</updated>
+		<author>
+			<name>Bill Brown</name>
+		</author>
+		<link href="http://www.colorfulsoftware.com/projects/atomsphere"
+			rel="alternate" type="text/html" />
+		<published>2008-04-20T20:33:27.716-06:00</published>
+		<summary>better support for entry documents.</summary>
+		<content type="xhtml">
+			<div xmlns="http://www.w3.org/1999/xhtml">
+
+				Added better support for reading and writing entry documents. Improved
+				attribute support to more closely match the specification. improved
+				efficiency of the entry sort extension.</div>
+		</content>
+	</entry>
+	<entry>
+		<id>http://www.colorfulsoftware.com/news.xml#Atomsphere%202.0.0.0</id>
+		<title>Atomsphere 2.0.0.0</title>
+		<updated>2008-03-31T08:23:12.151-06:00</updated>
+		<link href="http://www.colorfulsoftware.com/projects/atomsphere"
+			rel="alternate" type="text/html" />
+		<published>2008-03-31T08:21:20.325-06:00</published>
+		<summary>thread safe release</summary>
+		<content type="xhtml">
+			<div xmlns="http://www.w3.org/1999/xhtml">
+
+
+				<ul>&lt;li>This release represents a thread safe release. The feed
+					and all sub elements are immutable and thread safe.&lt;/li>&lt;li>A
+					decent size reduction in the size of the api. the FeedReader and
+					FeedWriter have been removed from the api. All reading and writing
+					operations can be achieved through the FeedDoc
+					factory.&lt;/li>&lt;li>Decoupled the stax-utils dependency from the
+					root atomsphere library.&lt;/li>&lt;li>added support for reading
+					and writing with arbitrary XMLStreamWriter
+					classes&lt;/li>&lt;li>fixed issue with handling xhtml content
+					type.&lt;/li>&lt;li>Email with questions.&lt;/li></ul>
+			</div>
+		</content>
+	</entry>
+	<entry>
+		<id>http://colorfulsoftware.localhost/news.xml#Atomsphere%201.0.2.0</id>
+		<title>Atomsphere 1.0.2.0</title>
+		<updated>2007-02-24T20:14:05.945-06:00</updated>
+		<link href="http://www.colorfulsoftware.com/projects/atomsphere"
+			rel="alternate" type="text/html" />
+		<published>2007-02-24T20:11:54.804-06:00</published>
+		<summary>heavy updates to atomsphere-taglib and atomsphere-weblib</summary>
+		<content type="html">&lt;div&gt;heavy updates to atomsphere-taglib
+			and atomsphere-weblib&lt;/div&gt;</content>
+	</entry>
+	<entry>
+		<id>http://colorfulsoftware.localhost/atom.xml#Atomsphere%201.0.1.0</id>
+		<title>Atomsphere 1.0.1.0</title>
+		<updated>2006-11-26T18:40:00.00-06:00</updated>
+		<rights>GPL</rights>
+		<category term="feed library" />
+		<author>
+			<name>Bill Brown</name>
+			<email>info@colorfulsoftware.com</email>
+			<uri>http://www.colorfulsoftware.com</uri>
+		</author>
+		<link href="http://www.colorfulsoftware.com/projects/atomsphere"
+			rel="alternate" type="text/html" />
+		<published>2006-11-26T18:40:00.00-06:00</published>
+		<summary>new artifact structures, features and bug fix release.</summary>
+		<content type="text">The new sturcture for the released code now
+			contians four parts: atomsphere (the atom feed spec library),
+			atomsphere-taglib (a taglib to put in your view), atomsphere-weblib
+			(the servlets for maintaining feeds) and the atomsphere-webapp (an
+			example app using all of the components). Check it out on the
+			projects page.</content>
+	</entry>
+	<entry>
+		<id>http://colorfulsoftware.com/atom.xml#Atomsphere%201.0.0</id>
+		<title>Atomsphere 1.0.0</title>
+		<updated>2006-06-15T13:45:00.00-06:00</updated>
+		<rights>GPL</rights>
+		<link href="http://colorfulsoftware.com/projects/atomsphere" rel="alternate"
+			type="text/html" />
+		<published>2006-06-15T18:49:00.00-06:00</published>
+		<summary>java open source library</summary>
+		<content type="text">Atomsphere is a java library for creating and
+			modifying Atom 1.0 compliant feed documents. It's also bundled with a
+			servlet based web interface for front-end manipulation of atom feeds.
+			Visit the homepage for more info
+			http://www.colorfulsoftware.com/projects/atomsphere or follow the
+			projects link from the main menu. </content>
+	</entry>
+</feed>

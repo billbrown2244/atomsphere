@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 William R. Brown
+ * Copyright 2011 William R. Brown
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,10 +54,13 @@ class AtomTextConstruct implements Serializable {
 	private ContentType contentType;
 	private final String divStartName;
 	private final Attribute divStartAttribute;
+	private List<String> unboundPrefixes = null;
 
 	// content elements do a different validation.
 	AtomTextConstruct(String text, List<Attribute> attributes,
 			boolean isContentElement) throws AtomSpecException {
+
+		this.unboundPrefixes = new LinkedList<String>();
 
 		if (attributes == null) {
 			this.attributes = null;
@@ -74,6 +77,15 @@ class AtomTextConstruct implements Serializable {
 								+ " for this Atom Text Construct.");
 					}
 					this.attributes.add(new Attribute(attr));
+					// check for unbound attribute prefixes
+					if (attr.getName().indexOf(":") != -1
+							&& !attr.getName().equals("xml:lang")
+							&& !attr.getName().equals("xml:base")
+							&& !attr.getName().startsWith("xmlns:")) {
+						this.unboundPrefixes.add(attr.getName().substring(0,
+								attr.getName().indexOf(":")));
+					}
+
 				}
 			} else {
 				for (Attribute attr : attributes) {
@@ -84,9 +96,20 @@ class AtomTextConstruct implements Serializable {
 								+ " for this Atom Text Construct.");
 					}
 					this.attributes.add(new Attribute(attr));
+					// check for unbound attribute prefixes
+					if (attr.getName().indexOf(":") != -1
+							&& !attr.getName().equals("xml:lang")
+							&& !attr.getName().equals("xml:base")
+							&& !attr.getName().startsWith("xmlns:")) {
+						this.unboundPrefixes.add(attr.getName().substring(0,
+								attr.getName().indexOf(":")));
+					}
 				}
 			}
 		}
+
+		this.unboundPrefixes = (this.unboundPrefixes.size() == 0) ? null
+				: this.unboundPrefixes;
 
 		// get the content type
 		Attribute attr = getAttribute("src");
@@ -127,8 +150,8 @@ class AtomTextConstruct implements Serializable {
 
 		// prepare the div wrapper start element and optional element.
 		if (divWrapperStart != null) {
-			String bare = divWrapperStart.replaceAll("<", "").replaceAll(">",
-					"").trim();
+			String bare = divWrapperStart.replaceAll("<", "")
+					.replaceAll(">", "").trim();
 			String[] split = bare.split(" ");
 			if (split.length > 1) {
 				this.divStartName = split[0];
@@ -288,5 +311,9 @@ class AtomTextConstruct implements Serializable {
 		}
 
 		return sb.toString();
+	}
+
+	List<String> getUnboundPrefixes() {
+		return unboundPrefixes;
 	}
 }

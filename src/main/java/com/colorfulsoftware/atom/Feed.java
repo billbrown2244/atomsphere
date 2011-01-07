@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 William R. Brown
+ * Copyright 2011 William R. Brown
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -110,6 +110,39 @@ public class Feed implements Serializable {
 
 		// check that the extension prefixes are bound to a namespace
 		this.unboundPrefixes = new LinkedList<String>();
+
+		if (generator != null && generator.getUnboundPrefixes() != null) {
+			for (String unboundPrefix : generator.getUnboundPrefixes()) {
+				if (getAttribute("xmlns:" + unboundPrefix) == null) {
+					this.unboundPrefixes.add(unboundPrefix);
+				}
+			}
+		}
+
+		if (subtitle != null && subtitle.getUnboundPrefixes() != null) {
+			for (String unboundPrefix : subtitle.getUnboundPrefixes()) {
+				if (getAttribute("xmlns:" + unboundPrefix) == null) {
+					this.unboundPrefixes.add(unboundPrefix);
+				}
+			}
+		}
+
+		if (icon != null && icon.getUnboundPrefixes() != null) {
+			for (String unboundPrefix : icon.getUnboundPrefixes()) {
+				if (getAttribute("xmlns:" + unboundPrefix) == null) {
+					this.unboundPrefixes.add(unboundPrefix);
+				}
+			}
+		}
+
+		if (logo != null && logo.getUnboundPrefixes() != null) {
+			for (String unboundPrefix : logo.getUnboundPrefixes()) {
+				if (getAttribute("xmlns:" + unboundPrefix) == null) {
+					this.unboundPrefixes.add(unboundPrefix);
+				}
+			}
+		}
+
 		if (sourceAdaptor.getUnboundPrefixes() != null) {
 			this.unboundPrefixes.addAll(sourceAdaptor.getUnboundPrefixes());
 		}
@@ -346,7 +379,8 @@ public class Feed implements Serializable {
 	 * @param relAttributeValue
 	 *            the value of the rel attribute.
 	 * @return the Link object based on the semantics of the rel attribute of
-	 *         the link element. See <a href="http://www.atomenabled.org/developers/syndication/atom-format-spec.php#element.link"
+	 *         the link element. See <a href=
+	 *         "http://www.atomenabled.org/developers/syndication/atom-format-spec.php#element.link"
 	 *         >atom:link</a>.
 	 */
 	public Link getLink(String relAttributeValue) {
