@@ -86,7 +86,7 @@ public class Icon implements Serializable {
 	public String toString() {
 		return "<icon" + icon + "</icon>";
 	}
-	
+
 	List<String> getUnboundPrefixes() {
 		return icon.getUnboundPrefixes();
 	}

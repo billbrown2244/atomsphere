@@ -75,7 +75,10 @@ public class Category implements Serializable {
 				if (attr.getName().indexOf(":") != -1
 						&& !attr.getName().equals("xml:lang")
 						&& !attr.getName().equals("xml:base")
-						&& !attr.getName().startsWith("xmlns:")) {
+						&& !attr.getName().startsWith("xmlns:")
+						&& getAttribute("xmlns:"
+								+ attr.getName().substring(0,
+										attr.getName().indexOf(":"))) == null) {
 					this.unboundPrefixes.add(attr.getName().substring(0,
 							attr.getName().indexOf(":")));
 				}
