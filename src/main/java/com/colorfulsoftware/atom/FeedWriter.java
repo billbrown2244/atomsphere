@@ -491,12 +491,12 @@ class FeedWriter implements Serializable {
 				}
 				// add the content.
 				String eleName = extension.getElementName();
-				if (eleName.indexOf(":") != -1) {
-					if (xhtmlNamespacePrefix != null
-							&& xhtmlNamespacePrefix.equals(eleName.substring(0,
-									eleName.indexOf(":")))) {
-						writeXHTML(writer, extension.getContent());
-					}
+				if (eleName.indexOf(":") != -1
+						&& xhtmlNamespacePrefix != null
+						&& xhtmlNamespacePrefix.equals(eleName.substring(0,
+								eleName.indexOf(":")))) {
+					writeXHTML(writer, extension.getContent());
+
 				} else if (extension.getAttribute("xmlns") != null
 						&& extension.getAttribute("xmlns").getValue()
 								.equals("http://www.w3.org/1999/xhtml")) {
