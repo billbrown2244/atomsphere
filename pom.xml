@@ -137,12 +137,13 @@
 		</plugins>
 	</reporting>
 	<dependencies>
+	<!--
 		<dependency>
 			<groupId>stax</groupId>
 			<artifactId>stax-api</artifactId>
 			<version>1.0.1</version>
 		</dependency>
-		<!--
+		
 			This Also works <dependency>
 			<groupId>org.apache.geronimo.specs</groupId>
 			<artifactId>geronimo-stax-api_1.0_spec</artifactId>
