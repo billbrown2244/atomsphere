@@ -68,8 +68,8 @@
 					</excludes>
 					<properties>
 						<year>${buildNumber}</year>
-						<name>William R. Brown</name>
-						<email>wbrown@colorfulsoftware.com</email>
+						<name>Bill Brown</name>
+						<email>billbrown@colorfulsoftware.com</email>
 					</properties>
 				</configuration>
 			</plugin>
@@ -137,18 +137,6 @@
 		</plugins>
 	</reporting>
 	<dependencies>
-	<!--
-		<dependency>
-			<groupId>stax</groupId>
-			<artifactId>stax-api</artifactId>
-			<version>1.0.1</version>
-		</dependency>
-		
-			This Also works <dependency>
-			<groupId>org.apache.geronimo.specs</groupId>
-			<artifactId>geronimo-stax-api_1.0_spec</artifactId>
-			<version>1.0.1</version> </dependency>
-		-->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
