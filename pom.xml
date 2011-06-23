@@ -54,7 +54,6 @@
 						</goals>
 					</execution>
 				</executions>
-
 			</plugin>
 			<plugin>
 				<groupId>com.google.code.maven-license-plugin</groupId>
