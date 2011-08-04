@@ -5,7 +5,7 @@
 	<artifactId>atomsphere</artifactId>
 	<packaging>jar</packaging>
 	<name>Atomsphere</name>
-	<version>3.0.2-SNAPSHOT</version>
+	<version>3.0.1-SNAPSHOT</version>
 	<description>An Atom 1.0 feed library written in Java on top of the Stax API.</description>
 	<url>http://www.colorfulsoftware.com/projects/atomsphere</url>
 	<licenses>
@@ -156,7 +156,7 @@
 			<uniqueVersion>true</uniqueVersion>
 			<id>com.colorfulsoftware</id>
 			<name>Colorful Software Maven Repository</name>
-			<url>/home/bill/.m2/repository</url>
+			<url>file:///home/bill/.m2/repository</url>
 			<layout>default</layout>
 		</repository>
 	</distributionManagement>
