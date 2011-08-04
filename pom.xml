@@ -156,7 +156,7 @@
 			<uniqueVersion>true</uniqueVersion>
 			<id>com.colorfulsoftware</id>
 			<name>Colorful Software Maven Repository</name>
-			<url>${settings.localRepository}</url>
+			<url>/home/bill/.m2/repository</url>
 			<layout>default</layout>
 		</repository>
 	</distributionManagement>
