@@ -5,7 +5,7 @@
 	<artifactId>atomsphere</artifactId>
 	<packaging>jar</packaging>
 	<name>Atomsphere</name>
-	<version>3.0.1-SNAPSHOT</version>
+	<version>3.0.1</version>
 	<description>An Atom 1.0 feed library written in Java on top of the Stax API.</description>
 	<url>http://www.colorfulsoftware.com/projects/atomsphere</url>
 	<licenses>
@@ -17,11 +17,11 @@
 	</licenses>
 	<scm>
 		
-<url>http://www.colorfulsoftware.com/svn/repos/ColorfulSoftware/list/atomsphere/trunk</url>
+<url>http://www.colorfulsoftware.com/svn/repos/ColorfulSoftware/list/atomsphere/tags/atomsphere-3.0.1</url>
 		
-<connection>scm:svn:http://www.colorfulsoftware.com/scm/atomsphere/trunk</connection>
+<connection>scm:svn:http://www.colorfulsoftware.com/scm/atomsphere/tags/atomsphere-3.0.1</connection>
 		
-<developerConnection>scm:svn:https://billbrown.homelinux.net/pubRepo/atomsphere/trunk</developerConnection>
+<developerConnection>scm:svn:https://billbrown.homelinux.net/pubRepo/atomsphere/tags/atomsphere-3.0.1</developerConnection>
 	</scm>
 	<build>
 		<resources>
