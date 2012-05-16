@@ -531,4 +531,19 @@ class AtomEntrySourceAdaptor implements Serializable {
 	List<String> getUnboundPrefixes() {
 		return unboundPrefixes;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof AtomEntrySourceAdaptor)) {
+			return false;
+		}
+		return this.toString().equals(obj.toString());
+	}
+	
+	@Override public int hashCode() {
+		return toString().hashCode();
+	}
 }

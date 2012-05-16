@@ -98,4 +98,19 @@ public class Subtitle implements Serializable {
 	List<String> getUnboundPrefixes() {
 		return subtitle.getUnboundPrefixes();
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof Subtitle)) {
+			return false;
+		}
+		return this.toString().equals(obj.toString());
+	}
+	
+	@Override public int hashCode() {
+		return toString().hashCode();
+	}
 }

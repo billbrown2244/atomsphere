@@ -25,6 +25,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
 
+import com.colorfulsoftware.rss.Day;
+
 class AtomDateConstruct implements Serializable {
 
 	private static final long serialVersionUID = 4497374180937974L;
@@ -273,5 +275,20 @@ class AtomDateConstruct implements Serializable {
 
 	List<String> getUnboundPrefixes() {
 		return unboundPrefixes;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof AtomDateConstruct)) {
+			return false;
+		}
+		return this.toString().equals(obj.toString());
+	}
+	
+	@Override public int hashCode() {
+		return toString().hashCode();
 	}
 }

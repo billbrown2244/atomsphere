@@ -74,16 +74,6 @@ public class Attribute implements Serializable {
 		return value;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof Attribute) {
-			Attribute local = (Attribute) obj;
-			return local.name.equals(this.name)
-					&& local.value.equals(this.value);
-		}
-		return false;
-	}
-
 	/**
 	 * Shows the contents of the element's attribute in the form of '
 	 * attrName="attrValue"'.
@@ -91,5 +81,20 @@ public class Attribute implements Serializable {
 	@Override
 	public String toString() {
 		return " " + name + "=\"" + value + "\"";
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof Attribute)) {
+			return false;
+		}
+		return this.toString().equals(obj.toString());
+	}
+	
+	@Override public int hashCode() {
+		return toString().hashCode();
 	}
 }

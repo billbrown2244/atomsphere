@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.colorfulsoftware</groupId>
 	<artifactId>atomsphere</artifactId>
 	<packaging>jar</packaging>
 	<name>Atomsphere</name>
 	<version>3.0.2-SNAPSHOT</version>
-	<description>An Atom 1.0 feed library written in Java on top of the Stax API.</description>
+	<description>An Atom 1.0 feed library written in Java.</description>
 	<url>http://www.colorfulsoftware.com/projects/atomsphere</url>
 	<licenses>
 		<license>
@@ -16,12 +17,9 @@
 		</license>
 	</licenses>
 	<scm>
-		
-<url>http://www.colorfulsoftware.com/svn/repos/ColorfulSoftware/list/atomsphere/trunk</url>
-		
-<connection>scm:svn:http://www.colorfulsoftware.com/scm/atomsphere/trunk</connection>
-		
-<developerConnection>scm:svn:https://billbrown.homelinux.net/pubRepo/atomsphere/trunk</developerConnection>
+		<connection>scm:git:https://code.google.com/p/atomsphere/</connection>
+		<developerConnection>scm:git:https://code.google.com/p/atomsphere/</developerConnection>
+		<url>http://www.colorfulsoftware.com/projects/atomsphere</url>
 	</scm>
 	<build>
 		<resources>
@@ -154,9 +152,9 @@
 	<distributionManagement>
 		<repository>
 			<uniqueVersion>true</uniqueVersion>
-			<id>com.colorfulsoftware</id>
-			<name>Colorful Software Maven Repository</name>
-			<url>file:///home/bill/.m2/repository</url>
+			<id>sonatype-nexus-staging</id>
+			<name>Colorful Software Staging Repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 			<layout>default</layout>
 		</repository>
 	</distributionManagement>

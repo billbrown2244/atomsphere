@@ -99,4 +99,19 @@ public class Rights implements Serializable {
 	List<String> getUnboundPrefixes() {
 		return rights.getUnboundPrefixes();
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof Rights)) {
+			return false;
+		}
+		return this.toString().equals(obj.toString());
+	}
+	
+	@Override public int hashCode() {
+		return toString().hashCode();
+	}
 }

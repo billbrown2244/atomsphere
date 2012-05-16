@@ -131,4 +131,19 @@ class AtomURIConstruct implements Serializable {
 	List<String> getUnboundPrefixes() {
 		return unboundPrefixes;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof AtomURIConstruct)) {
+			return false;
+		}
+		return this.toString().equals(obj.toString());
+	}
+	
+	@Override public int hashCode() {
+		return toString().hashCode();
+	}
 }
