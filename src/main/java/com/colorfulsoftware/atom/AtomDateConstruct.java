@@ -25,7 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
 
-import com.colorfulsoftware.rss.Day;
 
 class AtomDateConstruct implements Serializable {
 
