@@ -259,7 +259,11 @@ public class FeedReaderTest implements Serializable {
 
 			feed = feedReader.readFeed(reader4);
 			assertNotNull(feed);
-
+			
+			String atomStr = "file:///C:/Users/billbrown/workspace/feedbenchmarks/atomenabled.atom";
+			feed = new FeedDoc().readFeedToBean(new URL(atomStr));
+			assertNotNull(feed);
+			System.out.println("feed is not null"+feed);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("could not read fead.");
