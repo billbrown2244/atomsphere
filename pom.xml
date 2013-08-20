@@ -5,7 +5,7 @@
 	<artifactId>atomsphere</artifactId>
 	<packaging>jar</packaging>
 	<name>Atomsphere</name>
-	<version>3.0.3</version>
+	<version>3.0.4-SNAPSHOT</version>
 	<description>An Atom 1.0 feed library written in Java.</description>
 	<url>http://www.colorfulsoftware.com/projects/atomsphere</url>
 	<licenses>
@@ -20,7 +20,7 @@
 		<connection>scm:git:https://code.google.com/p/atomsphere/</connection>
 		<developerConnection>scm:git:https://code.google.com/p/atomsphere/</developerConnection>
 		<url>http://www.colorfulsoftware.com/atomsphere</url>
-	  <tag>atomsphere-3.0.3</tag>
+	  <tag>HEAD</tag>
   </scm>
 	
 	<properties>
