@@ -230,7 +230,7 @@ public class FeedReaderTest implements Serializable {
 		reader3 = XMLInputFactory.newInstance().createXMLStreamReader(
 				new FileInputStream("src/test/resources/dump.xml"));
 		reader4 = XMLInputFactory.newInstance().createXMLStreamReader(
-				new URL("http://www.atomenabled.org/atom.xml").openStream());
+				new URL("http://earthbeats.net/drops.xml").openStream());
 	}
 
 	/**

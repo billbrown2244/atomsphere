@@ -259,7 +259,7 @@ public class FeedWriterTest implements Serializable {
 			writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
 					new FileOutputStream("target/dump1.xml"));
 			Feed feed = feedDoc.readFeedToBean(new URL(
-					"http://www.atomenabled.org/atom.xml"));
+				"http://earthbeats.net/drops.xml"));
 			feedWriter.writeFeed(writer, feed);
 
 		} catch (Exception e) {
