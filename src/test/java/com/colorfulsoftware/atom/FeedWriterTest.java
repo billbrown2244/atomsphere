@@ -259,7 +259,7 @@ public class FeedWriterTest implements Serializable {
 			writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
 					new FileOutputStream("target/dump1.xml"));
 			Feed feed = feedDoc.readFeedToBean(new URL(
-				"http://earthbeats.net/drops.xml"));
+				"http://deals.ebay.com/feed/rss"));
 			feedWriter.writeFeed(writer, feed);
 
 		} catch (Exception e) {

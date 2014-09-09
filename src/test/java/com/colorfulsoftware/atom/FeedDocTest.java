@@ -667,7 +667,7 @@ public class FeedDocTest implements Serializable {
 	public void testWriteFeedDocOutputStreamFeedStringString() {
 		try {
 			feed1 = feedDoc.readFeedToBean(new java.net.URL(
-					"http://earthbeats.net/drops.xml"));
+					"http://deals.ebay.com/feeds/rss"));
 			feedDoc.writeFeedDoc(new FileOutputStream("target/out1.xml"),
 					feed1, feedDoc.getEncoding(), feedDoc.getXmlVersion());
 			Feed feed2 = feedDoc.readFeedToBean(new File("target/out1.xml"));
@@ -679,7 +679,7 @@ public class FeedDocTest implements Serializable {
 
 		try {
 			feed1 = feedDoc.readFeedToBean(new java.net.URL(
-				"http://earthbeats.net/drops.xml"));
+				"http://deals.ebay.com/feeds/rss"));
 			OutputStreamWriter writer = new OutputStreamWriter(
 					new FileOutputStream("target/out2.xml"), "UTF-8");
 			feedDoc.writeFeedDoc(writer, feed1, "UTF-8", feedDoc
@@ -694,7 +694,7 @@ public class FeedDocTest implements Serializable {
 		/*
 		 * uncomment stax-utils dependency in the root pom.xml to see example in
 		 * action try { feed1 = feedDoc.readFeedToBean(new java.net.URL(
-		 * "http://earthbeats.net/drops.xml"));
+		 * "http://deals.ebay.com/feeds/rss"));
 		 * feedDoc.writeFeedDoc(new IndentingXMLStreamWriter(XMLOutputFactory
 		 * .newInstance().createXMLStreamWriter( new
 		 * FileOutputStream("target/out3.xml"), "UTF-8")), feed1,
@@ -712,7 +712,7 @@ public class FeedDocTest implements Serializable {
 	public void testWriteEntryDocOutputStreamEntryStringString() {
 		try {
 			feed1 = feedDoc.readFeedToBean(new java.net.URL(
-					"http://earthbeats.net/drops.xml"));
+					"http://earthbeats.net/http://deals.ebay.com/feeds/rss"));
 			feedDoc.writeEntryDoc(new FileOutputStream("target/out5.xml"),
 					feed1.getEntries().get(0), feedDoc.getEncoding(), feedDoc
 							.getXmlVersion());
@@ -725,7 +725,7 @@ public class FeedDocTest implements Serializable {
 
 		try {
 			feed1 = feedDoc.readFeedToBean(new java.net.URL(
-					"http://earthbeats.net/drops.xml"));
+					"http://deals.ebay.com/feeds/rss"));
 			OutputStreamWriter writer = new OutputStreamWriter(
 					new FileOutputStream("target/out2.xml"), "UTF-8");
 			feedDoc.writeEntryDoc(writer, feed1.getEntries().get(0), "UTF-8",
@@ -769,7 +769,7 @@ public class FeedDocTest implements Serializable {
 		try {
 			// pretty print version.
 			feed1 = feedDoc.readFeedToBean(new java.net.URL(
-					"http://earthbeats.net/drops.xml"));
+					"http://deals.ebay.com/feeds/rss"));
 			feedDoc.writeFeedDoc(XMLOutputFactory.newInstance()
 					.createXMLStreamWriter(
 							new FileOutputStream("target/out2.xml"),
@@ -799,7 +799,7 @@ public class FeedDocTest implements Serializable {
 			assertNotNull(feedDoc2);
 			String output = feedDoc2.readFeedToString(feedDoc2
 					.readFeedToBean(new java.net.URL(
-							"http://earthbeats.net/drops.xml")), null);
+							"http://deals.ebay.com/feeds/rss")), null);
 			assertTrue(output
 					.indexOf("<?xml-stylesheet href=\"http://www.blogger.com/styles/atom.css\" type=\"text/css\"?>") != -1);
 		} catch (Exception e) {
@@ -815,7 +815,7 @@ public class FeedDocTest implements Serializable {
 	public void testReadFeedToStringFeedString() {
 		try {
 			feed1 = feedDoc.readFeedToBean(new java.net.URL(
-					"http://earthbeats.net/drops.xml"));
+					"http://deals.ebay.com/feeds/rss"));
 			String feedStr = feedDoc.readFeedToString(feed1,
 					"com.sun.xml.txw2.output.IndentingXMLStreamWriter");
 			assertNotNull(feedStr);
@@ -826,7 +826,7 @@ public class FeedDocTest implements Serializable {
 
 		try {
 			feed1 = feedDoc.readFeedToBean(new java.net.URL(
-					"http://earthbeats.net/drops.xml"));
+					"http://deals.ebay.com/feeds/rss"));
 			String feedStr = feedDoc.readFeedToString(feed1,
 					"javanet.staxutils.IndentingXMLStreamWriter");
 			assertNotNull(feedStr);
@@ -836,7 +836,7 @@ public class FeedDocTest implements Serializable {
 
 		try {
 			feed1 = feedDoc.readFeedToBean(new java.net.URL(
-					"http://earthbeats.net/drops.xml"));
+					"http://deals.ebay.com/feeds/rss"));
 			String feedStr = feedDoc.readFeedToString(feed1, "bunk");
 			assertNotNull(feedStr);
 		} catch (Exception e) {
@@ -1161,7 +1161,7 @@ public class FeedDocTest implements Serializable {
 
 			String feedStr = feedDoc.readFeedToString(feedDoc
 					.readFeedToBean(new URL(
-							"http://earthbeats.net/drops.xml")),
+							"http://deals.ebay.com/feeds/rss")),
 					"javanet.staxutils.IndentingXMLStreamWriter");
 			assertNotNull(feedStr);
 			BufferedWriter fout = new BufferedWriter(new FileWriter(
@@ -1406,7 +1406,7 @@ public class FeedDocTest implements Serializable {
 
 		try {
 			entry = feedDoc.readEntryToBean(new URL(
-					"http://earthbeats.net/drops.xml"));
+					"http://deals.ebay.com/feeds/rss"));
 			assertNotNull(entry);
 		} catch (Exception e) {
 			e.printStackTrace();
